@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+	   default-autowire="byName">
+
+	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg name="clusterConfig" ref="redisClusterConfiguration"/>
+		<constructor-arg name="poolConfig">
+			<bean class="redis.clients.jedis.JedisPoolConfig">
+				<property name="maxTotal" value="${kvstore.maxTotal}"/>
+				<property name="maxIdle" value="${kvstore.maxIdle}"/>
+				<property name="maxWaitMillis" value="${kvstore.maxWaitMillis}"/>
+				<property name="testOnBorrow" value="${kvstore.testOnBorrow}"/>
+			</bean>
+		</constructor-arg>
+		<property name="usePool" value="true"/>
+		<property name="timeout" value="${kvstore.timeout}"/>
+		<property name="hostName" value="${kvstore.host}"/>
+		<property name="port" value="${kvstore.port}"/>
+		<property name="password" value="${kvstore.password}"/>
+		<property name="database" value="${kvstore.default.db}"/>
+	</bean>
+
+	<bean id="resourcePropertySource" class="org.springframework.core.io.support.ResourcePropertySource">
+		<constructor-arg name="location" value="classpath:test.properties"/>
+	</bean>
+
+	<bean id="redisClusterConfiguration" class="org.springframework.data.redis.connection.RedisClusterConfiguration">
+		<constructor-arg name="propertySource" ref="resourcePropertySource"/>
+	</bean>
+
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connectionFactory-ref="jedisConnectionFactory">
+		<property name="keySerializer">
+			<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+		</property>
+
+		<property name="hashKeySerializer">
+			<bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+		</property>
+		<property name="valueSerializer">
+			<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+		</property>
+
+		<property name="hashValueSerializer">
+			<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+		</property>
+	</bean>
+</beans>

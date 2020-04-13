@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.xinxinfinance.commons</groupId>
+        <artifactId>commons-webapp-parent</artifactId>
+        <version>1.4.0</version>
+    </parent>
+
+    <groupId>com.xinxinfinance.xwas</groupId>
+    <artifactId>xwas-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>xwas-api</module>
+        <module>xwas-biz</module>
+        <module>xwas-repository</module>
+        <module>xwas-sal</module>
+        <module>xwas-web</module>
+        <module>xwas-common</module>
+        <module>xwas-session</module>
+    </modules>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        
+        <!-- API reference versions -->
+        <project.version>1.0-SNAPSHOT</project.version>
+        <xwas.api.version>1.6-SNAPSHOT</xwas.api.version>
+        <xwas.session.version>1.6-SNAPSHOT</xwas.session.version>
+        <commons-util.version>1.0.4-SNAPSHOT</commons-util.version>
+        <commons-api-support.version>1.0.0-SNAPSHOT</commons-api-support.version>
+        <rocektmq.version>1.6</rocektmq.version>
+        <oplog.client.version>1.2-SNAPSHOT</oplog.client.version>
+        <protobuf.version>2.5.0</protobuf.version>
+        <freemarker.version>2.3.20</freemarker.version>
+        <fastjson.version>1.2.29.sec06</fastjson.version>
+        <hvalidator.version>6.0.7.Final</hvalidator.version>
+        <ojdbc.version>5</ojdbc.version>
+        <servlet.jstl.version>1.2</servlet.jstl.version>
+        <shiro.version>1.4.0</shiro.version>
+        <pagehelper.version>5.1.4</pagehelper.version>
+        <shiro.encache.version>1.3.2</shiro.encache.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- api version -->
+            <dependency>
+                <groupId>com.xinxinfinance.xwas</groupId>
+                <artifactId>xwas-api</artifactId>
+                <version>${xwas.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xinxinfinance.xwas</groupId>
+                <artifactId>xwas-session</artifactId>
+                <version>${xwas.session.version}</version>
+            </dependency>
+
+            <!--<dependency>-->
+                <!--<groupId>org.apache.shiro</groupId>-->
+                <!--<artifactId>shiro-ehcache</artifactId>-->
+                <!--<version>${shiro.encache.version}</version>-->
+            <!--</dependency>-->
+
+            <dependency>
+                <groupId>com.xinxinfinance.xcif</groupId>
+                <artifactId>xcif-api</artifactId>
+                <version>${xcif.api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xinxinfinance.oplog</groupId>
+                <artifactId>oplog-client</artifactId>
+                <version>${oplog.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xinxinfinance.xwas</groupId>
+                <artifactId>xwas-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xinxinfinance.xwas</groupId>
+                <artifactId>xwas-repository</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xinxinfinance.xwas</groupId>
+                <artifactId>xwas-biz</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xinxinfinance.xwas</groupId>
+                <artifactId>xwas-sal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- Public libraries -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${hvalidator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <!-- Internal libraries -->
+            <dependency>
+                <groupId>com.xinxinfinance.commons</groupId>
+                <artifactId>commons-util</artifactId>
+                <version>${commons-util.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xinxinfinance.commons</groupId>
+                <artifactId>commons-api-support</artifactId>
+                <version>${commons-api-support.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.com.xinxin.commons</groupId>
+                <artifactId>xinxin-rocektmq-client</artifactId>
+                <version>${rocektmq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-redis</artifactId>
+                <version>${spring.redis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${jedis.version}</version>
+            </dependency>
+            <!-- Third-party SDKs -->
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.xinxinfinance.commons</groupId>
+            <artifactId>commons-dependency-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>com.xinxinfinance.commons</groupId>
+            <artifactId>commons-dependency-slf4j-logback</artifactId>
+            <type>pom</type>
+        </dependency>
+        <!-- test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>

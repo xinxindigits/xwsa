@@ -1,0 +1,172 @@
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-transition-delay: 99999s;
+    -webkit-transition: color 99999s ease-out, background-color 99999s ease-out;
+}
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+  background: url(../../images/login/bg.png) center center no-repeat;
+  background-size: cover;
+}
+.wrapper{
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+       -o-transform: translate(-50%,-50%);
+          transform: translate(-50%,-50%);
+  margin: 0 auto;
+  left: 50%;
+  width: 500px;
+  
+}
+.form-signin {
+  position: relative;
+  margin: 0 auto;
+  display: table;
+  width: 100%;
+  min-height: 368px;
+  padding:30px 30px 60px;
+  background: rgba(36,43,61,.9) none repeat scroll !important;
+  border-radius: 8px;
+}
+.form-signin .form-signin-heading{
+  display: table;
+  width: 100%;
+  font-family: SourceHanSansCN-Bold;
+  font-size: 16px;
+  color: #FFFFFF;
+  margin-bottom: 25px;
+}
+.form-signin .form-signin-heading .form-header-content{
+  display:table-cell;
+  text-align: center;
+  vertical-align: middle
+}
+.form-signin .form-signin-heading span{
+  vertical-align: middle
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 15px;
+  font-size: 16px;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid  #5B6171;
+  color: #fff;
+  outline: none;
+  -webkit-appearance: none;
+  -webkit-box-shadow: none !important;
+          box-shadow: none !important;
+}
+
+.form-control::-moz-placeholder {
+  color: #fff;
+  opacity: .7;
+  font-size: 14px;
+}
+.form-control:-ms-input-placeholder {
+  color: rgba(255,255,255,.7);
+  font-size: 14px;
+}
+.form-control::-webkit-input-placeholder {
+  color: rgba(255,255,255,.6);
+  font-size: 14px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.form-signin .input-group-addon {
+  background-color:transparent;
+  border: 1px solid transparent;
+}
+.checkbox-custom {
+  position: relative;
+  padding-left: 35px;
+  margin-top: 19px;
+  margin-bottom: 40px;
+  display: inline-block;
+  font-weight: normal;
+  color: #fff;
+  opacity: 0.7;
+  font-size: 14px;
+}
+/*
+自定义checkbox
+*/
+.checkbox-custom input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+  z-index: 2;
+  margin: -6px 0 0 0;
+  top: 50%;
+  left: 3px;
+}
+.checkbox-custom label:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  margin-top: -10px;
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  border: 2px solid #C0C2C7;
+  border-radius: 4px;
+
+}
+.checkbox-custom input[type="checkbox"]:checked +label:after {
+  position: absolute;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  content: "\e013";
+  top: 42%;
+  left: 18px;
+  margin-top: -5px;
+  color: #fff;
+  
+  font-size: 14px;
+  line-height: 1;
+  width: 16px;
+  height: 16px;
+}
+.checkbox-custom input[type="checkbox"]:checked +label:before {
+  background:#0084FF;
+}
+
+.checkbox-custom label {
+  cursor: pointer;
+  margin-bottom: 0;
+  padding-left: 15px;
+  text-align: left;
+}
+/* 自定义登录按钮 */
+.btn-cust{
+  position:absolute;
+  left: 0;
+  bottom: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background: #0084FF;
+  height: 60px;
+  margin-top: -60px;
+}

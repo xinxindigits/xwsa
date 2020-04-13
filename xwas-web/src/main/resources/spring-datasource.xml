@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/tx    http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="initialSize" value="${jdbc.pool.initialSize}" />
+        <property name="maxActive" value="${jdbc.pool.maxActive}" />
+        <property name="minIdle" value="${jdbc.pool.minIdle}" />
+        <property name="maxWait" value="${jdbc.pool.maxWait}" />
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="${jdbc.pool.maxPoolPreparedStatementPerConnectionSize}" />
+        <property name="validationQuery" value="SELECT 'x'" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+        <property name="testWhileIdle" value="true" />
+        <property name="timeBetweenEvictionRunsMillis" value="${jdbc.pool.timeBetweenEvictionRunsMillis}" />
+        <property name="minEvictableIdleTimeMillis" value="${jdbc.pool.minEvictableIdleTimeMillis}" />
+        <property name="removeAbandoned" value="true" />
+        <property name="removeAbandonedTimeout" value="${jdbc.pool.removeAbandonedTimeout}" />
+        <property name="logAbandoned" value="true" />
+        <property name="timeBetweenLogStatsMillis" value="${jdbc.pool.timeBetweenLogStatsMillis}" />
+        <property name="filters" value="config,slf4j" />
+        <property name="driverClassName" value="${jdbc.pool.driverClassName}"/>
+        <property name="username" value="${jdbc.pool.username}"/>
+        <property name="password" value="${jdbc.pool.password}"/>
+        <property name="url" value="${jdbc.pool.url}"/>
+    </bean>
+
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:mapper/**/*Mapper.xml</value>
+            </list>
+        </property>
+        <property name="typeAliasesPackage" value="cn.com.xinxin.portal.repository.dao"/>
+        <property name="typeHandlersPackage" value="cn.com.xinxin.portal.repository.handler"/>
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+    </bean>
+    <bean id="dataScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.com.xinxin.portal.repository.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>

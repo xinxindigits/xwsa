@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	   xsi:schemaLocation="
+           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://code.alibabatech.com/schema/dubbo    http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+       ">
+
+	<dubbo:application name="${dubbo.application.name}" />
+	<dubbo:annotation package="cn.com.xinxin" />
+	<dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" host="${dubbo.protocol.host}"/>
+	<dubbo:registry address="${dubbo.registry.address}" client="curator"/>
+	<dubbo:consumer check="false" lazy="true" />
+
+
+
+
+</beans>

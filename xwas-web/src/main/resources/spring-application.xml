@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+           http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       ">
+
+    <!-- - The configuration file of ROOT's ApplicationContext. -->
+
+    <import resource="classpath:spring-datasource.xml"/>
+    <import resource="classpath:spring-dubbo.xml"/>
+    <!--<import resource="classpath:spring-redis.xml"/>-->
+    <import resource="classpath:spring-aop.xml"/>
+    <import resource="classpath:spring-shiro.xml"/>
+    <import resource="classpath:spring-session-redis.xml"/>
+    <import resource="classpath:spring-portal-session-aop.xml"/>
+
+    <context:component-scan base-package="cn.com.xinxin">
+        <context:exclude-filter type="aspectj" expression="cn.com.xinxin.portal.web.*"/>
+    </context:component-scan>
+    <context:component-scan base-package="com.xinxinfinance.commons"/>
+
+    <context:annotation-config/>
+
+    <!-- Properties will be merged, properties will be override by the last
+        position file -->
+    <context:property-placeholder
+            location="classpath:properties/${properties.name}.properties, classpath:properties/*-${properties.name}.properties"
+            ignore-unresolvable="true"/>
+
+</beans>

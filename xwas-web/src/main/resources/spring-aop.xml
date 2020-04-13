@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="
+         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/aop   http://www.springframework.org/schema/aop/spring-aop.xsd
+       ">
+
+    <!-- 返回值包装/异常转换 -->
+    <bean id="resultInterceptor" class="com.xinxinfinance.commons.interceptor.CommonResultInterceptor"/>
+
+    <!-- 调用详细信息 -->
+    <bean id="traceInterceptor" class="com.xinxinfinance.commons.interceptor.InvocationTraceInterceptor"/>
+
+    <!-- 摘要日志 -->
+    <bean id="apiDigestInterceptor" class="com.xinxinfinance.commons.interceptor.InvocationDigestInterceptor"
+          c:logger="api-digest-log" p:appName="xportal"/>
+    <bean id="bizDigestInterceptor" class="com.xinxinfinance.commons.interceptor.InvocationDigestInterceptor"
+          c:logger="biz-digest-log" p:appName="xportal"/>
+    <bean id="dalDigestInterceptor" class="com.xinxinfinance.commons.interceptor.InvocationDigestInterceptor"
+          c:logger="dal-digest-log" p:appName="xportal"/>
+    <bean id="salDigestInterceptor" class="com.xinxinfinance.commons.interceptor.InvocationDigestInterceptor"
+          c:logger="sal-digest-log" p:appName="xportal"/>
+
+    <aop:config>
+        <aop:pointcut id="apiPointcut" expression="execution(public * cn.com.xinxin.portal.api..*.*(..))"/>
+        <aop:pointcut id="bizPointcut" expression="execution(public * cn.com.xinxin.portal.biz.service..*.*(..))"/>
+        <aop:pointcut id="dalPointcut" expression="execution(public * cn.com.xinxin.portal.repository.dao..*.*(..))"/>
+        <aop:pointcut id="salPointcut" expression="execution(public * cn.com.xinxin.portal.sal..*.*(..))"/>
+        <aop:advisor pointcut-ref="apiPointcut" advice-ref="apiDigestInterceptor"/>
+        <aop:advisor pointcut-ref="apiPointcut" advice-ref="resultInterceptor" order="1"/>
+        <aop:advisor pointcut-ref="bizPointcut" advice-ref="bizDigestInterceptor"/>
+        <aop:advisor pointcut-ref="bizPointcut" advice-ref="traceInterceptor"/>
+        <aop:advisor pointcut-ref="dalPointcut" advice-ref="dalDigestInterceptor"/>
+        <aop:advisor pointcut-ref="salPointcut" advice-ref="salDigestInterceptor"/>
+    </aop:config>
+
+</beans>
+
+

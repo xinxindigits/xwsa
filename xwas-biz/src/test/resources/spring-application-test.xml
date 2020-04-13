@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:task="http://www.springframework.org/schema/task"
+
+	   xsi:schemaLocation="
+           http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+
+
+	<!-- - The configuration file of ROOT's ApplicationContext. -->
+
+	<import resource="classpath:spring-datasource-test.xml" />
+	<import resource="classpath:dubbo-test.xml" />
+	<import resource="classpath:spring-redis-test.xml" />
+  	<import resource="classpath:spring-dubbo-ref-test.xml" />
+    <import resource="classpath:spring-portal-session.xml"/>
+
+     <context:component-scan base-package="cn.com.xinxin">
+	 <context:exclude-filter type="aspectj" expression="cn.com.xinxin.example.web.*" />
+	</context:component-scan>
+	<context:component-scan base-package="com.xinxinfinance.commons"/>
+
+	<context:annotation-config />
+	<!--<task:annotation-driven/>-->
+
+	<!-- Properties will be merged, properties will be override by the last position file -->
+	<context:property-placeholder location="classpath:test.properties" ignore-unresolvable="true" />
+
+</beans>

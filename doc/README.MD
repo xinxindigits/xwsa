@@ -1,0 +1,1 @@
+# This is common webapp example project templates

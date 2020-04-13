@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
+        <property name="hashAlgorithmName" value="SHA-512"/>
+        <property name="hashIterations" value="2"/>
+        <property name="storedCredentialsHexEncoded" value="true"/>
+    </bean>
+
+    <bean id="authorizationRealm" class="cn.com.xinxin.portal.web.shiro.realm.AuthorizationRealm">
+        <constructor-arg name="userService" ref="userServiceImpl"/>
+        <property name="credentialsMatcher" ref="credentialsMatcher"/>
+        <property name="cachingEnabled" value="true"/>
+        <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
+    </bean>
+
+    <!-- 权限管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realms">
+            <list>
+                <ref bean="authorizationRealm"/>
+            </list>
+        </property>
+        <property name="sessionManager" ref="sessionManager"/>
+        <!--<property name="cacheManager" ref="redisCacheManager"/>-->
+    </bean>
+
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionValidationInterval" value="1800000"/>
+        <property name="globalSessionTimeout" value="129600000"/>
+        <property name="deleteInvalidSessions" value="true"/>
+
+        <property name="sessionDAO" ref="portalSessionRepository"/>
+        <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
+    </bean>
+
+    <!--<bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.web.shiro.cache.PortalSessionRedisCacheManager">-->
+        <!--<property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="portalSessionRepository" class="cn.com.xinxin.portal.web.shiro.cache.PortalSessionRepository">-->
+        <!--<property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>-->
+    <!--</bean>-->
+
+    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
+    </bean>
+
+    <!-- 现在缓存中最大登陆人数1-->
+    <bean id="kickoutSessionControlFilter" class="cn.com.xinxin.portal.session.interceptor.KickoutSessionControlFilter">
+        <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
+        <property name="sessionManager" ref="sessionManager"/>
+        <!-- 是否踢出后来登录的，默认是false；即后者登录的用户踢出前者登录的用户 -->
+        <property name="kickoutAfter" value="false"/>
+        <!-- 同一个用户最大的会话数，默认1；比如2的意思是同一个用户允许最多同时两个人登录 -->
+        <property name="maxSession" value="1"/>
+        <property name="kickoutUrl" value="/login"/>
+    </bean>
+
+    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.session.repository.PortalSessionRedisCacheManager">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
+    <bean id="portalSessionRepository" class="cn.com.xinxin.portal.session.repository.PortalSessionRepository">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
+    <bean id="userAclSessionRepository" class="cn.com.xinxin.portal.session.repository.UserAclSessionRepository">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
+    <!-- 相当于调用SecurityUtils.setSecurityManager() -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>
+        <property name="arguments" ref="securityManager"/>
+    </bean>
+
+    <!-- 基于form表单的身份验证过滤器 -->
+    <bean id="formAuthenticationFilter" class="cn.com.xinxin.portal.web.shiro.filter.PortalLoginFilter">
+       <property name="usernameParam" value="username"/>
+        <property name="passwordParam" value="password"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="userService" ref="userServiceImpl"/>
+        <property name="userAclSessionRepository" ref="userAclSessionRepository"/>
+    </bean>
+
+    <bean id="portalLogoutFilter" class="cn.com.xinxin.portal.web.shiro.filter.PortalLogoutFilter"/>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="successUrl" value="/"/>
+        <property name="filters">
+            <util:map>
+                <entry key="authc" value-ref="formAuthenticationFilter"/>
+                <entry key="logout" value-ref="portalLogoutFilter"/>
+                <entry key="kickout" value-ref="kickoutSessionControlFilter"/>
+            </util:map>
+        </property>
+
+        <!-- 访问地址的过滤规则，从上到下的优先级，如果有匹配的规则，就会返回，不会再进行匹配 -->
+        <!--
+         anno 任何人都可以访问
+         authc 必须登录才可以访问，不包含rememberme
+         user 登录用户才可以访问，包含rememberme
+         perms 指定过滤规则
+         -->
+        <property name="filterChainDefinitions">
+            <value>
+                /login = authc
+                /logout = logout
+                /static/** = anon
+                /** = kickout,authc
+            </value>
+        </property>
+    </bean>
+
+    <!-- shiro 生命周期处理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!--<aop:config proxy-target-class="true"/>-->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+</beans>
