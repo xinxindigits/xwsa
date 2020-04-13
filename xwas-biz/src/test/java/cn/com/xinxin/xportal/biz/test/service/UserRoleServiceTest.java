@@ -1,7 +1,7 @@
 package cn.com.xinxin.xportal.biz.test.service;
 
-import cn.com.xinxin.portal.biz.service.UserRoleService;
-import cn.com.xinxin.portal.repository.model.UserRoleDO;
+import cn.com.xinxin.sass.biz.service.UserRoleService;
+import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.xportal.biz.test.base.SpringBaseTest;
 import org.junit.Assert;
 import org.junit.Ignore;

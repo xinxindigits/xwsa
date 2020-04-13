@@ -1,6 +1,6 @@
 package cn.com.xinxin.portal.web.vo;
 
-import cn.com.xinxin.portal.api.base.ToString;
+import cn.com.xinxin.sass.api.base.ToString;
 
 /**
  * Created by dengyunhui on 2018/5/10

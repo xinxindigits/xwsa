@@ -38,11 +38,11 @@
         <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
     </bean>
 
-    <!--<bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.web.shiro.cache.PortalSessionRedisCacheManager">-->
+    <!--<bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.web.shiro.caSassSessionRedisCacheManagerager">-->
         <!--<property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>-->
     <!--</bean>-->
 
-    <!--<bean id="portalSessionRepository" class="cn.com.xinxin.portal.web.shiro.cache.PortalSessionRepository">-->
+    <!--<bean id="portalSessionRepository" class="cn.com.xinxin.portal.web.shiro.caSassSessionRepositorytory">-->
         <!--<property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>-->
     <!--</bean>-->
 
@@ -61,11 +61,11 @@
         <property name="kickoutUrl" value="/login"/>
     </bean>
 
-    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.session.repository.PortalSessionRedisCacheManager">
+    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.session.repository.SassSessionRedisCacheManager">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 
-    <bean id="portalSessionRepository" class="cn.com.xinxin.portal.session.repository.PortalSessionRepository">
+    <bean id="portalSessionRepository" class="cn.com.xinxin.portal.session.repository.SassSessionRepository">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 

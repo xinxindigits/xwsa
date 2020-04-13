@@ -1,7 +1,7 @@
 package cn.com.xinxin.xportal.biz.test.service;
 
-import cn.com.xinxin.portal.biz.service.UserService;
-import cn.com.xinxin.portal.repository.model.UserDO;
+import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.xportal.biz.test.base.SpringBaseTest;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Ignore;

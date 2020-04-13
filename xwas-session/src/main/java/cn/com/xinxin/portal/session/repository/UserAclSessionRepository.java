@@ -1,7 +1,7 @@
 package cn.com.xinxin.portal.session.repository;
 
 import cn.com.xinxin.portal.session.BizResultCodeEnum;
-import cn.com.xinxin.portal.session.constant.PortalSessionConstants;
+import cn.com.xinxin.portal.session.constant.SessionCacheConstants;
 import cn.com.xinxin.portal.session.model.PortalUser;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.shiro.session.Session;
@@ -36,12 +36,12 @@ public class UserAclSessionRepository {
 
 
     private String getKey(String originalKey) {
-        return PortalSessionConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + originalKey;
+        return SessionCacheConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + originalKey;
     }
 
     public Session getPortalUserLoginSession(String sessionId){
         Session session = (Session) sessionRedisTemplate.opsForValue().get(
-            PortalSessionConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId);
+            SessionCacheConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId);
 
         return session;
 
@@ -49,17 +49,17 @@ public class UserAclSessionRepository {
 
     public void setPortalUserSession(String sessionId, Session session){
         sessionRedisTemplate.opsForValue().set(
-            PortalSessionConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId,
-            session, PortalSessionConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
+            SessionCacheConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId,
+            session, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
     }
 
     public void updatePortalUserSession(String sessionId){
-        sessionRedisTemplate.expire(PortalSessionConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId,
-                PortalSessionConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
+        sessionRedisTemplate.expire(SessionCacheConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId,
+                SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
     }
 
     public boolean exist(String sessionId){
-        return sessionRedisTemplate.hasKey(PortalSessionConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId);
+        return sessionRedisTemplate.hasKey(SessionCacheConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId);
     }
 
     public void cleanSession(String sessionId){
@@ -75,7 +75,7 @@ public class UserAclSessionRepository {
     public PortalUser getPortalUserBySessionId(String sessionId){
 
         Session session = (Session) sessionRedisTemplate.opsForValue().get(
-            PortalSessionConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId);
+            SessionCacheConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + sessionId);
 
         if (session == null){
             //TODO
@@ -101,7 +101,7 @@ public class UserAclSessionRepository {
     public PortalUser getPortalUserByUserNo(String userNo){
 
         PortalUser portalUser = (PortalUser) sessionRedisTemplate.opsForValue().get(
-            PortalSessionConstants.PORTAL_USER_INFO_CACHE_KEY + userNo);
+            SessionCacheConstants.PORTAL_USER_INFO_CACHE_KEY + userNo);
 
         return portalUser;
 
@@ -109,13 +109,13 @@ public class UserAclSessionRepository {
 
     public void setPortalUserByUserNo(String userNo, PortalUser portalUser){
         sessionRedisTemplate.opsForValue().set(
-            PortalSessionConstants.PORTAL_USER_INFO_CACHE_KEY + userNo,
-            portalUser, PortalSessionConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
+            SessionCacheConstants.PORTAL_USER_INFO_CACHE_KEY + userNo,
+            portalUser, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
     }
 
     public void cleanPortalUser(String userNo){
         try {
-            sessionRedisTemplate.delete(PortalSessionConstants.PORTAL_USER_INFO_CACHE_KEY + userNo);
+            sessionRedisTemplate.delete(SessionCacheConstants.PORTAL_USER_INFO_CACHE_KEY + userNo);
             logger.error("UserAclSessionRepository.delete user cache userNo :\n[]",userNo);
         } catch (Exception e) {
             logger.error("UserAclSessionRepository.delete occurs exception:\n[]",e);

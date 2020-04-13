@@ -1,6 +1,6 @@
 package cn.com.xinxin.portal.web.form;
 
-import cn.com.xinxin.portal.api.base.ToString;
+import cn.com.xinxin.sass.api.base.ToString;
 
 /**
  * @author dengyunhui

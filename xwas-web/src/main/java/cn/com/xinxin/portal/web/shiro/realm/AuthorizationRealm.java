@@ -1,9 +1,9 @@
 package cn.com.xinxin.portal.web.shiro.realm;
 
-import cn.com.xinxin.portal.biz.service.UserService;
-import cn.com.xinxin.portal.repository.model.ResourceDO;
-import cn.com.xinxin.portal.repository.model.RoleDO;
-import cn.com.xinxin.portal.repository.model.UserDO;
+import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.repository.model.ResourceDO;
+import cn.com.xinxin.sass.repository.model.RoleDO;
+import cn.com.xinxin.sass.repository.model.UserDO;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;

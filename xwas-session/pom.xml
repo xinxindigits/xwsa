@@ -33,6 +33,7 @@
         <mybatis.spring.version>1.3.2</mybatis.spring.version>
         <maven.test.skip>false</maven.test.skip>
         <shiro.encache.version>1.3.2</shiro.encache.version>
+        <java.jtw.version>3.8.3</java.jtw.version>
     </properties>
 
     <dependencyManagement>
@@ -171,6 +172,12 @@
                 <artifactId>shiro-ehcache</artifactId>
                 <version>${shiro.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.auth0</groupId>
+                <artifactId>java-jwt</artifactId>
+                <version>${java.jtw.version}</version>
+            </dependency>
         </dependencies>
 
     </dependencyManagement>
@@ -227,6 +234,11 @@
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-ehcache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
         </dependency>
 
     </dependencies>

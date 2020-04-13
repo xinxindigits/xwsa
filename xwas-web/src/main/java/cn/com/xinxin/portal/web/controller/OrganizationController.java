@@ -2,9 +2,9 @@ package cn.com.xinxin.portal.web.controller;
 
 import cn.com.xinxin.oplog.client.enums.AppProductEnum;
 import cn.com.xinxin.oplog.client.enums.OperationTypeEnum;
-import cn.com.xinxin.portal.biz.service.OrganizationService;
-import cn.com.xinxin.portal.common.Page;
-import cn.com.xinxin.portal.repository.model.OrganizationDO;
+import cn.com.xinxin.sass.biz.service.OrganizationService;
+import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import cn.com.xinxin.portal.session.annotation.RequirePermission;
 import cn.com.xinxin.portal.session.controller.AclController;
 import cn.com.xinxin.portal.session.model.PortalUser;

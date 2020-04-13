@@ -1,7 +1,7 @@
 package cn.com.xinxin.portal.web.controller;
 
-import cn.com.xinxin.portal.biz.service.UserService;
-import cn.com.xinxin.portal.repository.model.ResourceDO;
+import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.portal.session.controller.AclController;
 import cn.com.xinxin.portal.session.model.PortalUser;
 import cn.com.xinxin.portal.web.utils.TreeUtil;

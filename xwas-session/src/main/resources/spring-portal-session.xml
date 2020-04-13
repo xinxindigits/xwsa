@@ -40,11 +40,11 @@
         <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
     </bean>
 
-    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.session.repository.PortalSessionRedisCacheManager">
+    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.session.repository.SassSessionRedisCacheManager">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 
-    <bean id="portalSessionRepository" class="cn.com.xinxin.portal.session.repository.PortalSessionRepository">
+    <bean id="portalSessionRepository" class="cn.com.xinxin.portal.session.repository.SassSessionRepository">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 

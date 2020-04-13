@@ -1,16 +1,7 @@
 package cn.com.xinxin.portal.web.rest;
 
-import cn.com.xinxin.oplog.client.Oplog;
-import cn.com.xinxin.oplog.client.enums.AppProductEnum;
-import cn.com.xinxin.oplog.client.enums.OperationTypeEnum;
-import cn.com.xinxin.oplog.client.request.OplogProxyReq;
-import cn.com.xinxin.portal.biz.service.XPortalService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
 
 /**
  * Created by zhouyang on 25/04/2018.

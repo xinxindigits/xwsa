@@ -1,11 +1,9 @@
 package cn.com.xinxin.portal.web.convert;
 
-import cn.com.xinxin.portal.repository.model.*;
 import cn.com.xinxin.portal.web.form.*;
-import com.google.common.primitives.Bytes;
+import cn.com.xinxin.sass.repository.model.*;
 import com.xinxinfinance.commons.util.BaseConvert;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 /**
