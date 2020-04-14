@@ -1,6 +1,5 @@
 package cn.com.xinxin.sass.session.repository;
 
-
 import cn.com.xinxin.sass.session.constant.SessionCacheConstants;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
@@ -18,27 +17,27 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author: zhouyang
- * @created: 16/07/2018.
+ * @created: 14/04/2020.
  * @updater:
  * @description:
  */
+public class SassSessionCacheManagerDao extends AbstractSessionDAO {
 
-public class SassSessionRepository extends AbstractSessionDAO {
-
-    private static final Logger log = LoggerFactory.getLogger(SassSessionRepository.class);
+    private static final Logger log = LoggerFactory.getLogger(SassSessionCacheManagerDao.class);
 
     private RedisTemplate sessionRedisTemplate;
 
     private String getKey(String originalKey) {
-        return SessionCacheConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + originalKey;
+        return SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + originalKey;
     }
 
     @Override
     public void update(Session session) throws UnknownSessionException {
         try {
-            sessionRedisTemplate.opsForValue().set(getKey(session.getId().toString()), session, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT, TimeUnit.MINUTES);
+            sessionRedisTemplate.opsForValue().set(getKey(session.getId().toString()),
+                    session,SessionCacheConstants.DEFAULT_SESSION_TIME_OUT, TimeUnit.MINUTES);
         } catch (Exception e) {
-            log.error("SassSessionRepository.update occurs exception:\n[]",e);
+            log.error("PortalSessionRepository.update occurs exception:\n[]",e);
         }
     }
     @Override
@@ -47,14 +46,15 @@ public class SassSessionRepository extends AbstractSessionDAO {
             String key = getKey(session.getId().toString());
             sessionRedisTemplate.delete(key);
         } catch (Exception e) {
-            log.error("SassSessionRepository.delete occurs exception:\n[]",e);
+            log.error("PortalSessionRepository.delete occurs exception:\n[]",e);
         }
-
     }
+
+
     @Override
     public Collection<Session> getActiveSessions() {
         List<Session> values = (List<Session>) sessionRedisTemplate.opsForValue().get(
-            SessionCacheConstants.XPORTAL_SHIRO_USER_SESSION_CACHE_KEY + "*");
+                SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + "*");
         Set<Session> sessions = new HashSet<>();
         sessions.addAll(values);
 
@@ -67,9 +67,10 @@ public class SassSessionRepository extends AbstractSessionDAO {
         assignSessionId(session, sessionId);
 
         try {
-            sessionRedisTemplate.opsForValue().set(getKey(session.getId().toString()), session, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
+            sessionRedisTemplate.opsForValue().set(getKey(session.getId().toString()),
+                    session, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
         } catch (Exception e) {
-            log.error("SassSessionRepository.doCreate occurs exception:\n[]",e);
+            log.error("PortalSessionRepository.doCreate occurs exception:\n[]",e);
         }
         return sessionId;
     }
@@ -80,7 +81,7 @@ public class SassSessionRepository extends AbstractSessionDAO {
         try {
             session = (Session) sessionRedisTemplate.opsForValue().get(getKey(sessionId.toString()));
         } catch (Exception e) {
-            log.error("SassSessionRepository.doReadSession occurs exception:\n[]",e);
+            log.error("PortalSessionRepository.doReadSession occurs exception:\n[]",e);
         }
         return session;
     }
@@ -92,4 +93,5 @@ public class SassSessionRepository extends AbstractSessionDAO {
     public void setSessionRedisTemplate(RedisTemplate sessionRedisTemplate) {
         this.sessionRedisTemplate = sessionRedisTemplate;
     }
+
 }

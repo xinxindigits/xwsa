@@ -12,7 +12,7 @@ import java.util.Set;
  * @updater:
  * @description:
  */
-public class PortalUser implements Serializable {
+public class SassUserInfo implements Serializable {
 
     private static final long serialVersionUID = 2073926830281465880L;
 
@@ -27,8 +27,6 @@ public class PortalUser implements Serializable {
     private String salt;
 
     private String password;
-
-    private String userType;
 
     private String ip;
 
@@ -89,14 +87,6 @@ public class PortalUser implements Serializable {
         this.account = account;
     }
 
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(String userType) {
-        this.userType = userType;
-    }
-
     public String getIp() {
         return ip;
     }
@@ -139,7 +129,7 @@ public class PortalUser implements Serializable {
 
     @Override
     public String toString() {
-        return "PortalUser, name = (" + this.getName()+");"
+        return "SassUserInfo, name = (" + this.getName()+");"
             +"account = (" + this.getAccount() + ");";
     }
 }

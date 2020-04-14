@@ -8,7 +8,7 @@ import cn.com.xinxin.sass.common.Page;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.session.annotation.RequirePermission;
 import cn.com.xinxin.sass.session.controller.AclController;
-import cn.com.xinxin.sass.session.model.PortalUser;
+import cn.com.xinxin.sass.session.model.SassUserInfo;
 import cn.com.xinxin.sass.web.convert.PortalFormConvert;
 import cn.com.xinxin.sass.web.form.ResourceForm;
 import cn.com.xinxin.sass.web.utils.PortalOplogUtil;
@@ -100,22 +100,22 @@ public class ResourceController extends AclController {
             return PortalSingleViewResultVO.result(null,true,"资源编码已经存在");
         }
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         ResourceDO resourceDO = PortalFormConvert.convertResourceForm2ResourceDO(resourceForm);
-        resourceDO.setGmtCreator(portalUser.getAccount());
-        resourceDO.setGmtUpdater(portalUser.getAccount());
+        resourceDO.setGmtCreator(sassUserInfo.getAccount());
+        resourceDO.setGmtUpdater(sassUserInfo.getAccount());
         ResourceDO resultDO = resourceService.createResource(resourceDO);
 
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_ADD_RESOURCE_INFO,
             OperationTypeEnum.ADD,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             resourceForm.getCode(),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             resourceForm);
 
         return PortalSingleViewResultVO.result(null,!(resultDO != null),"操作失败");
@@ -137,22 +137,22 @@ public class ResourceController extends AclController {
 
         log.info("ResourceController.update,resourceForm:{}",resourceForm);
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         ResourceDO resourceDO = PortalFormConvert.convertResourceForm2ResourceDO(resourceForm);
 
-        resourceDO.setGmtUpdater(portalUser.getAccount());
+        resourceDO.setGmtUpdater(sassUserInfo.getAccount());
 
         int resultCount = resourceService.updateResource(resourceDO);
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_MODIFY_RESOURCE_INFO,
             OperationTypeEnum.UPDATE,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             resourceDO.getCode(),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             resourceForm);
 
         return PortalSingleViewResultVO.result(null,!(resultCount == 1),"操作失败");
@@ -165,18 +165,18 @@ public class ResourceController extends AclController {
 
         log.info("ResourceController.delete,id:{}",id);
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         Boolean result = resourceService.deleteById(id);
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_DELETE_RESOURCE_INFO,
             OperationTypeEnum.DELETE,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             Long.toString(id),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             id);
 
 

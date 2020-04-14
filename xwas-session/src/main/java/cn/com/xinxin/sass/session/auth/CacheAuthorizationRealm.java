@@ -1,7 +1,7 @@
 package cn.com.xinxin.sass.session.auth;
 
-import cn.com.xinxin.sass.session.model.PortalUser;
-import cn.com.xinxin.sass.session.repository.UserAclSessionRepository;
+import cn.com.xinxin.sass.session.model.SassUserInfo;
+import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -21,15 +21,15 @@ public class CacheAuthorizationRealm extends AuthorizingRealm {
 
     private static final Logger logger = LoggerFactory.getLogger(CacheAuthorizationRealm.class);
 
-    private UserAclSessionRepository userAclSessionRepository;
+    private UserAclTokenRepository userAclTokenRepository;
 
 
-    public UserAclSessionRepository getUserAclSessionRepository() {
-        return userAclSessionRepository;
+    public UserAclTokenRepository getUserAclTokenRepository() {
+        return userAclTokenRepository;
     }
 
-    public void setUserAclSessionRepository(UserAclSessionRepository userAclSessionRepository) {
-        this.userAclSessionRepository = userAclSessionRepository;
+    public void setUserAclTokenRepository(UserAclTokenRepository userAclTokenRepository) {
+        this.userAclTokenRepository = userAclTokenRepository;
     }
 
     /**
@@ -42,17 +42,17 @@ public class CacheAuthorizationRealm extends AuthorizingRealm {
 
         String userNo = (String) principalCollection.getPrimaryPrincipal();
 
-        PortalUser portalUser = this.userAclSessionRepository.getPortalUserByUserNo(userNo);
+        SassUserInfo sassUserInfo = this.userAclTokenRepository.getPortalUserByUserNo(userNo);
 
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
-        if (!CollectionUtils.isEmpty(portalUser.getRoles())){
-            authorizationInfo.setRoles(portalUser.getRoles());
+        if (!CollectionUtils.isEmpty(sassUserInfo.getRoles())){
+            authorizationInfo.setRoles(sassUserInfo.getRoles());
         }
 
 
-        if (!CollectionUtils.isEmpty(portalUser.getStringPermissions())){
-            authorizationInfo.setStringPermissions(portalUser.getStringPermissions());
+        if (!CollectionUtils.isEmpty(sassUserInfo.getStringPermissions())){
+            authorizationInfo.setStringPermissions(sassUserInfo.getStringPermissions());
         }
 
         return authorizationInfo;
@@ -69,15 +69,15 @@ public class CacheAuthorizationRealm extends AuthorizingRealm {
 
         String userNo = (String) authenticationToken.getPrincipal();
 
-        PortalUser portalUser = this.userAclSessionRepository.getPortalUserByUserNo(userNo);
+        SassUserInfo sassUserInfo = this.userAclTokenRepository.getPortalUserByUserNo(userNo);
 
-        if (portalUser == null){
+        if (sassUserInfo == null){
             throw new UnknownAccountException();
         }
 
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-            userNo, portalUser.getPassword(),
-            ByteSource.Util.bytes(userNo + portalUser.getSalt()),getName());
+            userNo, sassUserInfo.getPassword(),
+            ByteSource.Util.bytes(userNo + sassUserInfo.getSalt()),getName());
 
         return authenticationInfo;
     }

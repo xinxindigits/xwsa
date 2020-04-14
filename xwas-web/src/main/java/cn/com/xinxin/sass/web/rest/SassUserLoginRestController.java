@@ -1,5 +1,7 @@
 package cn.com.xinxin.sass.web.rest;
 
+
+import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
 import cn.com.xinxin.sass.session.utils.JWTUtil;
 import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.convert.PortalFormConvert;
@@ -70,16 +72,16 @@ public class SassUserLoginRestController {
             return userTokenVO;
         }else{
             // 登陆失败
-            throw new BusinessException(CommonResultCode.ILLEGAL_ARGUMENT,"登陆失败","登陆失败");
+            throw new BusinessException(BizResultCodeEnum.INVALID_TOKEN, "登陆失败","登陆失败");
         }
     }
 
     @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public Object unauthorized(HttpServletRequest request){
+        log.info("无效登陆口令，请重新登陆");
+        throw new BusinessException(BizResultCodeEnum.INVALID_TOKEN,"无效登陆口令","无效登陆口令，请重新登陆");
 
-        return CommonResultCode.ILLEGAL_ARGUMENT;
     }
-
 
 
     private String  getToken(String userName, String userPasswd){

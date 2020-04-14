@@ -1,13 +1,14 @@
 package cn.com.xinxin.sass.session.interceptor;
 
-import cn.com.xinxin.sass.session.BizResultCodeEnum;
+
 import cn.com.xinxin.sass.session.annotation.RequirePermission;
-import cn.com.xinxin.sass.session.model.PortalUser;
-import cn.com.xinxin.sass.session.repository.UserAclSessionRepository;
+import cn.com.xinxin.sass.session.model.SassUserInfo;
+import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
 import com.xinxinfinance.commons.portal.view.result.PortalSingleViewResultVO;
 //import com.xinxinfinance.commons.portal.xxjr.job.ReturnT;
+import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.util.ApplicationContextHolder;
 import com.xxl.job.core.biz.model.ReturnT;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -51,9 +52,9 @@ public class AclPermissionInterceptor implements MethodInterceptor {
                     HttpServletRequest request = (HttpServletRequest) o;
                     String[] values = ((RequirePermission) permissionAnnotation).value();
 
-                    UserAclSessionRepository userAclSessionRepository = (UserAclSessionRepository) ApplicationContextHolder.getBean("userAclSessionRepository");
+                    UserAclTokenRepository userAclTokenRepository = (UserAclTokenRepository) ApplicationContextHolder.getBean("userAclTokenRepository");
 
-                    hasPermission = hasPermission(request, values, userAclSessionRepository);
+                    hasPermission = hasPermission(request, values, userAclTokenRepository);
                 }
             }
 
@@ -89,7 +90,7 @@ public class AclPermissionInterceptor implements MethodInterceptor {
                     returnT.setMsg("您没有相应的权限");
                     return returnT;
                 }
-                throw new BusinessException(BizResultCodeEnum.NO_PERMISSION);
+                throw new BusinessException(CommonResultCode.ILLEGAL_ARGUMENT,"无权限");
             }
 
         }
@@ -97,13 +98,13 @@ public class AclPermissionInterceptor implements MethodInterceptor {
         return methodInvocation.proceed();
     }
 
-    private boolean hasPermission(HttpServletRequest request, String[] values, UserAclSessionRepository userAclSessionRepository) {
-        PortalUser portalUser = userAclSessionRepository.getPortalUserBySessionId(request.getRequestedSessionId());
-        if (portalUser == null){
+    private boolean hasPermission(HttpServletRequest request, String[] values, UserAclTokenRepository userAclTokenRepository) {
+        SassUserInfo sassUserInfo = userAclTokenRepository.getPortalUserBySessionId(request.getRequestedSessionId());
+        if (sassUserInfo == null){
             return false;
         }
 
-        Set<String> permissions = portalUser.getStringPermissions();
+        Set<String> permissions = sassUserInfo.getStringPermissions();
         if (CollectionUtils.isEmpty(permissions)){
             return false;
         }

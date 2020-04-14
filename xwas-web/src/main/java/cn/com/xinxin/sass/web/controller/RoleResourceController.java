@@ -8,7 +8,7 @@ import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.session.annotation.RequirePermission;
 import cn.com.xinxin.sass.session.controller.AclController;
-import cn.com.xinxin.sass.session.model.PortalUser;
+import cn.com.xinxin.sass.session.model.SassUserInfo;
 import cn.com.xinxin.sass.web.convert.PortalFormConvert;
 import cn.com.xinxin.sass.web.form.RoleResourceForm;
 import cn.com.xinxin.sass.web.utils.PortalOplogUtil;
@@ -80,22 +80,22 @@ public class RoleResourceController extends AclController {
         log.info("RoleResourceController.update,roleResourceForm = {}", roleResourceForm);
 
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         RoleResourceDO roleResourceDO = PortalFormConvert.convertRRForm2RoleResourceDO(roleResourceForm);
 
-        roleResourceDO.setGmtUpdater(portalUser.getAccount());
+        roleResourceDO.setGmtUpdater(sassUserInfo.getAccount());
 
         roleResourceService.updateRoleResource(roleResourceDO);
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_MODIFY_ROLE_RESOURCE,
             OperationTypeEnum.UPDATE,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             Long.toString(roleResourceForm.getId()),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             roleResourceForm);
 
         return PortalSingleViewResultVO.success(null);
@@ -108,23 +108,23 @@ public class RoleResourceController extends AclController {
 
         log.info("RoleResourceController.create,roleResourceForm:{}",roleResourceForm);
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         RoleResourceDO roleResourceDO = PortalFormConvert.convertRRForm2RoleResourceDO(roleResourceForm);
 
-        roleResourceDO.setGmtCreator(portalUser.getAccount());
-        roleResourceDO.setGmtUpdater(portalUser.getAccount());
+        roleResourceDO.setGmtCreator(sassUserInfo.getAccount());
+        roleResourceDO.setGmtUpdater(sassUserInfo.getAccount());
 
         RoleResourceDO resourceDO = roleResourceService.createRoleResource(roleResourceDO);
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_ADD_ROLE_RESOURCE,
             OperationTypeEnum.ADD,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             Long.toString(roleResourceForm.getId()),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             roleResourceForm);
 
         return PortalSingleViewResultVO.result(null,resourceDO == null,"操作失败");
@@ -137,14 +137,14 @@ public class RoleResourceController extends AclController {
 
         log.info("RoleResourceController.createRoleResources,resourceForms:{}",resourceForms);
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         List<RoleResourceDO> roleResourceDOS = PortalFormConvert.convertRRForm2RoleResourceDOList(resourceForms);
 
         // 设置用户
         roleResourceDOS.stream().forEach(roleResourceDO -> {
-            roleResourceDO.setGmtCreator(portalUser.getAccount());
-            roleResourceDO.setGmtUpdater(portalUser.getAccount());
+            roleResourceDO.setGmtCreator(sassUserInfo.getAccount());
+            roleResourceDO.setGmtUpdater(sassUserInfo.getAccount());
         });
 
         roleResourceService.createRoleResources(roleResourceDOS);
@@ -152,11 +152,11 @@ public class RoleResourceController extends AclController {
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_ADD_ROLE_RESOURCE,
             OperationTypeEnum.ADD,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             "createRoleResources",
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             resourceForms);
 
         return PortalSingleViewResultVO.success(null);
@@ -178,18 +178,18 @@ public class RoleResourceController extends AclController {
         log.info("RoleResourceController.delete,id:{}",id);
 
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         Boolean rst = roleResourceService.deleteRoleResource(id);
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_DELETE_ROLE_RESOURCE,
             OperationTypeEnum.DELETE,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             Long.toString(id),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             id);
 
         return PortalSingleViewResultVO.result(null,!rst,"操作失败");

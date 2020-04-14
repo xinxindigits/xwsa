@@ -14,8 +14,7 @@ import cn.com.xinxin.sass.repository.dao.UserDOMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
-import cn.com.xinxin.sass.session.model.PortalUser;
-import cn.com.xinxin.sass.session.repository.UserAclSessionRepository;
+import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
@@ -47,7 +46,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Autowired
-    private UserAclSessionRepository userAclSessionRepository;
+    private UserAclTokenRepository userAclTokenRepository;
 
     @Override
     public int createUser(UserDO userDO) {
@@ -209,11 +208,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDO getLoginUser(String sessionId) {
 
-        PortalUser portalUser = this.userAclSessionRepository.getPortalUserBySessionId(sessionId);
-
-        if (portalUser != null){
-            return findById(portalUser.getId());
-        }
         return null;
     }
 

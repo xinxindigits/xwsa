@@ -81,7 +81,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
         }
 
         Session session = subject.getSession();
-        //PortalUser user = (PortalUser)subject.getPrincipal();
+        //SassUserInfo user = (SassUserInfo)subject.getPrincipal();
         //String username = user.getAccount();
         String username = (String) subject.getPrincipal();
 

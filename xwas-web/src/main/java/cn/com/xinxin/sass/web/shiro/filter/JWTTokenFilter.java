@@ -54,7 +54,7 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
     private void unauthorized(ServletResponse resp) {
         try {
             HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
-            httpServletResponse.sendRedirect("/logout");
+            httpServletResponse.sendRedirect("/unauthorized");
         } catch (IOException e) {
             log.error(e.getMessage());
         }

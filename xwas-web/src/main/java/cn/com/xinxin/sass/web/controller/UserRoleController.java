@@ -7,7 +7,7 @@ import cn.com.xinxin.sass.common.Page;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.session.annotation.RequirePermission;
 import cn.com.xinxin.sass.session.controller.AclController;
-import cn.com.xinxin.sass.session.model.PortalUser;
+import cn.com.xinxin.sass.session.model.SassUserInfo;
 import cn.com.xinxin.sass.web.convert.PortalFormConvert;
 import cn.com.xinxin.sass.web.form.UserRoleForm;
 import cn.com.xinxin.sass.web.utils.PortalOplogUtil;
@@ -73,22 +73,22 @@ public class UserRoleController extends AclController {
 
         log.info("UserRoleController.update,userRoleForm:{}",userRoleForm);
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         UserRoleDO userRoleDO = PortalFormConvert.convertUserRoleForm2UserRoleDO(userRoleForm);
 
-        userRoleDO.setGmtUpdater(portalUser.getAccount());
+        userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
 
         Boolean rst = userRoleService.updateUserRole(userRoleDO);
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_MODIFY_USER_ROLE,
             OperationTypeEnum.UPDATE,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             Long.toString(userRoleForm.getId()),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             userRoleForm);
 
         return PortalSingleViewResultVO.result(null,!rst,"操作失败");
@@ -101,23 +101,23 @@ public class UserRoleController extends AclController {
 
         log.info("UserRoleController.create,userRoleForm={}",userRoleForm);
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         UserRoleDO userRoleDO = PortalFormConvert.convertUserRoleForm2UserRoleDO(userRoleForm);
 
-        userRoleDO.setGmtCreator(portalUser.getAccount());
-        userRoleDO.setGmtUpdater(portalUser.getAccount());
+        userRoleDO.setGmtCreator(sassUserInfo.getAccount());
+        userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
 
         UserRoleDO userRoleDOCreate = userRoleService.createUserRole(userRoleDO);
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_ADD_USER_ROLE,
             OperationTypeEnum.ADD,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             Long.toString(userRoleForm.getId()),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             userRoleForm);
 
         return PortalSingleViewResultVO.result(null,userRoleDOCreate == null,"操作失败");
@@ -137,18 +137,18 @@ public class UserRoleController extends AclController {
     public PortalSingleViewResultVO delete(HttpServletRequest request,@PathVariable Long id){
 
         log.info("UserRoleController.delete,id:{}",id);
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
         Boolean rst = userRoleService.deleteUserRole(id);
 
         PortalOplogUtil.logReq(
             AppProductEnum.XPORTAL_DELETE_USER_ROLE,
             OperationTypeEnum.DELETE,
-            portalUser.getAccount(),
-            portalUser.getNo(),
+            sassUserInfo.getAccount(),
+            sassUserInfo.getNo(),
             Long.toString(id),
-            portalUser.getIp(),
-            portalUser.getDevice(),
+            sassUserInfo.getIp(),
+            sassUserInfo.getDevice(),
             id);
 
         return PortalSingleViewResultVO.result(null,!rst,"操作失败");

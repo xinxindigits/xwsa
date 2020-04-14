@@ -28,6 +28,27 @@
         <property name="cookie" ref="rememberMeCookie"/>
     </bean>
 
+
+    <!-- sesison管理类实现 -->
+    <bean id="sassSessionRedisCacheManager" class="cn.com.xinxin.sass.session.repository.SassSessionRedisCacheManager">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
+    <!-- se sison管理类DAO -->
+    <bean id="sassSessionCacheManagerDao" class="cn.com.xinxin.sass.session.repository.SassSessionCacheManagerDao">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
+
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <property name="sessionValidationInterval" value="1800000"/>
+        <property name="globalSessionTimeout" value="129600000"/>
+        <property name="deleteInvalidSessions" value="true"/>
+        <property name="sessionDAO" ref="sassSessionCacheManagerDao"/>
+        <property name="cacheManager" ref="sassSessionRedisCacheManager"/>
+    </bean>
+
     <!-- 权限管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realms">
@@ -35,27 +56,16 @@
                 <ref bean="jwtTokenAuthorizingRealmRealm"/>
             </list>
         </property>
-        <property name="subjectDAO" ref="subjectDAO"/>
-        <property name="rememberMeManager" ref="rememberMeManager"/>
+        <!--<property name="subjectDAO" ref="subjectDAO"/>-->
+        <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
+        <property name="sessionManager" ref="sessionManager"/>
     </bean>
 
-    <bean id="portalSessionRepository" class="cn.com.xinxin.sass.session.repository.SassSessionRepository">
+
+
+    <bean id="userAclTokenRepository" class="cn.com.xinxin.sass.session.repository.UserAclTokenRepository">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
-
-    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.sass.session.repository.SassSessionRedisCacheManager">
-        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
-    </bean>
-
-    <bean id="userAclSessionRepository" class="cn.com.xinxin.sass.session.repository.UserAclSessionRepository">
-        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
-    </bean>
-
-    <!--&lt;!&ndash; 相当于调用SecurityUtils.setSecurityManager() &ndash;&gt;-->
-    <!--<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">-->
-        <!--<property name="staticMethod" value="org.apache.shiro.SecurityUtils.setSecurityManager"/>-->
-        <!--<property name="arguments" ref="securityManager"/>-->
-    <!--</bean>-->
 
     <bean id="jwtTokenFilter" class="cn.com.xinxin.sass.web.shiro.filter.JWTTokenFilter"/>
 
@@ -80,7 +90,7 @@
                 /register = anon
                 /unauthorized = anon
                 /static/** = anon
-                /** = anon
+                /** = jwtFilter
             </value>
         </property>
         <property name="unauthorizedUrl" value="/unauthorized"/>

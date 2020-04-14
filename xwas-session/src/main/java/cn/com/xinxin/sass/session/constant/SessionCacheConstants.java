@@ -11,12 +11,12 @@ public class SessionCacheConstants {
     /**
      * session cache key
      */
-    public static final String XPORTAL_SHIRO_USER_SESSION_CACHE_KEY = "shiro_redis_session_manager:";
+    public static final String SASS_SESSION_MANAGER_CACHE_KEY = "shiro_redis_session_manager:";
 
     /**
      * CHIRO_USER_CACHE_KEY
      */
-    public static final String SHIRO_USER_CACHE_KEY = "shiro_cache:";
+    public static final String SASS_USER_SESSION_CACHE_KEY = "shiro_session_cache:";
 
     /**
      * session默认超时时间, 分钟为单位
@@ -26,7 +26,13 @@ public class SessionCacheConstants {
     /**
      * 用户信息缓存
      */
-    public static final String  PORTAL_USER_INFO_CACHE_KEY = "PORTAL_USER_INFO:";
+    public static final String SASS_USER_INFO_CACHE_KEY = "SASS_USER_INFO:";
+
+    /**
+     * token cache key
+     */
+    public static final String SASS_USER_TOKEN_CACHE_KEY = "sass_user_token:";
+
 
 
 }

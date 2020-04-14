@@ -1,8 +1,9 @@
 package cn.com.xinxin.sass.session.interceptor;
 
-import cn.com.xinxin.sass.session.BizResultCodeEnum;
-import cn.com.xinxin.sass.session.repository.UserAclSessionRepository;
+
+import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.util.ApplicationContextHolder;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
@@ -26,11 +27,11 @@ public class SessionInterceptor implements MethodInterceptor {
                 if (argument instanceof HttpServletRequest){
                     HttpServletRequest request = (HttpServletRequest) argument;
                     if (request.getRequestedSessionId() != null){
-                        UserAclSessionRepository userAclSessionRepository = (UserAclSessionRepository) ApplicationContextHolder.getBean("userAclSessionRepository");
-                        boolean exist = userAclSessionRepository.exist(request.getRequestedSessionId());
+                        UserAclTokenRepository userAclTokenRepository = (UserAclTokenRepository) ApplicationContextHolder.getBean("userAclTokenRepository");
+                        boolean exist = userAclTokenRepository.exist(request.getRequestedSessionId());
                         if (exist){
                             //session 存在，更新session超时时间
-                            userAclSessionRepository.updatePortalUserSession(request.getRequestedSessionId());
+                            userAclTokenRepository.updatePortalUserSession(request.getRequestedSessionId());
                             return methodInvocation.proceed();
                         }else {
                             //session 超时
@@ -41,7 +42,7 @@ public class SessionInterceptor implements MethodInterceptor {
                                 ModelAndView mav = new ModelAndView("login");
                                 return mav;
                             }*/
-                            throw new BusinessException(BizResultCodeEnum.NO_EXIST_SESSION);
+                            throw new BusinessException(CommonResultCode.ILLEGAL_ARGUMENT,"无效session");
                         }
                     }
                 }

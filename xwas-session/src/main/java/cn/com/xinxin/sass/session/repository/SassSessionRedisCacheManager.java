@@ -9,11 +9,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author: zhouyang
- * @created: 16/07/2018.
+ * @created: 14/04/2020.
  * @updater:
- * @description:
+ * @description: shiro session redis cache 管理类
  */
-
 public class SassSessionRedisCacheManager implements CacheManager {
 
     private final ConcurrentHashMap<String,Cache> caches = new ConcurrentHashMap<>();
@@ -24,7 +23,7 @@ public class SassSessionRedisCacheManager implements CacheManager {
     public <K, V> Cache<K, V> getCache(String s) throws CacheException {
         Cache cache = caches.get(s);
         if (cache == null){
-            cache = new SassShiroSessionRedisCache(sessionRedisTemplate,s);
+            cache = new SassSessionRedisCache(sessionRedisTemplate,s);
             caches.put(s,cache);
         }
 
@@ -39,4 +38,5 @@ public class SassSessionRedisCacheManager implements CacheManager {
     public void setSessionRedisTemplate(RedisTemplate sessionRedisTemplate) {
         this.sessionRedisTemplate = sessionRedisTemplate;
     }
+
 }

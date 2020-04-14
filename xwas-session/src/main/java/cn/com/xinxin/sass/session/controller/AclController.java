@@ -1,9 +1,9 @@
 package cn.com.xinxin.sass.session.controller;
 
 
-import cn.com.xinxin.sass.session.model.PortalUser;
+import cn.com.xinxin.sass.session.model.SassUserInfo;
 import cn.com.xinxin.sass.session.protocol.SessionBizResultCodeEnum;
-import cn.com.xinxin.sass.session.repository.UserAclSessionRepository;
+import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.session.utils.HttpRequestUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +24,7 @@ public abstract class AclController {
     private static final Logger logger = LoggerFactory.getLogger(AclController.class);
 
     @Autowired
-    private UserAclSessionRepository userAclSessionRepository;
+    private UserAclTokenRepository userAclTokenRepository;
 
     public AclController() {
     }
@@ -39,70 +39,70 @@ public abstract class AclController {
         return sessionId;
     }
 
-    protected PortalUser getPortalUser(HttpServletRequest request){
+    protected SassUserInfo getPortalUser(HttpServletRequest request){
 
         String userSessionId = this.getSessionId(request);
 
-        PortalUser portalUser = userAclSessionRepository.getPortalUserBySessionId(userSessionId);
+        SassUserInfo sassUserInfo = userAclTokenRepository.getPortalUserBySessionId(userSessionId);
 
-        portalUser.setIp(HttpRequestUtil.getIpAddress(request));
-        portalUser.setDevice(HttpRequestUtil.getRequestDevice(request));
-        return portalUser;
+        sassUserInfo.setIp(HttpRequestUtil.getIpAddress(request));
+        sassUserInfo.setDevice(HttpRequestUtil.getRequestDevice(request));
+        return sassUserInfo;
 
     }
 
     protected Long getUserId(HttpServletRequest request) {
 
-        PortalUser portalUser = this.getPortalUser(request);
-        if(null == portalUser){
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
-        return portalUser.getId();
+        return sassUserInfo.getId();
     }
 
 
     protected String getUserName(HttpServletRequest request){
 
-        PortalUser portalUser = this.getPortalUser(request);
-        if(null == portalUser){
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
-        return portalUser.getName();
+        return sassUserInfo.getName();
     }
 
     protected String getUserAccount(HttpServletRequest request){
 
-        PortalUser portalUser = this.getPortalUser(request);
-        if(null == portalUser){
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
-        return portalUser.getAccount();
+        return sassUserInfo.getAccount();
     }
 
     protected String getUserNo(HttpServletRequest request){
-        PortalUser portalUser = this.getPortalUser(request);
-        if(null == portalUser){
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
-        return portalUser.getNo();
+        return sassUserInfo.getNo();
     }
 
     protected String getUserIp(HttpServletRequest request){
 
-        PortalUser portalUser = this.getPortalUser(request);
-        if(null == portalUser){
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
-        return portalUser.getIp();
+        return sassUserInfo.getIp();
     }
 
     protected String getUserDevice(HttpServletRequest request){
 
-        PortalUser portalUser = this.getPortalUser(request);
-        if(null == portalUser){
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
-        return portalUser.getDevice();
+        return sassUserInfo.getDevice();
     }
 
 }

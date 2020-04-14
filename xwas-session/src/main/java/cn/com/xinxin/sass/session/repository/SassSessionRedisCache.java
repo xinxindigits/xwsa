@@ -12,13 +12,15 @@ import java.util.*;
 
 /**
  * @author: zhouyang
- * @created: 16/07/2018.
+ * @created: 14/04/2020.
  * @updater:
- * @description:
+ * @description: redis session cache的实现类
  */
-public class SassShiroSessionRedisCache<K,V> implements Cache<K,V> {
+public class SassSessionRedisCache<K,V> implements Cache<K,V> {
 
-    private static final Logger log = LoggerFactory.getLogger(SassShiroSessionRedisCache.class);
+
+    private static final Logger log = LoggerFactory.getLogger(SassSessionRedisCache.class);
+
 
     private RedisTemplate sessionRedisTemplate;
 
@@ -28,20 +30,20 @@ public class SassShiroSessionRedisCache<K,V> implements Cache<K,V> {
         return (K) (this.cacheKey + key);
     }
 
-    public SassShiroSessionRedisCache(RedisTemplate sessionRedisTemplate, String name) {
+    public SassSessionRedisCache(RedisTemplate sessionRedisTemplate, String name) {
         this.sessionRedisTemplate = sessionRedisTemplate;
-        this.cacheKey = SessionCacheConstants.SHIRO_USER_CACHE_KEY + name + ":";
+        this.cacheKey = SessionCacheConstants.SASS_USER_SESSION_CACHE_KEY + name + ":";
     }
 
     @Override
     public V get(K k) throws CacheException {
-        log.debug("SassShiroSessionRedisCache get key :" + k);
+        log.debug("PortalShiroSessionRedisCache get key :" + k);
         return (V) sessionRedisTemplate.opsForValue().get(getCacheKey(k));
     }
 
     @Override
     public V put(K k, V v) throws CacheException {
-        log.debug("SassShiroSessionRedisCache put key :" + k);
+        log.debug("PortalShiroSessionRedisCache put key :" + k);
         sessionRedisTemplate.opsForValue().set(getCacheKey(k),v);
         return v;
     }
@@ -55,18 +57,18 @@ public class SassShiroSessionRedisCache<K,V> implements Cache<K,V> {
 
     @Override
     public void clear() throws CacheException {
-        sessionRedisTemplate.delete(SessionCacheConstants.SHIRO_USER_CACHE_KEY + "*");
+        sessionRedisTemplate.delete(SessionCacheConstants.SASS_USER_SESSION_CACHE_KEY + "*");
     }
 
     @Override
     public int size() {
-        Long size = sessionRedisTemplate.opsForValue().size(SessionCacheConstants.SHIRO_USER_CACHE_KEY + "*");
+        Long size = sessionRedisTemplate.opsForValue().size(SessionCacheConstants.SASS_USER_SESSION_CACHE_KEY + "*");
         return size.intValue();
     }
 
     @Override
     public Set<K> keys() {
-        Set keys = sessionRedisTemplate.keys(SessionCacheConstants.SHIRO_USER_CACHE_KEY + "*");
+        Set keys = sessionRedisTemplate.keys(SessionCacheConstants.SASS_USER_SESSION_CACHE_KEY + "*");
         if (CollectionUtils.isEmpty(keys)){
             return Collections.EMPTY_SET;
         }else {
@@ -78,7 +80,7 @@ public class SassShiroSessionRedisCache<K,V> implements Cache<K,V> {
 
     @Override
     public Collection<V> values() {
-        Set keys = sessionRedisTemplate.keys(SessionCacheConstants.SHIRO_USER_CACHE_KEY + "*");
+        Set keys = sessionRedisTemplate.keys(SessionCacheConstants.SASS_USER_SESSION_CACHE_KEY + "*");
         if (!CollectionUtils.isEmpty(keys)){
             List<V> values = new ArrayList<>(keys.size());
             for (Object key : keys){
@@ -90,4 +92,5 @@ public class SassShiroSessionRedisCache<K,V> implements Cache<K,V> {
             return Collections.EMPTY_LIST;
         }
     }
+
 }

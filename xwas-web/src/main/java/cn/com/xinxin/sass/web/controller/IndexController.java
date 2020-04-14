@@ -3,7 +3,7 @@ package cn.com.xinxin.sass.web.controller;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.session.controller.AclController;
-import cn.com.xinxin.sass.session.model.PortalUser;
+import cn.com.xinxin.sass.session.model.SassUserInfo;
 import cn.com.xinxin.sass.web.utils.TreeUtil;
 import cn.com.xinxin.sass.web.vo.TreeVO;
 import com.alibaba.fastjson.JSONObject;
@@ -33,11 +33,11 @@ public class IndexController  extends AclController {
     @RequestMapping("/dashboard")
     public String index(HttpServletRequest request,Model model){
 
-        PortalUser portalUser = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getPortalUser(request);
 
-        LOGGER.info("IndexController index and user = {} " , portalUser.getAccount());
+        LOGGER.info("IndexController index and user = {} " , sassUserInfo.getAccount());
 
-        List<ResourceDO> resourceDOS = userService.findMenus(portalUser.getNo());
+        List<ResourceDO> resourceDOS = userService.findMenus(sassUserInfo.getNo());
         List<TreeVO> trees = new ArrayList<>();
         List<TreeVO> menus = new ArrayList<>();
 
@@ -59,10 +59,10 @@ public class IndexController  extends AclController {
 
         String jsonObject = JSONObject.toJSONString(menus);
 
-        LOGGER.info("IndexController.index user:{},menus:{}",portalUser.getAccount(),menus);
+        LOGGER.info("IndexController.index user:{},menus:{}", sassUserInfo.getAccount(),menus);
 
         model.addAttribute("menus",jsonObject);
-        model.addAttribute("username",portalUser.getName());
+        model.addAttribute("username", sassUserInfo.getName());
 
         return "main";
     }
