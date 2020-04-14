@@ -12,6 +12,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 /**
@@ -28,6 +29,7 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
 
     private UserService userService;
 
+
     public UserService getUserService() {
         return userService;
     }
@@ -35,18 +37,6 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
     public void setUserService(UserService userService) {
         this.userService = userService;
     }
-
-    //    private UserAclSessionRepository userAclSessionRepository;
-//
-//
-//    public UserAclSessionRepository getUserAclSessionRepository() {
-//        return userAclSessionRepository;
-//    }
-//
-//    public void setUserAclSessionRepository(UserAclSessionRepository userAclSessionRepository) {
-//        this.userAclSessionRepository = userAclSessionRepository;
-//    }
-
 
     /**
      * 必须重写此方法，不然Shiro会报错

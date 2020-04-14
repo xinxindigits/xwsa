@@ -21,7 +21,7 @@ import java.io.IOException;
  */
 public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
 
-    private static final Logger log = LoggerFactory.getLogger(PortalLogoutFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(JWTTokenFilter.class);
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {

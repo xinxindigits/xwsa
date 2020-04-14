@@ -11,7 +11,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class UserTokenCacheRepository {
 
 
-
     private RedisTemplate sessionRedisTemplate;
 
     public RedisTemplate getSessionRedisTemplate() {
