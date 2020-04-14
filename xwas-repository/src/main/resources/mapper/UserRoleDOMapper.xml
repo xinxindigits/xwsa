@@ -10,7 +10,7 @@
     <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
     <result column="role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="user_no" jdbcType="VARCHAR" property="userNo" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_name" jdbcType="VARCHAR" property="account" />
     <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
     <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
     <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
@@ -56,7 +56,7 @@
       gmt_creator, gmt_created, gmt_updater, 
       gmt_updated, extension, deleted
       )
-    values (#{roleCode,jdbcType=VARCHAR},#{roleName,jdbcType=VARCHAR}, #{userNo,jdbcType=VARCHAR},#{userName,jdbcType=VARCHAR},
+    values (#{roleCode,jdbcType=VARCHAR},#{roleName,jdbcType=VARCHAR}, #{userNo,jdbcType=VARCHAR},#{account,jdbcType=VARCHAR},
       #{gmtCreator,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{gmtUpdater,jdbcType=VARCHAR}, 
       #{gmtUpdated,jdbcType=TIMESTAMP}, #{extension,jdbcType=VARCHAR}, #{deleted,jdbcType=TINYINT}
       )
@@ -80,7 +80,7 @@
       <if test="userNo != null">
         user_no,
       </if>
-      <if test="userName != null">
+      <if test="account != null">
         user_name,
       </if>
       <if test="gmtCreator != null">
@@ -112,8 +112,8 @@
       <if test="userNo != null">
         #{userNo,jdbcType=VARCHAR},
       </if>
-      <if test="userName != null">
-        #{userName,jdbcType=VARCHAR},
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
       </if>
       <if test="gmtCreator != null">
         #{gmtCreator,jdbcType=VARCHAR},
@@ -151,8 +151,8 @@
       <if test="userNo != null">
         user_no = #{userNo,jdbcType=VARCHAR},
       </if>
-      <if test="userName != null">
-        user_name = #{userName,jdbcType=VARCHAR},
+      <if test="account != null">
+        user_name = #{account,jdbcType=VARCHAR},
       </if>
       <if test="gmtCreator != null">
         gmt_creator = #{gmtCreator,jdbcType=VARCHAR},
@@ -184,7 +184,7 @@
     set role_code = #{roleCode,jdbcType=VARCHAR},
       role_name = #{roleName,jdbcType=VARCHAR},
       user_no = #{userNo,jdbcType=VARCHAR},
-      user_name = #{userName,jdbcType=VARCHAR},
+      user_name = #{account,jdbcType=VARCHAR},
       gmt_creator = #{gmtCreator,jdbcType=VARCHAR},
       gmt_created = #{gmtCreated,jdbcType=TIMESTAMP},
       gmt_updater = #{gmtUpdater,jdbcType=VARCHAR},

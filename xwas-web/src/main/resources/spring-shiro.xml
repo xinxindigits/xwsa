@@ -80,7 +80,7 @@
                 /register = anon
                 /unauthorized = anon
                 /static/** = anon
-                /** = jwtFilter
+                /** = anon
             </value>
         </property>
         <property name="unauthorizedUrl" value="/unauthorized"/>

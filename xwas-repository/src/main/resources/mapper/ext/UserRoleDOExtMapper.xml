@@ -10,7 +10,7 @@
     <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
     <result column="role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="user_no" jdbcType="VARCHAR" property="userNo" />
-    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_name" jdbcType="VARCHAR" property="account" />
     <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
     <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
     <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
@@ -49,7 +49,7 @@
       gmt_creator, gmt_updater, extension)
     values
      <foreach collection="list" index="index" item="item" separator=",">
-       (#{item.roleCode,jdbcType=VARCHAR}, #{item.roleName,jdbcType=VARCHAR}, #{item.userNo,jdbcType=VARCHAR},#{item.userName,jdbcType=VARCHAR},
+       (#{item.roleCode,jdbcType=VARCHAR}, #{item.roleName,jdbcType=VARCHAR}, #{item.userNo,jdbcType=VARCHAR},#{item.account,jdbcType=VARCHAR},
        #{item.gmtCreator,jdbcType=VARCHAR}, #{item.gmtUpdater,jdbcType=VARCHAR},
        #{item.extension,jdbcType=VARCHAR}
        )
@@ -70,8 +70,8 @@
     <if test="userNo != null and userNo != ''">
       and user_no like concat('%',#{userNo,jdbcType=VARCHAR},'%')
     </if>
-    <if test="userName != null and userName != ''">
-      and user_name like concat('%',#{userName,jdbcType=VARCHAR},'%')
+    <if test="account != null and account != ''">
+      and user_name like concat('%',#{account,jdbcType=VARCHAR},'%')
     </if>
     order by gmt_created desc
   </select>

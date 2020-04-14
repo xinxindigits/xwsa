@@ -8,6 +8,7 @@ import cn.com.xinxin.sass.web.form.UserLoginForm;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
+import cn.com.xinxin.sass.web.vo.UserTokenVO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.result.CommonResultCode;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 
 @RestController
+@RequestMapping(produces = "application/json; charset=UTF-8")
 public class SassUserLoginRestController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
@@ -33,7 +35,7 @@ public class SassUserLoginRestController {
     private UserService userService;
 
 
-    @PostMapping("/register")
+    @RequestMapping(value = "/register",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
     @ResponseBody
     public Object register(HttpServletRequest request, @RequestBody UserForm userForm){
 
@@ -47,41 +49,42 @@ public class SassUserLoginRestController {
 
     }
 
-    @PostMapping("/auth")
-    public Object login(@RequestBody UserLoginForm userLoginForm){
+    @RequestMapping(value = "/auth",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    public Object login(HttpServletRequest request, @RequestBody UserLoginForm userLoginForm){
 
-        String userName = userLoginForm.getUserName();
+        String userAccount = userLoginForm.getAccount();
 
         String password = userLoginForm.getPassword();
 
-        UserDO userDO = userService.findByUserName(userName);
+        UserDO userDO = userService.findByUserAccount(userAccount);
 
         String ecnryptPassword = PasswordUtils.encryptPassword(userDO.getAccount(),
                 userDO.getSalt(), password);
 
         if(ecnryptPassword.equals(userDO.getPassword())){
-            // 登陆成功
-            String token = getToken(userName, userDO.getPassword());
-
-            return token;
-
+            // 登陆成功, 返回token
+            String token = getToken(userAccount, userDO.getPassword());
+            UserTokenVO userTokenVO = new UserTokenVO();
+            userTokenVO.setAccount(userAccount);
+            userTokenVO.setToken(token);
+            return userTokenVO;
         }else{
             // 登陆失败
             throw new BusinessException(CommonResultCode.ILLEGAL_ARGUMENT,"登陆失败","登陆失败");
         }
     }
 
-    @GetMapping("/unauthorized")
-    public Object unauthorized(){
+    @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    public Object unauthorized(HttpServletRequest request){
 
         return CommonResultCode.ILLEGAL_ARGUMENT;
     }
 
-    private String  getToken(String userName, String userPasswd){
 
+
+    private String  getToken(String userName, String userPasswd){
          //TODO: 缓存设置tokent
          return JWTUtil.sign(userName,userPasswd);
     }
-
 
 }

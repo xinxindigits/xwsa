@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.web.form;
+package cn.com.xinxin.sass.web.vo;
 
 import cn.com.xinxin.sass.api.base.ToString;
 
@@ -8,11 +8,11 @@ import cn.com.xinxin.sass.api.base.ToString;
  * @updater:
  * @description:
  */
-public class UserLoginForm extends ToString{
+public class UserTokenVO extends ToString {
 
     private String account;
 
-    private String password;
+    private String token;
 
     public String getAccount() {
         return account;
@@ -22,11 +22,11 @@ public class UserLoginForm extends ToString{
         this.account = account;
     }
 
-    public String getPassword() {
-        return password;
+    public String getToken() {
+        return token;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setToken(String token) {
+        this.token = token;
     }
 }
