@@ -71,9 +71,6 @@
         <property name="successUrl" value="/"/>
         <property name="filters">
             <util:map>
-                <!--<entry key="authc" value-ref="formAuthenticationFilter"/>-->
-                <!--<entry key="logout" value-ref="portalLogoutFilter"/>-->
-                <!--<entry key="kickout" value-ref="kickoutSessionControlFilter"/>-->
                 <entry key="jwtFilter" value-ref="jwtTokenFilter"/>
             </util:map>
         </property>
@@ -86,14 +83,6 @@
          perms 指定过滤规则
          -->
         <property name="filterChainDefinitions">
-            <!--
-            <value>
-                /login = authc
-                /logout = logout
-                /static/** = anon
-                /** = kickout,authc
-            </value>
-            -->
             <value>
                 /auth = anon
                 /register = anon
