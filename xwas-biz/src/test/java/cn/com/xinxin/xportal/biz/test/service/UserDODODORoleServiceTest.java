@@ -13,7 +13,7 @@ import java.util.Arrays;
 /**
  * Created by dengyunhui on 2018/5/1
  **/
-public class UserRoleServiceTest extends SpringBaseTest {
+public class UserDODODORoleServiceTest extends SpringBaseTest {
 
     @Autowired
     private UserRoleService userRoleService;

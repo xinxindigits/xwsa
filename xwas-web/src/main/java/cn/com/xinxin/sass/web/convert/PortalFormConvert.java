@@ -2,7 +2,6 @@ package cn.com.xinxin.sass.web.convert;
 
 import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.repository.model.*;
-import cn.com.xinxin.sass.web.form.*;
 import com.xinxinfinance.commons.util.BaseConvert;
 
 import java.util.List;
@@ -48,7 +47,7 @@ public class PortalFormConvert {
      */
     public static UserDO convertUserForm2UserDO(final UserForm userForm){
         UserDO userDO = BaseConvert.convert(userForm, UserDO.class);
-        userDO.setGender(userForm.getGender());
+        userDO.setGender((byte)1);
         return userDO;
     }
 

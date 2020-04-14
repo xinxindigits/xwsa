@@ -15,53 +15,58 @@
 
         <!-- !!!! Database Configurations !!!! -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://10.0.50.71:3306/xportal?useUnicode=yes&characterEncoding=utf-8&serverTimezone=Hongkong"
-                        userId="root" password="root"/>
+                        connectionURL="jdbc:mysql://10.0.50.71:3306/xwsass"
+                        userId="root" password="root">
+            <property name="useInformationSchema" value="true"/>
+        </jdbcConnection>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
         <!-- !!!! Model Configurations !!!! -->
-        <javaModelGenerator targetPackage="cn.com.xinxin.portal.repository.model"
-                            targetProject="src\main\java">
+        <javaModelGenerator targetPackage="cn.com.xinxin.sass.repository.model"
+                            targetProject="src/main/java">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- !!!! Mapper XML Configurations !!!! -->
-        <sqlMapGenerator targetPackage="mapper"
-                         targetProject="src\main\resources">
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- !!!! Mapper Interface Configurations !!!! -->
-        <javaClientGenerator targetPackage="cn.com.xinxin.portal.repository.dao"
-                             targetProject="src\main\java" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="cn.com.xinxin.sass.repository.dao"
+                             targetProject="src/main/java" type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
         <!-- !!!! Table Configurations !!!! -->
-        <table tableName="role" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false"/>
+        <!--<table tableName="role" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false"/>-->
 
-        <table tableName="audit" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false">
-            <generatedKey column="ID" sqlStatement="MySQL" identity="true"/>
-        </table>
-        <table tableName="organization" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false">
-            <generatedKey column="ID" sqlStatement="MySQL" identity="true"/>
-        </table>
-        <table tableName="resource" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false">
-            <generatedKey column="ID" sqlStatement="MySQL" identity="true"/>
-        </table>
-        <table tableName="role_resource" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
-               enableUpdateByExample="false">
-            <generatedKey column="ID" sqlStatement="MySQL" identity="true"/>
-        </table>
-        <table tableName="user_role" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+        <!--<table tableName="audit" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false">-->
+            <!--<generatedKey column="ID" sqlStatement="MySQL" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="organization" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false">-->
+            <!--<generatedKey column="ID" sqlStatement="MySQL" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="resource" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false">-->
+            <!--<generatedKey column="ID" sqlStatement="MySQL" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="role_resource" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false">-->
+            <!--<generatedKey column="ID" sqlStatement="MySQL" identity="true"/>-->
+        <!--</table>-->
+        <!--<table tableName="user_role" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false">-->
+            <!--<generatedKey column="ID" sqlStatement="MySQL" identity="true"/>-->
+        <!--</table>-->
+        <table tableName="account" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false">
             <generatedKey column="ID" sqlStatement="MySQL" identity="true"/>
         </table>

@@ -21,7 +21,7 @@ public interface UserService {
 
     UserDO findByUserName(String userName);
 
-    UserDO findByUserNo(String userNo);
+    UserDO findByUserAccount(String userNo);
 
     List<RoleDO> findRoles(String userNo);
 

@@ -17,6 +17,7 @@ import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.session.model.PortalUser;
 import cn.com.xinxin.sass.session.repository.UserAclSessionRepository;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,25 +51,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public int createUser(UserDO userDO) {
-        UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getNo(),userDO.getPassword());
+        UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getAccount(), userDO.getPassword());
         userDO.setSalt(userPwdVO.getSalt());
         userDO.setPassword(userPwdVO.getPassword());
         userDO.setStatus((byte)0);
         userDO.setExpireDate(DateUtils.addMonths(new Date(),3));
-
         return userDOMapper.insertSelective(userDO);
-
-
     }
-
-
 
     @Override
     public void resetPassword(Long userId, String newPassword,String updater) {
         UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
         if (userDO != null){
             userDO.setPassword(newPassword);
-            UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getNo(),userDO.getPassword());
+            UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getAccount(),userDO.getPassword());
 
             UserDO update = new UserDO();
             update.setId(userDO.getId());
@@ -88,12 +84,12 @@ public class UserServiceImpl implements UserService {
         }
 
         String originEncryptedPassword = userDO.getPassword();
-        String inputOriginPassword = PasswordUtils.encryptPassword(userDO.getNo(), userDO.getSalt(), originPassword);
+        String inputOriginPassword = PasswordUtils.encryptPassword(userDO.getAccount(), userDO.getSalt(), originPassword);
         if (!Objects.equals(originEncryptedPassword,inputOriginPassword)){
             throw new BusinessException(BizResultCodeEnum.ILLEGAL_PARAMETER,"旧密码错误,修改密码失败");
         }
 
-        UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getNo(),newPassword);
+        UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getAccount(),newPassword);
 
         UserDO update = new UserDO();
         update.setId(userDO.getId());
@@ -104,21 +100,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDO findByUserName(String userName) {
-        return userDOMapper.findByName(userName);
+    public UserDO findByUserName(String account) {
+        return userDOMapper.selectByAccount(account);
     }
 
     @Override
-    public UserDO findByUserNo(String userNo) {
-        return userDOMapper.findByUserNo(userNo);
+    public UserDO findByUserAccount(String account) {
+        return userDOMapper.selectByAccount(account);
     }
 
     @Override
     public List<RoleDO> findRoles(String userNo) {
-        UserDO userDO = findByUserNo(userNo);
+        UserDO userDO = findByUserAccount(userNo);
 
         if (userDO != null){
-            return userRoleService.findRoleByUserNo(userDO.getNo());
+            return userRoleService.findRoleByUserNo(userDO.getAccount());
         }
 
         return null;
@@ -177,12 +173,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserDO> findByConditionPage(Page page,QueryUserConditionVO queryUserConditionVO) {
         UserDO userDO = new UserDO();
-        userDO.setNo(queryUserConditionVO.getNo());
-        userDO.setMobile(queryUserConditionVO.getMobile());
+        userDO.setAccount(queryUserConditionVO.getNo());
         userDO.setName(queryUserConditionVO.getName());
 
         com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        List<UserDO> userDOS = userDOMapper.findByCondition(userDO);
+        // 后面在实现
+        //List<UserDO> userDOS = userDOMapper.findByCondition(userDO);
+        List<UserDO> userDOS = Lists.newArrayList();
 
         Page<UserDO> result = new Page<>();
         result.setPageNumber(page.getPageNumber());
@@ -229,7 +226,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         // 判断资源是否存在
-        List<ResourceDO> resourceDOS = findResources(userDO.getNo());
+        List<ResourceDO> resourceDOS = findResources(userDO.getAccount());
         if (CollectionUtils.isEmpty(resourceDOS)) {
             return false;
         }
