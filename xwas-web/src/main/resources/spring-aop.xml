@@ -25,10 +25,10 @@
           c:logger="sal-digest-log" p:appName="xportal"/>
 
     <aop:config>
-        <aop:pointcut id="apiPointcut" expression="execution(public * cn.com.xinxin.portal.api..*.*(..))"/>
-        <aop:pointcut id="bizPointcut" expression="execution(public * cn.com.xinxin.portal.biz.service..*.*(..))"/>
-        <aop:pointcut id="dalPointcut" expression="execution(public * cn.com.xinxin.portal.repository.dao..*.*(..))"/>
-        <aop:pointcut id="salPointcut" expression="execution(public * cn.com.xinxin.portal.sal..*.*(..))"/>
+        <aop:pointcut id="apiPointcut" expression="execution(public * cn.com.xinxin.sass.api..*.*(..))"/>
+        <aop:pointcut id="bizPointcut" expression="execution(public * cn.com.xinxin.sass.biz.service..*.*(..))"/>
+        <aop:pointcut id="dalPointcut" expression="execution(public * cn.com.xinxin.sass.repository.dao..*.*(..))"/>
+        <aop:pointcut id="salPointcut" expression="execution(public * cn.com.xinxin.sass.sal..*.*(..))"/>
         <aop:advisor pointcut-ref="apiPointcut" advice-ref="apiDigestInterceptor"/>
         <aop:advisor pointcut-ref="apiPointcut" advice-ref="resultInterceptor" order="1"/>
         <aop:advisor pointcut-ref="bizPointcut" advice-ref="bizDigestInterceptor"/>

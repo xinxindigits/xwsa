@@ -13,7 +13,7 @@
         <property name="storedCredentialsHexEncoded" value="true"/>
     </bean>
 
-    <bean id="cacheAuthorizationRealm" class="cn.com.xinxin.portal.session.auth.CacheAuthorizationRealm">
+    <bean id="cacheAuthorizationRealm" class="cn.com.xinxin.sass.session.auth.CacheAuthorizationRealm">
         <property name="userAclSessionRepository" ref="userAclSessionRepository"/>
         <property name="credentialsMatcher" ref="credentialsMatcher"/>
         <property name="cachingEnabled" value="true"/>
@@ -40,15 +40,15 @@
         <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
     </bean>
 
-    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.session.repository.SassSessionRedisCacheManager">
+    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.sass.session.repository.SassSessionRedisCacheManager">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 
-    <bean id="portalSessionRepository" class="cn.com.xinxin.portal.session.repository.SassSessionRepository">
+    <bean id="portalSessionRepository" class="cn.com.xinxin.sass.session.repository.SassSessionRepository">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 
-    <bean id="userAclSessionRepository" class="cn.com.xinxin.portal.session.repository.UserAclSessionRepository">
+    <bean id="userAclSessionRepository" class="cn.com.xinxin.sass.session.repository.UserAclSessionRepository">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 

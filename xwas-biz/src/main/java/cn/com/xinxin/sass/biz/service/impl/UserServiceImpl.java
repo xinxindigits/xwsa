@@ -14,8 +14,8 @@ import cn.com.xinxin.sass.repository.dao.UserDOMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
-import cn.com.xinxin.portal.session.model.PortalUser;
-import cn.com.xinxin.portal.session.repository.UserAclSessionRepository;
+import cn.com.xinxin.sass.session.model.PortalUser;
+import cn.com.xinxin.sass.session.repository.UserAclSessionRepository;
 import com.github.pagehelper.PageHelper;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.time.DateUtils;
@@ -57,7 +57,11 @@ public class UserServiceImpl implements UserService {
         userDO.setExpireDate(DateUtils.addMonths(new Date(),3));
 
         return userDOMapper.insertSelective(userDO);
+
+
     }
+
+
 
     @Override
     public void resetPassword(Long userId, String newPassword,String updater) {
@@ -238,5 +242,30 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
+    }
+
+    @Override
+    public List<RoleDO> findRolesByName(String userName) {
+        return null;
+    }
+
+    @Override
+    public List<ResourceDO> findResourcesByName(String userName) {
+        return null;
+    }
+
+    @Override
+    public List<ResourceDO> findPermissionsByName(String userName) {
+        return null;
+    }
+
+    @Override
+    public List<ResourceDO> findRootMenusByName(String userName) {
+        return null;
+    }
+
+    @Override
+    public List<ResourceDO> findMenusByName(String userName) {
+        return null;
     }
 }

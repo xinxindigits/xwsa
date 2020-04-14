@@ -4,29 +4,44 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 
-    <bean id="credentialsMatcher" class="org.apache.shiro.authc.credential.HashedCredentialsMatcher">
-        <property name="hashAlgorithmName" value="SHA-512"/>
-        <property name="hashIterations" value="2"/>
-        <property name="storedCredentialsHexEncoded" value="true"/>
-    </bean>
 
-    <bean id="authorizationRealm" class="cn.com.xinxin.portal.web.shiro.realm.AuthorizationRealm">
+    <!--&lt;!&ndash; 权限管理器 &ndash;&gt;-->
+    <!--<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">-->
+        <!--<property name="realms">-->
+            <!--<list>-->
+                <!--<ref bean="authorizationRealm"/>-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="sessionManager" ref="sessionManager"/>-->
+        <!--&lt;!&ndash;<property name="cacheManager" ref="redisCacheManager"/>&ndash;&gt;-->
+    <!--</bean>-->
+
+    <bean id="jwtTokenAuthorizingRealmRealm" class="cn.com.xinxin.sass.web.shiro.realm.AuthorizationRealm">
         <constructor-arg name="userService" ref="userServiceImpl"/>
-        <property name="credentialsMatcher" ref="credentialsMatcher"/>
-        <property name="cachingEnabled" value="true"/>
-        <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
+        <!--<property name="cachingEnabled" value="true"/>-->
+        <!--<property name="cacheManager" ref="portalSessionRedisCacheManager"/>-->
     </bean>
 
     <!-- 权限管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realms">
             <list>
-                <ref bean="authorizationRealm"/>
+                <ref bean="jwtTokenAuthorizingRealmRealm"/>
             </list>
         </property>
         <property name="sessionManager" ref="sessionManager"/>
-        <!--<property name="cacheManager" ref="redisCacheManager"/>-->
     </bean>
+
+
+
+    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.sass.session.repository.SassSessionRedisCacheManager">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
+    <bean id="portalSessionRepository" class="cn.com.xinxin.sass.session.repository.SassSessionRepository">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
 
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
         <property name="sessionValidationSchedulerEnabled" value="true"/>
@@ -38,38 +53,7 @@
         <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
     </bean>
 
-    <!--<bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.web.shiro.caSassSessionRedisCacheManagerager">-->
-        <!--<property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>-->
-    <!--</bean>-->
-
-    <!--<bean id="portalSessionRepository" class="cn.com.xinxin.portal.web.shiro.caSassSessionRepositorytory">-->
-        <!--<property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>-->
-    <!--</bean>-->
-
-    <bean id="shiroEhcacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
-        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml" />
-    </bean>
-
-    <!-- 现在缓存中最大登陆人数1-->
-    <bean id="kickoutSessionControlFilter" class="cn.com.xinxin.portal.session.interceptor.KickoutSessionControlFilter">
-        <property name="cacheManager" ref="portalSessionRedisCacheManager"/>
-        <property name="sessionManager" ref="sessionManager"/>
-        <!-- 是否踢出后来登录的，默认是false；即后者登录的用户踢出前者登录的用户 -->
-        <property name="kickoutAfter" value="false"/>
-        <!-- 同一个用户最大的会话数，默认1；比如2的意思是同一个用户允许最多同时两个人登录 -->
-        <property name="maxSession" value="1"/>
-        <property name="kickoutUrl" value="/login"/>
-    </bean>
-
-    <bean id="portalSessionRedisCacheManager" class="cn.com.xinxin.portal.session.repository.SassSessionRedisCacheManager">
-        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
-    </bean>
-
-    <bean id="portalSessionRepository" class="cn.com.xinxin.portal.session.repository.SassSessionRepository">
-        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
-    </bean>
-
-    <bean id="userAclSessionRepository" class="cn.com.xinxin.portal.session.repository.UserAclSessionRepository">
+    <bean id="userAclSessionRepository" class="cn.com.xinxin.sass.session.repository.UserAclSessionRepository">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 
@@ -79,26 +63,18 @@
         <property name="arguments" ref="securityManager"/>
     </bean>
 
-    <!-- 基于form表单的身份验证过滤器 -->
-    <bean id="formAuthenticationFilter" class="cn.com.xinxin.portal.web.shiro.filter.PortalLoginFilter">
-       <property name="usernameParam" value="username"/>
-        <property name="passwordParam" value="password"/>
-        <property name="loginUrl" value="/login"/>
-        <property name="userService" ref="userServiceImpl"/>
-        <property name="userAclSessionRepository" ref="userAclSessionRepository"/>
-    </bean>
-
-    <bean id="portalLogoutFilter" class="cn.com.xinxin.portal.web.shiro.filter.PortalLogoutFilter"/>
+    <bean id="jwtTokenFilter" class="cn.com.xinxin.sass.web.shiro.filter.JWTTokenFilter"/>
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="/login"/>
+        <property name="loginUrl" value="/auth"/>
         <property name="successUrl" value="/"/>
         <property name="filters">
             <util:map>
-                <entry key="authc" value-ref="formAuthenticationFilter"/>
-                <entry key="logout" value-ref="portalLogoutFilter"/>
-                <entry key="kickout" value-ref="kickoutSessionControlFilter"/>
+                <!--<entry key="authc" value-ref="formAuthenticationFilter"/>-->
+                <!--<entry key="logout" value-ref="portalLogoutFilter"/>-->
+                <!--<entry key="kickout" value-ref="kickoutSessionControlFilter"/>-->
+                <entry key="jwtFilter" value-ref="jwtTokenFilter"/>
             </util:map>
         </property>
 
@@ -110,13 +86,23 @@
          perms 指定过滤规则
          -->
         <property name="filterChainDefinitions">
+            <!--
             <value>
                 /login = authc
                 /logout = logout
                 /static/** = anon
                 /** = kickout,authc
             </value>
+            -->
+            <value>
+                /auth = anon
+                /register = anon
+                /unauthorized = anon
+                /static/** = anon
+                /** = jwtFilter
+            </value>
         </property>
+        <property name="unauthorizedUrl" value="/unauthorized"/>
     </bean>
 
     <!-- shiro 生命周期处理器 -->

@@ -7,9 +7,9 @@
            http://code.alibabatech.com/schema/dubbo    http://code.alibabatech.com/schema/dubbo/dubbo.xsd
        ">
 
-    <dubbo:service interface="cn.com.xinxin.sass.api.XPortalUserFacade"
-                   class="XPortalUserFacadeImpl"
-                   timeout="6000" />
+    <!--<dubbo:service interface="cn.com.xinxin.sass.api.XPortalUserFacade"-->
+                   <!--class="XPortalUserFacadeImpl"-->
+                   <!--timeout="6000" />-->
 
 
 

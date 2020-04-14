@@ -18,7 +18,7 @@
     <import resource="classpath:spring-portal-session-aop.xml"/>
 
     <context:component-scan base-package="cn.com.xinxin">
-        <context:exclude-filter type="aspectj" expression="cn.com.xinxin.portal.web.*"/>
+        <context:exclude-filter type="aspectj" expression="cn.com.xinxin.sass.web.*"/>
     </context:component-scan>
     <context:component-scan base-package="com.xinxinfinance.commons"/>
 

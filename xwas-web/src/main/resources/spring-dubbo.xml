@@ -7,7 +7,7 @@
        ">
 
     <dubbo:application name="${dubbo.application.name}"/>
-    <dubbo:annotation package="cn.com.xinxin.example"/>
+    <dubbo:annotation package="cn.com.xinxin"/>
     <dubbo:protocol name="dubbo" port="${dubbo.protocol.port}" host="${dubbo.protocol.host}"/>
 
     <dubbo:registry address="${dubbo.registry.address}" client="curator"/>
