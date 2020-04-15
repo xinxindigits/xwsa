@@ -102,7 +102,7 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
 
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
-        List<RoleDO> roleDOList = userService.findRolesByName(account);
+        List<RoleDO> roleDOList = userService.findRolesByAccount(account);
 
         if (!CollectionUtils.isEmpty(roleDOList)){
             Set<String> roleCodes = new HashSet<>(roleDOList.size());
@@ -110,7 +110,7 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
             authorizationInfo.setRoles(roleCodes);
         }
 
-        List<ResourceDO> resourceDOS = userService.findResourcesByName(account);
+        List<ResourceDO> resourceDOS = userService.findResourcesByAccount(account);
         if (!CollectionUtils.isEmpty(resourceDOS)){
             Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
             resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getUrl()));

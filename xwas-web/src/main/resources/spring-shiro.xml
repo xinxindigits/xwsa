@@ -28,10 +28,6 @@
         <property name="cookie" ref="rememberMeCookie"/>
     </bean>
 
-    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="sessionValidationSchedulerEnabled" value="false"/>
-    </bean>
-
     <!-- 权限管理器 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realms">
@@ -39,9 +35,8 @@
                 <ref bean="jwtTokenAuthorizingRealmRealm"/>
             </list>
         </property>
-        <!--<property name="subjectDAO" ref="subjectDAO"/>-->
-        <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
-        <property name="sessionManager" ref="sessionManager"/>
+        <property name="subjectDAO" ref="subjectDAO"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>
 
     <bean id="userAclTokenRepository" class="cn.com.xinxin.sass.auth.repository.UserAclTokenRepository">
@@ -52,6 +47,8 @@
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/auth"/>
+        <property name="unauthorizedUrl" value="/unauthorized"/>
         <property name="filters">
             <util:map>
                 <entry key="jwtFilter" value-ref="jwtTokenFilter"/>
@@ -74,7 +71,7 @@
                 /** = jwtFilter
             </value>
         </property>
-        <property name="unauthorizedUrl" value="/unauthorized"/>
+
     </bean>
 
     <!-- shiro 生命周期处理器 -->

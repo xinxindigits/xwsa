@@ -118,27 +118,27 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
         return super.preHandle(request, response);
     }
 
-    @Override
-    protected boolean onLoginSuccess(AuthenticationToken authenticationToken,
-                                     Subject subject,
-                                     ServletRequest request,
-                                     ServletResponse response) throws Exception {
-        // 如果登陆成功，则需要刷新对应的token缓存信息，同时要判断token是否失效
-        String url = WebUtils.toHttp(request).getRequestURI();
-        log.info("鉴权成功,token:{},url:{}", authenticationToken, url);
-        JWTToken jwtToken = (JWTToken)authenticationToken;
-        HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
-        userAclTokenRepository.refreshToken(jwtToken.getToken(),httpServletResponse);
-        return true;
-    }
-
-    @Override
-    protected boolean onLoginFailure(AuthenticationToken token,
-                                     AuthenticationException e,
-                                     ServletRequest request,
-                                     ServletResponse response) {
-        log.error("登录失败，token:" + token + ",error:" + e.getMessage(), e);
-        return false;
-    }
+//    @Override
+//    protected boolean onLoginSuccess(AuthenticationToken authenticationToken,
+//                                     Subject subject,
+//                                     ServletRequest request,
+//                                     ServletResponse response) throws Exception {
+//        // 如果登陆成功，则需要刷新对应的token缓存信息，同时要判断token是否失效
+//        String url = WebUtils.toHttp(request).getRequestURI();
+//        log.info("鉴权成功,token:{},url:{}", authenticationToken, url);
+//        JWTToken jwtToken = (JWTToken)authenticationToken;
+//        HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
+//        userAclTokenRepository.refreshToken(jwtToken.getToken(),httpServletResponse);
+//        return true;
+//    }
+//
+//    @Override
+//    protected boolean onLoginFailure(AuthenticationToken token,
+//                                     AuthenticationException e,
+//                                     ServletRequest request,
+//                                     ServletResponse response) {
+//        log.error("登录失败，token:" + token + ",error:" + e.getMessage(), e);
+//        return false;
+//    }
 
 }

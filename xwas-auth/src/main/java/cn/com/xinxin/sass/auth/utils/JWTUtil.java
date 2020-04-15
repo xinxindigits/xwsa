@@ -22,8 +22,8 @@ public class JWTUtil {
 
     public static final Logger log = LoggerFactory.getLogger(JWTUtil.class);
 
-    // 过期时间300分钟分钟
-    public static final long TOKEN_EXPIRE_TIME = 600 * 60 * 1000;
+    // 过期时间480分钟分钟
+    public static final long TOKEN_EXPIRE_TIME = 480 * 60 * 1000;
 
     // 默认token倒计时失效60秒
     public static final Integer TOKEN_EXPIRE_TIME_COUNT = 10;

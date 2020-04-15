@@ -17,7 +17,7 @@ public interface UserRoleService {
 
     boolean updateUserRole(UserRoleDO userRoleDO);
 
-    List<RoleDO> findRoleByUserNo(String userNo);
+    List<RoleDO> findRoleByUserAccount(String account);
 
     boolean deleteUserRole(Long id);
 

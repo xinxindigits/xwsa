@@ -55,7 +55,7 @@ public interface UserRoleMapper {
      */
     int updateByPrimaryKey(UserRoleDO record);
 
-    List<RoleDO> findRoleByUserNo(@Param("userNo") String userNo);
+    List<RoleDO> findRoleByUserAccount(@Param("account") String account);
 
     int batchInsert(List<UserRoleDO> list);
 

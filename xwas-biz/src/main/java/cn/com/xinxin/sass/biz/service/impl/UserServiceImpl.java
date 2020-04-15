@@ -99,29 +99,24 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDO findByUserName(String account) {
-        return userDOMapper.selectByAccount(account);
-    }
-
-    @Override
     public UserDO findByUserAccount(String account) {
         return userDOMapper.selectByAccount(account);
     }
 
     @Override
-    public List<RoleDO> findRoles(String userNo) {
-        UserDO userDO = findByUserAccount(userNo);
+    public List<RoleDO> findRolesByAccount(String account) {
+        UserDO userDO = findByUserAccount(account);
 
         if (userDO != null){
-            return userRoleService.findRoleByUserNo(userDO.getAccount());
+            return userRoleService.findRoleByUserAccount(userDO.getAccount());
         }
 
         return null;
     }
 
     @Override
-    public List<ResourceDO> findResources(String userNo) {
-        List<RoleDO> roleDOS = userRoleService.findRoleByUserNo(userNo);
+    public List<ResourceDO> findResourcesByAccount(String account) {
+        List<RoleDO> roleDOS = userRoleService.findRoleByUserAccount(account);
 
         if (!CollectionUtils.isEmpty(roleDOS)){
             List<String> roleCodes = roleDOS.stream().map(RoleDO::getCode).collect(Collectors.toList());
@@ -133,8 +128,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ResourceDO> findPermissions(String userNo) {
-        List<ResourceDO> resourceDOS = findResources(userNo);
+    public List<ResourceDO> findPermissionsByAccount(String account) {
+        List<ResourceDO> resourceDOS = findResourcesByAccount(account);
 
         if (!CollectionUtils.isEmpty(resourceDOS)){
             return resourceDOS.stream().filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnum.FUNCTION.name())).collect(Collectors.toList());
@@ -144,8 +139,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ResourceDO> findRootMenus(String userNo) {
-        List<ResourceDO> resourceDOS = findResources(userNo);
+    public List<ResourceDO> findRootMenusByAccount(String userNo) {
+        List<ResourceDO> resourceDOS = findResourcesByAccount(userNo);
 
         if (!CollectionUtils.isEmpty(resourceDOS)){
             return resourceDOS.stream().filter(ResourceDO::getRoot).collect(Collectors.toList());
@@ -155,9 +150,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ResourceDO> findMenus(String userNo) {
+    public List<ResourceDO> findMenusByAccount(String account) {
 
-        List<ResourceDO> resourceDOS = findResources(userNo);
+        List<ResourceDO> resourceDOS = findResourcesByAccount(account);
         if (CollectionUtils.isEmpty(resourceDOS)){
            return null;
         }
@@ -220,7 +215,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
         // 判断资源是否存在
-        List<ResourceDO> resourceDOS = findResources(userDO.getAccount());
+        List<ResourceDO> resourceDOS = findResourcesByAccount(userDO.getAccount());
         if (CollectionUtils.isEmpty(resourceDOS)) {
             return false;
         }
@@ -235,28 +230,4 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public List<RoleDO> findRolesByName(String userName) {
-        return null;
-    }
-
-    @Override
-    public List<ResourceDO> findResourcesByName(String userName) {
-        return null;
-    }
-
-    @Override
-    public List<ResourceDO> findPermissionsByName(String userName) {
-        return null;
-    }
-
-    @Override
-    public List<ResourceDO> findRootMenusByName(String userName) {
-        return null;
-    }
-
-    @Override
-    public List<ResourceDO> findMenusByName(String userName) {
-        return null;
-    }
 }

@@ -19,29 +19,18 @@ public interface UserService {
 
     void modifyPassword(Long userId,String originPassword, String newPassword,String updater);
 
-    UserDO findByUserName(String userName);
+    UserDO findByUserAccount(String account);
 
-    UserDO findByUserAccount(String userNo);
+    List<RoleDO> findRolesByAccount(String account);
 
-    List<RoleDO> findRoles(String userNo);
+    List<ResourceDO> findResourcesByAccount(String account);
 
-    List<RoleDO> findRolesByName(String userName);
+    List<ResourceDO> findPermissionsByAccount(String account);
 
-    List<ResourceDO> findResources(String userNo);
+    List<ResourceDO> findRootMenusByAccount(String account);
 
-    List<ResourceDO> findResourcesByName(String userName);
+    List<ResourceDO> findMenusByAccount(String userNo);
 
-    List<ResourceDO> findPermissions(String userNo);
-
-    List<ResourceDO> findPermissionsByName(String userName);
-
-    List<ResourceDO> findRootMenus(String userNo);
-
-    List<ResourceDO> findRootMenusByName(String userName);
-
-    List<ResourceDO> findMenus(String userNo);
-
-    List<ResourceDO> findMenusByName(String userName);
 
     Page<UserDO> findByConditionPage(Page page, QueryUserConditionVO queryUserConditionVO);
 

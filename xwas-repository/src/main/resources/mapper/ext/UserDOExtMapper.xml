@@ -39,7 +39,7 @@
     <include refid="Base_Column_List" />
     from user
     where account = #{account,jdbcType=BIGINT}
-    and deleted = FALSE
+    and deleted=0
   </select>
 
 </mapper>

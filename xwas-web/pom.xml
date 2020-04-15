@@ -138,7 +138,7 @@
         <profile>
             <id>local-debug</id>
             <properties>
-                <properties.name>local</properties.name>
+                <properties.name>cloud-dev</properties.name>
                 <log.level>debug</log.level>
             </properties>
             <activation>
@@ -159,7 +159,7 @@
         <profile>
             <id>local</id>
             <properties>
-                <properties.name>local</properties.name>
+                <properties.name>cloud-dev</properties.name>
                 <log.home>/home/weblogic/logs/app</log.home>
                 <log.level>debug</log.level>
             </properties>

@@ -17,6 +17,7 @@ import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.web.vo.UserTokenVO;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -64,14 +65,18 @@ public class SassAuthRestController {
     }
 
     @RequestMapping(value = "/auth",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-    public Object login(HttpServletRequest request,
-                        @RequestBody UserLoginForm userLoginForm){
+    public Object login(HttpServletRequest request, @RequestBody UserLoginForm userLoginForm){
 
         String userAccount = userLoginForm.getAccount();
 
         String password = userLoginForm.getPassword();
 
         UserDO userDO = userService.findByUserAccount(userAccount);
+
+        if (userDO == null) {
+            throw new BusinessException(BizResultCodeEnum.DATA_NOT_EXIST, "用户信息不存在","用户信息不存在");
+
+        }
 
         String ecnryptPassword = PasswordUtils.encryptPassword(userDO.getAccount(),
                 userDO.getSalt(), password);
@@ -89,7 +94,7 @@ public class SassAuthRestController {
             sassUserInfo.setDevice(HttpRequestUtil.getRequestDevice(request));
             sassUserInfo.setIp(HttpRequestUtil.getIpAddress(request));
 
-            List<RoleDO> roleDOList = userService.findRolesByName(userAccount);
+            List<RoleDO> roleDOList = userService.findRolesByAccount(userAccount);
 
             if (!CollectionUtils.isEmpty(roleDOList)){
                 Set<String> roleCodes = new HashSet<>(roleDOList.size());
@@ -97,7 +102,7 @@ public class SassAuthRestController {
                 sassUserInfo.setRoles(roleCodes);
             }
 
-            List<ResourceDO> resourceDOS = userService.findResourcesByName(userAccount);
+            List<ResourceDO> resourceDOS = userService.findResourcesByAccount(userAccount);
             if (!CollectionUtils.isEmpty(resourceDOS)){
                 Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
                 resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getUrl()));
@@ -120,6 +125,13 @@ public class SassAuthRestController {
          return JWTUtil.sign(userName,userPasswd);
     }
 
+
+    @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    public Object unauthorized(HttpServletRequest request){
+        log.info("无效登陆口令，请重新登陆");
+        throw new BusinessException(CommonResultCode.REMOTE_ERROR,"无效登陆口令","无效登陆口令，请重新登陆");
+
+    }
 
 
 }

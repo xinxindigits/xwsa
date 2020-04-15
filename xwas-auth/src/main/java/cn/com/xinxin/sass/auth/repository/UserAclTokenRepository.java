@@ -49,7 +49,7 @@ public class UserAclTokenRepository {
     public void setSassUserTokenCache(String account, String token){
         sessionRedisTemplate.opsForValue().set(
                 SessionCacheConstants.SASS_USER_TOKEN_CACHE_KEY + account,
-                token, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.SECONDS);
+                token, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.MILLISECONDS);
 
     }
 
@@ -65,7 +65,7 @@ public class UserAclTokenRepository {
     public void setSassUserByUserAccount(String account, SassUserInfo sassUserInfo){
         sessionRedisTemplate.opsForValue().set(
             SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + account,
-                sassUserInfo, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.MINUTES);
+                sassUserInfo, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.MILLISECONDS);
     }
 
 

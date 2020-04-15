@@ -37,7 +37,7 @@ public class IndexController  extends AclController {
 
         LOGGER.info("IndexController index and user = {} " , sassUserInfo.getAccount());
 
-        List<ResourceDO> resourceDOS = userService.findMenus(sassUserInfo.getAccount());
+        List<ResourceDO> resourceDOS = userService.findMenusByAccount(sassUserInfo.getAccount());
         List<TreeVO> trees = new ArrayList<>();
         List<TreeVO> menus = new ArrayList<>();
 

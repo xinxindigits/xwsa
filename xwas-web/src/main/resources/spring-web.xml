@@ -15,6 +15,7 @@
         is child of the ROOT context. -->
 
     <context:component-scan base-package="cn.com.xinxin.sass.web"/>
+    <context:component-scan base-package="cn.com.xinxin.sass.**.web.*"/>
     <mvc:annotation-driven/>
     <mvc:interceptors>
         <bean class="com.xinxinfinance.commons.trace.TraceIdHandlerInterceptor"/>

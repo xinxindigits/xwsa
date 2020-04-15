@@ -22,7 +22,7 @@ public class UserDODODORoleServiceTest extends SpringBaseTest {
     @Ignore
     public void TestCreateUserRole(){
         UserRoleDO userRoleDO = new UserRoleDO();
-        userRoleDO.setUserNo("asdfasf");
+        userRoleDO.setUserAccount("asdfasf");
         userRoleDO.setRoleCode("fsfdsf");
 
         UserRoleDO userRoleDO1 = userRoleService.createUserRole(userRoleDO);
@@ -32,14 +32,14 @@ public class UserDODODORoleServiceTest extends SpringBaseTest {
     @Ignore
     public void testBatchInsert(){
         UserRoleDO userRoleDO = new UserRoleDO();
-        userRoleDO.setUserNo("asdfasf1");
+        userRoleDO.setUserAccount("asdfasf1");
         userRoleDO.setRoleCode("fsfdsf1");
         userRoleDO.setExtension("");
         userRoleDO.setGmtCreator("");
         userRoleDO.setGmtUpdater("");
 
         UserRoleDO userRoleDO2 = new UserRoleDO();
-        userRoleDO2.setUserNo("asdfasf2");
+        userRoleDO2.setUserAccount("asdfasf2");
         userRoleDO2.setRoleCode("fsfdsf2");
         userRoleDO2.setExtension("");
         userRoleDO2.setGmtCreator("");
