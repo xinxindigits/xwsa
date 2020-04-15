@@ -28,26 +28,8 @@
         <property name="cookie" ref="rememberMeCookie"/>
     </bean>
 
-
-    <!-- sesison管理类实现 -->
-    <bean id="sassSessionRedisCacheManager" class="cn.com.xinxin.sass.auth.repository.SassSessionRedisCacheManager">
-        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
-    </bean>
-
-    <!-- se sison管理类DAO -->
-    <bean id="sassSessionCacheManagerDao" class="cn.com.xinxin.sass.auth.repository.SassSessionCacheManagerDao">
-        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
-    </bean>
-
-
     <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
-        <property name="sessionValidationSchedulerEnabled" value="true"/>
-        <!--<property name="sessionValidationSchedulerEnabled" value="false"/>-->
-        <property name="sessionValidationInterval" value="1800000"/>
-        <property name="globalSessionTimeout" value="129600000"/>
-        <property name="deleteInvalidSessions" value="true"/>
-        <property name="sessionDAO" ref="sassSessionCacheManagerDao"/>
-        <property name="cacheManager" ref="sassSessionRedisCacheManager"/>
+        <property name="sessionValidationSchedulerEnabled" value="false"/>
     </bean>
 
     <!-- 权限管理器 -->
@@ -61,8 +43,6 @@
         <!--<property name="rememberMeManager" ref="rememberMeManager"/>-->
         <property name="sessionManager" ref="sessionManager"/>
     </bean>
-
-
 
     <bean id="userAclTokenRepository" class="cn.com.xinxin.sass.auth.repository.UserAclTokenRepository">
         <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>

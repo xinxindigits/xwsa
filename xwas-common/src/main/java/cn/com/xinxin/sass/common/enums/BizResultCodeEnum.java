@@ -29,6 +29,8 @@ public enum BizResultCodeEnum implements BizResultCode {
 
     INVALID_TOKEN("NTC00006", "无效的登陆口令", "无效的登陆口令,请登陆操作!"),
 
+    UNAUTHORIZED("UNAUTHORIZED", "无效授权", "无效授权!"),
+
     /* Enum end */;
 
 

@@ -83,7 +83,7 @@ public class OrganizationController extends AclController {
 
         log.info("OrganizationController.create,organizationForm :{}",organizationForm);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         OrganizationDO organizationDO = PortalFormConvert.convertOrgForm2OrganizationDO(organizationForm);
 
@@ -91,16 +91,6 @@ public class OrganizationController extends AclController {
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
 
         OrganizationDO createResultDO = organizationService.createOrganization(organizationDO);
-
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_ORGANIZATION,
-            OperationTypeEnum.ADD,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            organizationForm.getCode(),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            organizationForm);
 
         return PortalSingleViewResultVO.result(null,!(createResultDO != null),"操作失败");
     }
@@ -121,7 +111,7 @@ public class OrganizationController extends AclController {
 
         log.info("OrganizationController.create,organizationForm :{}",organizationForm);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         OrganizationDO organizationDO = PortalFormConvert.convertOrgForm2OrganizationDO(organizationForm);
 
@@ -129,15 +119,6 @@ public class OrganizationController extends AclController {
 
         OrganizationDO organizationDO1 = organizationService.updateOrganization(organizationDO);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_MODIFY_ORGANIZATION,
-            OperationTypeEnum.UPDATE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            organizationForm.getCode(),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            organizationForm);
 
         return PortalSingleViewResultVO.result(null,organizationDO1 == null,"操作失败");
     }
@@ -149,19 +130,10 @@ public class OrganizationController extends AclController {
 
         log.info("OrganizationController.delete,id:{}",id);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         Boolean rst = organizationService.deleteById(id);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_DELETE_ORGANIZATION,
-            OperationTypeEnum.DELETE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(id),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            id);
 
         return PortalSingleViewResultVO.result(null,!rst,"操作失败");
     }

@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.web.shiro.realm;
+package cn.com.xinxin.sass.auth.model;
 
 import org.apache.shiro.authc.AuthenticationToken;
 
@@ -8,7 +8,7 @@ import org.apache.shiro.authc.AuthenticationToken;
  * @updater:
  * @description:
  */
-public class JWTToken  implements AuthenticationToken {
+public class JWTToken implements AuthenticationToken {
 
     // 密钥
     private String token;
@@ -25,5 +25,13 @@ public class JWTToken  implements AuthenticationToken {
     @Override
     public Object getCredentials() {
         return token;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

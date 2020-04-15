@@ -33,11 +33,11 @@ public class IndexController  extends AclController {
     @RequestMapping("/dashboard")
     public String index(HttpServletRequest request,Model model){
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         LOGGER.info("IndexController index and user = {} " , sassUserInfo.getAccount());
 
-        List<ResourceDO> resourceDOS = userService.findMenus(sassUserInfo.getNo());
+        List<ResourceDO> resourceDOS = userService.findMenus(sassUserInfo.getAccount());
         List<TreeVO> trees = new ArrayList<>();
         List<TreeVO> menus = new ArrayList<>();
 

@@ -43,7 +43,7 @@ public class HttpRequestUtil {
 
     public static String getLoginToken(HttpServletRequest request){
         // 重请求信息中获取token
-        String token = request.getHeader("XToken");
+        String token = request.getHeader(JWTUtil.TOKEN_NAME);
         return token;
     }
 

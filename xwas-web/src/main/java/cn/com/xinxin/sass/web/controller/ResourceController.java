@@ -100,7 +100,7 @@ public class ResourceController extends AclController {
             return PortalSingleViewResultVO.result(null,true,"资源编码已经存在");
         }
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         ResourceDO resourceDO = PortalFormConvert.convertResourceForm2ResourceDO(resourceForm);
         resourceDO.setGmtCreator(sassUserInfo.getAccount());
@@ -108,15 +108,6 @@ public class ResourceController extends AclController {
         ResourceDO resultDO = resourceService.createResource(resourceDO);
 
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_RESOURCE_INFO,
-            OperationTypeEnum.ADD,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            resourceForm.getCode(),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            resourceForm);
 
         return PortalSingleViewResultVO.result(null,!(resultDO != null),"操作失败");
     }
@@ -137,7 +128,7 @@ public class ResourceController extends AclController {
 
         log.info("ResourceController.update,resourceForm:{}",resourceForm);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         ResourceDO resourceDO = PortalFormConvert.convertResourceForm2ResourceDO(resourceForm);
 
@@ -145,15 +136,6 @@ public class ResourceController extends AclController {
 
         int resultCount = resourceService.updateResource(resourceDO);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_MODIFY_RESOURCE_INFO,
-            OperationTypeEnum.UPDATE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            resourceDO.getCode(),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            resourceForm);
 
         return PortalSingleViewResultVO.result(null,!(resultCount == 1),"操作失败");
     }
@@ -165,19 +147,10 @@ public class ResourceController extends AclController {
 
         log.info("ResourceController.delete,id:{}",id);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         Boolean result = resourceService.deleteById(id);
-
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_DELETE_RESOURCE_INFO,
-            OperationTypeEnum.DELETE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(id),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            id);
+        
 
 
         return PortalSingleViewResultVO.result(null,!result,"操作失败");

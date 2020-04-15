@@ -73,7 +73,7 @@ public class UserRoleController extends AclController {
 
         log.info("UserRoleController.update,userRoleForm:{}",userRoleForm);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         UserRoleDO userRoleDO = PortalFormConvert.convertUserRoleForm2UserRoleDO(userRoleForm);
 
@@ -81,15 +81,6 @@ public class UserRoleController extends AclController {
 
         Boolean rst = userRoleService.updateUserRole(userRoleDO);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_MODIFY_USER_ROLE,
-            OperationTypeEnum.UPDATE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(userRoleForm.getId()),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            userRoleForm);
 
         return PortalSingleViewResultVO.result(null,!rst,"操作失败");
     }
@@ -101,7 +92,7 @@ public class UserRoleController extends AclController {
 
         log.info("UserRoleController.create,userRoleForm={}",userRoleForm);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         UserRoleDO userRoleDO = PortalFormConvert.convertUserRoleForm2UserRoleDO(userRoleForm);
 
@@ -110,15 +101,6 @@ public class UserRoleController extends AclController {
 
         UserRoleDO userRoleDOCreate = userRoleService.createUserRole(userRoleDO);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_USER_ROLE,
-            OperationTypeEnum.ADD,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(userRoleForm.getId()),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            userRoleForm);
 
         return PortalSingleViewResultVO.result(null,userRoleDOCreate == null,"操作失败");
     }
@@ -137,19 +119,9 @@ public class UserRoleController extends AclController {
     public PortalSingleViewResultVO delete(HttpServletRequest request,@PathVariable Long id){
 
         log.info("UserRoleController.delete,id:{}",id);
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         Boolean rst = userRoleService.deleteUserRole(id);
-
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_DELETE_USER_ROLE,
-            OperationTypeEnum.DELETE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(id),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            id);
 
         return PortalSingleViewResultVO.result(null,!rst,"操作失败");
     }

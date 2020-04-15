@@ -6,13 +6,16 @@ import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.result.CommonResultCode;
-import org.apache.shiro.session.Session;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 
 
-import java.util.Collection;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -82,5 +85,40 @@ public class UserAclTokenRepository {
         } catch (Exception e) {
             logger.error("UserAclTokenRepository.delete occurs exception:\n[]",e);
         }
+    }
+
+
+    public void refreshToken(String token,  HttpServletResponse httpServletResponse) throws Exception{
+        // 刷新token
+        if (StringUtils.isBlank(token)) {
+            throw new BusinessException(CommonResultCode.SYSTEM_ERROR,"无效token","无效token");
+        }
+        // 获取过期时间
+        Date expireDate = JWTUtil.getExpiresTime(token);
+        String account = JWTUtil.getUserAccount(token);
+        // 如果(当前时间+倒计时)>过期时间，则刷新token
+        boolean isNeedrefresh = DateUtils.addSeconds(new Date(),JWTUtil.TOKEN_EXPIRE_TIME_COUNT).after(expireDate);
+        if (!isNeedrefresh) {
+            // 不需要刷新
+            return;
+        }else{
+            // 需要刷新token
+            // 如果在redis中已经存在token，则表示在某个地方已经刷新了缓存
+            String cachedToken = this.getSassUserCacheToken(account);
+            if(StringUtils.isNotEmpty(cachedToken)){
+                httpServletResponse.setStatus(SessionCacheConstants.JWT_INVALID_TOKEN_CODE);
+                throw new AuthenticationException("token已无效，请使用已刷新的token");
+            }
+            // 获取用户的信息重新生成token
+            SassUserInfo sassUserInfo = this.getSassUserByUserAccount(account);
+            String newToken = JWTUtil.sign(sassUserInfo.getAccount(),sassUserInfo.getPassword());
+            // 更新缓存中的token
+            this.setSassUserTokenCache(account,newToken);
+            // 设置响应头
+            // 刷新token
+            httpServletResponse.setStatus(SessionCacheConstants.JWT_REFRESH_TOKEN_CODE);
+            httpServletResponse.setHeader(JWTUtil.TOKEN_NAME, newToken);
+        }
+
     }
 }

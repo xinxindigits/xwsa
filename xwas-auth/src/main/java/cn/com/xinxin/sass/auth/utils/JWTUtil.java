@@ -25,6 +25,11 @@ public class JWTUtil {
     // 过期时间300分钟分钟
     public static final long TOKEN_EXPIRE_TIME = 600 * 60 * 1000;
 
+    // 默认token倒计时失效60秒
+    public static final Integer TOKEN_EXPIRE_TIME_COUNT = 10;
+
+    public static final String TOKEN_NAME = "XToken";
+
     /**
      * 生成签名,5min后过期
      *

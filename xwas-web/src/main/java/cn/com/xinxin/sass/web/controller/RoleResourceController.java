@@ -80,23 +80,13 @@ public class RoleResourceController extends AclController {
         log.info("RoleResourceController.update,roleResourceForm = {}", roleResourceForm);
 
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         RoleResourceDO roleResourceDO = PortalFormConvert.convertRRForm2RoleResourceDO(roleResourceForm);
 
         roleResourceDO.setGmtUpdater(sassUserInfo.getAccount());
 
         roleResourceService.updateRoleResource(roleResourceDO);
-
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_MODIFY_ROLE_RESOURCE,
-            OperationTypeEnum.UPDATE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(roleResourceForm.getId()),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            roleResourceForm);
 
         return PortalSingleViewResultVO.success(null);
     }
@@ -108,7 +98,7 @@ public class RoleResourceController extends AclController {
 
         log.info("RoleResourceController.create,roleResourceForm:{}",roleResourceForm);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         RoleResourceDO roleResourceDO = PortalFormConvert.convertRRForm2RoleResourceDO(roleResourceForm);
 
@@ -117,15 +107,6 @@ public class RoleResourceController extends AclController {
 
         RoleResourceDO resourceDO = roleResourceService.createRoleResource(roleResourceDO);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_ROLE_RESOURCE,
-            OperationTypeEnum.ADD,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(roleResourceForm.getId()),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            roleResourceForm);
 
         return PortalSingleViewResultVO.result(null,resourceDO == null,"操作失败");
     }
@@ -137,7 +118,7 @@ public class RoleResourceController extends AclController {
 
         log.info("RoleResourceController.createRoleResources,resourceForms:{}",resourceForms);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         List<RoleResourceDO> roleResourceDOS = PortalFormConvert.convertRRForm2RoleResourceDOList(resourceForms);
 
@@ -149,15 +130,6 @@ public class RoleResourceController extends AclController {
 
         roleResourceService.createRoleResources(roleResourceDOS);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_ROLE_RESOURCE,
-            OperationTypeEnum.ADD,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            "createRoleResources",
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            resourceForms);
 
         return PortalSingleViewResultVO.success(null);
     }
@@ -178,19 +150,10 @@ public class RoleResourceController extends AclController {
         log.info("RoleResourceController.delete,id:{}",id);
 
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         Boolean rst = roleResourceService.deleteRoleResource(id);
-
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_DELETE_ROLE_RESOURCE,
-            OperationTypeEnum.DELETE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(id),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            id);
+        
 
         return PortalSingleViewResultVO.result(null,!rst,"操作失败");
     }

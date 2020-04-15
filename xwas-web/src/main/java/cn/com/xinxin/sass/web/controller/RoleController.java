@@ -90,7 +90,7 @@ public class RoleController extends AclController {
             return PortalSingleViewResultVO.result(null, true, "角色编码已经存在");
         }
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
 
         // 组装角色参数
@@ -133,15 +133,7 @@ public class RoleController extends AclController {
             roleResourceService.createRoleResources(roleResources);
         }
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_ROLE_RESOURCE,
-            OperationTypeEnum.ADD,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            roleResourceVO.getCode(),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            roleResourceVO);
+
 
         return PortalSingleViewResultVO.result(null, createRoleResult == null, null);
     }
@@ -195,7 +187,7 @@ public class RoleController extends AclController {
         log.info("RoleController.update,roleResourceVO:{}",roleResourceVO);
 
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         RoleDO roleDO = new RoleDO();
         roleDO.setId(roleResourceVO.getId());
@@ -264,15 +256,6 @@ public class RoleController extends AclController {
             }
         }
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_ROLE_RESOURCE,
-            OperationTypeEnum.DELETE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            roleResourceVO.getCode(),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            roleResourceVO);
 
         return PortalSingleViewResultVO.success(null);
     }
@@ -284,19 +267,10 @@ public class RoleController extends AclController {
 
         log.info("RoleController.delete,id=={}",id);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         int n = roleService.deleteRole(id);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_ROLE_RESOURCE,
-            OperationTypeEnum.DELETE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(id),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            id);
 
         return PortalSingleViewResultVO.result(null, n != 1, "操作失败");
     }

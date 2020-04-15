@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.web.shiro.realm;
 
 
+import cn.com.xinxin.sass.auth.model.JWTToken;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;

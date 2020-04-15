@@ -81,21 +81,12 @@ public class UserController extends AclController {
         // 必要的参数验证
         this.checkUserFormParameter(userForm);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         UserDO userDO = PortalFormConvert.convertUserForm2UserDO(userForm);
 
         int result = userService.createUser(userDO);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_ADD_USER_INFO,
-            OperationTypeEnum.ADD,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            userForm.getAccount(),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            userForm);
 
         return PortalSingleViewResultVO.result(null,result != 1,"操作失败");
 
@@ -119,22 +110,11 @@ public class UserController extends AclController {
         //参数校验
         this.checkUserFormParameter(userForm);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         UserDO updateUserDO = PortalFormConvert.convertUserForm2UserDO(userForm);
 
         Boolean updateResult = userService.updateUser(updateUserDO);
-
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_MODIFY_USER_INFO,
-            OperationTypeEnum.UPDATE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            userForm.getAccount(),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            userForm);
-
 
         return PortalSingleViewResultVO.result(null,!updateResult,"操作失败");
     }
@@ -146,19 +126,10 @@ public class UserController extends AclController {
 
         log.info("UserController.delete,userId = {}", id);
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         Boolean rst = userService.delete(id);
 
-        PortalOplogUtil.logReq(
-            AppProductEnum.XPORTAL_DELETE_USER_INFO,
-            OperationTypeEnum.DELETE,
-            sassUserInfo.getAccount(),
-            sassUserInfo.getNo(),
-            Long.toString(id),
-            sassUserInfo.getIp(),
-            sassUserInfo.getDevice(),
-            id);
 
         return PortalSingleViewResultVO.result(null,!rst,"操作失败");
     }
@@ -186,19 +157,10 @@ public class UserController extends AclController {
 
         log.info("UserController.resetPasswd,userId = {}", resetPasswordForm.getId());
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         userService.resetPassword(resetPasswordForm.getId(),resetPasswordForm.getNewPasswd(), sassUserInfo.getAccount());
 
-        PortalOplogUtil.logReq(
-                AppProductEnum.XPORTAL_DELETE_USER_INFO,
-                OperationTypeEnum.DELETE,
-                sassUserInfo.getAccount(),
-                sassUserInfo.getNo(),
-                Long.toString(resetPasswordForm.getId()),
-                sassUserInfo.getIp(),
-                sassUserInfo.getDevice(),
-                resetPasswordForm.getId());
 
         return PortalSingleViewResultVO.result(null,false,"操作失败");
     }
@@ -206,7 +168,8 @@ public class UserController extends AclController {
     @RequestMapping(value = "/modifyPassword",method = RequestMethod.POST)
     @ResponseBody
     public PortalSingleViewResultVO modifyPassword(HttpServletRequest request, @RequestBody ModifyPasswordForm modifyPasswordForm){
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         log.info("UserController.modifyPassword,userId = {}", sassUserInfo.getId());
 
@@ -220,15 +183,7 @@ public class UserController extends AclController {
             return PortalSingleViewResultVO.result(null,true,"操作失败");
         }
 
-        PortalOplogUtil.logReq(
-                AppProductEnum.XPORTAL_MODIFY_USER_INFO,
-                OperationTypeEnum.UPDATE,
-                sassUserInfo.getAccount(),
-                sassUserInfo.getNo(),
-                Long.toString(sassUserInfo.getId()),
-                sassUserInfo.getIp(),
-                sassUserInfo.getDevice(),
-                modifyPasswordForm.getId());
+
 
         return PortalSingleViewResultVO.result(null,false,"操作失败");
     }
