@@ -64,7 +64,7 @@ public class JWTUtil {
      *
      * @return token中包含的用户名
      */
-    public static String getUsername(String token) {
+    public static String getUserAccount(String token) {
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getClaim("username").asString();
     }

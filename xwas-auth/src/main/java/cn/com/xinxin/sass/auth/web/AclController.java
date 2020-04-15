@@ -5,6 +5,7 @@ import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -40,11 +41,10 @@ public abstract class AclController {
     }
 
     protected SassUserInfo getSassUser(HttpServletRequest request){
-
-        String userSessionId = this.getSessionId(request);
-
-        SassUserInfo sassUserInfo = userAclTokenRepository.getSassUserBySessionId(userSessionId);
-
+        // 从tokent中获取对应的权限
+        String token = HttpRequestUtil.getLoginToken(request);
+        String account = JWTUtil.getUserAccount(token);
+        SassUserInfo sassUserInfo = userAclTokenRepository.getSassUserByUserAccount(account);
         sassUserInfo.setIp(HttpRequestUtil.getIpAddress(request));
         sassUserInfo.setDevice(HttpRequestUtil.getRequestDevice(request));
         return sassUserInfo;

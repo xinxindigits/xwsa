@@ -1,8 +1,13 @@
 package cn.com.xinxin.sass.web.rest;
 
 
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
+import cn.com.xinxin.sass.repository.model.ResourceDO;
+import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.convert.PortalFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
@@ -12,12 +17,17 @@ import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.web.vo.UserTokenVO;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.util.BaseConvert;
+import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author: zhouyang
@@ -34,6 +44,9 @@ public class SassAuthRestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private UserAclTokenRepository userAclTokenRepository;
 
 
     @RequestMapping(value = "/register",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
@@ -70,6 +83,30 @@ public class SassAuthRestController {
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
             userTokenVO.setToken(token);
+
+            // 获取必要的用户信息,缓存到redis
+            SassUserInfo sassUserInfo = BaseConvert.convert(userDO,SassUserInfo.class);
+            sassUserInfo.setDevice(HttpRequestUtil.getRequestDevice(request));
+            sassUserInfo.setIp(HttpRequestUtil.getIpAddress(request));
+
+            List<RoleDO> roleDOList = userService.findRolesByName(userAccount);
+
+            if (!CollectionUtils.isEmpty(roleDOList)){
+                Set<String> roleCodes = new HashSet<>(roleDOList.size());
+                roleDOList.forEach(roleDO -> roleCodes.add(roleDO.getCode()));
+                sassUserInfo.setRoles(roleCodes);
+            }
+
+            List<ResourceDO> resourceDOS = userService.findResourcesByName(userAccount);
+            if (!CollectionUtils.isEmpty(resourceDOS)){
+                Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
+                resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getUrl()));
+                sassUserInfo.setStringPermissions(permissionUrls);
+            }
+            // 设置用户的token以及角色，权限等信息缓存
+            userAclTokenRepository.setSassUserByUserAccount(userAccount,sassUserInfo);
+            userAclTokenRepository.setSassUserTokenCache(userAccount,token);
+
             return userTokenVO;
         }else{
             // 登陆失败
@@ -82,5 +119,7 @@ public class SassAuthRestController {
          //TODO: 缓存设置tokent
          return JWTUtil.sign(userName,userPasswd);
     }
+
+
 
 }

@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.web.shiro.filter;
 
+import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.web.shiro.realm.JWTToken;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -43,7 +44,7 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request,
                                    ServletResponse response) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String authorization = httpServletRequest.getHeader("XToken");
+        String authorization = HttpRequestUtil.getLoginToken(httpServletRequest);
         JWTToken token = new JWTToken(authorization);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(token);

@@ -71,7 +71,7 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
         // 从tokent中读取用户信息
         String token = (String) authenticationToken.getCredentials();
 
-        String account = JWTUtil.getUsername(token);
+        String account = JWTUtil.getUserAccount(token);
 
         if (account == null) {
             throw new AuthenticationException("token验证无效，清重新尝试");
@@ -97,7 +97,7 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
 
         String token = (String) principalCollection.getPrimaryPrincipal();
 
-        String account = JWTUtil.getUsername(token);
+        String account = JWTUtil.getUserAccount(token);
 
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 

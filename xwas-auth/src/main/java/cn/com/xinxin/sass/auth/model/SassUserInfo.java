@@ -17,8 +17,6 @@ public class SassUserInfo implements Serializable {
 
     private Long id;
 
-    private String no;
-
     private String name;
 
     private String account;
@@ -60,14 +58,6 @@ public class SassUserInfo implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getNo() {
-        return no;
-    }
-
-    public void setNo(String no) {
-        this.no = no;
     }
 
     public Long getId() {

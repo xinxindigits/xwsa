@@ -49,64 +49,6 @@ public class UserAclTokenRepository {
 
     }
 
-    public Session getSassUserLoginSession(String sessionId){
-        Session session = (Session) sessionRedisTemplate.opsForValue().get(
-            SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId);
-        return session;
-
-    }
-
-    public void setSassUserSession(String sessionId, Session session){
-        sessionRedisTemplate.opsForValue().set(
-            SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId,
-            session, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
-    }
-
-    public void updateSassUserSession(String sessionId){
-        sessionRedisTemplate.expire(SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId,
-                SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
-    }
-
-    public boolean exist(String sessionId){
-        return sessionRedisTemplate.hasKey(SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId);
-    }
-
-    public void cleanSession(String sessionId){
-        try {
-            String key = SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId;
-            sessionRedisTemplate.delete(key);
-        } catch (Exception e) {
-            logger.error("UserAclTokenRepository.cleanSession occurs exception:\n[]",e);
-        }
-    }
-
-
-    public SassUserInfo getSassUserBySessionId(String sessionId){
-
-        Session session = (Session) sessionRedisTemplate.opsForValue().get(
-            SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId);
-
-        if (session == null){
-            //TODO
-            throw new BusinessException(CommonResultCode.ILLEGAL_ARGUMENT,"登陆失效，请重新登陆系统");
-        }
-        SassUserInfo SassUserInfo = new SassUserInfo();
-
-        Collection<Object> keys = session.getAttributeKeys();
-        if (keys != null && keys.size() > 0){
-            for (Object key : keys) {
-                Object value = session.getAttribute(key);
-                if (value instanceof SassUserInfo){
-                    SassUserInfo = (SassUserInfo) value;
-                    break;
-                }
-            }
-        }
-
-        return SassUserInfo;
-    }
-
-
     public SassUserInfo getSassUserByUserAccount(String account){
 
         SassUserInfo sassUserInfo = (SassUserInfo) sessionRedisTemplate.opsForValue().get(
@@ -122,7 +64,17 @@ public class UserAclTokenRepository {
                 sassUserInfo, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
     }
 
-    public void cleanSassUserSessionCache(String account){
+
+    public void cleanSassUserTokenCache(String account){
+        try {
+            sessionRedisTemplate.delete(SessionCacheConstants.SASS_USER_TOKEN_CACHE_KEY + account);
+            logger.error("UserAclTokenRepository.delete user cache account :\n[]", account);
+        } catch (Exception e) {
+            logger.error("UserAclTokenRepository.delete occurs exception:\n[]",e);
+        }
+    }
+
+    public void cleanSassUserInfoCache(String account){
         try {
             sessionRedisTemplate.delete(SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + account);
             logger.error("UserAclTokenRepository.delete user cache account :\n[]", account);
