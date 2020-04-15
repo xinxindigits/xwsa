@@ -4,6 +4,8 @@ package cn.com.xinxin.sass.auth.interceptor;
 import cn.com.xinxin.sass.auth.annotation.RequirePermission;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
 import com.xinxinfinance.commons.portal.view.result.PortalSingleViewResultVO;
@@ -98,8 +100,14 @@ public class AclPermissionInterceptor implements MethodInterceptor {
         return methodInvocation.proceed();
     }
 
-    private boolean hasPermission(HttpServletRequest request, String[] values, UserAclTokenRepository userAclTokenRepository) {
-        SassUserInfo sassUserInfo = userAclTokenRepository.getPortalUserBySessionId(request.getRequestedSessionId());
+    private boolean hasPermission(HttpServletRequest request,
+                                  String[] values,
+                                  UserAclTokenRepository userAclTokenRepository) {
+
+
+        String token = HttpRequestUtil.getLoginToken(request);
+        String account = JWTUtil.getUserAccount(token);
+        SassUserInfo sassUserInfo = userAclTokenRepository.getSassUserByUserAccount(account);
         if (sassUserInfo == null){
             return false;
         }

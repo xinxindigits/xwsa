@@ -1,12 +1,16 @@
 package cn.com.xinxin.sass.auth.interceptor;
 
 
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.util.ApplicationContextHolder;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
@@ -26,23 +30,18 @@ public class SessionInterceptor implements MethodInterceptor {
             for (Object argument : methodInvocation.getArguments()) {
                 if (argument instanceof HttpServletRequest){
                     HttpServletRequest request = (HttpServletRequest) argument;
+                    // 获取用户token并且拿到用户信息
+                    String token = HttpRequestUtil.getLoginToken(request);
+                    String account = JWTUtil.getUserAccount(token);
                     if (request.getRequestedSessionId() != null){
                         UserAclTokenRepository userAclTokenRepository = (UserAclTokenRepository) ApplicationContextHolder.getBean("userAclTokenRepository");
-                        boolean exist = userAclTokenRepository.exist(request.getRequestedSessionId());
-                        if (exist){
-                            //auth 存在，更新session超时时间
-                            userAclTokenRepository.updatePortalUserSession(request.getRequestedSessionId());
+                        String cacheToken = userAclTokenRepository.getSassUserCacheToken(account);
+                        if (StringUtils.isNotEmpty(cacheToken)){
+                            //auth 存在，更新token超时时间
+                            userAclTokenRepository.setSassUserTokenCache(account,token);
                             return methodInvocation.proceed();
                         }else {
-                            //auth 超时
-                            /*Type returnType = method.getGenericReturnType();
-                            if (returnType.getTypeName().equals("java.lang.String")){
-                                return "login";
-                            }else if (returnType.getTypeName().equals("org.springframework.web.servlet.ModelAndView")) {
-                                ModelAndView mav = new ModelAndView("login");
-                                return mav;
-                            }*/
-                            throw new BusinessException(CommonResultCode.ILLEGAL_ARGUMENT,"无效session");
+                            throw new BusinessException(CommonResultCode.ILLEGAL_ARGUMENT,"无效token");
                         }
                     }
                 }
