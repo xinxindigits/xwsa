@@ -150,7 +150,7 @@ public class ResourceController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
         Boolean result = resourceService.deleteById(id);
-        
+
 
 
         return PortalSingleViewResultVO.result(null,!result,"操作失败");

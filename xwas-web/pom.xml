@@ -31,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>com.xinxinfinance.xwas</groupId>
-            <artifactId>xwas-session</artifactId>
+            <artifactId>xwas-auth</artifactId>
         </dependency>
         <dependency>
             <groupId>com.xinxinfinance.oplog</groupId>
