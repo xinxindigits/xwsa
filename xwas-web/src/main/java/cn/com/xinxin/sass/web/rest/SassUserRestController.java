@@ -1,11 +1,14 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.auth.annotation.RequirePermission;
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.form.UserForm;
 import com.xinxinfinance.commons.util.BaseConvert;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +35,10 @@ public class SassUserRestController extends AclController {
 
     @RequestMapping(value = "/query/{account}",method = RequestMethod.GET)
     @ResponseBody
-    public Object queryUserByAccount(HttpServletRequest request,@PathVariable String account){
+    @RequiresPermissions("/user/query")
+    public UserForm queryUserByAccount(HttpServletRequest request,@PathVariable String account){
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         log.info("queryUserByAccount, account = {}",account);
 

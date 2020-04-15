@@ -10,6 +10,7 @@
 
     <!-- 权限检查 -->
     <bean id="aclPermissionInterceptor" class="cn.com.xinxin.sass.auth.interceptor.AclPermissionInterceptor"/>
+
     <!-- updauthsion -->
     <bean id="sessionInterceptor" class="cn.com.xinxin.sass.auth.interceptor.SessionInterceptor"/>
 

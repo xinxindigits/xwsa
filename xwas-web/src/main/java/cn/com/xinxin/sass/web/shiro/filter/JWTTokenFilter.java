@@ -1,14 +1,17 @@
 package cn.com.xinxin.sass.web.shiro.filter;
 
 import cn.com.xinxin.sass.auth.model.JWTToken;
+import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
 import com.alibaba.fastjson.JSON;
+import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.slf4j.Logger;
@@ -29,7 +32,7 @@ import java.io.PrintWriter;
  * @updater:
  * @description:
  */
-public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
+public class JWTTokenFilter extends AuthenticatingFilter {
 
     private static String UTF8 = "UTF-8";
     private static String CONTENT_TYPE = "application/json";
@@ -40,6 +43,17 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
     private UserAclTokenRepository userAclTokenRepository;
 
 
+
+    @Override
+    protected AuthenticationToken createToken(ServletRequest servletRequest,
+                                              ServletResponse servletResponse) throws Exception {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        String loginToken = HttpRequestUtil.getLoginToken(httpServletRequest);
+        if(StringUtils.isBlank(loginToken)){
+            return null;
+        }
+        return new JWTToken(loginToken);
+    }
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
@@ -55,19 +69,10 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean  onAccessDenied(ServletRequest request, ServletResponse response) throws Exception{
-        HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
-        HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
-        // 返回401
-        httpServletResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        // 设置响应码为401或者直接输出消息
-        String url = httpServletRequest.getRequestURI();
-        log.error("onAccessDenied url：{}", url);
-        response.setCharacterEncoding(UTF8);
-        response.setContentType(CONTENT_TYPE);
-        PrintWriter printWriter = response.getWriter();
-        printWriter.write(JSON.toJSONString(BizResultCodeEnum.UNAUTHORIZED));
-        printWriter.flush();
-        printWriter.close();
+        HttpServletResponse httpResponse = WebUtils.toHttp(response);
+        httpResponse.setCharacterEncoding("UTF-8");
+        httpResponse.setContentType("application/json;charset=utf-8");
+        httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         return false;
     }
 
@@ -118,27 +123,28 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
         return super.preHandle(request, response);
     }
 
-//    @Override
-//    protected boolean onLoginSuccess(AuthenticationToken authenticationToken,
-//                                     Subject subject,
-//                                     ServletRequest request,
-//                                     ServletResponse response) throws Exception {
-//        // 如果登陆成功，则需要刷新对应的token缓存信息，同时要判断token是否失效
-//        String url = WebUtils.toHttp(request).getRequestURI();
-//        log.info("鉴权成功,token:{},url:{}", authenticationToken, url);
-//        JWTToken jwtToken = (JWTToken)authenticationToken;
-//        HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
-//        userAclTokenRepository.refreshToken(jwtToken.getToken(),httpServletResponse);
-//        return true;
-//    }
-//
-//    @Override
-//    protected boolean onLoginFailure(AuthenticationToken token,
-//                                     AuthenticationException e,
-//                                     ServletRequest request,
-//                                     ServletResponse response) {
-//        log.error("登录失败，token:" + token + ",error:" + e.getMessage(), e);
-//        return false;
-//    }
+    @Override
+    protected boolean onLoginSuccess(AuthenticationToken authenticationToken,
+                                     Subject subject,
+                                     ServletRequest request,
+                                     ServletResponse response) throws Exception {
+        // 如果登陆成功，则需要刷新对应的token缓存信息，同时要判断token是否失效
+        String url = WebUtils.toHttp(request).getRequestURI();
+        log.info("鉴权成功,token:{},url:{}", authenticationToken, url);
+        JWTToken jwtToken = (JWTToken)authenticationToken;
+        HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
+        userAclTokenRepository.refreshToken(jwtToken.getToken(),httpServletResponse);
+        return true;
+    }
+
+    @Override
+    protected boolean onLoginFailure(AuthenticationToken token,
+                                     AuthenticationException e,
+                                     ServletRequest request,
+                                     ServletResponse response) {
+
+        log.error("登录失败，token:" + token + ",error:" + e.getMessage(), e);
+        throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION);
+    }
 
 }

@@ -2,12 +2,11 @@ package cn.com.xinxin.sass.web.shiro.realm;
 
 
 import cn.com.xinxin.sass.auth.model.JWTToken;
-import cn.com.xinxin.sass.repository.model.ResourceDO;
-import cn.com.xinxin.sass.repository.model.RoleDO;
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
-import cn.com.xinxin.sass.biz.service.UserService;
-import cn.com.xinxin.sass.repository.model.UserDO;
+import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -18,9 +17,7 @@ import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+
 
 
 /**
@@ -35,19 +32,19 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenAuthorizingRealm.class);
 
 
-    private UserService userService;
+    //private UserService userService;
 
 
     private UserAclTokenRepository userAclTokenRepository;
 
 
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
+//    public UserService getUserService() {
+//        return userService;
+//    }
+//
+//    public void setUserService(UserService userService) {
+//        this.userService = userService;
+//    }
 
     public UserAclTokenRepository getUserAclTokenRepository() {
         return userAclTokenRepository;
@@ -69,55 +66,62 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
-        // 从tokent中读取用户信息
-        String token = (String) authenticationToken.getCredentials();
+        try {
+            // 从tokent中读取用户信息
+            String token = (String) authenticationToken.getCredentials();
 
-        String account = JWTUtil.getUserAccount(token);
+            String account = JWTUtil.getUserAccount(token);
 
-        if (account == null) {
-            throw new AuthenticationException("token验证无效，清重新尝试");
+            if (account == null) {
+                throw new AuthenticationException("token验证无效，清重新尝试");
+            }
+
+            SassUserInfo sassUserInfo = this.userAclTokenRepository.getSassUserByUserAccount(account);
+
+            if (sassUserInfo == null){
+                throw new UnknownAccountException();
+            }
+            // 返回值
+            SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
+                    account, token, ByteSource.Util.bytes(account + "JwtTokenAuthorizingRealm"),getName());
+
+            return authenticationInfo;
+
+        }catch (Exception ex){
+            throw new BusinessException(SessionBizResultCodeEnum.FAIL,"登陆认证失败","登陆认证失败");
         }
-
-        UserDO userDO = this.userService.findByUserAccount(account);
-
-        if (userDO == null){
-            throw new UnknownAccountException();
-        }
-        // 返回值
-        SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                account, token, ByteSource.Util.bytes(account + "JwtTokenAuthorizingRealm"),getName());
-
-        return authenticationInfo;
     }
 
 
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) throws AuthenticationException{
 
         logger.info("————权限认证 [ roles、permissions]————");
 
-        String token = (String) principalCollection.getPrimaryPrincipal();
+        try {
+            String account = (String) principalCollection.getPrimaryPrincipal();
 
-        String account = JWTUtil.getUserAccount(token);
+            SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
 
-        SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+            SassUserInfo sassUserInfo = this.userAclTokenRepository.getSassUserByUserAccount(account);
 
-        List<RoleDO> roleDOList = userService.findRolesByAccount(account);
+            if (sassUserInfo == null){
+                throw new UnknownAccountException();
+            }
+            if (!CollectionUtils.isEmpty(sassUserInfo.getRoles())){
+                authorizationInfo.setRoles(sassUserInfo.getRoles());
+            }
+            if (!CollectionUtils.isEmpty(sassUserInfo.getStringPermissions())){
+                authorizationInfo.setStringPermissions(sassUserInfo.getStringPermissions());
+            }
+            if (!CollectionUtils.isEmpty(sassUserInfo.getObjectPermissions())){
+                authorizationInfo.setObjectPermissions(sassUserInfo.getObjectPermissions());
+            }
+            return authorizationInfo;
 
-        if (!CollectionUtils.isEmpty(roleDOList)){
-            Set<String> roleCodes = new HashSet<>(roleDOList.size());
-            roleDOList.forEach(roleDO -> roleCodes.add(roleDO.getCode()));
-            authorizationInfo.setRoles(roleCodes);
+        }catch (Exception ex){
+            throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION,"无权限操作","无权限操作");
         }
-
-        List<ResourceDO> resourceDOS = userService.findResourcesByAccount(account);
-        if (!CollectionUtils.isEmpty(resourceDOS)){
-            Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
-            resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getUrl()));
-            authorizationInfo.setStringPermissions(permissionUrls);
-        }
-
-        return authorizationInfo;
     }
 
 

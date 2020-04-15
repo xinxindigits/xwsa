@@ -4,8 +4,13 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
 
+    <bean id="userAclTokenRepository" class="cn.com.xinxin.sass.auth.repository.UserAclTokenRepository">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
     <bean id="jwtTokenAuthorizingRealmRealm" class="cn.com.xinxin.sass.web.shiro.realm.JwtTokenAuthorizingRealm">
-        <property name="userService" ref="userServiceImpl"/>
+        <!--<property name="userService" ref="userServiceImpl"/>-->
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
     </bean>
 
     <bean id="defaultSessionStorageEvaluator" class="org.apache.shiro.mgt.DefaultSessionStorageEvaluator">
@@ -37,10 +42,6 @@
         </property>
         <property name="subjectDAO" ref="subjectDAO"/>
         <property name="rememberMeManager" ref="rememberMeManager"/>
-    </bean>
-
-    <bean id="userAclTokenRepository" class="cn.com.xinxin.sass.auth.repository.UserAclTokenRepository">
-        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
     </bean>
 
     <bean id="jwtTokenFilter" class="cn.com.xinxin.sass.web.shiro.filter.JWTTokenFilter"/>
