@@ -1,7 +1,6 @@
 package cn.com.xinxin.sass.auth.interceptor;
 
 
-import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;

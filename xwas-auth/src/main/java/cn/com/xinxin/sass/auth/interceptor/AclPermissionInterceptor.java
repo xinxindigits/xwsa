@@ -7,12 +7,8 @@ import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
-import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
-import com.xinxinfinance.commons.portal.view.result.PortalSingleViewResultVO;
-//import com.xinxinfinance.commons.portal.xxjr.job.ReturnT;
 import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.util.ApplicationContextHolder;
-import com.xxl.job.core.biz.model.ReturnT;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.slf4j.Logger;
@@ -65,32 +61,10 @@ public class AclPermissionInterceptor implements MethodInterceptor {
             }else {
                 Type returnType = method.getGenericReturnType();
                 if (returnType.getTypeName().equals("java.lang.String")){
-                    return "common/unauthorized";
+                    return "unauthorized";
                 }else if (returnType.getTypeName().equals("org.springframework.web.servlet.ModelAndView")){
-                    ModelAndView mav = new ModelAndView("common/unauthorized");
+                    ModelAndView mav = new ModelAndView("unauthorized");
                     return mav;
-                }else if (returnType.getTypeName().equals("com.xinxinfinance.commons.portal.view.result.PortalSingleViewResultVO")){
-                    /**
-                     * 注意，controller的返回值一定要是SingleResponseVO，不能写Object
-                     */
-                    PortalSingleViewResultVO portalSingleViewResultVO = new PortalSingleViewResultVO();
-                    portalSingleViewResultVO.setError(true);
-                    portalSingleViewResultVO.setErrorMsg("您没有相应的权限");
-                    return portalSingleViewResultVO;
-                }else if (returnType.getTypeName().equals("com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO")){
-                    /**
-                     * 注意，controller的返回值一定要是PageResponseVO，不能写Object
-                     */
-                    PortalPageViewResultVO portalPageViewResultVO = new PortalPageViewResultVO();
-                    portalPageViewResultVO.setError(true);
-                    portalPageViewResultVO.setErrorMsg("您没有相应的权限");
-                    return portalPageViewResultVO;
-                }else if (returnType.getTypeName().equals("com.xinxinfinance.commons.portal.xxjr.job.ReturnT")){
-                //}else if (returnType.getTypeName().equals("com.xxl.job.core.biz.model.ReturnT")){
-                    ReturnT returnT = new ReturnT();
-                    returnT.setCode(ReturnT.FAIL_CODE);
-                    returnT.setMsg("您没有相应的权限");
-                    return returnT;
                 }
                 throw new BusinessException(CommonResultCode.ILLEGAL_ARGUMENT,"无权限");
             }

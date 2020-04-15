@@ -20,10 +20,10 @@ import java.util.UUID;
 public class JWTUtil {
 
 
-    private static final Logger log = LoggerFactory.getLogger(JWTUtil.class);
+    public static final Logger log = LoggerFactory.getLogger(JWTUtil.class);
 
-    // 过期时间5分钟
-    private static final long EXPIRE_TIME = 5 * 60 * 1000;
+    // 过期时间300分钟分钟
+    public static final long TOKEN_EXPIRE_TIME = 600 * 60 * 1000;
 
     /**
      * 生成签名,5min后过期
@@ -33,7 +33,7 @@ public class JWTUtil {
      * @return 加密的token
      */
     public static String sign(String username, String secret) {
-        Date date = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+        Date date = new Date(System.currentTimeMillis() + TOKEN_EXPIRE_TIME);
         Algorithm algorithm = Algorithm.HMAC256(secret);
         // 附带username信息
         return JWT.create()

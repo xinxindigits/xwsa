@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.auth.repository;
 
 import cn.com.xinxin.sass.auth.constant.SessionCacheConstants;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.result.CommonResultCode;
 import org.apache.shiro.session.Session;
@@ -45,7 +46,7 @@ public class UserAclTokenRepository {
     public void setSassUserTokenCache(String account, String token){
         sessionRedisTemplate.opsForValue().set(
                 SessionCacheConstants.SASS_USER_TOKEN_CACHE_KEY + account,
-                token, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
+                token, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.SECONDS);
 
     }
 
@@ -61,7 +62,7 @@ public class UserAclTokenRepository {
     public void setSassUserByUserAccount(String account, SassUserInfo sassUserInfo){
         sessionRedisTemplate.opsForValue().set(
             SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + account,
-                sassUserInfo, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
+                sassUserInfo, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.MINUTES);
     }
 
 

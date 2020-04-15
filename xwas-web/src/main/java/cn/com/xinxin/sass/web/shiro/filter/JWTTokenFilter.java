@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.web.shiro.filter;
 
+import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.web.shiro.realm.JWTToken;
 import org.apache.shiro.authc.AuthenticationException;
@@ -27,6 +28,11 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JWTTokenFilter.class);
 
+
+    private UserAclTokenRepository userAclTokenRepository;
+
+
+
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         try {
@@ -48,7 +54,6 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
         JWTToken token = new JWTToken(authorization);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
         getSubject(request, response).login(token);
-        // TODO: 登陆之后将token以及用户信息存如缓存
         return true;
     }
 
@@ -89,6 +94,7 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
                                      Subject subject,
                                      ServletRequest request,
                                      ServletResponse response) throws Exception {
+        // 如果登陆成功，则需要刷新对应的token缓存信息，同时要
         return true;
     }
 
