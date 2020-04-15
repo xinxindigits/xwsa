@@ -4,4 +4,4 @@
  * @updater:
  * @description:
  */
-package cn.com.xinxin.sass.session;
+package cn.com.xinxin.sass.auth;

@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.session.annotation;
+package cn.com.xinxin.sass.auth.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

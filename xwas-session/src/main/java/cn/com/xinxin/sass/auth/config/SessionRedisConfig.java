@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.session.config;
+package cn.com.xinxin.sass.auth.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,13 +18,13 @@ import java.util.Map;
 @Configuration
 public class SessionRedisConfig {
 
-    @Value("${session.redis.cluster.nodes}")
+    @Value("${auth.redis.cluster.nodes}")
     private String clusterNodes;
 
-    @Value("${session.redis.cluster.timeout}")
+    @Value("${auth.redis.cluster.timeout}")
     private Long timeout;
 
-    @Value("${session.redis.cluster.max-redirects}")
+    @Value("${auth.redis.cluster.max-redirects}")
     private Integer redirects;
 
     @Bean("redisClusterConfiguration")

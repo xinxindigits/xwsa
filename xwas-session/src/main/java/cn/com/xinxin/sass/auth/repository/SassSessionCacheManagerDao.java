@@ -1,6 +1,6 @@
-package cn.com.xinxin.sass.session.repository;
+package cn.com.xinxin.sass.auth.repository;
 
-import cn.com.xinxin.sass.session.constant.SessionCacheConstants;
+import cn.com.xinxin.sass.auth.constant.SessionCacheConstants;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;

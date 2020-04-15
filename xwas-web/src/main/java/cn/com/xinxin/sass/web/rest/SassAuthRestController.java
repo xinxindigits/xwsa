@@ -2,7 +2,7 @@ package cn.com.xinxin.sass.web.rest;
 
 
 import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
-import cn.com.xinxin.sass.session.utils.JWTUtil;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.convert.PortalFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
@@ -12,7 +12,6 @@ import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.web.vo.UserTokenVO;
 import com.xinxinfinance.commons.exception.BusinessException;
-import com.xinxinfinance.commons.result.CommonResultCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(produces = "application/json; charset=UTF-8")
-public class SassUserLoginRestController {
+public class SassAuthRestController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -52,7 +51,8 @@ public class SassUserLoginRestController {
     }
 
     @RequestMapping(value = "/auth",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-    public Object login(HttpServletRequest request, @RequestBody UserLoginForm userLoginForm){
+    public Object login(HttpServletRequest request,
+                        @RequestBody UserLoginForm userLoginForm){
 
         String userAccount = userLoginForm.getAccount();
 
@@ -65,6 +65,7 @@ public class SassUserLoginRestController {
 
         if(ecnryptPassword.equals(userDO.getPassword())){
             // 登陆成功, 返回token
+            // TODO: 登陆成功之后需要将用户的信息缓存起来，方便查询读写
             String token = getToken(userAccount, userDO.getPassword());
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
@@ -74,13 +75,6 @@ public class SassUserLoginRestController {
             // 登陆失败
             throw new BusinessException(BizResultCodeEnum.INVALID_TOKEN, "登陆失败","登陆失败");
         }
-    }
-
-    @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
-    public Object unauthorized(HttpServletRequest request){
-        log.info("无效登陆口令，请重新登陆");
-        throw new BusinessException(BizResultCodeEnum.INVALID_TOKEN,"无效登陆口令","无效登陆口令，请重新登陆");
-
     }
 
 

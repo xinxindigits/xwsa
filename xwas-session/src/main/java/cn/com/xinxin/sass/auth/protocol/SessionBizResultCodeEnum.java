@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.session.protocol;
+package cn.com.xinxin.sass.auth.protocol;
 
 
 import com.xinxinfinance.commons.result.BizResultCode;

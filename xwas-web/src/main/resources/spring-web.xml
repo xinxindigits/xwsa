@@ -42,7 +42,7 @@
     <mvc:resources mapping="/static/**" location="/WEB-INF/static/"/>
 
     <!-- 定义无需Controller的url<->view直接映射 -->
-    <!--<mvc:view-controller path="/" view-name="redirect:/unauthorized"/>-->
+    <!--<mvc:vwebller path="/" view-name="redirect:/unauthorized"/>-->
 
     <bean id="defaultViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/"/>

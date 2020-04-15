@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.session.repository;
+package cn.com.xinxin.sass.auth.repository;
 
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
@@ -11,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: zhouyang
  * @created: 14/04/2020.
  * @updater:
- * @description: shiro session redis cache 管理类
+ * @description: shiro auth redis cache 管理类
  */
 public class SassSessionRedisCacheManager implements CacheManager {
 

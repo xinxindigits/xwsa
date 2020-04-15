@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.session.constant;
+package cn.com.xinxin.sass.auth.constant;
 
 /**
  * @author: zhouyang
@@ -9,7 +9,7 @@ package cn.com.xinxin.sass.session.constant;
 public class SessionCacheConstants {
 
     /**
-     * session cache key
+     * auth cache key
      */
     public static final String SASS_SESSION_MANAGER_CACHE_KEY = "shiro_redis_session_manager:";
 

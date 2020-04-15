@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.session.interceptor;
+package cn.com.xinxin.sass.auth.interceptor;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shiro.cache.CacheManager;
@@ -56,7 +56,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
     }
 
     public void setCacheManager(CacheManager cacheManager) {
-        this.cache = cacheManager.getCache("shiro-kickout-session");
+        this.cache = cacheManager.getCache("shiro-kickout-auth");
     }
 
     @Override

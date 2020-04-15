@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.session.utils;
+package cn.com.xinxin.sass.auth.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

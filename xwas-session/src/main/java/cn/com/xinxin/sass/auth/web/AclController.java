@@ -1,10 +1,10 @@
-package cn.com.xinxin.sass.session.controller;
+package cn.com.xinxin.sass.auth.web;
 
 
-import cn.com.xinxin.sass.session.model.SassUserInfo;
-import cn.com.xinxin.sass.session.protocol.SessionBizResultCodeEnum;
-import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
-import cn.com.xinxin.sass.session.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
+import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -39,11 +39,11 @@ public abstract class AclController {
         return sessionId;
     }
 
-    protected SassUserInfo getPortalUser(HttpServletRequest request){
+    protected SassUserInfo getSassUser(HttpServletRequest request){
 
         String userSessionId = this.getSessionId(request);
 
-        SassUserInfo sassUserInfo = userAclTokenRepository.getPortalUserBySessionId(userSessionId);
+        SassUserInfo sassUserInfo = userAclTokenRepository.getSassUserBySessionId(userSessionId);
 
         sassUserInfo.setIp(HttpRequestUtil.getIpAddress(request));
         sassUserInfo.setDevice(HttpRequestUtil.getRequestDevice(request));
@@ -53,7 +53,7 @@ public abstract class AclController {
 
     protected Long getUserId(HttpServletRequest request) {
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
@@ -63,7 +63,7 @@ public abstract class AclController {
 
     protected String getUserName(HttpServletRequest request){
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
@@ -72,24 +72,17 @@ public abstract class AclController {
 
     protected String getUserAccount(HttpServletRequest request){
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
         return sassUserInfo.getAccount();
     }
 
-    protected String getUserNo(HttpServletRequest request){
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
-        if(null == sassUserInfo){
-            throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
-        }
-        return sassUserInfo.getNo();
-    }
 
     protected String getUserIp(HttpServletRequest request){
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }
@@ -98,7 +91,7 @@ public abstract class AclController {
 
     protected String getUserDevice(HttpServletRequest request){
 
-        SassUserInfo sassUserInfo = this.getPortalUser(request);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         if(null == sassUserInfo){
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
         }

@@ -1,6 +1,9 @@
 package cn.com.xinxin.sass.web.shiro.filter;
 
 import cn.com.xinxin.sass.web.shiro.realm.JWTToken;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +40,8 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
      * 认证
      */
     @Override
-    protected boolean executeLogin(ServletRequest request, ServletResponse response) {
+    protected boolean executeLogin(ServletRequest request,
+                                   ServletResponse response) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String authorization = httpServletRequest.getHeader("XToken");
         JWTToken token = new JWTToken(authorization);
@@ -77,6 +81,22 @@ public class JWTTokenFilter extends BasicHttpAuthenticationFilter {
             return false;
         }
         return super.preHandle(request, response);
+    }
+
+    @Override
+    protected boolean onLoginSuccess(AuthenticationToken token,
+                                     Subject subject,
+                                     ServletRequest request,
+                                     ServletResponse response) throws Exception {
+        return true;
+    }
+
+    @Override
+    protected boolean onLoginFailure(AuthenticationToken token,
+                                     AuthenticationException e,
+                                     ServletRequest request,
+                                     ServletResponse response) {
+        return false;
     }
 
 }

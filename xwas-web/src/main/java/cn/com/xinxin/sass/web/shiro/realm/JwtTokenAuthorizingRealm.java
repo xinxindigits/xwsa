@@ -3,9 +3,8 @@ package cn.com.xinxin.sass.web.shiro.realm;
 
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
-import cn.com.xinxin.sass.session.model.SassUserInfo;
-import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
-import cn.com.xinxin.sass.session.utils.JWTUtil;
+import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,7 +16,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.List;

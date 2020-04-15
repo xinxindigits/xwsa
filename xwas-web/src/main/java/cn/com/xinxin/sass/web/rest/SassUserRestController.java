@@ -2,7 +2,7 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.repository.model.UserDO;
-import cn.com.xinxin.sass.session.controller.AclController;
+import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.form.UserForm;
 import com.xinxinfinance.commons.util.BaseConvert;

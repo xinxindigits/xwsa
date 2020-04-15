@@ -2,8 +2,8 @@ package cn.com.xinxin.sass.web.controller;
 
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
-import cn.com.xinxin.sass.session.controller.AclController;
-import cn.com.xinxin.sass.session.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.web.utils.TreeUtil;
 import cn.com.xinxin.sass.web.vo.TreeVO;
 import com.alibaba.fastjson.JSONObject;

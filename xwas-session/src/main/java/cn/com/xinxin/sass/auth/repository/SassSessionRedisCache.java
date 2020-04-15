@@ -1,6 +1,6 @@
-package cn.com.xinxin.sass.session.repository;
+package cn.com.xinxin.sass.auth.repository;
 
-import cn.com.xinxin.sass.session.constant.SessionCacheConstants;
+import cn.com.xinxin.sass.auth.constant.SessionCacheConstants;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import java.util.*;
  * @author: zhouyang
  * @created: 14/04/2020.
  * @updater:
- * @description: redis session cache的实现类
+ * @description: redis auth cache的实现类
  */
 public class SassSessionRedisCache<K,V> implements Cache<K,V> {
 

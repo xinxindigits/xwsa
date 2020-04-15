@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.session.utils;
+package cn.com.xinxin.sass.auth.utils;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

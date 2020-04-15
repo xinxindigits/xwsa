@@ -1,8 +1,8 @@
-package cn.com.xinxin.sass.session.repository;
+package cn.com.xinxin.sass.auth.repository;
 
 
-import cn.com.xinxin.sass.session.constant.SessionCacheConstants;
-import cn.com.xinxin.sass.session.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.constant.SessionCacheConstants;
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.result.CommonResultCode;
 import org.apache.shiro.session.Session;
@@ -49,20 +49,20 @@ public class UserAclTokenRepository {
 
     }
 
-    public Session getPortalUserLoginSession(String sessionId){
+    public Session getSassUserLoginSession(String sessionId){
         Session session = (Session) sessionRedisTemplate.opsForValue().get(
             SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId);
         return session;
 
     }
 
-    public void setPortalUserSession(String sessionId, Session session){
+    public void setSassUserSession(String sessionId, Session session){
         sessionRedisTemplate.opsForValue().set(
             SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId,
             session, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
     }
 
-    public void updatePortalUserSession(String sessionId){
+    public void updateSassUserSession(String sessionId){
         sessionRedisTemplate.expire(SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId,
                 SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);
     }
@@ -81,7 +81,7 @@ public class UserAclTokenRepository {
     }
 
 
-    public SassUserInfo getPortalUserBySessionId(String sessionId){
+    public SassUserInfo getSassUserBySessionId(String sessionId){
 
         Session session = (Session) sessionRedisTemplate.opsForValue().get(
             SessionCacheConstants.SASS_SESSION_MANAGER_CACHE_KEY + sessionId);
@@ -107,16 +107,16 @@ public class UserAclTokenRepository {
     }
 
 
-    public SassUserInfo getPortalUserByUserNo(String userNo){
+    public SassUserInfo getSassUserByUserAccount(String account){
 
         SassUserInfo sassUserInfo = (SassUserInfo) sessionRedisTemplate.opsForValue().get(
-            SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + userNo);
+            SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + account);
 
         return sassUserInfo;
 
     }
 
-    public void setPortalUserByUserNo(String account, SassUserInfo sassUserInfo){
+    public void setSassUserByUserAccount(String account, SassUserInfo sassUserInfo){
         sessionRedisTemplate.opsForValue().set(
             SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + account,
                 sassUserInfo, SessionCacheConstants.DEFAULT_SESSION_TIME_OUT,TimeUnit.MINUTES);

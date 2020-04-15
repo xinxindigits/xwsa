@@ -14,7 +14,7 @@ import cn.com.xinxin.sass.repository.dao.UserDOMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
-import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;

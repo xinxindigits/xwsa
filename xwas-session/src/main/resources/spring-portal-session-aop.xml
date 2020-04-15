@@ -9,9 +9,9 @@
     <context:component-scan base-package="com.xinxinfinance.commons"/>
 
     <!-- 权限检查 -->
-    <bean id="aclPermissionInterceptor" class="cn.com.xinxin.sass.session.interceptor.AclPermissionInterceptor"/>
-    <!-- update session -->
-    <bean id="sessionInterceptor" class="cn.com.xinxin.sass.session.interceptor.SessionInterceptor"/>
+    <bean id="aclPermissionInterceptor" class="cn.com.xinxin.sass.auth.interceptor.AclPermissionInterceptor"/>
+    <!-- updauthsion -->
+    <bean id="sessionInterceptor" class="cn.com.xinxin.sass.auth.interceptor.SessionInterceptor"/>
 
     <aop:config>
         <aop:pointcut id="controllerPointcut" expression="execution(public * cn.com.xinxin.*.web.controller..*.*(..))"/>

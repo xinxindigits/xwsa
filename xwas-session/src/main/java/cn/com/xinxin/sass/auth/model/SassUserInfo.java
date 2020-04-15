@@ -1,6 +1,5 @@
-package cn.com.xinxin.sass.session.model;
+package cn.com.xinxin.sass.auth.model;
 
-import com.xinxinfinance.commons.api.base.ToString;
 import org.apache.shiro.authz.Permission;
 
 import java.io.Serializable;

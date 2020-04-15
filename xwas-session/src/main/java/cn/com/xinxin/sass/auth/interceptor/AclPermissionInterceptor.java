@@ -1,9 +1,9 @@
-package cn.com.xinxin.sass.session.interceptor;
+package cn.com.xinxin.sass.auth.interceptor;
 
 
-import cn.com.xinxin.sass.session.annotation.RequirePermission;
-import cn.com.xinxin.sass.session.model.SassUserInfo;
-import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.auth.annotation.RequirePermission;
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
 import com.xinxinfinance.commons.portal.view.result.PortalSingleViewResultVO;

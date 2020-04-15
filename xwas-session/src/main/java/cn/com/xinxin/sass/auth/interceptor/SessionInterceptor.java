@@ -1,7 +1,7 @@
-package cn.com.xinxin.sass.session.interceptor;
+package cn.com.xinxin.sass.auth.interceptor;
 
 
-import cn.com.xinxin.sass.session.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.util.ApplicationContextHolder;
@@ -30,11 +30,11 @@ public class SessionInterceptor implements MethodInterceptor {
                         UserAclTokenRepository userAclTokenRepository = (UserAclTokenRepository) ApplicationContextHolder.getBean("userAclTokenRepository");
                         boolean exist = userAclTokenRepository.exist(request.getRequestedSessionId());
                         if (exist){
-                            //session 存在，更新session超时时间
+                            //auth 存在，更新session超时时间
                             userAclTokenRepository.updatePortalUserSession(request.getRequestedSessionId());
                             return methodInvocation.proceed();
                         }else {
-                            //session 超时
+                            //auth 超时
                             /*Type returnType = method.getGenericReturnType();
                             if (returnType.getTypeName().equals("java.lang.String")){
                                 return "login";
