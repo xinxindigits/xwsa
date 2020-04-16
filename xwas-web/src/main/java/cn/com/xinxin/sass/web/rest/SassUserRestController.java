@@ -53,7 +53,7 @@ public class SassUserRestController extends AclController {
 
     }
 
-    @RequestMapping(value = "/update/{account}",method = RequestMethod.POST)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/update")
     public Object updateUserInfo(HttpServletRequest request, @RequestBody UserForm userForm){
