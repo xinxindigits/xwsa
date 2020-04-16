@@ -82,7 +82,6 @@
                 /** = jwtFilter
             </value>
         </property>
-
     </bean>
 
     <!-- shiro 生命周期处理器 -->
