@@ -42,7 +42,7 @@ public class SessionCacheConstants {
      * JWT刷新新token响应状态码，
      * Redis中不存在，但jwt未过期，不生成新的token，返回361状态码
      */
-    public static final int JWT_INVALID_TOKEN_CODE = 461;
+    public static final int JWT_INVALID_TOKEN_CODE = 361;
 
 
 
