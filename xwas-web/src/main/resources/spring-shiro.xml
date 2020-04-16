@@ -50,6 +50,7 @@
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/auth"/>
         <property name="unauthorizedUrl" value="/unauthorized"/>
+        <property name="successUrl" value="/index"/>
         <property name="filters">
             <util:map>
                 <entry key="jwtFilter" value-ref="jwtTokenFilter"/>

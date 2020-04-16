@@ -112,9 +112,7 @@ public abstract class AclController {
 
 
 
-    @ExceptionHandler({ UnauthorizedException.class,
-            AuthorizationException.class,
-            UnauthorizedException.class })
+    @ExceptionHandler({ UnauthenticatedException.class, AuthenticationException.class })
     public Object authenticationException(HttpServletRequest request, HttpServletResponse response) {
         logger.info("登陆授权失败");
         Map<String, String> resultMap = new HashMap();
@@ -163,7 +161,6 @@ public abstract class AclController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION,"无权限操作","无权限操作");
         return null;
     }
     

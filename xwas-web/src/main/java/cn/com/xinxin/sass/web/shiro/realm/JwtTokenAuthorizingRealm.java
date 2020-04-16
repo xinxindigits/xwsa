@@ -66,7 +66,6 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
 
-        try {
             // 从tokent中读取用户信息
             String token = (String) authenticationToken.getCredentials();
 
@@ -86,10 +85,6 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
                     account, token, ByteSource.Util.bytes(account + "JwtTokenAuthorizingRealm"),getName());
 
             return authenticationInfo;
-
-        }catch (Exception ex){
-            throw new BusinessException(SessionBizResultCodeEnum.FAIL,"登陆认证失败","登陆认证失败");
-        }
     }
 
 
@@ -98,7 +93,6 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
 
         logger.info("————权限认证 [ roles、permissions]————");
 
-        try {
             String account = (String) principalCollection.getPrimaryPrincipal();
 
             SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
@@ -118,10 +112,6 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
                 authorizationInfo.setObjectPermissions(sassUserInfo.getObjectPermissions());
             }
             return authorizationInfo;
-
-        }catch (Exception ex){
-            throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION,"无权限操作","无权限操作");
-        }
     }
 
 
