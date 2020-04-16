@@ -160,7 +160,7 @@
             <id>local</id>
             <properties>
                 <properties.name>cloud-dev</properties.name>
-                <log.home>/home/weblogic/logs/app</log.home>
+                <log.home>/home/appuser/logs/app</log.home>
                 <log.level>debug</log.level>
             </properties>
         </profile>
@@ -168,7 +168,7 @@
             <id>dev</id>
             <properties>
                 <properties.name>dev</properties.name>
-                <log.home>/home/weblogic/logs/app</log.home>
+                <log.home>/home/appuser/logs/app</log.home>
                 <log.level>debug</log.level>
             </properties>
         </profile>
@@ -176,7 +176,7 @@
             <id>test</id>
             <properties>
                 <properties.name>test</properties.name>
-                <log.home>/home/weblogic/logs/app</log.home>
+                <log.home>/home/appuser/logs/app</log.home>
                 <log.level>info</log.level>
             </properties>
         </profile>

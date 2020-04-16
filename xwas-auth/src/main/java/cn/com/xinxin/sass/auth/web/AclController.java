@@ -112,7 +112,9 @@ public abstract class AclController {
 
 
 
-    @ExceptionHandler({ UnauthenticatedException.class, AuthenticationException.class })
+    @ExceptionHandler({ UnauthorizedException.class,
+            AuthorizationException.class,
+            UnauthorizedException.class })
     public Object authenticationException(HttpServletRequest request, HttpServletResponse response) {
         logger.info("登陆授权失败");
         Map<String, String> resultMap = new HashMap();
