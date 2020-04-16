@@ -42,15 +42,6 @@ public abstract class AclController {
     public AclController() {
     }
 
-    protected String getSessionId(HttpServletRequest request){
-
-        String sessionId = request.getRequestedSessionId();
-        if(StringUtils.isEmpty(sessionId)){
-            throw new BusinessException(SessionBizResultCodeEnum.INVALID_SESSION_ID,"无法获取用户登陆信息，清查看是否登陆成功");
-        }
-        logger.info("getSessionId ,sessionid={}", sessionId);
-        return sessionId;
-    }
 
     protected SassUserInfo getSassUser(HttpServletRequest request){
         // 从tokent中获取对应的权限
@@ -140,9 +131,7 @@ public abstract class AclController {
      * @param response
      * @return
      */
-    @ExceptionHandler({UnauthorizedException.class,
-            AuthorizationException.class,
-            UnauthorizedException.class})
+    @ExceptionHandler({UnauthorizedException.class, AuthorizationException.class})
     public Object authorizationException(HttpServletRequest request, HttpServletResponse response) {
 
         logger.info("未授权的操作请求");
@@ -160,6 +149,7 @@ public abstract class AclController {
             out.write(json);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION,"无权限操作","无权限操作");
         }
         return null;
     }

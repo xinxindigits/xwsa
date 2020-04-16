@@ -19,12 +19,12 @@
         <dependency>
             <groupId>com.xinxinfinance.commons</groupId>
             <artifactId>commons-api-protocol</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.xinxinfinance.commons</groupId>
             <artifactId>commons-api-support</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
+            <version>1.2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

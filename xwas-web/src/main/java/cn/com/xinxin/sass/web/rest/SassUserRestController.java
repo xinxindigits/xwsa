@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.web.rest;
 
-import cn.com.xinxin.sass.auth.annotation.RequirePermission;
+
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
@@ -71,7 +71,6 @@ public class SassUserRestController extends AclController {
             userDO.setName(userForm.getName());
         }
         userDO.setGender(Byte.valueOf(String.valueOf(userForm.getGender())));
-
         boolean result = this.userService.updateUser(userDO);
         return result;
     }

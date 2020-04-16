@@ -36,7 +36,7 @@
         <aop:pointcut id="controllerPointcut" expression="@within(org.springframework.web.bind.annotation.RestController)
         and @annotation(org.springframework.web.bind.annotation.RequestMapping)"/>
         <aop:advisor pointcut-ref="restPointcut" advice-ref="restResultInterceptor" order="0"/>
-        <aop:advisor pointcut-ref="restPointcut" advice-ref="validationInterceptor" order="2"/>
+        <aop:advisor pointcut-ref="restPointcut" advice-ref="validationInterceptor" order="1"/>
     </aop:config>
 
     <mvc:resources mapping="/check-service.html" location="/check-service.html"/>
