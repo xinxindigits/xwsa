@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Created by helloyy on 12/02/2018.
  */
-public enum BizResultCodeEnum implements BizResultCode {
+public enum SassBizResultCodeEnum implements BizResultCode {
 
     // 公用
     SUCCESS("SUCCESS", "成功", "成功"),
@@ -55,7 +55,7 @@ public enum BizResultCodeEnum implements BizResultCode {
      * @param debugMessage
      * @param alertMessage
      */
-    BizResultCodeEnum(String debugMessage, String alertMessage) {
+    SassBizResultCodeEnum(String debugMessage, String alertMessage) {
         this.code = this.name();
         this.debugMessage = debugMessage;
         this.alertMessage = alertMessage;
@@ -66,7 +66,7 @@ public enum BizResultCodeEnum implements BizResultCode {
      *
      * @param alertMessage   前端提示文案
      */
-    BizResultCodeEnum(final String alertMessage) {
+    SassBizResultCodeEnum(final String alertMessage) {
         this.code = this.name();
         this.debugMessage = alertMessage;
         this.alertMessage = alertMessage;
@@ -78,7 +78,7 @@ public enum BizResultCodeEnum implements BizResultCode {
      * @param debugMessage
      * @param alertMessage
      */
-    BizResultCodeEnum(String code, String debugMessage, String alertMessage) {
+    SassBizResultCodeEnum(String code, String debugMessage, String alertMessage) {
         this.code = code;
         this.debugMessage = debugMessage;
         this.alertMessage = alertMessage;
@@ -90,7 +90,7 @@ public enum BizResultCodeEnum implements BizResultCode {
      * @param value 枚举值
      * @return <value>FilmServiceErrors</value>
      */
-    static BizResultCodeEnum getEnumByCode(final String value) {
+    static SassBizResultCodeEnum getEnumByCode(final String value) {
 
         // value为空，返回null
         if (value == null || value.isEmpty()) {
@@ -98,7 +98,7 @@ public enum BizResultCodeEnum implements BizResultCode {
         }
 
         // 遍历
-        for (final BizResultCodeEnum errEnum : values()) {
+        for (final SassBizResultCodeEnum errEnum : values()) {
             if (value.equals(String.valueOf(errEnum.getCode()))) {
                 return errEnum;
             }

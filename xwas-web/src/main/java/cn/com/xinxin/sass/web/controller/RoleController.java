@@ -1,19 +1,16 @@
 package cn.com.xinxin.sass.web.controller;
 
-import cn.com.xinxin.oplog.client.enums.AppProductEnum;
-import cn.com.xinxin.oplog.client.enums.OperationTypeEnum;
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.common.Page;
-import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.auth.annotation.RequirePermission;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
-import cn.com.xinxin.sass.web.utils.PortalOplogUtil;
 import cn.com.xinxin.sass.web.vo.RoleResourceVO;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
@@ -70,19 +67,19 @@ public class RoleController extends AclController {
 
 
         if(null == roleResourceVO){
-            throw new BusinessException(BizResultCodeEnum.PARAMETER_NULL, "参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL, "参数不能为空");
         }
 
         if(StringUtils.isEmpty(roleResourceVO.getCode())){
-            throw new BusinessException(BizResultCodeEnum.PARAMETER_NULL, "资源编码不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL, "资源编码不能为空");
         }
 
         if(StringUtils.isEmpty(roleResourceVO.getName())){
-            throw new BusinessException(BizResultCodeEnum.PARAMETER_NULL, "资源名称不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL, "资源名称不能为空");
         }
 
         if(StringUtils.isEmpty(roleResourceVO.getRoleType())){
-            throw new BusinessException(BizResultCodeEnum.PARAMETER_NULL, "角色类型不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL, "角色类型不能为空");
         }
 
         RoleDO exist = roleService.findByRoleCode(roleResourceVO.getCode());

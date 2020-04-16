@@ -1,17 +1,14 @@
 package cn.com.xinxin.sass.web.controller;
 
-import cn.com.xinxin.oplog.client.enums.AppProductEnum;
-import cn.com.xinxin.oplog.client.enums.OperationTypeEnum;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.common.Page;
-import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.auth.annotation.RequirePermission;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.web.convert.PortalFormConvert;
 import cn.com.xinxin.sass.web.form.RoleResourceForm;
-import cn.com.xinxin.sass.web.utils.PortalOplogUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
 import com.xinxinfinance.commons.portal.view.result.PortalSingleViewResultVO;
@@ -162,11 +159,11 @@ public class RoleResourceController extends AclController {
     private void checkRoleResourceFormParameter(final RoleResourceForm roleResourceForm){
         // 必要的参数验证
         if(null == roleResourceForm){
-            throw new BusinessException(BizResultCodeEnum.PARAMETER_NULL,"角色信息参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"角色信息参数不能为空");
         }
 
         if(StringUtils.isEmpty(roleResourceForm.getRoleCode())){
-            throw new BusinessException(BizResultCodeEnum.PARAMETER_NULL,"角色账户信息参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"角色账户信息参数不能为空");
         }
 
     }

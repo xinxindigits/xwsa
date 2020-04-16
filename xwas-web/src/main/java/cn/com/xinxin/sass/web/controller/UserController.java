@@ -1,11 +1,9 @@
 package cn.com.xinxin.sass.web.controller;
 
-import cn.com.xinxin.oplog.client.enums.AppProductEnum;
-import cn.com.xinxin.oplog.client.enums.OperationTypeEnum;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.common.Page;
-import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.annotation.RequirePermission;
 import cn.com.xinxin.sass.auth.web.AclController;
@@ -14,7 +12,6 @@ import cn.com.xinxin.sass.web.convert.PortalFormConvert;
 import cn.com.xinxin.sass.web.form.ModifyPasswordForm;
 import cn.com.xinxin.sass.web.form.ResetPasswordForm;
 import cn.com.xinxin.sass.web.form.UserForm;
-import cn.com.xinxin.sass.web.utils.PortalOplogUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
 import com.xinxinfinance.commons.portal.view.result.PortalSingleViewResultVO;
@@ -143,11 +140,11 @@ public class UserController extends AclController {
 
         // 必要的参数验证
         if(null == userForm){
-            throw new BusinessException(BizResultCodeEnum.PARAMETER_NULL,"用户信息参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"用户信息参数不能为空");
         }
 
         if(StringUtils.isEmpty(userForm.getAccount())){
-            throw new BusinessException(BizResultCodeEnum.PARAMETER_NULL,"用户账户信息参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"用户账户信息参数不能为空");
         }
     }
 

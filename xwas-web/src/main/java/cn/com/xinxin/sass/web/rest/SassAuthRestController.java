@@ -4,7 +4,7 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
-import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
@@ -74,7 +74,7 @@ public class SassAuthRestController {
         UserDO userDO = userService.findByUserAccount(userAccount);
 
         if (userDO == null) {
-            throw new BusinessException(BizResultCodeEnum.DATA_NOT_EXIST, "用户信息不存在","用户信息不存在");
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "用户信息不存在","用户信息不存在");
 
         }
 
@@ -115,7 +115,7 @@ public class SassAuthRestController {
             return userTokenVO;
         }else{
             // 登陆失败
-            throw new BusinessException(BizResultCodeEnum.INVALID_TOKEN, "登陆失败","登陆失败");
+            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败","登陆失败");
         }
     }
 

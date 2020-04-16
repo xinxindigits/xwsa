@@ -9,7 +9,7 @@ import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.biz.vo.UserPwdVO;
 import cn.com.xinxin.sass.common.Page;
 
-import cn.com.xinxin.sass.common.enums.BizResultCodeEnum;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.dao.UserDOMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
@@ -79,13 +79,13 @@ public class UserServiceImpl implements UserService {
     public void modifyPassword(Long userId, String originPassword, String newPassword, String updater) {
         UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
         if (userDO == null){
-            throw new BusinessException(BizResultCodeEnum.DATA_NOT_EXIST,"根据用户id找不到对应的用户");
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"根据用户id找不到对应的用户");
         }
 
         String originEncryptedPassword = userDO.getPassword();
         String inputOriginPassword = PasswordUtils.encryptPassword(userDO.getAccount(), userDO.getSalt(), originPassword);
         if (!Objects.equals(originEncryptedPassword,inputOriginPassword)){
-            throw new BusinessException(BizResultCodeEnum.ILLEGAL_PARAMETER,"旧密码错误,修改密码失败");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"旧密码错误,修改密码失败");
         }
 
         UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getAccount(),newPassword);
