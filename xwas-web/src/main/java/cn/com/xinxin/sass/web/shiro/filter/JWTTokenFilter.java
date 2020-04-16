@@ -42,7 +42,13 @@ public class JWTTokenFilter extends AuthenticatingFilter {
 
     private UserAclTokenRepository userAclTokenRepository;
 
+    public UserAclTokenRepository getUserAclTokenRepository() {
+        return userAclTokenRepository;
+    }
 
+    public void setUserAclTokenRepository(UserAclTokenRepository userAclTokenRepository) {
+        this.userAclTokenRepository = userAclTokenRepository;
+    }
 
     @Override
     protected AuthenticationToken createToken(ServletRequest servletRequest,

@@ -44,7 +44,14 @@
         <property name="rememberMeManager" ref="rememberMeManager"/>
     </bean>
 
-    <bean id="jwtTokenFilter" class="cn.com.xinxin.sass.web.shiro.filter.JWTTokenFilter"/>
+    <bean id="jwtTokenFilter" class="cn.com.xinxin.sass.web.shiro.filter.JWTTokenFilter">
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
+    </bean>
+
+    <bean id="logoutFilter" class="cn.com.xinxin.sass.web.shiro.filter.JwtLogoutFilter">
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
+    </bean>
+
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
@@ -54,6 +61,7 @@
         <property name="filters">
             <util:map>
                 <entry key="jwtFilter" value-ref="jwtTokenFilter"/>
+                <entry key="logoutFilter" value-ref="logoutFilter"/>
             </util:map>
         </property>
 
@@ -70,6 +78,7 @@
                 /register = anon
                 /unauthorized = anon
                 /static/** = anon
+                /logout = logoutFilter
                 /** = jwtFilter
             </value>
         </property>
