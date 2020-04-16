@@ -112,7 +112,7 @@
     </dependencies>
 
     <build>
-        <finalName>xwas</finalName>
+        <finalName>sass</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -145,7 +145,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
-                <finalName>xwas</finalName>
+                <finalName>sass</finalName>
                 <resources>
                     <resource>
                         <directory>src/main/resources</directory>
