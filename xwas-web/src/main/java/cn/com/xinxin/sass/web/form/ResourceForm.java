@@ -22,6 +22,8 @@ public class ResourceForm extends ToString {
 
     private String name;
 
+    private String authority;
+
     private String url;
 
     private Boolean root;
@@ -66,6 +68,14 @@ public class ResourceForm extends ToString {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getAuthority() {
+        return authority;
+    }
+
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     public String getUrl() {
