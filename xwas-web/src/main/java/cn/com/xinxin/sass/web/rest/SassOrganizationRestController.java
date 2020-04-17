@@ -76,7 +76,7 @@ public class SassOrganizationRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
         OrganizationDO organizationDO = SassFormConvert.convertOrgForm2OrganizationDO(orgForm);
-     
+
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
 
         // 创建对象
