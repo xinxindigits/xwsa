@@ -2,7 +2,7 @@ import { login, getUserInfo, logout } from "@/api/user";
 export default {
   state: {
     account: "",
-    userId: "",
+    userName: "",
     avatarImgPath: "",
     access: "super_admin",
     token: "",
@@ -12,8 +12,8 @@ export default {
     setAvatar(state, avatarPath) {
       state.avatarImgPath = avatarPath;
     },
-    setUserId(state, id) {
-      state.userId = id;
+    setUserName(state, id) {
+      state.userName = id;
     },
     setAccount(state, name) {
       state.account = name;
@@ -53,12 +53,8 @@ export default {
       return new Promise((resolve, reject) => {
         getUserInfo(state.account)
           .then(res => {
-            debugger;
             const data = res.data;
-            // commit("setAvatar", data.avatar);
-
-            commit("setUserId", data.user_id);
-            commit("setAccess", data.access);
+            commit("setUserName", data.name || "");
             commit("setHasGetInfo", true);
             resolve(data);
           })
@@ -67,11 +63,12 @@ export default {
           });
       });
     },
-    handleLogout({ commit }) {
+    handleLogOut({ commit }) {
       return new Promise((resolve, reject) => {
         logout()
           .then(() => {
             commit("setToken", "");
+            commit("setUserName", "");
             // commit('setAccess', [])
             resolve();
           })
