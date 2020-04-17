@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
  * Created by dengyunhui on 2018/5/21
  * @author dengyunhui
  **/
-public enum XPortalResultCodeEnum implements ResultCode {
+public enum SassResultCodeEnum implements ResultCode {
     SUCCESS("SUCCESS","操作成功","操作成功"),
 
     SYSTEM_ERROR("SYSTEM_ERROR","系统错误","系统错误"),
@@ -20,16 +20,16 @@ public enum XPortalResultCodeEnum implements ResultCode {
 
     private  String debugMessage;
 
-    XPortalResultCodeEnum(String message) {
+    SassResultCodeEnum(String message) {
         this.message = message;
     }
 
-    XPortalResultCodeEnum(String message, String debugMessage) {
+    SassResultCodeEnum(String message, String debugMessage) {
         this.message = message;
         this.debugMessage = debugMessage;
     }
 
-    XPortalResultCodeEnum(String code, String message, String debugMessage) {
+    SassResultCodeEnum(String code, String message, String debugMessage) {
         this.code = code;
         this.message = message;
         this.debugMessage = debugMessage;
