@@ -1,9 +1,11 @@
 package cn.com.xinxin.sass.auth.utils;
 
+import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.xinxinfinance.commons.exception.BusinessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +40,19 @@ public class JWTUtil {
      * @return 加密的token
      */
     public static String sign(String username, String secret) {
-        Date date = new Date(System.currentTimeMillis() + TOKEN_EXPIRE_TIME);
-        Algorithm algorithm = Algorithm.HMAC256(secret);
-        // 附带username信息
-        return JWT.create()
-                .withClaim("username", username)
-                .withExpiresAt(date)
-                .sign(algorithm);
+        try {
+            Date date = new Date(System.currentTimeMillis() + TOKEN_EXPIRE_TIME);
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            // 附带username信息
+            return JWT.create()
+                    .withClaim("username", username)
+                    .withExpiresAt(date)
+                    .sign(algorithm);
+
+        }catch (Exception ex){
+            log.info("token 解密失败  ex = {}", ex.getMessage());
+            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
+        }
     }
 
     /**
@@ -55,12 +63,17 @@ public class JWTUtil {
      * @return 是否正确
      */
     public static boolean verify(String token, String username, String secret) {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
-        JWTVerifier verifier = JWT.require(algorithm)
-                .withClaim("username", username)
-                .build();
-        DecodedJWT jwt = verifier.verify(token);
-        return true;
+        try {
+            Algorithm algorithm = Algorithm.HMAC256(secret);
+            JWTVerifier verifier = JWT.require(algorithm)
+                    .withClaim("username", username)
+                    .build();
+            DecodedJWT jwt = verifier.verify(token);
+            return true;
+        }catch (Exception ex){
+            log.info("token 解密失败  ex = {}", ex.getMessage());
+            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
+        }
     }
 
 
@@ -70,8 +83,14 @@ public class JWTUtil {
      * @return token中包含的用户名
      */
     public static String getUserAccount(String token) {
-        DecodedJWT jwt = JWT.decode(token);
-        return jwt.getClaim("username").asString();
+
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getClaim("username").asString();
+        }catch (Exception ex){
+            log.info("token 解密失败  ex = {}", ex.getMessage());
+            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
+        }
     }
 
 
@@ -79,8 +98,15 @@ public class JWTUtil {
      *从token解析出过期时间
      */
     public static Date getExpiresTime(String token){
-        DecodedJWT jwt = JWT.decode(token);
-        return  jwt.getExpiresAt();
+
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return  jwt.getExpiresAt();
+
+        }catch (Exception ex){
+            log.info("token 解密失败  ex = {}", ex.getMessage());
+            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
+        }
     }
 
     /**
@@ -113,7 +139,7 @@ public class JWTUtil {
     }
     /**
      * 字节数组转换为16进制字符串
-     * @param bytes数组
+     * @param bytes
      * @return 16进制字符串
      */
     private static String toHex(byte[] bytes) {
