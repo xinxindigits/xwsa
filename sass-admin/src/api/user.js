@@ -13,10 +13,7 @@ export const login = ({ account, password }) => {
 };
 export const getUserInfo = account => {
   return axios.request({
-    url: "sass/user/query",
-    params: {
-      account
-    },
+    url: "sass/user/query/" + account,
     method: "get"
   });
 };
