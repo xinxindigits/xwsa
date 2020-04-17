@@ -32,13 +32,6 @@
           <user :user-avatar="userAvatar" :account="account"></user>
         </header-bar>
       </Header>
-      <Layout class="breadcrumb-con">
-        <custom-bread-crumb
-          show-icon
-          style="margin-left: 30px;"
-          :list="breadCrumbList"
-        />
-      </Layout>
       <Content class="main-content-con">
         <Layout class="main-layout-con">
           <Content class="content-wrapper">
@@ -56,7 +49,6 @@
 import HeaderBar from "./components/header-bar";
 import User from "./components/user";
 import SideMenu from "./components/side-menu";
-import customBreadCrumb from "./components/custom-bread-crumb";
 import maxLogo from "@/assets/images/logo-bg.png";
 import { mapMutations } from "vuex";
 import routers from "@/router/routers";
@@ -66,15 +58,11 @@ export default {
   components: {
     HeaderBar,
     User,
-    SideMenu,
-    customBreadCrumb
+    SideMenu
   },
   computed: {
     menuList() {
       return this.$store.getters.menuList;
-    },
-    breadCrumbList() {
-      return this.$store.state.app.breadCrumbList;
     },
     account() {
       return this.$store.state.user.account;
@@ -91,7 +79,6 @@ export default {
   },
   mounted() {
     this.setHomeRoute(routers);
-    this.setBreadCrumb(this.$route);
   },
   methods: {
     ...mapMutations(["setBreadCrumb", "setHomeRoute"]),

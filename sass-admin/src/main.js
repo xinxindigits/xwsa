@@ -5,7 +5,7 @@ import store from "./store";
 import "./plugins/iview.js";
 import config from "@/config";
 /* eslint-disable */
-if (process.env.NODE_ENV !== "production") require("@/mock");
+// if (process.env.NODE_ENV !== "production") require("@/mock");
 Vue.config.productionTip = false;
 Vue.prototype.$config = config;
 new Vue({

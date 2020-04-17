@@ -14,5 +14,8 @@ module.exports = {
   chainWebpack: config => {
     config.plugins.delete("prefetch");
     config.resolve.alias.set("@", resolve("src"));
+  },
+  devServer: {
+    proxy: "http://172.27.0.16:8080"
   }
 };
