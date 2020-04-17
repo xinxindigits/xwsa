@@ -12,7 +12,7 @@ import java.util.List;
  * @updater:
  * @description: 组织转换类
  */
-public class PortalFormConvert {
+public class SassFormConvert {
 
     /**
      * 组织类型转换方法

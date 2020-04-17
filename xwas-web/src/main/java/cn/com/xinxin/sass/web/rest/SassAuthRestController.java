@@ -9,7 +9,7 @@ import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.web.controller.UserController;
-import cn.com.xinxin.sass.web.convert.PortalFormConvert;
+import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
 import cn.com.xinxin.sass.web.form.UserLoginForm;
 import cn.com.xinxin.sass.biz.service.UserService;
@@ -56,7 +56,7 @@ public class SassAuthRestController {
 
         log.info("UserController.create, userForm = {}", userForm);
 
-        UserDO userDO = PortalFormConvert.convertUserForm2UserDO(userForm);
+        UserDO userDO = SassFormConvert.convertUserForm2UserDO(userForm);
 
         int result = userService.createUser(userDO);
 

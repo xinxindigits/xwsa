@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.biz.api;
 
-import cn.com.xinxin.sass.api.XPortalUserFacade;
+import cn.com.xinxin.sass.api.XSassUserFacade;
 import cn.com.xinxin.sass.api.model.UserDTO;
 import cn.com.xinxin.sass.api.enums.XPortalResultCodeEnum;
 import cn.com.xinxin.sass.biz.convert.UserConvert;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * Created by dengyunhui on 2018/5/21
  **/
 
-class XPortalUserFacadeImpl implements XPortalUserFacade {
+class XSassUserFacadeImpl implements XSassUserFacade {
 
     @Autowired
     private UserService userService;

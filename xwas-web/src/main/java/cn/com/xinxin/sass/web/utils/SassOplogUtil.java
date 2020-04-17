@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * Created by dengyunhui on 2018/5/15
  **/
-public class PortalOplogUtil {
+public class SassOplogUtil {
 
     public static void logReq(AppProductEnum appProduct,
                               OperationTypeEnum operationType,
