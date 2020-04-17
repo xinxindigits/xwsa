@@ -6,7 +6,6 @@ import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
-import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.form.UserForm;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -30,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/user",produces = "application/json; charset=UTF-8")
 public class SassUserRestController extends AclController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(SassUserRestController.class);
 
 
     @Autowired
