@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author: zhouyang
  * @created: 14/04/2020.
  * @updater:
- * @description:
+ * @description: 用户信息接口，注意在更新用户权限以及相关的菜单操作的时候记得要刷新对应的用户权限缓存信息
  */
 
 @RestController
