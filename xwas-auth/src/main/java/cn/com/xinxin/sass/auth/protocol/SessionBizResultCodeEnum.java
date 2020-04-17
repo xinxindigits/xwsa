@@ -20,6 +20,8 @@ public enum SessionBizResultCodeEnum implements BizResultCode {
 
     INVALID_SESSION_ID("NTC00005", "session为空", "session为空，请登陆操作!"),
 
+    INVALID_TOKEN("INVALID_TOKEN", "无效登陆口令", "无效登陆口令!"),
+
     NO_PERMISSION("NO_PERMISSION", "无权限操作", "无权限操作!"),
 
     AUTHENTICATE_FAIL("AUTHENTICATE_FAIL", "登陆授权失败", "登陆授权失败,请登陆操作!"),
