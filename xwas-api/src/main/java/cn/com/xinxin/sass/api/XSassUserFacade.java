@@ -7,7 +7,7 @@ import com.xinxinfinance.commons.api.result.generic.SingleResult;
 /**
  * Created by dengyunhui on 2018/5/21
  **/
-public interface XPortalUserFacade {
+public interface XSassUserFacade {
 
     /**
      * 根据sessionId获取当前登录的用户信息
