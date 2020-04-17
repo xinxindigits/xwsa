@@ -8,7 +8,6 @@ import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
-import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
 import cn.com.xinxin.sass.web.form.UserLoginForm;
@@ -41,7 +40,7 @@ import java.util.Set;
 @RequestMapping(produces = "application/json; charset=UTF-8")
 public class SassAuthRestController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(SassAuthRestController.class);
 
     @Autowired
     private UserService userService;
@@ -50,7 +49,7 @@ public class SassAuthRestController {
     private UserAclTokenRepository userAclTokenRepository;
 
 
-    @RequestMapping(value = "/register",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
     public Object register(HttpServletRequest request, @RequestBody UserForm userForm){
 
@@ -64,7 +63,7 @@ public class SassAuthRestController {
 
     }
 
-    @RequestMapping(value = "/auth",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @RequestMapping(value = "/auth",method = RequestMethod.POST)
     public Object login(HttpServletRequest request, @RequestBody UserLoginForm userLoginForm){
 
         String userAccount = userLoginForm.getAccount();
