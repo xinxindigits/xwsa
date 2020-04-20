@@ -1,7 +1,7 @@
 package cn.com.xinxin.sass.biz.service;
 
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
@@ -32,7 +32,7 @@ public interface UserService {
     List<ResourceDO> findMenusByAccount(String userNo);
 
 
-    Page<UserDO> findByConditionPage(Page page, QueryUserConditionVO queryUserConditionVO);
+    PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO);
 
     boolean updateUser(UserDO userDO);
 

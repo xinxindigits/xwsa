@@ -1,7 +1,6 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.ResourceService;
-import cn.com.xinxin.sass.common.Page;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.ResourceMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;

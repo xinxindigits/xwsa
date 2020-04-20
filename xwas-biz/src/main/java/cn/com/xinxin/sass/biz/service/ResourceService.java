@@ -1,6 +1,5 @@
 package cn.com.xinxin.sass.biz.service;
 
-import cn.com.xinxin.sass.common.Page;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 

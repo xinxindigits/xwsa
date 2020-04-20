@@ -7,9 +7,9 @@ import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.biz.vo.UserPwdVO;
-import cn.com.xinxin.sass.common.Page;
 
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.UserDOMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
@@ -167,7 +167,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDO> findByConditionPage(Page page,QueryUserConditionVO queryUserConditionVO) {
+    public PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO) {
         UserDO userDO = new UserDO();
         userDO.setAccount(queryUserConditionVO.getNo());
         userDO.setName(queryUserConditionVO.getName());
@@ -177,11 +177,11 @@ public class UserServiceImpl implements UserService {
         //List<UserDO> userDOS = userDOMapper.findByCondition(userDO);
         List<UserDO> userDOS = Lists.newArrayList();
 
-        Page<UserDO> result = new Page<>();
+        PageResultVO<UserDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());
         result.setPageSize(page.getPageSize());
         result.setTotal(doPage.getTotal());
-        result.setRows(userDOS);
+        result.setItems(userDOS);
         return result;
     }
 
