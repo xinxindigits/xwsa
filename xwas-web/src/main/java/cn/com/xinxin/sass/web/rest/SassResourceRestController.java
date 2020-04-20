@@ -54,9 +54,6 @@ public class SassResourceRestController extends AclController {
                                @RequestParam String url,
                                @RequestParam Boolean root){
 
-        //SassUserInfo sassUserInfo = this.getSassUser(request);
-        //String userAccount = sassUserInfo.getAccount();
-
         log.info("ResourceController.list,pageSize={},pageIndex={},code={},resourceType={},name={},url={},root={}",
                 pageSize,pageIndex,code,resourceType,name,url,root);
 
@@ -69,8 +66,8 @@ public class SassResourceRestController extends AclController {
         condition.setCode(code);
         condition.setName(name);
         condition.setUrl(url);
-        if (root != null){
-            condition.setRoot(root);
+        if ((Boolean.valueOf(root) != null)){
+            condition.setRoot(Boolean.valueOf(root));
         }
 
         PageResultVO result = resourceService.findByConditionPage(pageVo,condition);

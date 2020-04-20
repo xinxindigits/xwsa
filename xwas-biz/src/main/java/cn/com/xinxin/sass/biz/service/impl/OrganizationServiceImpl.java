@@ -1,7 +1,7 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.OrganizationService;
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.OrganizationMapper;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import com.github.pagehelper.PageHelper;
@@ -37,13 +37,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Page<OrganizationDO> findByCondition(Page page, OrganizationDO condition) {
+    public PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition) {
         com.github.pagehelper.Page page1 = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
         List<OrganizationDO> organizationDOS = organizationMapper.findByCondition(condition);
 
-        Page<OrganizationDO> result = new Page<>();
+        PageResultVO<OrganizationDO> result = new PageResultVO<>();
         result.setTotal(page1.getTotal());
-        result.setRows(organizationDOS);
+        result.setItems(organizationDOS);
         result.setPageSize(page.getPageSize());
         result.setPageNumber(page.getPageNumber());
 

@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.biz.service;
 
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 
@@ -21,7 +21,7 @@ public interface UserRoleService {
 
     boolean deleteUserRole(Long id);
 
-    Page<UserRoleDO> findByConditionPage(Page page,UserRoleDO condition);
+    PageResultVO<UserRoleDO> findByConditionPage(PageResultVO page, UserRoleDO condition);
 
     UserRoleDO findById(Long id);
 }
