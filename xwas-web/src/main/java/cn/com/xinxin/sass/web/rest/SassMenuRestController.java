@@ -40,17 +40,6 @@ public class SassMenuRestController extends AclController {
     private UserService userService;
 
 
-    @RequestMapping(value = "/create",method = RequestMethod.POST)
-    @ResponseBody
-    @RequiresPermissions("/menu/create")
-    public Object createMenu(HttpServletRequest request,
-                                   @RequestBody ResourceForm resourceForm){
-
-
-        return null;
-
-    }
-
     /**
      * 用户可以看到的菜单列表
      * @param request
