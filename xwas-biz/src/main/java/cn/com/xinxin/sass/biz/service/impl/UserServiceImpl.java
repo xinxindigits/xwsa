@@ -116,6 +116,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ResourceDO> findResourcesByAccount(String account) {
+
         List<RoleDO> roleDOS = userRoleService.findRoleByUserAccount(account);
 
         if (!CollectionUtils.isEmpty(roleDOS)){
@@ -126,6 +127,7 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
+
 
     @Override
     public List<ResourceDO> findPermissionsByAccount(String account) {
