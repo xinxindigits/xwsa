@@ -8,11 +8,7 @@
     ></sider-trigger>
 
     <div class="header-bar-nav">
-      <custom-bread-crumb
-        show-icon
-        style="margin-left: 30px;"
-        :list="breadCrumbList"
-      />
+      <slot name="nav"></slot>
       <div class="custom-content-con">
         <slot></slot>
       </div>

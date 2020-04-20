@@ -6,6 +6,19 @@ import { setTitle } from "@/libs/util";
 import routes from "./routers";
 import config from "@/config";
 Vue.use(VueRouter);
+
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject);
+  return originalPush.call(this, location).catch(err => err);
+};
+const originalReplace = VueRouter.prototype.replace;
+VueRouter.prototype.replace = function repalce(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalReplace.call(this, location, onResolve, onReject);
+  return originalReplace.call(this, location).catch(err => err);
+};
 const { homeName } = config;
 const LOGIN_PAGE_NAME = "login";
 const router = new VueRouter({
