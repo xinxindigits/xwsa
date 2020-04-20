@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.ResourceMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import com.github.pagehelper.PageHelper;
@@ -82,15 +83,14 @@ public class ResourceServiceImpl implements ResourceService {
     }
 
     @Override
-    public Page<ResourceDO> findByConditionPage(Page page, ResourceDO condition) {
-        com.github.pagehelper.Page page1 = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+    public PageResultVO<ResourceDO> findByConditionPage(PageResultVO page, ResourceDO condition) {
+        com.github.pagehelper.Page pageHelper = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
         List<ResourceDO> resourceDOS = resourceMapper.findByCondition(condition);
-        Page<ResourceDO> result = new Page<>();
-        result.setTotal(page1.getTotal());
-        result.setRows(resourceDOS);
+        PageResultVO<ResourceDO> result = new PageResultVO<>();
+        result.setTotal(pageHelper.getTotal());
+        result.setItems(resourceDOS);
         result.setPageSize(page.getPageSize());
         result.setPageNumber(page.getPageNumber());
-
         return result;
     }
 
