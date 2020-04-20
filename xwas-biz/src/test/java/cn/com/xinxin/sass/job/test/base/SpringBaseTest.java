@@ -1,4 +1,4 @@
-package cn.com.xinxin.xportal.biz.test.base;
+package cn.com.xinxin.sass.job.test.base;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
