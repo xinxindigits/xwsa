@@ -1,4 +1,5 @@
 import customBreadCrumb from "./custom-bread-crumb";
+import { mapMutations } from "vuex";
 export default {
   components: {
     customBreadCrumb
@@ -8,7 +9,15 @@ export default {
       return this.$store.state.app.breadCrumbList;
     }
   },
+  methods: {
+    ...mapMutations(["setBreadCrumb"])
+  },
   mounted() {
     this.setBreadCrumb(this.$route);
+  },
+  watch: {
+    $route(newRoute) {
+      this.setBreadCrumb(newRoute);
+    }
   }
 };
