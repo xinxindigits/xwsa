@@ -9,6 +9,7 @@ import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.ResourceForm;
+import cn.com.xinxin.sass.web.form.ResourceQueryForm;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import com.google.common.collect.Lists;
@@ -45,34 +46,29 @@ public class SassResourceRestController extends AclController {
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/resource/list")
-    public Object ListResource(HttpServletRequest request,
-                               @RequestParam Integer pageSize,
-                               @RequestParam Integer pageIndex,
-                               @RequestParam String code,
-                               @RequestParam String resourceType,
-                               @RequestParam String name,
-                               @RequestParam String url,
-                               @RequestParam Boolean root){
+    public Object ListResource(HttpServletRequest request, @RequestBody ResourceQueryForm resourceQueryForm){
 
-        log.info("ResourceController.list,pageSize={},pageIndex={},code={},resourceType={},name={},url={},root={}",
-                pageSize,pageIndex,code,resourceType,name,url,root);
+        log.info("ResourceController.list,resourceQueryForm={}", resourceQueryForm);
 
-        PageResultVO pageVo = new PageResultVO();
-        pageVo.setPageSize(pageSize);
-        pageVo.setPageNumber(pageIndex);
-
-        ResourceDO condition = new ResourceDO();
-        condition.setResourceType(resourceType);
-        condition.setCode(code);
-        condition.setName(name);
-        condition.setUrl(url);
-        if ((Boolean.valueOf(root) != null)){
-            condition.setRoot(Boolean.valueOf(root));
+        if(null == resourceQueryForm){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"参数不能为空 ");
         }
 
+        PageResultVO pageVo = new PageResultVO();
+        pageVo.setPageSize(resourceQueryForm.getPageSize());
+        pageVo.setPageNumber(resourceQueryForm.getPageIndex());
+
+        ResourceDO condition = new ResourceDO();
+        condition.setResourceType(resourceQueryForm.getResourceType());
+        condition.setCode(resourceQueryForm.getCode());
+        condition.setName(resourceQueryForm.getName());
+        condition.setUrl(resourceQueryForm.getUrl());
+        if ( resourceQueryForm.getRoot()!= null){
+            condition.setRoot(resourceQueryForm.getRoot());
+        }
         PageResultVO result = resourceService.findByConditionPage(pageVo,condition);
 
-        return request;
+        return result;
     }
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)
