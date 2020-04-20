@@ -22,7 +22,7 @@ public class OrganizationForm extends ToString {
 
     private String orgType;
 
-    private Boolean isLeaf;
+    private boolean isLeaf;
 
     private String state;
 

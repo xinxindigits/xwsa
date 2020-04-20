@@ -106,22 +106,8 @@ public abstract class AclController {
     @ExceptionHandler({ UnauthenticatedException.class, AuthenticationException.class })
     public Object authenticationException(HttpServletRequest request, HttpServletResponse response) {
         logger.info("登陆授权失败");
-        Map<String, String> resultMap = new HashMap();
-        resultMap.put("code", SessionBizResultCodeEnum.AUTHENTICATE_FAIL.getCode());
-        resultMap.put("message", SessionBizResultCodeEnum.AUTHENTICATE_FAIL.getAlertMessage());
-        resultMap.put("data", null);
-        ObjectMapper objectMapper = new ObjectMapper();
-        PrintWriter out = null;
-        try {
-            String json = objectMapper.writeValueAsString(resultMap);
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/json; charset=utf-8");
-            out = response.getWriter();
-            out.write(json);
-        } catch (Exception e) {
-            e.getMessage();
-        }
-        return null;
+
+        throw new BusinessException(SessionBizResultCodeEnum.AUTHENTICATE_FAIL,"认证失败","认证失败");
 
     }
     /**
@@ -135,23 +121,7 @@ public abstract class AclController {
     public Object authorizationException(HttpServletRequest request, HttpServletResponse response) {
 
         logger.info("未授权的操作请求");
-        Map<String, String> resultMap = new HashMap();
-        resultMap.put("code", SessionBizResultCodeEnum.NO_PERMISSION.getCode());
-        resultMap.put("message", SessionBizResultCodeEnum.NO_PERMISSION.getAlertMessage());
-        resultMap.put("data", null);
-        ObjectMapper objectMapper = new ObjectMapper();
-        PrintWriter out = null;
-        try {
-            String json = objectMapper.writeValueAsString(resultMap);
-            response.setCharacterEncoding("UTF-8");
-            response.setContentType("application/json; charset=utf-8");
-            out = response.getWriter();
-            out.write(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION,"无权限操作","无权限操作");
-        }
-        return null;
+        throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION,"无权限操作","无权限操作");
     }
     
 }

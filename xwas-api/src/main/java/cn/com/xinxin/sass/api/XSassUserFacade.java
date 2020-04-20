@@ -1,7 +1,7 @@
 package cn.com.xinxin.sass.api;
 
 import cn.com.xinxin.sass.api.model.UserDTO;
-import cn.com.xinxin.sass.api.enums.XPortalResultCodeEnum;
+import cn.com.xinxin.sass.api.enums.SassResultCodeEnum;
 import com.xinxinfinance.commons.api.result.generic.SingleResult;
 
 /**
@@ -14,7 +14,7 @@ public interface XSassUserFacade {
      * @param sessionId
      * @return
      */
-    SingleResult<XPortalResultCodeEnum,UserDTO> getLoginUser(String sessionId);
+    SingleResult<SassResultCodeEnum,UserDTO> getLoginUser(String sessionId);
 
     /**
      * 当前登陆用户对某个路径是否有权限
@@ -22,5 +22,5 @@ public interface XSassUserFacade {
      * @param url
      * @return
      */
-    SingleResult<XPortalResultCodeEnum,Boolean> hasPermission(String sessionId, String url);
+    SingleResult<SassResultCodeEnum,Boolean> hasPermission(String sessionId, String url);
 }

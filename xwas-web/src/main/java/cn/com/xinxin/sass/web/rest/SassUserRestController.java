@@ -6,7 +6,6 @@ import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
-import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.form.UserForm;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -23,14 +22,14 @@ import javax.servlet.http.HttpServletRequest;
  * @author: zhouyang
  * @created: 14/04/2020.
  * @updater:
- * @description:
+ * @description: 用户信息接口，注意在更新用户权限以及相关的菜单操作的时候记得要刷新对应的用户权限缓存信息
  */
 
 @RestController
 @RequestMapping(value = "/user",produces = "application/json; charset=UTF-8")
 public class SassUserRestController extends AclController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(SassUserRestController.class);
 
 
     @Autowired

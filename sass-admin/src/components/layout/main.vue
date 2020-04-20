@@ -29,16 +29,15 @@
           :collapsed="collapsed"
           @on-coll-change="handleCollapsedChange"
         >
+          <custom-bread-crumb
+            show-icon
+            style="margin-left: 30px;"
+            :list="breadCrumbList"
+            slot="nav"
+          />
           <user :user-avatar="userAvatar" :account="account"></user>
         </header-bar>
       </Header>
-      <Layout class="breadcrumb-con">
-        <custom-bread-crumb
-          show-icon
-          style="margin-left: 30px;"
-          :list="breadCrumbList"
-        />
-      </Layout>
       <Content class="main-content-con">
         <Layout class="main-layout-con">
           <Content class="content-wrapper">
@@ -56,25 +55,23 @@
 import HeaderBar from "./components/header-bar";
 import User from "./components/user";
 import SideMenu from "./components/side-menu";
-import customBreadCrumb from "./components/custom-bread-crumb";
 import maxLogo from "@/assets/images/logo-bg.png";
+import minLogo from "@/assets/images/logo-min.png";
 import { mapMutations } from "vuex";
 import routers from "@/router/routers";
+import bread_crumb from "./components/custom-bread-crumb/mixin";
 import "./main.less";
 export default {
   name: "Main",
+  mixins: [bread_crumb],
   components: {
     HeaderBar,
     User,
-    SideMenu,
-    customBreadCrumb
+    SideMenu
   },
   computed: {
     menuList() {
       return this.$store.getters.menuList;
-    },
-    breadCrumbList() {
-      return this.$store.state.app.breadCrumbList;
     },
     account() {
       return this.$store.state.user.account;
@@ -83,18 +80,16 @@ export default {
   data() {
     return {
       collapsed: false,
-      userAvatar:
-        "https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png", //TODO
+      userAvatar: minLogo,
       maxLogo,
-      minLogo: "" //TODO
+      minLogo
     };
   },
-  mounted() {
+  beforeMount() {
     this.setHomeRoute(routers);
-    this.setBreadCrumb(this.$route);
   },
   methods: {
-    ...mapMutations(["setBreadCrumb", "setHomeRoute"]),
+    ...mapMutations(["setHomeRoute"]),
     handleCollapsedChange(state) {
       this.collapsed = state;
     },
@@ -119,7 +114,6 @@ export default {
   },
   watch: {
     $route(newRoute) {
-      this.setBreadCrumb(newRoute);
       this.$refs.sideMenu.updateOpenName(newRoute.name);
     }
   }
