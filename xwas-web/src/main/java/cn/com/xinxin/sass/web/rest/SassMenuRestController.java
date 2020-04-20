@@ -71,7 +71,7 @@ public class SassMenuRestController extends AclController {
                     menuTreeVO.setId(String.valueOf(resourceDO.getId()));
                     menuTreeVO.setCode(resourceDO.getCode());
                     menuTreeVO.setUrl(resourceDO.getUrl());
-                    menuTreeVO.setHref(resourceDO.getUrl());
+                    menuTreeVO.setAuthority(resourceDO.getAuthority());
                     menuTreeVO.setOrder(0);
                     menuResourceVOList.add(menuTreeVO);
                 }
