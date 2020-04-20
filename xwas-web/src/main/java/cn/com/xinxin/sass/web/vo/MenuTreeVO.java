@@ -47,11 +47,6 @@ public class MenuTreeVO {
     private String url;
 
     /**
-     *
-     */
-    private String href;
-
-    /**
      * 编号
      */
     private String code;
@@ -61,12 +56,18 @@ public class MenuTreeVO {
      */
     private Integer order;
 
-    public String getHref() {
-        return href;
+    /**
+     * 权限值
+     */
+    private String authority;
+
+
+    public String getAuthority() {
+        return authority;
     }
 
-    public void setHref(String href) {
-        this.href = href;
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     public List<MenuTreeVO> getItems() {
