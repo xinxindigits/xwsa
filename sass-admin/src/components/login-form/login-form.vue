@@ -44,7 +44,7 @@ export default {
   data() {
     return {
       form: {
-        account: "super_admin", //TODO
+        account: this.$store.state.user.account,
         password: ""
       }
     };
