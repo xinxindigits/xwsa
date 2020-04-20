@@ -5,9 +5,9 @@ package cn.com.xinxin.sass.api.enums;
  **/
 public enum  ResourceTypeEnum {
 
-    MENU("MENU","菜单"),
+    MENU("menu","菜单"),
 
-    FUNCTION("FUNCTION","功能");
+    FUNCTION("function","功能");
 
     private String code;
 

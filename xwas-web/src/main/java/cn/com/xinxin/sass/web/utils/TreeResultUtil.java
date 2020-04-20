@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.web.utils;
 
-import cn.com.xinxin.sass.web.vo.TreeVO;
+import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -8,20 +8,24 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Created by dengyunhui on 2018/5/4
- **/
-public class TreeUtil {
-    public static List<TreeVO> build(List<TreeVO> nodes){
+ * @author: zhouyang
+ * @created: 20/04/2020.
+ * @updater:
+ * @description: 构建树形结果工具类
+ */
+public class TreeResultUtil {
+
+    public static List<MenuTreeVO> build(List<MenuTreeVO> nodes){
         if (nodes == null){
             return null;
         }
 
-        List<TreeVO> root = new ArrayList<>();
+        List<MenuTreeVO> root = new ArrayList<>();
 
-        Iterator<TreeVO> iterator = nodes.iterator();
+        Iterator<MenuTreeVO> iterator = nodes.iterator();
 
         while (iterator.hasNext()){
-            TreeVO node = iterator.next();
+            MenuTreeVO node = iterator.next();
             if (Objects.equals("0",node.getParentId()) || Objects.equals(node.getParentId(),node.getId())){
                 node.setExpanded(true);
                 root.add(node);
@@ -34,17 +38,17 @@ public class TreeUtil {
         return root;
     }
 
-    public static List<TreeVO> build2(List<TreeVO> nodes){
+    public static List<MenuTreeVO> build2(List<MenuTreeVO> nodes){
         if (nodes == null){
             return null;
         }
 
-        List<TreeVO> root = new ArrayList<>();
+        List<MenuTreeVO> root = new ArrayList<>();
 
-        Iterator<TreeVO> iterator = nodes.iterator();
+        Iterator<MenuTreeVO> iterator = nodes.iterator();
 
         while (iterator.hasNext()){
-            TreeVO node = iterator.next();
+            MenuTreeVO node = iterator.next();
             if (Objects.equals("0",node.getParentId()) || Objects.equals(node.getParentId(),node.getId())){
                 node.setExpanded(false);
                 root.add(node);
@@ -57,11 +61,11 @@ public class TreeUtil {
         return root;
     }
 
-    private static void buildChildren(List<TreeVO> parents, List<TreeVO> nodes){
-        for (TreeVO parent : parents){
+    private static void buildChildren(List<MenuTreeVO> parents, List<MenuTreeVO> nodes){
+        for (MenuTreeVO parent : parents){
             String pid = parent.getId();
 
-            for (TreeVO node : nodes){
+            for (MenuTreeVO node : nodes){
                 if (Objects.equals(pid,node.getParentId())){
                     node.setExpanded(false);
                     //parent.getChildren().add(node);
@@ -70,17 +74,17 @@ public class TreeUtil {
             }
         }
 
-        for (TreeVO parent : parents){
-            List<TreeVO> children = parent.getItems();
+        for (MenuTreeVO parent : parents){
+            List<MenuTreeVO> children = parent.getItems();
             buildChildren(children,nodes);
         }
     }
 
-    private static void buildChildren2(List<TreeVO> parents, List<TreeVO> nodes){
-        for (TreeVO parent : parents){
+    private static void buildChildren2(List<MenuTreeVO> parents, List<MenuTreeVO> nodes){
+        for (MenuTreeVO parent : parents){
             String pid = parent.getId();
 
-            for (TreeVO node : nodes){
+            for (MenuTreeVO node : nodes){
                 if (Objects.equals(pid,node.getParentId())){
                     node.setExpanded(true);
                     parent.getChildren().add(node);
@@ -89,9 +93,10 @@ public class TreeUtil {
             }
         }
 
-        for (TreeVO parent : parents){
-            List<TreeVO> children = parent.getChildren();
+        for (MenuTreeVO parent : parents){
+            List<MenuTreeVO> children = parent.getChildren();
             buildChildren2(children,nodes);
         }
     }
+
 }

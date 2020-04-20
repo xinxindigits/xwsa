@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by dengyunhui on 2018/5/4
  **/
-public class TreeVO{
+public class MenuTreeVO {
 
     /**
      * 节点id
@@ -21,9 +21,10 @@ public class TreeVO{
     /**
      * 节点的子节点
      */
-    private List<TreeVO> children = new ArrayList<>();
+    private List<MenuTreeVO> children = new ArrayList<>();
 
-    private List<TreeVO> items = new ArrayList<>();
+
+    private List<MenuTreeVO> items = new ArrayList<>();
 
     /**
      * 父节点id
@@ -40,11 +41,25 @@ public class TreeVO{
      */
     private Boolean checked;
 
+    /**
+     * 连接地址
+     */
     private String url;
 
+    /**
+     *
+     */
     private String href;
 
+    /**
+     * 编号
+     */
     private String code;
+
+    /**
+     * 顺序
+     */
+    private Integer order;
 
     public String getHref() {
         return href;
@@ -54,11 +69,11 @@ public class TreeVO{
         this.href = href;
     }
 
-    public List<TreeVO> getItems() {
+    public List<MenuTreeVO> getItems() {
         return items;
     }
 
-    public void setItems(List<TreeVO> items) {
+    public void setItems(List<MenuTreeVO> items) {
         this.items = items;
     }
 
@@ -102,11 +117,11 @@ public class TreeVO{
         this.text = text;
     }
 
-    public List<TreeVO> getChildren() {
+    public List<MenuTreeVO> getChildren() {
         return children;
     }
 
-    public void setChildren(List<TreeVO> children) {
+    public void setChildren(List<MenuTreeVO> children) {
         this.children = children;
     }
 
@@ -124,5 +139,13 @@ public class TreeVO{
 
     public void setChecked(Boolean checked) {
         this.checked = checked;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 }
