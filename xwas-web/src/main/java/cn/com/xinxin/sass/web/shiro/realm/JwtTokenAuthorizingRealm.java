@@ -113,9 +113,14 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
             }
             if (!CollectionUtils.isEmpty(sassUserInfo.getStringPermissions())){
                 authorizationInfo.setStringPermissions(sassUserInfo.getStringPermissions());
+            }else{
+                throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION,"无权限操作","无权限操作");
             }
+
             if (!CollectionUtils.isEmpty(sassUserInfo.getObjectPermissions())){
                 authorizationInfo.setObjectPermissions(sassUserInfo.getObjectPermissions());
+            }else{
+                throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION,"无权限操作","无权限操作");
             }
             return authorizationInfo;
 
