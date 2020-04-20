@@ -1,8 +1,8 @@
-package cn.com.xinxin.xportal.biz.test.service;
+package cn.com.xinxin.sass.job.test.service;
 
 import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.job.test.base.SpringBaseTest;
 import cn.com.xinxin.sass.repository.model.UserDO;
-import cn.com.xinxin.xportal.biz.test.base.SpringBaseTest;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.util.Date;
 /**
  * Created by dengyunhui on 2018/5/2
  **/
-public class UserDODODOServiceTest extends SpringBaseTest{
+public class UserDODODOServiceTest extends SpringBaseTest {
 
     @Autowired
     private UserService userService;

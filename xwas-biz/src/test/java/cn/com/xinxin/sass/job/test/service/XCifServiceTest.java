@@ -1,6 +1,6 @@
-package cn.com.xinxin.xportal.biz.test.service;
+package cn.com.xinxin.sass.job.test.service;
 
-import cn.com.xinxin.xportal.biz.test.base.SpringBaseTest;
+import cn.com.xinxin.sass.job.test.base.SpringBaseTest;
 
 /**
  * @author: zhouyang

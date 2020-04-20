@@ -1,11 +1,11 @@
-package cn.com.xinxin.xportal.biz.test.service;
+package cn.com.xinxin.sass.job.test.service;
 
 import cn.com.xinxin.sass.api.enums.ResourceTypeEnum;
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
-import cn.com.xinxin.xportal.biz.test.base.SpringBaseTest;
+import cn.com.xinxin.sass.job.test.base.SpringBaseTest;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
