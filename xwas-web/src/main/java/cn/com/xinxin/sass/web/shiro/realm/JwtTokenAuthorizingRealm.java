@@ -120,7 +120,7 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
             if (!CollectionUtils.isEmpty(sassUserInfo.getObjectPermissions())){
                 authorizationInfo.setObjectPermissions(sassUserInfo.getObjectPermissions());
             }
-            
+
             return authorizationInfo;
 
         }catch (Exception ex){
