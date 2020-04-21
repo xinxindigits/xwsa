@@ -6,6 +6,7 @@ import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -51,6 +52,35 @@ public class SassUserRestController extends AclController {
         return result;
 
     }
+
+    @RequestMapping(value = "/create",method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresPermissions("/user/create")
+    public Object createUserInfo(HttpServletRequest request, @RequestBody UserForm userForm){
+
+        if(null == userForm){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"用户创建信息不能为空","用户信息不能为空");
+        }
+
+        // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
+        String userAccount = userForm.getAccount();
+        // 查询已经存在的用户信息
+        UserDO existUserDO = this.userService.findByUserAccount(userAccount);
+
+        if(null != existUserDO){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_ALREADY_EXIST,"用户账号信息已经存在","用户账号信息已经存在");
+        }
+
+        UserDO userCreateDO = SassFormConvert.convertUserForm2UserDO(userForm);
+
+        userCreateDO.setGender(Byte.valueOf(String.valueOf(userForm.getGender())));
+
+        int result = this.userService.createUser(userCreateDO);
+
+        return result;
+    }
+
+
 
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
