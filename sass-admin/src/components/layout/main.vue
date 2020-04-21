@@ -57,7 +57,7 @@ import User from "./components/user";
 import SideMenu from "./components/side-menu";
 import maxLogo from "@/assets/images/logo-bg.png";
 import minLogo from "@/assets/images/logo-min.png";
-import { mapMutations } from "vuex";
+import { mapMutations, mapActions } from "vuex";
 import routers from "@/router/routers";
 import bread_crumb from "./components/custom-bread-crumb/mixin";
 import "./main.less";
@@ -90,6 +90,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setHomeRoute"]),
+    ...mapActions(["getMenuInfo"]),
     handleCollapsedChange(state) {
       this.collapsed = state;
     },
@@ -111,6 +112,9 @@ export default {
         query
       });
     }
+  },
+  mounted() {
+    this.getMenuInfo();
   },
   watch: {
     $route(newRoute) {

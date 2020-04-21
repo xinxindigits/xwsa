@@ -167,6 +167,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<ResourceDO> findFunctionsByAccount(String account) {
+        List<ResourceDO> resourceDOS = findResourcesByAccount(account);
+        if (CollectionUtils.isEmpty(resourceDOS)){
+            return null;
+        }
+
+        List<ResourceDO> resourceDOList = resourceDOS.stream().distinct()
+                .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnum.FUNCTION.getCode()))
+                .collect(Collectors.toList());
+        return resourceDOList;
+    }
+
+    @Override
     public PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO) {
         UserDO userDO = new UserDO();
         userDO.setAccount(queryUserConditionVO.getNo());

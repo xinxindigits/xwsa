@@ -1,5 +1,14 @@
-import { getBreadCrumbList, getHomeRoute, getMenuByRouter } from "@/libs/util";
+import {
+  getBreadCrumbList,
+  getHomeRoute,
+  getMenuByRouter,
+  localSave
+} from "@/libs/util";
+import { loadMenu } from "@/router/routers";
+import { getMenuInfo } from "@/api/user";
 import routers from "@/router/routers";
+import { formatMenu } from "@/router/routers";
+import router from "@/router";
 import config from "@/config";
 const { homeName } = config;
 export default {
@@ -8,8 +17,12 @@ export default {
     breadCrumbList: []
   },
   getters: {
-    menuList: (state, getters, rootState) =>
-      getMenuByRouter(routers, rootState.user.access)
+    menuList: (state, getters, rootState) => {
+      return getMenuByRouter(
+        [...routers, ...loadMenu()],
+        rootState.user.access
+      );
+    }
   },
   mutations: {
     setHomeRoute(state, routes) {
@@ -17,6 +30,33 @@ export default {
     },
     setBreadCrumb(state, route) {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute);
+    },
+    updateMenuList(state, routes) {
+      router.addRoutes(routes);
+      state.menuList = routes;
+    }
+  },
+  actions: {
+    getMenuInfo({ commit }) {
+      return new Promise((resolve, reject) => {
+        getMenuInfo()
+          .then(res => {
+            localSave("route", JSON.stringify(res.data));
+            let list = [];
+            list = formatMenu(res.data);
+            list.push({
+              path: "*",
+              name: "error_404",
+              meta: {
+                hideInMenu: true
+              },
+              component: () => import("@/views/error-page/404.vue")
+            });
+            commit("updateMenuList", list);
+            commit("setHasGetInfo", true, { root: true });
+          })
+          .catch(reject);
+      });
     }
   }
 };

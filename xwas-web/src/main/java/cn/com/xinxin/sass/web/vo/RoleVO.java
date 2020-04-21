@@ -5,12 +5,14 @@ import cn.com.xinxin.sass.api.base.ToString;
 import java.util.Date;
 
 /**
- * @author: yanghaoxian
- * @created: 2020/4/20.
+ * @author: zhouyang
+ * @created: 21/04/2020.
  * @updater:
- * @description:角色VO
+ * @description:
  */
 public class RoleVO extends ToString {
+
+    private static final long serialVersionUID = 9038508462834612482L;
 
     /**
      * 角色Id
@@ -32,6 +34,8 @@ public class RoleVO extends ToString {
      * 创建时间
      */
     private Date gmtCreated;
+
+
     /**
      * 扩展
      */

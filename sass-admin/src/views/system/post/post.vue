@@ -4,7 +4,7 @@
 
 <script>
 export default {
-  name: "post"
+  name: "post-list"
 };
 </script>
 

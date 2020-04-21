@@ -29,8 +29,9 @@ public interface UserService {
 
     List<ResourceDO> findRootMenusByAccount(String account);
 
-    List<ResourceDO> findMenusByAccount(String userNo);
+    List<ResourceDO> findMenusByAccount(String userAccount);
 
+    List<ResourceDO> findFunctionsByAccount(String account);
 
     PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO);
 

@@ -47,4 +47,11 @@
     order by gmt_created desc
   </select>
 
+  <select id="selectAllOrgs" resultMap="BaseResultMapExt">
+    select
+    <include refid="Base_Column_List_Ext" />
+    from organization  where deleted = 0;
+  </select>
+
+
 </mapper>
