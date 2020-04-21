@@ -52,7 +52,7 @@ public class WeChatWorkUserBO {
      * 性别。0表示未定义，1表示男性，2表示女性
      */
     @JSONField(name = "gender")
-    private String gender;
+    private Integer gender;
 
     /**
      * 邮箱
@@ -94,7 +94,7 @@ public class WeChatWorkUserBO {
      * 激活状态: 1=已激活，2=已禁用，4=未激活，5=退出企业。
      */
     @JSONField(name = "status")
-    private String status;
+    private Integer status;
 
     /**
      * 地址
@@ -124,7 +124,7 @@ public class WeChatWorkUserBO {
      * 主部门
      */
     @JSONField(name = "main_department")
-    private Integer mainDepartment;
+    private Long mainDepartment;
 
     /**
      * 扩展属性
@@ -198,11 +198,11 @@ public class WeChatWorkUserBO {
         this.mobile = mobile;
     }
 
-    public String getGender() {
+    public Integer getGender() {
         return gender;
     }
 
-    public void setGender(String gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
@@ -254,11 +254,11 @@ public class WeChatWorkUserBO {
         this.alias = alias;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -294,11 +294,11 @@ public class WeChatWorkUserBO {
         this.openUserId = openUserId;
     }
 
-    public Integer getMainDepartment() {
+    public Long getMainDepartment() {
         return mainDepartment;
     }
 
-    public void setMainDepartment(Integer mainDepartment) {
+    public void setMainDepartment(Long mainDepartment) {
         this.mainDepartment = mainDepartment;
     }
 
