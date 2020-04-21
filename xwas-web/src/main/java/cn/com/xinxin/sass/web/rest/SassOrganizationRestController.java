@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author: zhouyang
@@ -40,7 +41,7 @@ public class SassOrganizationRestController extends AclController {
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/organization/list")
-    public Object OrganizationList(HttpServletRequest request,@RequestBody OrgQueryForm orgForm){
+    public Object OrganizationList(HttpServletRequest request, @RequestBody OrgQueryForm orgForm){
 
         if(null == orgForm){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"组织机构查询参数不能为空","组织机构查询参数");
@@ -64,6 +65,31 @@ public class SassOrganizationRestController extends AclController {
 
 
         return result;
+
+    }
+
+    /**
+     * 获取组织机构的树形结构
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/routes",method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresPermissions("/organization/routes")
+    public Object OrganizationRoutes(HttpServletRequest request){
+
+
+        loger.info("SassOrganizationRestController,createOrganization, orgName = {}");
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        // 参数转换设置
+
+
+        List<OrganizationDO> organizationDOList = this.organizationService.queryOrgList();
+
+
+
+        return null;
 
     }
 
