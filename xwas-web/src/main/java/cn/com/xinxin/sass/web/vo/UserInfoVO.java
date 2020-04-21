@@ -1,11 +1,16 @@
 package cn.com.xinxin.sass.web.vo;
 
+import cn.com.xinxin.sass.api.base.ToString;
+
 import java.util.List;
 
 /**
  * Created by dengyunhui on 2018/5/2
  **/
-public class UserInfoVO {
+public class UserInfoVO extends ToString{
+
+    private static final long serialVersionUID = 61839903145221657L;
+
 
     private Long id;
 
