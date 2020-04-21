@@ -3,9 +3,7 @@
 </template>
 
 <script>
-export default {
-  name: "user-list"
-};
+export default { name: "message-list" };
 </script>
 
 <style lang="less" scoped></style>

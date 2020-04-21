@@ -6,20 +6,27 @@ export const login = ({ account, password }) => {
     password
   };
   return axios.request({
-    url: "sass/auth",
+    url: "auth",
     data,
     method: "post"
   });
 };
 export const getUserInfo = account => {
   return axios.request({
-    url: "sass/user/query/" + account,
+    url: "user/query/" + account,
     method: "get"
   });
 };
+export const getMenuInfo = () => {
+  return axios.request({
+    url: "menu/routes",
+    method: "get"
+  });
+};
+
 export const logout = () => {
   return axios.request({
-    url: "sass/logout",
+    url: "logout",
     data: {},
     method: "post"
   });

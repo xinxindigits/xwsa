@@ -4,6 +4,7 @@ import store from "@/store";
 import ViewUI from "view-design";
 import { setTitle } from "@/libs/util";
 import routes from "./routers";
+import { loadMenu } from "./routers";
 import config from "@/config";
 Vue.use(VueRouter);
 
@@ -22,7 +23,7 @@ VueRouter.prototype.replace = function repalce(location, onResolve, onReject) {
 const { homeName } = config;
 const LOGIN_PAGE_NAME = "login";
 const router = new VueRouter({
-  routes
+  routes: [...routes, ...loadMenu()]
 });
 router.beforeEach((to, from, next) => {
   ViewUI.LoadingBar.start();
@@ -47,10 +48,12 @@ router.beforeEach((to, from, next) => {
       store
         .dispatch("getUserInfo")
         .then(() => {
-          next();
+          store.dispatch("getMenuInfo").then(() => {
+            next();
+          });
         })
         .catch(() => {
-          store.commit.setToken("");
+          store.commit("setToken", "");
           next({
             name: "login"
           });
