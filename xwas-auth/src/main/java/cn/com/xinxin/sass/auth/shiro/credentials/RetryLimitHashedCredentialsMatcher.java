@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.web.shiro.credentials;
+package cn.com.xinxin.sass.auth.shiro.credentials;
 
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;

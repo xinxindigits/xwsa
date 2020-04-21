@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.web.shiro.filter;
+package cn.com.xinxin.sass.auth.shiro.filter;
 
 import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
