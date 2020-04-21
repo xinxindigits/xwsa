@@ -1,6 +1,9 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.MemberReceivedDO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MemberReceivedDOMapper {
     /**
@@ -50,4 +53,11 @@ public interface MemberReceivedDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(MemberReceivedDO record);
+
+    /**
+     * 批量插入记录
+     * @param memberReceivedDOS 记录
+     * @return 插入成功条数
+     */
+    int insertBatch(@Param(value = "memberReceivedDOS") List<MemberReceivedDO> memberReceivedDOS);
 }
