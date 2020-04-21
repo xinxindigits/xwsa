@@ -13,7 +13,7 @@
     <import resource="classpath:spring-dubbo.xml"/>
     <!--<import resource="classpath:spring-redis.xml"/>-->
     <import resource="classpath:spring-aop.xml"/>
-    <import resource="classpath:spring-shiro.xml"/>
+    <import resource="classpath:spring-portal-session.xml"/>
     <import resource="classpath:spring-session-redis.xml"/>
     <import resource="classpath:spring-portal-session-aop.xml"/>
 
