@@ -24,8 +24,6 @@ public class MenuTreeVO {
     private List<MenuTreeVO> children = new ArrayList<>();
 
 
-    private List<MenuTreeVO> items = new ArrayList<>();
-
     /**
      * 父节点id
      */
@@ -68,14 +66,6 @@ public class MenuTreeVO {
 
     public void setAuthority(String authority) {
         this.authority = authority;
-    }
-
-    public List<MenuTreeVO> getItems() {
-        return items;
-    }
-
-    public void setItems(List<MenuTreeVO> items) {
-        this.items = items;
     }
 
     public String getCode() {
