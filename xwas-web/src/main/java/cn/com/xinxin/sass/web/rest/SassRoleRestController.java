@@ -9,6 +9,7 @@ import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
+import cn.com.xinxin.sass.web.form.CreateRoleForm;
 import cn.com.xinxin.sass.web.form.RoleAuthorityForm;
 import cn.com.xinxin.sass.web.form.RoleForm;
 import cn.com.xinxin.sass.web.vo.RoleVO;
@@ -46,22 +47,21 @@ public class SassRoleRestController extends AclController {
 
     /**
      * 创建角色接口
-     * @param roleForm
+     * @param createRoleForm
      * @param request
      * @return
      */
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @RequiresPermissions("/role/create")
-    public Object createRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
+    public Object createRole(@RequestBody CreateRoleForm createRoleForm, HttpServletRequest request){
 
-        if(roleForm == null){
+        if(createRoleForm == null){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"创建角色参数不能为空");
         }
 
-        logger.info("--------SassRoleRestController.createRole.Request:{}--------",JSONObject.toJSONString(roleForm));
+        logger.info("--------SassRoleRestController.createRole.Request:{}--------",JSONObject.toJSONString(createRoleForm));
 
-        RoleDO roleDO = SassFormConvert.convertRoleForm2RoleDO(roleForm);
-        roleDO.setId(null);
+        RoleDO roleDO = BaseConvert.convert(createRoleForm, RoleDO.class);
         SassUserInfo sassUserInfo = this.getSassUser(request);
         roleDO.setGmtCreator(sassUserInfo.getAccount());
         roleDO.setGmtUpdater(sassUserInfo.getAccount());
@@ -145,7 +145,7 @@ public class SassRoleRestController extends AclController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/query/list",method = RequestMethod.POST)
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
     @RequiresPermissions("/role/list")
     public Object pageQueryRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
 
