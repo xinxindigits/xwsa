@@ -27,4 +27,20 @@ public interface WeChatWorkCustomerClient {
      * @return 客户的详细信息
      */
     WeChatWorkCustomerBO queryCustomerDetail(String token, String customerUserId);
+
+    /**
+     * 根据成员的userID查询客户的userID
+     * @param token 企业微信token
+     * @param userIdS 成员的userID列表
+     * @return 客户的userID
+     */
+    List<String> queryCustomerUserId(String token, List<String> userIdS);
+
+    /**
+     * 根据客户的userID查询客户的详细信息
+     * @param token 企业微信token
+     * @param customerUserIdS 客户的userID
+     * @return 客户的详细信息
+     */
+    List<WeChatWorkCustomerBO> queryCustomerDetail(String token, List<String> customerUserIdS);
 }

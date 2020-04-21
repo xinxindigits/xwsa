@@ -16,8 +16,16 @@ public interface WeChatWorkUserClient {
     /**
      * 查询用户信息列表
      * @param token 企业微信token
-     * @param departmentId 部门列表
+     * @param departmentId 部门id
      * @return 用户信息列表
      */
-    List<WeChatWorkUserBO> queryUserList(String token, Integer departmentId);
+    List<WeChatWorkUserBO> queryUserList(String token, Long departmentId);
+
+    /**
+     * 查询用户信息列表
+     * @param token 企业微信token
+     * @param departmentIdS 部门id列表
+     * @return 用户信息列表
+     */
+    List<WeChatWorkUserBO> queryUserList(String token, List<Long> departmentIdS);
 }
