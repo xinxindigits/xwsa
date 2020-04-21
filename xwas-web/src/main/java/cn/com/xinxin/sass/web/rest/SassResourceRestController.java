@@ -12,6 +12,7 @@ import cn.com.xinxin.sass.web.form.ResourceForm;
 import cn.com.xinxin.sass.web.form.ResourceQueryForm;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
+import cn.com.xinxin.sass.web.vo.ResourceVO;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: zhouyang
@@ -70,6 +72,51 @@ public class SassResourceRestController extends AclController {
 
         return result;
     }
+
+
+    /**
+     * 获取所有权限资源的列表，用于在创建角色或者角色赋值的时候拉去权限值
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/tree",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresPermissions("/resource/tree")
+    public Object treeResource(HttpServletRequest request){
+
+        log.info("ResourceController.treeResource,resourceQueryForm={}");
+
+        List<ResourceDO> resourceDOSList = this.resourceService.findAllResources();
+
+        if(CollectionUtils.isEmpty(resourceDOSList)){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"无法查询权限值列表");
+        }
+
+        List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(resourceDOSList);
+
+
+        // 组装必要的参数
+        List<MenuTreeVO> resourceTreeVOList = Lists.newArrayList();
+        resourceVOList.stream().forEach(
+                resourceVO -> {
+                    MenuTreeVO menuTreeVO = new MenuTreeVO();
+                    menuTreeVO.setText(resourceVO.getName());
+                    menuTreeVO.setParentId(String.valueOf(resourceVO.getParentId()));
+                    menuTreeVO.setId(String.valueOf(resourceVO.getId()));
+                    menuTreeVO.setCode(resourceVO.getCode());
+                    menuTreeVO.setUrl(resourceVO.getUrl());
+                    menuTreeVO.setAuthority(resourceVO.getAuthority());
+                    menuTreeVO.setOrder(0);
+                    resourceTreeVOList.add(menuTreeVO);
+                }
+        );
+
+        List<MenuTreeVO> results = TreeResultUtil.build(resourceTreeVOList);
+        // 返回权限树
+        return results;
+
+    }
+
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
