@@ -4,8 +4,10 @@ import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
+import cn.com.xinxin.sass.web.form.OrgQueryForm;
 import cn.com.xinxin.sass.web.form.OrganizationForm;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -31,6 +33,38 @@ public class SassOrganizationRestController extends AclController {
 
     public SassOrganizationRestController(OrganizationService organizationService) {
         this.organizationService = organizationService;
+    }
+
+
+
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresPermissions("/organization/list")
+    public Object OrganizationList(HttpServletRequest request,@RequestBody OrgQueryForm orgForm){
+
+        if(null == orgForm){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"组织机构查询参数不能为空","组织机构查询参数");
+        }
+
+        loger.info("SassOrganizationRestController,createOrganization, orgName = {}",orgForm.getName());
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        // 参数转换设置
+
+        PageResultVO page = new PageResultVO();
+        page.setPageSize(orgForm.getPageSize());
+        page.setPageNumber(orgForm.getPageIndex());
+
+        OrganizationDO condition = new OrganizationDO();
+        condition.setCode(orgForm.getCode());
+        condition.setName(orgForm.getName());
+        condition.setOrgType(orgForm.getOrgType());
+
+        PageResultVO result = organizationService.findByCondition(page, condition);
+
+
+        return result;
+
     }
 
 
