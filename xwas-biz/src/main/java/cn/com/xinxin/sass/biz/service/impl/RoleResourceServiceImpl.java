@@ -1,7 +1,7 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.RoleResourceMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
@@ -56,14 +56,14 @@ public class RoleResourceServiceImpl implements RoleResourceService {
     }
 
     @Override
-    public Page<RoleResourceDO> findByConditionPage(Page page,RoleResourceDO condition) {
+    public PageResultVO<RoleResourceDO> findByConditionPage(PageResultVO page,RoleResourceDO condition) {
         com.github.pagehelper.Page page1 = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
         List<RoleResourceDO> resourceDOS = roleResourceMapper.findByCondition(condition);
 
-        Page<RoleResourceDO> result = new Page<>();
+        PageResultVO<RoleResourceDO> result = new PageResultVO<>();
         result.setTotal(page1.getTotal());
         result.setPageSize(page.getPageSize());
-        result.setRows(resourceDOS);
+        result.setItems(resourceDOS);
         result.setPageNumber(page.getPageNumber());
 
         return result;

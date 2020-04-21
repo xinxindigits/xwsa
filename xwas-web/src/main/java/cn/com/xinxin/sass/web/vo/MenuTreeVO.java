@@ -24,8 +24,6 @@ public class MenuTreeVO {
     private List<MenuTreeVO> children = new ArrayList<>();
 
 
-    private List<MenuTreeVO> items = new ArrayList<>();
-
     /**
      * 父节点id
      */
@@ -47,11 +45,6 @@ public class MenuTreeVO {
     private String url;
 
     /**
-     *
-     */
-    private String href;
-
-    /**
      * 编号
      */
     private String code;
@@ -61,20 +54,18 @@ public class MenuTreeVO {
      */
     private Integer order;
 
-    public String getHref() {
-        return href;
+    /**
+     * 权限值
+     */
+    private String authority;
+
+
+    public String getAuthority() {
+        return authority;
     }
 
-    public void setHref(String href) {
-        this.href = href;
-    }
-
-    public List<MenuTreeVO> getItems() {
-        return items;
-    }
-
-    public void setItems(List<MenuTreeVO> items) {
-        this.items = items;
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
     public String getCode() {

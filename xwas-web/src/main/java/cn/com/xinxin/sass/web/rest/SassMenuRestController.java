@@ -40,17 +40,6 @@ public class SassMenuRestController extends AclController {
     private UserService userService;
 
 
-    @RequestMapping(value = "/create",method = RequestMethod.POST)
-    @ResponseBody
-    @RequiresPermissions("/menu/create")
-    public Object createMenu(HttpServletRequest request,
-                                   @RequestBody ResourceForm resourceForm){
-
-
-        return null;
-
-    }
-
     /**
      * 用户可以看到的菜单列表
      * @param request
@@ -82,7 +71,7 @@ public class SassMenuRestController extends AclController {
                     menuTreeVO.setId(String.valueOf(resourceDO.getId()));
                     menuTreeVO.setCode(resourceDO.getCode());
                     menuTreeVO.setUrl(resourceDO.getUrl());
-                    menuTreeVO.setHref(resourceDO.getUrl());
+                    menuTreeVO.setAuthority(resourceDO.getAuthority());
                     menuTreeVO.setOrder(0);
                     menuResourceVOList.add(menuTreeVO);
                 }

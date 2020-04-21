@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.service;
 
-import cn.com.xinxin.sass.common.Page;
+
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
 
 /**
@@ -14,7 +15,7 @@ public interface OrganizationService {
 
     OrganizationDO findById(Long id);
 
-    Page<OrganizationDO> findByCondition(Page page,OrganizationDO condition);
+    PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition);
 
     Boolean deleteById(Long id);
 

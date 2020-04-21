@@ -33,6 +33,7 @@
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="resource_type" jdbcType="VARCHAR" property="resourceType" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="authority" jdbcType="VARCHAR" property="authority" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="root" jdbcType="TINYINT" property="root" />
     <result column="extension" jdbcType="VARCHAR" property="extension" />
@@ -40,7 +41,7 @@
   </resultMap>
 
   <select id="findResourceByRoleCode" resultMap="ResourceMap" parameterType="java.util.Map">
-    select r.id,r.code,r.parent_id,r.resource_type,r.name,r.url,r.root,r.extension,r.deleted
+    select r.id,r.code,r.parent_id,r.resource_type,r.name,r.authority,r.url,r.root,r.extension,r.deleted
     from role_resource rr,resource r
     where rr.role_code = #{roleCode,jdbcType=VARCHAR}
     and rr.resource_code = r.code
@@ -48,7 +49,7 @@
   </select>
 
   <select id="findResources" resultMap="ResourceMap" parameterType="java.util.List">
-    select r.id,r.code,r.parent_id,r.resource_type,r.name,r.url,r.root,r.extension,r.deleted
+    select r.id,r.code,r.parent_id,r.resource_type,r.name,r.authority,r.url,r.root,r.extension,r.deleted
     from role_resource rr,resource r
     where
     rr.resource_code = r.code
