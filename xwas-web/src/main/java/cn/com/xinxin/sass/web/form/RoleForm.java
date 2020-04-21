@@ -33,6 +33,10 @@ public class RoleForm extends ToString {
      * 描述
      */
     private String extension;
+    /**
+     * 状态
+     */
+    private Boolean deleted;
 
     /**
      * 每页大小
@@ -42,6 +46,14 @@ public class RoleForm extends ToString {
      * 页码
      */
     private Integer pageNum;
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public String getId() {
         return id;
