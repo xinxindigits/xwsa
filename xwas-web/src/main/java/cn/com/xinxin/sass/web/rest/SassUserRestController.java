@@ -4,12 +4,19 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.repository.model.ResourceDO;
+import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
+import cn.com.xinxin.sass.web.form.UserRoleForm;
+import cn.com.xinxin.sass.web.vo.ResourceVO;
+import cn.com.xinxin.sass.web.vo.RoleVO;
+import cn.com.xinxin.sass.web.vo.UserInfoVO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -18,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author: zhouyang
@@ -41,15 +49,31 @@ public class SassUserRestController extends AclController {
     @RequiresPermissions("/user/query")
     public Object queryUserByAccount(HttpServletRequest request,@PathVariable String account){
 
-        SassUserInfo sassUserInfo = this.getSassUser(request);
-
         log.info("queryUserByAccount, account = {}",account);
 
         UserDO userDO = this.userService.findByUserAccount(account);
 
-        UserForm result = BaseConvert.convert(userDO,UserForm.class);
+        UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
 
-        return result;
+        /**
+         * 用户对应的角色值
+         */
+        List<RoleDO> userRolesLists = this.userService.findRolesByAccount(account);
+        log.info("queryUserByAccount, userRolesLists = {}",userRolesLists);
+
+        List<RoleVO> userRolesVOLists = SassFormConvert.convertRoleDO2VOs(userRolesLists);
+        userInfoVO.setRoles(userRolesVOLists);
+
+        /**
+         * 用户对应的资源权限值
+         */
+        List<ResourceDO> userResourceDOList = this.userService.findResourcesByAccount(account);
+        List<ResourceVO> userResourceVOList  = SassFormConvert.convertResourceDO2VO(userResourceDOList);
+        log.info("queryUserByAccount, userRolesLists = {}",userRolesLists);
+
+        userInfoVO.setResources(userResourceVOList);
+
+        return userInfoVO;
 
     }
 
@@ -103,5 +127,22 @@ public class SassUserRestController extends AclController {
         boolean result = this.userService.updateUser(userDO);
         return result;
     }
+
+
+    /**
+     * 用户角色授权接口
+     * @param request
+     * @param userRoleForm
+     * @return
+     */
+    @RequestMapping(value = "/grant",method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresPermissions("/user/grant")
+    public Object grantRoleUserInfo(HttpServletRequest request, @RequestBody UserRoleForm userRoleForm){
+
+        return null;
+
+    }
+
 
 }
