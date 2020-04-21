@@ -11,7 +11,7 @@ import java.util.List;
  **/
 public interface RoleService {
 
-    RoleDO createRole(RoleDO roleDO);
+    RoleDO createRole(RoleDO roleDO, List<String> resourceList);
 
     int updateRole(RoleDO roleDO);
 

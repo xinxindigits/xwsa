@@ -61,12 +61,12 @@
   </select>
 
   <insert id="batchInsert" parameterType="java.util.List">
-    insert into role_resource (role_code, role_name,resource_code,resource_name, gmt_creator)
+    insert into role_resource (role_code, role_name,resource_code,resource_name, gmt_creator, gmt_updater)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.roleCode,jdbcType=VARCHAR}, #{item.roleName,jdbcType=VARCHAR},
       #{item.resourceCode,jdbcType=VARCHAR},#{item.resourceName,jdbcType=VARCHAR},
-      #{item.gmtCreator,jdbcType=VARCHAR})
+      #{item.gmtCreator,jdbcType=VARCHAR},#{item.gmtUpdater,jdbcType=VARCHAR})
     </foreach>
   </insert>
 
