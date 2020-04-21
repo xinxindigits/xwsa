@@ -17,11 +17,9 @@
 </template>
 <script>
 import siderTrigger from "./sider-trigger";
-import bread_crumb from "../custom-bread-crumb/mixin";
 import "./header-bar.less";
 export default {
   name: "HeaderBar",
-  mixins: [bread_crumb],
   components: {
     siderTrigger
   },

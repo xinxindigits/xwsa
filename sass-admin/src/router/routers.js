@@ -21,7 +21,7 @@ export const formatMenu = list => {
   forEach(list, item => {
     let ROUTES_CONFIG = routes_config[item.url];
     if (!ROUTES_CONFIG) {
-      console.log("no route config");
+      console.warn("no route config", item.url);
       let obj = {
         name: "not_found_" + item.code,
         meta: { title: item.text }

@@ -4,11 +4,9 @@ import {
   getMenuByRouter,
   localSave
 } from "@/libs/util";
-import { loadMenu } from "@/router/routers";
+import { loadMenu, formatMenu } from "@/router/routers";
 import { getMenuInfo } from "@/api/user";
 import routers from "@/router/routers";
-import { formatMenu } from "@/router/routers";
-import router from "@/router";
 import config from "@/config";
 const { homeName } = config;
 export default {
@@ -32,7 +30,6 @@ export default {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute);
     },
     updateMenuList(state, routes) {
-      router.addRoutes(routes);
       state.menuList = routes;
     }
   },
