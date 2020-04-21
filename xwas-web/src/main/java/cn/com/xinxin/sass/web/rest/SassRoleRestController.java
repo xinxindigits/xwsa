@@ -12,6 +12,8 @@ import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.RoleAuthorityForm;
 import cn.com.xinxin.sass.web.form.RoleForm;
 import cn.com.xinxin.sass.web.vo.RoleVO;
+import com.alibaba.fastjson.JSONObject;
+import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -42,9 +44,21 @@ public class SassRoleRestController extends AclController {
     @Autowired
     private UserRoleService userRoleService;
 
+    /**
+     * 创建角色接口
+     * @param roleForm
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @RequiresPermissions("/role/create")
     public Object createRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
+
+        if(roleForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"创建角色参数不能为空");
+        }
+
+        logger.info("--------SassRoleRestController.createRole.Request:{}--------",JSONObject.toJSONString(roleForm));
 
         RoleDO roleDO = SassFormConvert.convertRoleForm2RoleDO(roleForm);
         roleDO.setId(null);
@@ -56,9 +70,20 @@ public class SassRoleRestController extends AclController {
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 
+    /**
+     * 永久删除角色接口
+     * @param roleId
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/delete/{roleId}",method = RequestMethod.DELETE)
     @RequiresPermissions("/role/delete")
     public Object deleteRole(@PathVariable Long roleId, HttpServletRequest request){
+
+        if(roleId == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"角色id不能为空");
+        }
+        logger.info("--------SassRoleRestController.deleteRole.Request:{}--------",JSONObject.toJSONString(roleId));
 
         RoleDO roleDO = new RoleDO();
         SassUserInfo sassUserInfo = this.getSassUser(request);
@@ -70,9 +95,20 @@ public class SassRoleRestController extends AclController {
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 
+    /**
+     * 更新角色接口
+     * @param roleForm
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/update",method = RequestMethod.GET)
     @RequiresPermissions("/role/update")
     public Object updateRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
+
+        if(roleForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"更新角色参数不能为空");
+        }
+        logger.info("--------SassRoleRestController.updateRole.Request:{}--------",JSONObject.toJSONString(roleForm));
 
         RoleDO roleDO = SassFormConvert.convertRoleForm2RoleDO(roleForm);
         SassUserInfo sassUserInfo = this.getSassUser(request);
@@ -82,10 +118,20 @@ public class SassRoleRestController extends AclController {
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 
+    /**
+     * 根据角色id查询接口
+     * @param roleId
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/query/{roleId}",method = RequestMethod.GET)
     @ResponseBody
     @RequiresPermissions("/user/query")
     public Object pageQueryUser(@PathVariable Long roleId, HttpServletRequest request){
+
+        if(roleId == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"角色id不能为空");
+        }
 
         RoleDO roleDO = roleService.findOne(roleId);
         roleDO.setDeleted(false);
@@ -93,10 +139,21 @@ public class SassRoleRestController extends AclController {
         return roleVo;
     }
 
-    @RequestMapping(value = "/query/page",method = RequestMethod.POST)
-    @RequiresPermissions("/role/query")
+    /**
+     * 分页查询角色列表接口
+     * @param roleForm
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/query/list",method = RequestMethod.POST)
+    @RequiresPermissions("/role/list")
     public Object pageQueryRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
 
+        if(roleForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"更新角色参数不能为空");
+        }
+        logger.info("--------SassRoleRestController.pageQueryRole.Request:{}--------",JSONObject.toJSONString(roleForm));
+        
         RoleDO roleDO = SassFormConvert.convertRoleForm2RoleDO(roleForm);
         roleDO.setDeleted(false);
         PageResultVO page = new PageResultVO();
@@ -107,10 +164,22 @@ public class SassRoleRestController extends AclController {
         return pageRole;
     }
 
-    @RequestMapping(value = "/authority",method = RequestMethod.POST)
+    /**
+     * 角色授权接口
+     * @param roleAuthorityForm
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/grant",method = RequestMethod.POST)
     @RequiresPermissions("/role/grant")
     @Transactional(rollbackFor = Exception.class)
-    public Object authority(@RequestBody RoleAuthorityForm roleAuthorityForm, HttpServletRequest request){
+    public Object grant(@RequestBody RoleAuthorityForm roleAuthorityForm, HttpServletRequest request){
+
+        if(roleAuthorityForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"更新角色参数不能为空");
+        }
+        logger.info("--------SassRoleRestController.grant.Request:{}--------",JSONObject.toJSONString(roleAuthorityForm));
+
         SassUserInfo sassUserInfo = this.getSassUser(request);
         userRoleService.deleteByRoleCode(roleAuthorityForm.getRoleCode());
         List<UserRoleDO> userRoleDOList = roleAuthorityForm.getUserList().stream().map(user -> {
@@ -125,6 +194,7 @@ public class SassRoleRestController extends AclController {
             return userRoleDO;
         }).collect(Collectors.toList());
         userRoleService.createUserRoles(userRoleDOList);
+        //TODO 更新缓存
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 }
