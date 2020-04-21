@@ -89,7 +89,7 @@ public class SassFormConvert {
 
         return userRoleDO;
     }
-
+    
 
     public static List<ResourceVO> convertResourceDO2VO(List<ResourceDO> resourceDOS){
         List<ResourceVO> resourceVOList = BaseConvert.convertList(resourceDOS,ResourceVO.class);
@@ -103,6 +103,12 @@ public class SassFormConvert {
 
         return roleVOS;
 
+    }
+
+
+    public static RoleDO convertRoleForm2RoleDO(RoleForm roleForm){
+        RoleDO roleDO = BaseConvert.convert(roleForm, RoleDO.class);
+        return roleDO;
     }
 
 }

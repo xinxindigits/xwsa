@@ -49,4 +49,18 @@ public class UserDODODORoleServiceTest extends SpringBaseTest {
         Assert.assertTrue(rst);
     }
 
+    @Test
+    public void testSaveOrUpdate(){
+        UserRoleDO userRoleDO = new UserRoleDO();
+        userRoleDO.setUserAccount("admin004");
+        userRoleDO.setUserName("admin004");
+        userRoleDO.setDeleted(false);
+        userRoleDO.setGmtCreator("admin004");
+        userRoleDO.setGmtUpdater("admin004");
+        userRoleDO.setRoleCode("RO1001");
+        userRoleDO.setRoleName("系统管理员");
+
+        userRoleService.saveOrUpdate(userRoleDO);
+    }
+
 }
