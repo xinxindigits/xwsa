@@ -33,6 +33,14 @@
             <artifactId>commons-dependency-dubbo-all</artifactId>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
 
     </dependencies>
 
