@@ -41,11 +41,10 @@ export default {
             const data = res.data;
             commit("setToken", data.token);
             commit("setAccount", data.account);
+            localStorage.removeItem("route");
             resolve();
           })
-          .catch(err => {
-            reject(err);
-          });
+          .catch(reject);
       });
     },
     // 获取用户相关信息
@@ -55,26 +54,23 @@ export default {
           .then(res => {
             const data = res.data;
             commit("setUserName", data.name || "");
-            commit("setHasGetInfo", true);
             resolve(data);
           })
-          .catch(err => {
-            reject(err);
-          });
+          .catch(reject);
       });
     },
+
     handleLogOut({ commit }) {
       return new Promise((resolve, reject) => {
         logout()
           .then(() => {
             commit("setToken", "");
             commit("setUserName", "");
+            commit("setHasGetInfo", false);
             // commit('setAccess', [])
             resolve();
           })
-          .catch(err => {
-            reject(err);
-          });
+          .catch(reject);
       });
     }
   }
