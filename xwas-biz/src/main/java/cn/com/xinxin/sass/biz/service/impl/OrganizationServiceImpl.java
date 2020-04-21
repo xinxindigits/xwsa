@@ -56,4 +56,11 @@ public class OrganizationServiceImpl implements OrganizationService {
         return n == 1;
     }
 
+    @Override
+    public List<OrganizationDO> queryOrgList() {
+
+        List<OrganizationDO> organizationDOS = this.organizationMapper.selectAllOrgs();
+
+        return organizationDOS;
+    }
 }

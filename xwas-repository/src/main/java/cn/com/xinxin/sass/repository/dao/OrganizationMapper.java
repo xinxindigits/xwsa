@@ -62,4 +62,7 @@ public interface OrganizationMapper {
     int updateByPrimaryKey(OrganizationDO record);
 
     List<OrganizationDO> findByCondition(OrganizationDO condition);
+
+
+    List<OrganizationDO> selectAllOrgs();
 }
