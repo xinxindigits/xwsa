@@ -10,7 +10,7 @@
     <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
     <result column="role_name" jdbcType="VARCHAR" property="roleName" />
     <result column="user_account" jdbcType="VARCHAR" property="userAccount" />
-    <result column="user_name" jdbcType="VARCHAR" property="account" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
     <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
     <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
     <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
@@ -76,4 +76,86 @@
     order by gmt_created desc
   </select>
 
+  <delete id="deleteByRoleCode" parameterType="string">
+    delete from user_role where role_code = #{roleCode}
+  </delete>
+
+  <insert id="saveOrUpdate" parameterType="cn.com.xinxin.sass.repository.model.UserRoleDO">
+    <selectKey keyProperty="id" resultType="cn.com.xinxin.sass.repository.model.UserRoleDO" order="BEFORE">
+      select count(id) as id from user_role where role_code = #{roleCode} and user_account = #{userAccount}
+    </selectKey>
+
+    <if test="id == 1">
+      update user_role
+      set deleted = #{deleted},gmt_updater = #{gmtUpdater}
+      where role_code = #{roleCode} and user_account = #{userAccount}
+    </if>
+    <if test="id == 0">
+      insert into user_role
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="roleCode != null">
+          role_code,
+        </if>
+        <if test="roleName != null">
+          role_name,
+        </if>
+        <if test="userAccount != null">
+          user_account,
+        </if>
+        <if test="userName != null">
+          user_name,
+        </if>
+        <if test="gmtCreator != null">
+          gmt_creator,
+        </if>
+        <if test="gmtCreated != null">
+          gmt_created,
+        </if>
+        <if test="gmtUpdater != null">
+          gmt_updater,
+        </if>
+        <if test="gmtUpdated != null">
+          gmt_updated,
+        </if>
+        <if test="extension != null">
+          extension,
+        </if>
+        <if test="deleted != null">
+          deleted,
+        </if>
+      </trim>
+      <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="roleCode != null">
+          #{roleCode,jdbcType=VARCHAR},
+        </if>
+        <if test="roleName != null">
+          #{roleName,jdbcType=VARCHAR},
+        </if>
+        <if test="userAccount != null">
+          #{userAccount,jdbcType=VARCHAR},
+        </if>
+        <if test="userName != null">
+          #{userName,jdbcType=VARCHAR},
+        </if>
+        <if test="gmtCreator != null">
+          #{gmtCreator,jdbcType=VARCHAR},
+        </if>
+        <if test="gmtCreated != null">
+          #{gmtCreated,jdbcType=TIMESTAMP},
+        </if>
+        <if test="gmtUpdater != null">
+          #{gmtUpdater,jdbcType=VARCHAR},
+        </if>
+        <if test="gmtUpdated != null">
+          #{gmtUpdated,jdbcType=TIMESTAMP},
+        </if>
+        <if test="extension != null">
+          #{extension,jdbcType=VARCHAR},
+        </if>
+        <if test="deleted != null">
+          #{deleted,jdbcType=TINYINT},
+        </if>
+      </trim>
+    </if>
+  </insert>
 </mapper>

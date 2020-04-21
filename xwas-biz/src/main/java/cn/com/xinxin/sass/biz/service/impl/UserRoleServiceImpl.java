@@ -47,7 +47,13 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public boolean deleteUserRole(Long id) {
         int n = userRoleMapper.deleteByPrimaryKey(id);
-        return n == 1;
+        return true;
+    }
+
+    @Override
+    public boolean deleteByRoleCode(String roleCode) {
+        userRoleMapper.deleteByRoleCode(roleCode);
+        return true;
     }
 
     @Override
@@ -67,5 +73,10 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public UserRoleDO findById(Long id) {
         return userRoleMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public boolean saveOrUpdate(UserRoleDO userRoleDO) {
+        return userRoleMapper.saveOrUpdate(userRoleDO) == 1;
     }
 }

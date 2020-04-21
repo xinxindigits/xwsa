@@ -37,11 +37,11 @@
                 <value>classpath:mapper/**/*Mapper.xml</value>
             </list>
         </property>
-        <property name="typeAliasesPackage" value="cn.com.xinxin.portal.repository.dao"/>
-        <property name="typeHandlersPackage" value="cn.com.xinxin.portal.repository.handler"/>
+        <property name="typeAliasesPackage" value="cn.com.xinxin.sass.repository.dao"/>
+        <property name="typeHandlersPackage" value="cn.com.xinxin.sass.repository.handler"/>
     </bean>
     <bean id="dataScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="cn.com.xinxin.portal.repository.dao"/>
+        <property name="basePackage" value="cn.com.xinxin.sass.repository.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
     </bean>
 
