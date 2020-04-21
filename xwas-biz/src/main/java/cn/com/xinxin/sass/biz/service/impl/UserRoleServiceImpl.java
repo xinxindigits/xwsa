@@ -40,7 +40,8 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<RoleDO> findRoleByUserAccount(String account) {
-        return userRoleMapper.findRoleByUserAccount(account);
+        List<RoleDO> roleDOList = userRoleMapper.findRoleByUserAccount(account);
+        return roleDOList;
     }
 
     @Override
