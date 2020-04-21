@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.web.convert;
 
 import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.repository.model.*;
+import cn.com.xinxin.sass.web.vo.ResourceVO;
 import com.xinxinfinance.commons.util.BaseConvert;
 
 import java.util.List;
@@ -86,6 +87,12 @@ public class SassFormConvert {
         UserRoleDO userRoleDO = BaseConvert.convert(userRoleForm, UserRoleDO.class);
 
         return userRoleDO;
+    }
+
+
+    public static List<ResourceVO> convertResourceDO2VO(List<ResourceDO> resourceDOS){
+        List<ResourceVO> resourceVOList = BaseConvert.convertList(resourceDOS,ResourceVO.class);
+        return resourceVOList;
     }
 
 }
