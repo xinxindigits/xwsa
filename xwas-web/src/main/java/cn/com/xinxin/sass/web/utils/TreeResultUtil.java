@@ -75,7 +75,7 @@ public class TreeResultUtil {
         }
 
         for (MenuTreeVO parent : parents){
-            List<MenuTreeVO> children = parent.getItems();
+            List<MenuTreeVO> children = parent.getChildren();
             buildChildren(children,nodes);
         }
     }
