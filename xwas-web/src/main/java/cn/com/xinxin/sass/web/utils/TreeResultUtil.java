@@ -68,8 +68,8 @@ public class TreeResultUtil {
             for (MenuTreeVO node : nodes){
                 if (Objects.equals(pid,node.getParentId())){
                     node.setExpanded(false);
-                    //parent.getChildren().add(node);
-                    parent.getItems().add(node);
+                    parent.getChildren().add(node);
+                    //parent.getItems().add(node);
                 }
             }
         }
