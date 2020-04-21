@@ -24,6 +24,9 @@ public class MenuTreeVO {
     private List<MenuTreeVO> children = new ArrayList<>();
 
 
+    private List<ResourceVO> functions = new ArrayList<>();
+
+
     /**
      * 父节点id
      */
@@ -59,6 +62,14 @@ public class MenuTreeVO {
      */
     private String authority;
 
+
+    public List<ResourceVO> getFunctions() {
+        return functions;
+    }
+
+    public void setFunctions(List<ResourceVO> functions) {
+        this.functions = functions;
+    }
 
     public String getAuthority() {
         return authority;
