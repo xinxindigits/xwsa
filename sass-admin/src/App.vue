@@ -24,5 +24,6 @@ body {
 }
 #app {
   .size;
+  min-width: 1200px;
 }
 </style>
