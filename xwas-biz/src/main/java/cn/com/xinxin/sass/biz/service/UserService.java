@@ -37,6 +37,13 @@ public interface UserService {
                         String newPassword,
                         String updater);
 
+    /**
+     * 批量删除用户信息
+     * @param accounts
+     */
+    void deleteUserByAccounts(List<String> accounts);
+
+
     UserDO findByUserAccount(String account);
 
     List<RoleDO> findRolesByAccount(String account);

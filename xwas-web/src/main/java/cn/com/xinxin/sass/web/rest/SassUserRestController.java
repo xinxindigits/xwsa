@@ -155,6 +155,29 @@ public class SassUserRestController extends AclController {
     }
 
 
+    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
+    @ResponseBody
+    @RequiresPermissions("/user/delete")
+    public Object deleteUserInfo(HttpServletRequest request, @RequestParam List<String> accounts){
+
+        if(null == accounts){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
+        }
+
+        if(CollectionUtils.isEmpty(accounts)){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
+        }
+
+        // FIXME: 删除的时候同时需要清除token等缓存信息
+
+        this.userService.deleteUserByAccounts(accounts);
+
+        return SassBizResultCodeEnum.SUCCESS;
+
+    }
+
+
+
     /**
      * 用户角色授权接口
      * @param request
