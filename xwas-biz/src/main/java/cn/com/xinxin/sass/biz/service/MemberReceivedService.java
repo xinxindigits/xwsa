@@ -10,7 +10,7 @@ import java.util.List;
  * @updater:
  * @description: 成员信息暂存表数据库服务
  */
-public interface MemberReceivedDBService {
+public interface MemberReceivedService {
     /**
      * 批量插入记录
      * @param memberReceivedDOS 记录
