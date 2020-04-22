@@ -114,7 +114,7 @@ public class SassAuthRestController {
             return userTokenVO;
         }else{
             // 登陆失败
-            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败","登陆失败");
+            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败,用户名或者密码错误","登陆失败,用户名或者密码错误");
         }
     }
 
