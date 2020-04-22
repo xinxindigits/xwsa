@@ -105,6 +105,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUserByAccounts(List<String> accounts) {
+
+        // 删除用户信息
+        this.userDOMapper.deleteByAccounts(accounts);
+        // 删除角色权限相关的信息
+        this.userRoleService.deleteByAccounts(accounts);
+
+    }
+
+    @Override
     public UserDO findByUserAccount(String account) {
         return userDOMapper.selectByAccount(account);
     }
