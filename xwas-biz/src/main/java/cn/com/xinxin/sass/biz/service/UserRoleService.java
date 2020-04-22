@@ -24,6 +24,14 @@ public interface UserRoleService {
 
     boolean deleteByRoleCode(String roleCode);
 
+    /**
+     * @param accounts
+     * @return
+     */
+    boolean deleteByAccounts(List<String> accounts);
+
+
+
     PageResultVO<UserRoleDO> findByConditionPage(PageResultVO page, UserRoleDO condition);
 
     UserRoleDO findById(Long id);
