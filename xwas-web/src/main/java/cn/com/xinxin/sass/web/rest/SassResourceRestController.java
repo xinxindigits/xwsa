@@ -3,10 +3,14 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.ResourceService;
+import cn.com.xinxin.sass.biz.service.RoleResourceService;
+import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
+import cn.com.xinxin.sass.repository.model.RoleDO;
+import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.ResourceForm;
 import cn.com.xinxin.sass.web.form.ResourceQueryForm;
@@ -40,9 +44,17 @@ public class SassResourceRestController extends AclController {
 
     private static final Logger log = LoggerFactory.getLogger(SassResourceRestController.class);
 
-
     @Autowired
     private ResourceService resourceService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private RoleService roleService;
+
+    @Autowired
+    private RoleResourceService roleResourceService;
 
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -171,12 +183,21 @@ public class SassResourceRestController extends AclController {
 
         String userAccount = sassUserInfo.getAccount();
 
+        log.info("ResourceController.delete,account={}, id={}", userAccount, id);
+
+        ResourceDO resourceDO = this.resourceService.findById(Long.valueOf(id));
+
+        List<RoleResourceDO> RoRslists = this.roleResourceService.queryRolesAndResourcesByRSCode(resourceDO.getCode());
+
+        if(CollectionUtils.isNotEmpty(RoRslists)){
+            // 如果某个资源关联角色，则不能删除该权限资源
+            throw new BusinessException(SassBizResultCodeEnum.FAIL,
+                    "该资源权限已经使用，删除需要移除关联角色","该资源权限已经使用，删除需要移除关联角色");
+        }
+
         boolean result = resourceService.deleteById(Long.valueOf(id));
 
         return result;
-
     }
-
-
 
 }

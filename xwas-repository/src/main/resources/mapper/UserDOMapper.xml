@@ -165,7 +165,7 @@
     -->
     update user
     <set>
-      <if test="user != null">
+      <if test="account != null">
         account = #{account,jdbcType=VARCHAR},
       </if>
       <if test="name != null">

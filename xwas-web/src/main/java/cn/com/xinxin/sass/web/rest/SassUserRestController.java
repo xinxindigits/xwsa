@@ -10,6 +10,7 @@ import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
+import cn.com.xinxin.sass.web.form.UserLoginForm;
 import cn.com.xinxin.sass.web.form.UserRoleForm;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
 import cn.com.xinxin.sass.web.vo.RoleVO;
@@ -77,6 +78,31 @@ public class SassUserRestController extends AclController {
 
     }
 
+
+    @RequestMapping(value = "/restpwd",method = RequestMethod.POST)
+    @ResponseBody
+    @RequiresPermissions("/user/restpwd")
+    public Object restUserPassword(HttpServletRequest request, @RequestBody UserLoginForm pwdForm){
+
+        if(null == pwdForm){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"重置密码参数不能为空","重置密码参数不能为空");
+        }
+
+        // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
+        String userAccount = pwdForm.getAccount();
+
+        String userPwd = pwdForm.getPassword();
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        this.userService.resetPassword(userAccount,userPwd,sassUserInfo.getAccount());
+
+        //FIXME: 重置密码同时需要清除用户缓存以及对应的token
+
+        return SassBizResultCodeEnum.SUCCESS;
+    }
+
+
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/create")
@@ -127,6 +153,29 @@ public class SassUserRestController extends AclController {
         boolean result = this.userService.updateUser(userDO);
         return result;
     }
+
+
+    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
+    @ResponseBody
+    @RequiresPermissions("/user/delete")
+    public Object deleteUserInfo(HttpServletRequest request, @RequestParam List<String> accounts){
+
+        if(null == accounts){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
+        }
+
+        if(CollectionUtils.isEmpty(accounts)){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
+        }
+
+        // FIXME: 删除的时候同时需要清除token等缓存信息
+
+        this.userService.deleteUserByAccounts(accounts);
+
+        return SassBizResultCodeEnum.SUCCESS;
+
+    }
+
 
 
     /**

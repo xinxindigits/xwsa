@@ -57,6 +57,13 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     @Override
+    public boolean deleteByAccounts(List<String> accounts) {
+
+        userRoleMapper.deleteByAccounts(accounts);
+        return true;
+    }
+
+    @Override
     public PageResultVO<UserRoleDO> findByConditionPage(PageResultVO page, UserRoleDO condition) {
        com.github.pagehelper.Page page1 = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
        List<UserRoleDO> userRoleDOS = userRoleMapper.findByCondition(condition);

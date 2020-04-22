@@ -56,8 +56,6 @@ public class UserDODODOServiceTest extends SpringBaseTest {
     @Test
     @Ignore
     public void testChangePassword(){
-        userService.resetPassword(59l,"123","admin");
-
-
+        userService.resetPassword("fhuserts1","123","admin");
     }
 }
