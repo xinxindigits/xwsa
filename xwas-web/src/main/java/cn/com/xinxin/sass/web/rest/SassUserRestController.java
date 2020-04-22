@@ -97,6 +97,8 @@ public class SassUserRestController extends AclController {
 
         this.userService.resetPassword(userAccount,userPwd,sassUserInfo.getAccount());
 
+        //FIXME: 重置密码同时需要清除用户缓存以及对应的token
+
         return SassBizResultCodeEnum.SUCCESS;
     }
 
