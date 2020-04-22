@@ -51,6 +51,7 @@ export default {
             });
             commit("updateMenuList", list);
             commit("setHasGetInfo", true, { root: true });
+            resolve();
           })
           .catch(reject);
       });
