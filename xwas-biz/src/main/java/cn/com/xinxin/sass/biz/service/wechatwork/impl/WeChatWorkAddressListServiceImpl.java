@@ -3,9 +3,9 @@ package cn.com.xinxin.sass.biz.service.wechatwork.impl;
 import cn.com.xinxin.sass.biz.convert.CustomerConvert;
 import cn.com.xinxin.sass.biz.convert.DepartmentConvert;
 import cn.com.xinxin.sass.biz.convert.MemberConvert;
-import cn.com.xinxin.sass.biz.service.CustomerReceivedDBService;
-import cn.com.xinxin.sass.biz.service.DepartmentReceivedDBService;
-import cn.com.xinxin.sass.biz.service.MemberReceivedDBService;
+import cn.com.xinxin.sass.biz.service.CustomerReceivedService;
+import cn.com.xinxin.sass.biz.service.DepartmentReceivedService;
+import cn.com.xinxin.sass.biz.service.MemberReceivedService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkAddressListService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.CustomerReceivedDO;
@@ -46,24 +46,24 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
     private final WeChatWorkDepartmentClient weChatWorkDepartmentClient;
     private final WeChatWorkUserClient weChatWorkUserClient;
     private final WeChatWorkCustomerClient weChatWorkCustomerClient;
-    private final CustomerReceivedDBService customerReceivedDBService;
-    private final MemberReceivedDBService memberReceivedDBService;
-    private final DepartmentReceivedDBService departmentReceivedDBService;
+    private final CustomerReceivedService customerReceivedService;
+    private final MemberReceivedService memberReceivedService;
+    private final DepartmentReceivedService departmentReceivedService;
 
     public WeChatWorkAddressListServiceImpl(final WeChatWorkInteractionClient weChatWorkInteractionClient,
                                             final WeChatWorkDepartmentClient weChatWorkDepartmentClient,
                                             final WeChatWorkUserClient weChatWorkUserClient,
                                             final WeChatWorkCustomerClient weChatWorkCustomerClient,
-                                            final CustomerReceivedDBService customerReceivedDBService,
-                                            final MemberReceivedDBService memberReceivedDBService,
-                                            final DepartmentReceivedDBService departmentReceivedDBService) {
+                                            final CustomerReceivedService customerReceivedService,
+                                            final MemberReceivedService memberReceivedService,
+                                            final DepartmentReceivedService departmentReceivedService) {
         this.weChatWorkInteractionClient = weChatWorkInteractionClient;
         this.weChatWorkDepartmentClient = weChatWorkDepartmentClient;
         this.weChatWorkUserClient = weChatWorkUserClient;
         this.weChatWorkCustomerClient = weChatWorkCustomerClient;
-        this.customerReceivedDBService = customerReceivedDBService;
-        this.memberReceivedDBService = memberReceivedDBService;
-        this.departmentReceivedDBService = departmentReceivedDBService;
+        this.customerReceivedService = customerReceivedService;
+        this.memberReceivedService = memberReceivedService;
+        this.departmentReceivedService = departmentReceivedService;
     }
 
     /**
@@ -72,12 +72,14 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
      * @param corporationId 机构id
      * @param addressListSecret 通讯录应用Secret
      * @param customerContactSecret 客户联系应用Secret
+     * @param taskId 任务id
+     * @param orgId 机构id
      */
     @Override
     public void fetchAndImportAddressList(String corporationId, String addressListSecret, String customerContactSecret,
                                           String taskId, String orgId) {
         //参数检查
-        checkParam(corporationId, addressListSecret, customerContactSecret);
+        checkParam(corporationId, addressListSecret, customerContactSecret, taskId, orgId);
 
         //获取通讯录应用api所需要的token
         String addressListToken = weChatWorkInteractionClient.fetchToken(corporationId, addressListSecret);
@@ -107,10 +109,10 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
                 weChatWorkCustomerBOS, taskId, orgId);
 
         //入库
-        departmentReceivedDBService.insertBatch(departmentReceivedDOS);
-        memberReceivedDBService.insertBatch(memberReceivedDOS.stream()
+        departmentReceivedService.insertBatch(departmentReceivedDOS);
+        memberReceivedService.insertBatch(memberReceivedDOS.stream()
                 .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()));
-        customerReceivedDBService.insertBatch(customerReceivedDOS.stream()
+        customerReceivedService.insertBatch(customerReceivedDOS.stream()
                 .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()));
     }
 
@@ -120,8 +122,11 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
      * @param corporationId 机构id
      * @param addressListSecret 通讯录应用Secret
      * @param customerContactSecret 客户联系应用Secret
+     * @param taskId 任务id
+     * @param orgId 机构id
      */
-    private void checkParam(String corporationId, String addressListSecret, String customerContactSecret) {
+    private void checkParam(String corporationId, String addressListSecret, String customerContactSecret,
+            String taskId, String orgId) {
         if (StringUtils.isBlank(corporationId)) {
             LOGGER.error("获取并导入企业微信通讯录，corporationId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "获取并导入企业微信通讯录，corporationId不能为空");
@@ -133,6 +138,16 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
         if (StringUtils.isBlank(customerContactSecret)) {
             LOGGER.error("获取并导入企业微信通讯录，customerContactSecret不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "获取并导入企业微信通讯录，customerContactSecret不能为空");
+        }
+
+        if (StringUtils.isBlank(taskId)) {
+            LOGGER.error("获取并导入企业微信通讯录，taskId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "获取并导入企业微信通讯录，taskId不能为空");
+        }
+
+        if (StringUtils.isBlank(orgId)) {
+            LOGGER.error("获取并导入企业微信通讯录，orgId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "获取并导入企业微信通讯录，orgId不能为空");
         }
     }
 
