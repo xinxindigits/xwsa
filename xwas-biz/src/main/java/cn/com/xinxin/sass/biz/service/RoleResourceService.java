@@ -29,4 +29,10 @@ public interface RoleResourceService {
 
     Boolean delete(String roleCode,List<String> resourceCodes);
 
+
+    List<RoleResourceDO> queryRolesAndResourcesByRSCode(String rsCode);
+
+
+    List<RoleResourceDO> queryRolesAndResourcesByRSCodeList(List<String> rsCodes);
+
 }

@@ -89,6 +89,27 @@
     order by gmt_created desc
   </select>
 
+
+  <select id="queryRolesAndResourcesByRSCode" resultMap="BaseResultMapExt" parameterType="java.lang.String">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from role_resource
+    where resource_code = #{rsCode,jdbcType=VARCHAR}
+
+  </select>
+
+
+  <select id="queryRolesAndResourcesByRSCodeList" resultMap="BaseResultMapExt" parameterType="java.util.List">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from role_resource
+    where resource_code in
+    <foreach collection="rsCodeList" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </select>
+
   <delete id="delete" parameterType="java.util.Map">
     delete from role_resource
     where

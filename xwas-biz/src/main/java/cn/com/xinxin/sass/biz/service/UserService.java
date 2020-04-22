@@ -15,9 +15,27 @@ public interface UserService {
 
     int createUser(UserDO userDO);
 
-    void resetPassword(Long userId,String newPassword,String updater);
+    /**
+     * 重置用户密码
+     * @param userAccount
+     * @param newPassword
+     * @param updater
+     */
+    void resetPassword(String userAccount,
+                       String newPassword,
+                       String updater);
 
-    void modifyPassword(Long userId,String originPassword, String newPassword,String updater);
+    /**
+     * 修改用户密码
+     * @param userId
+     * @param originPassword
+     * @param newPassword
+     * @param updater
+     */
+    void modifyPassword(String userId,
+                        String originPassword,
+                        String newPassword,
+                        String updater);
 
     UserDO findByUserAccount(String account);
 

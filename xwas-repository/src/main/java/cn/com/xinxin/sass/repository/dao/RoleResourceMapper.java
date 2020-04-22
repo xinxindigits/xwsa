@@ -55,13 +55,56 @@ public interface RoleResourceMapper {
      */
     int updateByPrimaryKey(RoleResourceDO record);
 
+    /**
+     *
+     * @param roleCode
+     * @return
+     */
     List<ResourceDO> findResourceByRoleCode(@Param("roleCode") String roleCode);
 
+    /**
+     *
+     * @param roleCodes
+     * @return
+     */
     List<ResourceDO> findResources(List<String> roleCodes);
 
+    /**
+     *
+     * @param list
+     * @return
+     */
     int batchInsert(List<RoleResourceDO> list);
 
+    /**
+     *
+     * @param condition
+     * @return
+     */
     List<RoleResourceDO> findByCondition(RoleResourceDO condition);
 
+    /**
+     *
+     * @param roleCode
+     * @param resourceCodes
+     * @return
+     */
     int delete(@Param("roleCode") String roleCode,@Param("list")List<String> resourceCodes);
+
+    /**
+     *
+     * @param rsCode
+     * @return
+     */
+    List<RoleResourceDO> queryRolesAndResourcesByRSCode(@Param("rsCode") String rsCode);
+
+
+    /**
+     *
+     * @param rsCodeList
+     * @return
+     */
+    List<RoleResourceDO> queryRolesAndResourcesByRSCodeList(@Param("rsCodeList") List<String> rsCodeList);
+
+
 }
