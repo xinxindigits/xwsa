@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.biz.service;
 
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 
@@ -23,10 +23,16 @@ public interface RoleResourceService {
 
     List<ResourceDO> findResources(List<String> roleCodes);
 
-    Page<RoleResourceDO> findByConditionPage(Page page,RoleResourceDO condition);
+    PageResultVO<RoleResourceDO> findByConditionPage(PageResultVO page, RoleResourceDO condition);
 
     RoleResourceDO findById(Long id);
 
     Boolean delete(String roleCode,List<String> resourceCodes);
+
+
+    List<RoleResourceDO> queryRolesAndResourcesByRSCode(String rsCode);
+
+
+    List<RoleResourceDO> queryRolesAndResourcesByRSCodeList(List<String> rsCodes);
 
 }

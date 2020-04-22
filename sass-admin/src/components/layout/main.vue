@@ -29,6 +29,12 @@
           :collapsed="collapsed"
           @on-coll-change="handleCollapsedChange"
         >
+          <custom-bread-crumb
+            show-icon
+            style="margin-left: 30px;"
+            :list="breadCrumbList"
+            slot="nav"
+          />
           <user :user-avatar="userAvatar" :account="account"></user>
         </header-bar>
       </Header>
@@ -50,11 +56,14 @@ import HeaderBar from "./components/header-bar";
 import User from "./components/user";
 import SideMenu from "./components/side-menu";
 import maxLogo from "@/assets/images/logo-bg.png";
-import { mapMutations } from "vuex";
+import minLogo from "@/assets/images/logo-min.png";
+import { mapMutations, mapActions } from "vuex";
 import routers from "@/router/routers";
+import bread_crumb from "./components/custom-bread-crumb/mixin";
 import "./main.less";
 export default {
   name: "Main",
+  mixins: [bread_crumb],
   components: {
     HeaderBar,
     User,
@@ -71,17 +80,17 @@ export default {
   data() {
     return {
       collapsed: false,
-      userAvatar:
-        "https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png", //TODO
+      userAvatar: minLogo,
       maxLogo,
-      minLogo: "" //TODO
+      minLogo
     };
   },
-  mounted() {
+  beforeMount() {
     this.setHomeRoute(routers);
   },
   methods: {
-    ...mapMutations(["setBreadCrumb", "setHomeRoute"]),
+    ...mapMutations(["setHomeRoute"]),
+    ...mapActions(["getMenuInfo"]),
     handleCollapsedChange(state) {
       this.collapsed = state;
     },
@@ -104,9 +113,11 @@ export default {
       });
     }
   },
+  mounted() {
+    this.getMenuInfo();
+  },
   watch: {
     $route(newRoute) {
-      this.setBreadCrumb(newRoute);
       this.$refs.sideMenu.updateOpenName(newRoute.name);
     }
   }

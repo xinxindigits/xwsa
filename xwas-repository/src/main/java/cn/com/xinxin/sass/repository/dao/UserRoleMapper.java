@@ -60,4 +60,15 @@ public interface UserRoleMapper {
     int batchInsert(List<UserRoleDO> list);
 
     List<UserRoleDO> findByCondition(UserRoleDO condition);
+
+    int saveOrUpdate(UserRoleDO condition);
+
+    boolean deleteByRoleCode(@Param("roleCode") String roleCode);
+
+    /**
+     *
+     * @param accounts
+     * @return
+     */
+    boolean deleteByAccounts(@Param("accounts") List<String> accounts);
 }

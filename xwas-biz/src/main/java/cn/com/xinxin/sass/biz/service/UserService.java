@@ -1,7 +1,7 @@
 package cn.com.xinxin.sass.biz.service;
 
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
@@ -15,9 +15,34 @@ public interface UserService {
 
     int createUser(UserDO userDO);
 
-    void resetPassword(Long userId,String newPassword,String updater);
+    /**
+     * 重置用户密码
+     * @param userAccount
+     * @param newPassword
+     * @param updater
+     */
+    void resetPassword(String userAccount,
+                       String newPassword,
+                       String updater);
 
-    void modifyPassword(Long userId,String originPassword, String newPassword,String updater);
+    /**
+     * 修改用户密码
+     * @param userId
+     * @param originPassword
+     * @param newPassword
+     * @param updater
+     */
+    void modifyPassword(String userId,
+                        String originPassword,
+                        String newPassword,
+                        String updater);
+
+    /**
+     * 批量删除用户信息
+     * @param accounts
+     */
+    void deleteUserByAccounts(List<String> accounts);
+
 
     UserDO findByUserAccount(String account);
 
@@ -29,10 +54,11 @@ public interface UserService {
 
     List<ResourceDO> findRootMenusByAccount(String account);
 
-    List<ResourceDO> findMenusByAccount(String userNo);
+    List<ResourceDO> findMenusByAccount(String userAccount);
 
+    List<ResourceDO> findFunctionsByAccount(String account);
 
-    Page<UserDO> findByConditionPage(Page page, QueryUserConditionVO queryUserConditionVO);
+    PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO);
 
     boolean updateUser(UserDO userDO);
 

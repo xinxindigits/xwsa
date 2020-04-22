@@ -8,11 +8,7 @@
     ></sider-trigger>
 
     <div class="header-bar-nav">
-      <custom-bread-crumb
-        show-icon
-        style="margin-left: 30px;"
-        :list="breadCrumbList"
-      />
+      <slot name="nav"></slot>
       <div class="custom-content-con">
         <slot></slot>
       </div>
@@ -21,11 +17,9 @@
 </template>
 <script>
 import siderTrigger from "./sider-trigger";
-import bread_crumb from "../custom-bread-crumb/mixin";
 import "./header-bar.less";
 export default {
   name: "HeaderBar",
-  mixins: [bread_crumb],
   components: {
     siderTrigger
   },

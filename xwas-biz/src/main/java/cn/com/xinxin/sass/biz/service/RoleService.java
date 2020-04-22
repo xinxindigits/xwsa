@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.service;
 
-import cn.com.xinxin.sass.common.Page;
+
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  **/
 public interface RoleService {
 
-    RoleDO createRole(RoleDO roleDO);
+    RoleDO createRole(RoleDO roleDO, List<String> resourceList);
 
     int updateRole(RoleDO roleDO);
 
@@ -18,7 +19,7 @@ public interface RoleService {
 
     RoleDO findOne(long roleId);
 
-    Page<RoleDO> findByConditionPage(Page page,RoleDO condition);
+    PageResultVO<RoleDO> findByConditionPage(PageResultVO page, RoleDO condition);
 
     /**
      * 根据角色编号得到角色标识符列表

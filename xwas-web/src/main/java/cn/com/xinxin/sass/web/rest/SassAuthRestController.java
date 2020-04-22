@@ -104,7 +104,7 @@ public class SassAuthRestController {
             List<ResourceDO> resourceDOS = userService.findResourcesByAccount(userAccount);
             if (!CollectionUtils.isEmpty(resourceDOS)){
                 Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
-                resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getUrl()));
+                resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getAuthority()));
                 sassUserInfo.setStringPermissions(permissionUrls);
             }
             // 设置用户的token以及角色，权限等信息缓存
@@ -114,7 +114,7 @@ public class SassAuthRestController {
             return userTokenVO;
         }else{
             // 登陆失败
-            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败","登陆失败");
+            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败,用户名或者密码错误","登陆失败,用户名或者密码错误");
         }
     }
 

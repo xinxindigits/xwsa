@@ -4,12 +4,26 @@ import store from "@/store";
 import ViewUI from "view-design";
 import { setTitle } from "@/libs/util";
 import routes from "./routers";
+import { loadMenu } from "./routers";
 import config from "@/config";
 Vue.use(VueRouter);
+
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject);
+  return originalPush.call(this, location).catch(err => err);
+};
+const originalReplace = VueRouter.prototype.replace;
+VueRouter.prototype.replace = function repalce(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalReplace.call(this, location, onResolve, onReject);
+  return originalReplace.call(this, location).catch(err => err);
+};
 const { homeName } = config;
 const LOGIN_PAGE_NAME = "login";
 const router = new VueRouter({
-  routes
+  routes: [...routes, ...loadMenu()]
 });
 router.beforeEach((to, from, next) => {
   ViewUI.LoadingBar.start();
@@ -34,10 +48,12 @@ router.beforeEach((to, from, next) => {
       store
         .dispatch("getUserInfo")
         .then(() => {
-          next();
+          store.dispatch("getMenuInfo").then(() => {
+            next();
+          });
         })
         .catch(() => {
-          store.commit.setToken("");
+          store.commit("setToken", "");
           next({
             name: "login"
           });

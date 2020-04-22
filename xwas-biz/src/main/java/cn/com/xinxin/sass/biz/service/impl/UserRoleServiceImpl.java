@@ -1,7 +1,7 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.UserRoleService;
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.UserRoleMapper;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
@@ -40,23 +40,37 @@ public class UserRoleServiceImpl implements UserRoleService {
 
     @Override
     public List<RoleDO> findRoleByUserAccount(String account) {
-        return userRoleMapper.findRoleByUserAccount(account);
+        List<RoleDO> roleDOList = userRoleMapper.findRoleByUserAccount(account);
+        return roleDOList;
     }
 
     @Override
     public boolean deleteUserRole(Long id) {
         int n = userRoleMapper.deleteByPrimaryKey(id);
-        return n == 1;
+        return true;
     }
 
     @Override
-    public Page<UserRoleDO> findByConditionPage(Page page, UserRoleDO condition) {
+    public boolean deleteByRoleCode(String roleCode) {
+        userRoleMapper.deleteByRoleCode(roleCode);
+        return true;
+    }
+
+    @Override
+    public boolean deleteByAccounts(List<String> accounts) {
+
+        userRoleMapper.deleteByAccounts(accounts);
+        return true;
+    }
+
+    @Override
+    public PageResultVO<UserRoleDO> findByConditionPage(PageResultVO page, UserRoleDO condition) {
        com.github.pagehelper.Page page1 = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
        List<UserRoleDO> userRoleDOS = userRoleMapper.findByCondition(condition);
 
-       Page<UserRoleDO> result = new Page<>();
+        PageResultVO<UserRoleDO> result = new PageResultVO<UserRoleDO>();
        result.setPageNumber(page.getPageNumber());
-       result.setRows(userRoleDOS);
+       result.setItems(userRoleDOS);
        result.setPageSize(page.getPageSize());
        result.setTotal(page1.getTotal());
 
@@ -66,5 +80,10 @@ public class UserRoleServiceImpl implements UserRoleService {
     @Override
     public UserRoleDO findById(Long id) {
         return userRoleMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public boolean saveOrUpdate(UserRoleDO userRoleDO) {
+        return userRoleMapper.saveOrUpdate(userRoleDO) == 1;
     }
 }

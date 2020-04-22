@@ -42,4 +42,14 @@
     and deleted=0
   </select>
 
+  <delete id="deleteByAccounts"  parameterType="java.util.List">
+
+    delete from user
+    where account in
+    <foreach collection="accounts" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </delete>
+
 </mapper>

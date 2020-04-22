@@ -7,9 +7,9 @@ import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.biz.vo.UserPwdVO;
-import cn.com.xinxin.sass.common.Page;
 
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.UserDOMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
@@ -59,8 +59,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(Long userId, String newPassword,String updater) {
-        UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
+    public void resetPassword(String account,
+                              String newPassword,
+                              String updater) {
+        UserDO userDO = userDOMapper.selectByAccount(account);
         if (userDO != null){
             userDO.setPassword(newPassword);
             UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getAccount(),userDO.getPassword());
@@ -76,8 +78,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modifyPassword(Long userId, String originPassword, String newPassword, String updater) {
-        UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
+    public void modifyPassword(String account,
+                               String originPassword,
+                               String newPassword,
+                               String updater) {
+        UserDO userDO = userDOMapper.selectByAccount(account);
+
         if (userDO == null){
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"根据用户id找不到对应的用户");
         }
@@ -99,6 +105,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUserByAccounts(List<String> accounts) {
+
+        // 删除用户信息
+        this.userDOMapper.deleteByAccounts(accounts);
+        // 删除角色权限相关的信息
+        this.userRoleService.deleteByAccounts(accounts);
+
+    }
+
+    @Override
     public UserDO findByUserAccount(String account) {
         return userDOMapper.selectByAccount(account);
     }
@@ -116,6 +132,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ResourceDO> findResourcesByAccount(String account) {
+
         List<RoleDO> roleDOS = userRoleService.findRoleByUserAccount(account);
 
         if (!CollectionUtils.isEmpty(roleDOS)){
@@ -126,6 +143,7 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
+
 
     @Override
     public List<ResourceDO> findPermissionsByAccount(String account) {
@@ -165,7 +183,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDO> findByConditionPage(Page page,QueryUserConditionVO queryUserConditionVO) {
+    public List<ResourceDO> findFunctionsByAccount(String account) {
+        List<ResourceDO> resourceDOS = findResourcesByAccount(account);
+        if (CollectionUtils.isEmpty(resourceDOS)){
+            return null;
+        }
+
+        List<ResourceDO> resourceDOList = resourceDOS.stream().distinct()
+                .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnum.FUNCTION.getCode()))
+                .collect(Collectors.toList());
+        return resourceDOList;
+    }
+
+    @Override
+    public PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO) {
         UserDO userDO = new UserDO();
         userDO.setAccount(queryUserConditionVO.getNo());
         userDO.setName(queryUserConditionVO.getName());
@@ -175,11 +206,11 @@ public class UserServiceImpl implements UserService {
         //List<UserDO> userDOS = userDOMapper.findByCondition(userDO);
         List<UserDO> userDOS = Lists.newArrayList();
 
-        Page<UserDO> result = new Page<>();
+        PageResultVO<UserDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());
         result.setPageSize(page.getPageSize());
         result.setTotal(doPage.getTotal());
-        result.setRows(userDOS);
+        result.setItems(userDOS);
         return result;
     }
 
