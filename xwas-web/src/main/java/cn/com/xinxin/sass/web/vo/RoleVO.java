@@ -35,7 +35,6 @@ public class RoleVO extends ToString {
      */
     private Date gmtCreated;
 
-
     /**
      * 扩展
      */
