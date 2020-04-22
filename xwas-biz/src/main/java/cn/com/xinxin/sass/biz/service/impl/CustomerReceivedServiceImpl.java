@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
-import cn.com.xinxin.sass.biz.service.CustomerReceivedDBService;
+import cn.com.xinxin.sass.biz.service.CustomerReceivedService;
 import cn.com.xinxin.sass.repository.dao.CustomerReceivedDOMapper;
 import cn.com.xinxin.sass.repository.model.CustomerReceivedDO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -17,13 +17,13 @@ import java.util.List;
  * @description: 客户信息暂存表数据库服务
  */
 @Service
-public class CustomerReceivedDBServiceImpl implements CustomerReceivedDBService {
+public class CustomerReceivedServiceImpl implements CustomerReceivedService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerReceivedDBServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerReceivedServiceImpl.class);
 
     private final CustomerReceivedDOMapper customerReceivedDOMapper;
 
-    public CustomerReceivedDBServiceImpl(final CustomerReceivedDOMapper customerReceivedDOMapper) {
+    public CustomerReceivedServiceImpl(final CustomerReceivedDOMapper customerReceivedDOMapper) {
         this.customerReceivedDOMapper = customerReceivedDOMapper;
     }
 
