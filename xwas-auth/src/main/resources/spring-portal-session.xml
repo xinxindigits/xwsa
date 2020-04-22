@@ -7,5 +7,97 @@
     <import resource="spring-session-redis.xml"/>
     <import resource="spring-portal-session-aop.xml"/>
 
+    <bean id="userAclTokenRepository" class="cn.com.xinxin.sass.auth.repository.UserAclTokenRepository">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
+    <bean id="jwtTokenAuthorizingRealmRealm" class="cn.com.xinxin.sass.auth.shiro.realm.JwtTokenAuthorizingRealm">
+        <!--<property name="userService" ref="userServiceImpl"/>-->
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
+    </bean>
+
+    <bean id="defaultSessionStorageEvaluator" class="org.apache.shiro.mgt.DefaultSessionStorageEvaluator">
+        <property name="sessionStorageEnabled" value="false"/>
+    </bean>
+
+    <bean id="subjectDAO" class="org.apache.shiro.mgt.DefaultSubjectDAO">
+        <property name="sessionStorageEvaluator" ref="defaultSessionStorageEvaluator"/>
+    </bean>
+
+    <!--手动指定cookie-->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="1000"/><!-- 7天 -->
+    </bean>
+
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
+    <!-- 权限管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realms">
+            <list>
+                <ref bean="jwtTokenAuthorizingRealmRealm"/>
+            </list>
+        </property>
+        <property name="subjectDAO" ref="subjectDAO"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+
+    <bean id="jwtTokenFilter" class="cn.com.xinxin.sass.auth.shiro.filter.JWTTokenFilter">
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
+    </bean>
+
+    <bean id="logoutFilter" class="cn.com.xinxin.sass.auth.shiro.filter.JwtLogoutFilter">
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
+    </bean>
+
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/auth"/>
+        <property name="unauthorizedUrl" value="/unauthorized"/>
+        <property name="successUrl" value="/index"/>
+        <property name="filters">
+            <util:map>
+                <entry key="jwtFilter" value-ref="jwtTokenFilter"/>
+                <entry key="logoutFilter" value-ref="logoutFilter"/>
+            </util:map>
+        </property>
+
+        <!-- 访问地址的过滤规则，从上到下的优先级，如果有匹配的规则，就会返回，不会再进行匹配 -->
+        <!--
+         anno 任何人都可以访问
+         authc 必须登录才可以访问，不包含rememberme
+         user 登录用户才可以访问，包含rememberme
+         perms 指定过滤规则
+         -->
+        <property name="filterChainDefinitions">
+            <value>
+                /auth = anon
+                /register = anon
+                /unauthorized = anon
+                /static/** = anon
+                /logout = logoutFilter
+                /** = jwtFilter
+            </value>
+        </property>
+    </bean>
+
+    <!-- shiro 生命周期处理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!--<aop:config proxy-target-class="true"/>-->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+
 
 </beans>
