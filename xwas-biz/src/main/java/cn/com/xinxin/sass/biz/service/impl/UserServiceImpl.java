@@ -59,8 +59,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(Long userId, String newPassword,String updater) {
-        UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
+    public void resetPassword(String account,
+                              String newPassword,
+                              String updater) {
+        UserDO userDO = userDOMapper.selectByAccount(account);
         if (userDO != null){
             userDO.setPassword(newPassword);
             UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getAccount(),userDO.getPassword());
@@ -76,8 +78,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modifyPassword(Long userId, String originPassword, String newPassword, String updater) {
-        UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
+    public void modifyPassword(String account,
+                               String originPassword,
+                               String newPassword,
+                               String updater) {
+        UserDO userDO = userDOMapper.selectByAccount(account);
+
         if (userDO == null){
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"根据用户id找不到对应的用户");
         }

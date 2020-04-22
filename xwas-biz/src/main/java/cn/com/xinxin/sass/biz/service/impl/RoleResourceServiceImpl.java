@@ -79,4 +79,18 @@ public class RoleResourceServiceImpl implements RoleResourceService {
         roleResourceMapper.delete(roleCode,resourceCodes);
         return true;
     }
+
+
+    @Override
+    public List<RoleResourceDO> queryRolesAndResourcesByRSCode(String rsCode) {
+
+        List<RoleResourceDO> roleResourceDOS = this.roleResourceMapper.queryRolesAndResourcesByRSCode(rsCode);
+
+        return roleResourceDOS;
+    }
+
+    @Override
+    public List<RoleResourceDO> queryRolesAndResourcesByRSCodeList(List<String> rsCodes) {
+        return null;
+    }
 }

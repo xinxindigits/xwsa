@@ -85,6 +85,9 @@ public class SassRoleRestController extends AclController {
         }
         logger.info("--------SassRoleRestController.deleteRole.Request:{}--------",JSONObject.toJSONString(roleId));
 
+
+        //FIXME: 1.删除之前要去检查角色是否已经关联了用户，如果关联用户不能删除
+        //FIXME: 2.关联资源的可以不用检查
         RoleDO roleDO = new RoleDO();
         SassUserInfo sassUserInfo = this.getSassUser(request);
         roleDO.setGmtUpdater(sassUserInfo.getAccount());
@@ -94,6 +97,8 @@ public class SassRoleRestController extends AclController {
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
+
+
 
     /**
      * 更新角色接口
