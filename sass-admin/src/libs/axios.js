@@ -58,7 +58,6 @@ class HttpRequest {
       res => {
         this.destroy(url);
         const { data, status } = res;
-
         if (!res.config.headers.isRetry && status && status === 460) {
           if (res.headers && res.headers.XToken) {
             store.commit("setToken", res.headers.XToken);

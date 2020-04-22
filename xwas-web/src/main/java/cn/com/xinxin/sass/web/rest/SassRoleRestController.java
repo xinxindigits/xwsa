@@ -65,7 +65,7 @@ public class SassRoleRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
         roleDO.setGmtCreator(sassUserInfo.getAccount());
         roleDO.setGmtUpdater(sassUserInfo.getAccount());
-        roleService.createRole(roleDO);
+        roleService.createRole(roleDO, createRoleForm.getResourceList());
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
@@ -126,8 +126,8 @@ public class SassRoleRestController extends AclController {
      */
     @RequestMapping(value = "/query/{roleId}",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/user/query")
-    public Object pageQueryUser(@PathVariable Long roleId, HttpServletRequest request){
+    @RequiresPermissions("/role/query")
+    public Object queryRoleById(@PathVariable Long roleId, HttpServletRequest request){
 
         if(roleId == null){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"角色id不能为空");
