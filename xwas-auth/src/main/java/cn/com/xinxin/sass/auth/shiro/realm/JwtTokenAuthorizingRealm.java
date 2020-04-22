@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.web.shiro.realm;
+package cn.com.xinxin.sass.auth.shiro.realm;
 
 
 import cn.com.xinxin.sass.auth.model.JWTToken;
@@ -16,8 +16,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 
 
 /**
