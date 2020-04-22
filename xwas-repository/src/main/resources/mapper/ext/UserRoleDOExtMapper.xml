@@ -162,7 +162,7 @@
   <delete id="deleteByAccounts"  parameterType="java.util.List">
 
     delete from user_role
-    where account in
+    where user_account in
     <foreach collection="accounts" index="index" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>

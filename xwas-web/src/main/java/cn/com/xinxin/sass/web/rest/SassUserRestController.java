@@ -158,7 +158,7 @@ public class SassUserRestController extends AclController {
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     @ResponseBody
     @RequiresPermissions("/user/delete")
-    public Object deleteUserInfo(HttpServletRequest request, @RequestBody List<String> accounts){
+    public Object deleteUserInfo(HttpServletRequest request, @RequestParam List<String> accounts){
 
         if(null == accounts){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
