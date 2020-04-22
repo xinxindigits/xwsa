@@ -1,6 +1,9 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.DepartmentDO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface DepartmentDOMapper {
     /**
@@ -50,4 +53,25 @@ public interface DepartmentDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(DepartmentDO record);
+
+    /**
+     * 通过机构id查询部门列表
+     * @param orgId 机构id
+     * @return 部门列表
+     */
+    List<DepartmentDO> selectByOrgId(@Param(value = "orgId") String orgId);
+
+    /**
+     * 批量插入记录
+     * @param departmentDOS 部门信息
+     * @return 插入成功条数
+     */
+    int insertBatch(@Param(value = "departmentDOS")List<DepartmentDO> departmentDOS);
+
+    /**
+     * 批量更新记录
+     * @param departmentDOS 部门信息
+     * @return 更新成功条数
+     */
+    int updateBatchById(@Param(value = "departmentDOS")List<DepartmentDO> departmentDOS);
 }
