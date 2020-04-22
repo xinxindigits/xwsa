@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.OrgBaseInfoDO;
+import org.apache.ibatis.annotations.Param;
 
 public interface OrgBaseInfoDOMapper {
     /**
@@ -50,4 +51,11 @@ public interface OrgBaseInfoDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(OrgBaseInfoDO record);
+
+    /**
+     * 通过机构id查询
+     * @param orgId 机构id
+     * @return 机构基础信息
+     */
+    OrgBaseInfoDO selectByOrgId(@Param(value = "orgId") String orgId);
 }
