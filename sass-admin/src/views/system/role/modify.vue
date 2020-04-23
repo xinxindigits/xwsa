@@ -1,7 +1,7 @@
 <template>
   <Modal
     v-model="curValue"
-    title="新增角色"
+    :title="title"
     :loading="true"
     :mask-closable="false"
   >
@@ -13,7 +13,11 @@
       :rules="rules"
     >
       <FormItem label="角色编号" prop="code">
-        <Input v-model="formObj.code" style="width: 250px"></Input>
+        <Input
+          v-model="formObj.code"
+          style="width: 250px"
+          :disabled="code_editable"
+        ></Input>
       </FormItem>
       <FormItem label="角色名称" prop="name">
         <Input v-model="formObj.name" style="width: 250px"></Input>
@@ -41,19 +45,44 @@
       </FormItem>
     </Form>
     <div slot="footer">
-      <Button type="primary" @click="hdlSubmit('formObj')">确认新增</Button>
+      <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
       <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
     </div>
   </Modal>
 </template>
 
 <script>
-import { addRole } from "@/api/data";
+import { addRole, updateRole } from "@/api/data";
+const _config = {
+  create: {
+    title: "新增角色",
+    success_evt: "on-add-role",
+    submit: addRole
+  },
+  update: {
+    title: "更新角色",
+    success_evt: "on-update-role",
+    updateRole: updateRole
+  }
+};
 export default {
-  name: "role-create",
-  props: { value: Boolean },
+  name: "role-update",
+  props: {
+    value: Boolean,
+    type: {
+      validator: function(value) {
+        return ["create", "update"].indexOf(value) !== -1;
+      }
+    }
+  },
+  computed: {
+    title() {
+      return _config[this.type].title;
+    }
+  },
   data() {
     return {
+      code_editable: false,
       curValue: false,
       statusEnum: [
         { roleType: "admin", extension: "管理员" },
@@ -79,12 +108,19 @@ export default {
     };
   },
   methods: {
+    setData(obj) {
+      this.formObj.code = obj.code;
+      this.formObj.extension = obj.extension;
+      this.formObj.roleType = obj.roleType;
+      this.formObj.name = obj.name;
+      this.code_editable = true;
+    },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          addRole(this.formObj).then(() => {
+          _config[this.type].submit(this.formObj).then(() => {
             this.curValue = false;
-            this.$emit("on-add-role", this.formObj);
+            this.$emit(_config[this.type].success_evt, this.formObj);
           });
         }
       });
