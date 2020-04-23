@@ -26,12 +26,15 @@
       </Form>
       <Row type="flex" :gutter="20" class="row-operation">
         <Col
-          ><Button icon="md-add" type="primary" @click="showAddModal = true"
+          ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
             >新增</Button
           >
         </Col>
         <Col
-          ><Button icon="md-trash" type="error" @click="hdlDelete"
+          ><Button
+            icon="md-trash"
+            type="error"
+            @click="hdlDelete(delteRoleCodes)"
             >删除</Button
           ></Col
         >
@@ -47,20 +50,30 @@
           @on-grant-role="hdlquery"
         ></role-grant>
       </Row>
-      <role-create
-        v-model="showAddModal"
-        @on-cancel="showAddModal = false"
-        @on-add-role="hdlquery"
-      ></role-create>
-      <tables
+
+      <Table
         stripe
         border
         ref="tables"
-        v-model="tableData"
+        :data="tableData"
         :columns="columns"
         :loading="isLoading"
         @on-selection-change="hdlSelectionChange"
-      />
+      >
+        <template slot-scope="{ row }" slot="action">
+          <Button
+            type="primary"
+            size="small"
+            style="margin-right: 5px"
+            @click="hdlSingleModified(row)"
+          >
+            修改
+          </Button>
+          <Button type="error" size="small" @click="hdlDelete([row.code])">
+            删除
+          </Button>
+        </template>
+      </Table>
       <div style="margin: auto; text-align: right;padding-top:10px">
         <Page
           :total="total"
@@ -74,20 +87,30 @@
           transfer
         ></Page>
       </div>
+      <role-update
+        type="create"
+        v-model="showAddModal"
+        @on-cancel="showAddModal = false"
+        @on-add-role="hdlquery"
+      ></role-update>
+      <role-update
+        type="update"
+        v-model="showUpdateModal"
+        @on-update-role="hdlquery"
+        ref="updateModal"
+      ></role-update>
     </Card>
   </div>
 </template>
 
 <script>
-import Tables from "@/components/tables";
 import { getRoleList, delRole } from "@/api/data";
-import RoleCreate from "./create";
+import RoleUpdate from "./modify";
 import RoleGrant from "./granttree";
 export default {
   name: "role-list",
   components: {
-    Tables,
-    RoleCreate,
+    RoleUpdate,
     RoleGrant
   },
   computed: {
@@ -99,6 +122,7 @@ export default {
     return {
       showAddModal: false,
       showGrantModal: false,
+      showUpdateModal: false,
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -118,7 +142,13 @@ export default {
         { title: "角色编号", key: "code", align: "center" },
         { title: "角色名称", key: "name", align: "center" },
         { title: "角色类别", key: "roleType", align: "center" },
-        { title: "角色描述", key: "extension", align: "center" }
+        { title: "角色描述", key: "extension", align: "center" },
+        {
+          title: "操作",
+          slot: "action",
+          width: 150,
+          align: "center"
+        }
       ],
       tbSelection: []
     };
@@ -143,15 +173,16 @@ export default {
       this.pageSize = pageSize;
       this.changePage(1);
     },
-    hdlDelete() {
-      const roleCodes = this.delteRoleCodes;
-      if (this.tbSelection.length > 0) {
+    hdlDelete(roleCodes) {
+      let self = this;
+      if (roleCodes.length > 0) {
         this.$Modal.confirm({
           title: "确认删除？",
           content: `确定删除选中记录?`,
           onOk() {
             delRole({ roleCodes }).then(() => {
               this.$Message.success("删除成功！");
+              self.hdlquery();
             });
           }
         });
@@ -179,6 +210,13 @@ export default {
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;
+    },
+    hdlSingleCreate() {
+      this.showAddModal = true;
+    },
+    hdlSingleModified(data) {
+      this.$refs.updateModal.setData(data);
+      this.showUpdateModal = true;
     }
   },
   mounted() {

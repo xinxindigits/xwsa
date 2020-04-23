@@ -16,6 +16,14 @@ export const addRole = ({ code, extension, name, roleType }) => {
     method: "post"
   });
 };
+export const updateRole = ({ code, extension, name, roleType }) => {
+  let data = { code, extension, name, roleType };
+  return axios.request({
+    url: "role/update",
+    data,
+    method: "post"
+  });
+};
 //角色管理-删除角色
 export const delRole = ({ roleCodes }) => {
   return axios.request({
