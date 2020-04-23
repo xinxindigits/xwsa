@@ -10,7 +10,7 @@ import java.util.List;
  * @updater:
  * @description: 部门信息暂存表数据库服务
  */
-public interface DepartmentReceivedDBService {
+public interface DepartmentReceivedService {
 
     /**
      * 批量插入记录
@@ -18,4 +18,12 @@ public interface DepartmentReceivedDBService {
      * @return 插入成功条数
      */
     int insertBatch(List<DepartmentReceivedDO> departmentReceivedDOS);
+
+    /**
+     * 通过任务id和机构id查询部门信息
+     * @param taskId 任务id
+     * @param orgId 机构id
+     * @return 部门信息
+     */
+    List<DepartmentReceivedDO> selectByTaskIdAndOrgId(String taskId, String orgId);
 }

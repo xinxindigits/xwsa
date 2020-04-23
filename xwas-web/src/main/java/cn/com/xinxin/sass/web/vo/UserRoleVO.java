@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.web.form;
+package cn.com.xinxin.sass.web.vo;
 
 import cn.com.xinxin.sass.api.base.ToString;
 
@@ -8,7 +8,7 @@ import cn.com.xinxin.sass.api.base.ToString;
  * @updater:
  * @description:
  */
-public class UserRoleForm extends ToString {
+public class UserRoleVO extends ToString {
 
     private static final long serialVersionUID = -679598670792406818L;
 
