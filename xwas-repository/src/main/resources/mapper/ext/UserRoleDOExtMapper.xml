@@ -169,6 +169,15 @@
 
   </delete>
 
+  <delete id="deleteByAccountsAndRoleCode"  parameterType="java.util.List">
+    delete from user_role
+    where user_account in
+    <foreach collection="accounts" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    and role_code = #{roleCode,jdbcType=VARCHAR}
+  </delete>
+
   <delete id="deleteByRoleCodes"  parameterType="java.util.List">
 
     delete from user_role
@@ -195,9 +204,6 @@
       <if test="gmtUpdated != null">
         gmt_updated = #{gmtUpdated,jdbcType=TIMESTAMP},
       </if>
-      <if test="extension != null">
-        extension = #{extension,jdbcType=VARCHAR},
-      </if>
     </set>
     where role_code = #{roleCode,jdbcType=VARCHAR}
   </update>
@@ -216,9 +222,6 @@
       </if>
       <if test="gmtUpdated != null">
         gmt_updated = #{gmtUpdated,jdbcType=TIMESTAMP},
-      </if>
-      <if test="extension != null">
-        extension = #{extension,jdbcType=VARCHAR},
       </if>
     </set>
     where user_account = #{userAccount,jdbcType=VARCHAR}

@@ -42,6 +42,18 @@
     and deleted=0
   </select>
 
+  <select id="selectByAccounts"  parameterType="java.util.List" resultMap="BaseResultMapExt">
+
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where account in
+    <foreach collection="accounts" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </select>
+
   <delete id="deleteByAccounts"  parameterType="java.util.List">
 
     delete from user
