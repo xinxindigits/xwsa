@@ -55,6 +55,21 @@
         <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
     </bean>
 
+    <!--<bean id="filterRegistration" >-->
+
+    <!--</bean>-->
+
+    <bean id="firstSuccessfulStrategy" class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"/>
+
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+
+        <property name="authenticationStrategy" ref="firstSuccessfulStrategy"/>
+        <property name="realms">
+            <util:list>
+                <ref bean="jwtTokenAuthorizingRealmRealm"/>
+            </util:list>
+        </property>
+    </bean>
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>

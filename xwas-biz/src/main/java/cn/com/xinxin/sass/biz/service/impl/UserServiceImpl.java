@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
         if (!CollectionUtils.isEmpty(roleDOS)){
             List<String> roleCodes = roleDOS.stream().map(RoleDO::getCode).collect(Collectors.toList());
 
-            return roleResourceService.findResources(roleCodes);
+            return roleResourceService.findResourcesByRoleCode(roleCodes);
         }
 
         return null;

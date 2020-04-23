@@ -2,27 +2,37 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.service.ResourceService;
+import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
+import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.CreateRoleForm;
 import cn.com.xinxin.sass.web.form.DeleteRoleForm;
 import cn.com.xinxin.sass.web.form.RoleAuthorityForm;
 import cn.com.xinxin.sass.web.form.RoleForm;
+import cn.com.xinxin.sass.web.utils.TreeResultUtil;
+import cn.com.xinxin.sass.web.vo.MenuTreeVO;
+import cn.com.xinxin.sass.web.vo.ResourceVO;
 import cn.com.xinxin.sass.web.vo.RoleVO;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,6 +56,12 @@ public class SassRoleRestController extends AclController {
 
     @Autowired
     private UserRoleService userRoleService;
+
+    @Autowired
+    private RoleResourceService roleResourceService;
+
+    @Autowired
+    private ResourceService resourceService;
 
     /**
      * 创建角色接口
@@ -164,6 +180,51 @@ public class SassRoleRestController extends AclController {
         PageResultVO<RoleDO> pageRole = roleService.findByConditionPage(page, roleDO);
 
         return pageRole;
+    }
+
+
+    /**
+     * 查询某个角色下面的权限值
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/resource/tree",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresPermissions("/role/resource/tree")
+    public Object treeRoleResource(HttpServletRequest request, @Param("roleCode") String roleCode){
+
+        logger.info("ResourceController.treeRoleResource,roleCode={}",roleCode);
+
+        if(StringUtils.isEmpty(roleCode)){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"角色不能为空,无法查询权限值列表");
+        }
+
+        // 如果roleCode不为空，则表示需要查询roleCode的权限值
+        List<ResourceDO> roleResourceDOS = this.roleResourceService.findResourcesByRoleCode(roleCode);
+
+        List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(roleResourceDOS);
+
+        // 组装必要的参数
+        List<MenuTreeVO> resourceTreeVOList = Lists.newArrayList();
+        resourceVOList.stream().forEach(
+                resourceVO -> {
+                    MenuTreeVO menuTreeVO = new MenuTreeVO();
+                    menuTreeVO.setText(resourceVO.getName());
+                    menuTreeVO.setParentId(String.valueOf(resourceVO.getParentId()));
+                    menuTreeVO.setId(String.valueOf(resourceVO.getId()));
+                    menuTreeVO.setCode(resourceVO.getCode());
+                    menuTreeVO.setUrl(resourceVO.getUrl());
+                    menuTreeVO.setAuthority(resourceVO.getAuthority());
+                    menuTreeVO.setOrder(0);
+                    menuTreeVO.setChecked(false);
+                    resourceTreeVOList.add(menuTreeVO);
+                }
+        );
+
+        List<MenuTreeVO> results = TreeResultUtil.build(resourceTreeVOList);
+        // 返回权限树
+        return results;
+
     }
 
     /**
