@@ -1,37 +1,51 @@
 <template>
   <div>
     <Card>
-      <Form :model="formItem" :label-width="80" inline>
-        <FormItem label="角色名称">
-          <i-input
-            v-model="formItem.name"
-            placeholder="请输入角色名称"
-          ></i-input>
+      <Form :model="formItem" :label-width="70" inline>
+        <FormItem label="角色编号">
+          <Input v-model="formItem.code" placeholder="请输入角色编号"></Input>
         </FormItem>
-        <FormItem label="租户id">
-          <i-input v-model="formItem.code" placeholder="请输入租户id"></i-input>
+        <FormItem label="角色名称">
+          <Input v-model="formItem.name" placeholder="请输入角色名称"></Input>
+        </FormItem>
+        <FormItem label="角色类型">
+          <Input
+            v-model="formItem.roleType"
+            placeholder="请输入角色类型"
+          ></Input>
         </FormItem>
         <FormItem style="float:right">
           <Button type="primary" @click="hdlquery">查询</Button>
-          <Button style="margin-left: 8px">重置</Button>
+          <Button style="margin-left: 8px" @click="reset">重置</Button>
         </FormItem>
       </Form>
       <Row type="flex" :gutter="20" class="row-operation">
-        <i-col><Button icon="md-add" type="primary">新增</Button></i-col>
-        <i-col><Button icon="md-trash" type="error">删除</Button></i-col>
-        <i-col><Button icon="md-person-add">权限设置</Button></i-col>
+        <Col
+          ><Button icon="md-add" type="primary" @click="showAddModal = true"
+            >新增</Button
+          >
+        </Col>
+        <Col
+          ><Button icon="md-trash" type="error" @click="hdlDelete"
+            >删除</Button
+          ></Col
+        >
+        <!-- <Col><Button icon="md-person-add">权限设置</Button></Col> -->
       </Row>
-
+      <role-create
+        v-model="showAddModal"
+        @on-cancel="showAddModal = false"
+        @on-add-role="hdlquery"
+      ></role-create>
       <tables
         stripe
         border
         ref="tables"
         v-model="tableData"
         :columns="columns"
-        @on-delete="handleDelete"
         :loading="isLoading"
       />
-      <div style="margin: auto; text-align: right">
+      <div style="margin: auto; text-align: right;padding-top:10px">
         <Page
           :total="total"
           :current="page"
@@ -51,13 +65,16 @@
 <script>
 import Tables from "@/components/tables";
 import { getRoleList } from "@/api/data";
+import RoleCreate from "./create";
 export default {
   name: "role-list",
   components: {
-    Tables
+    Tables,
+    RoleCreate
   },
   data() {
     return {
+      showAddModal: false,
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -69,10 +86,15 @@ export default {
       },
       tableData: [],
       columns: [
-        { title: "角色编号", key: "code" },
-        { title: "角色名称", key: "name" },
-        { title: "角色类别", key: "roleType" },
-        { title: "角色描述", key: "extension" }
+        {
+          type: "selection",
+          width: 60,
+          align: "center"
+        },
+        { title: "角色编号", key: "code", align: "center" },
+        { title: "角色名称", key: "name", align: "center" },
+        { title: "角色类别", key: "roleType", align: "center" },
+        { title: "角色描述", key: "extension", align: "center" }
       ]
     };
   },
@@ -96,7 +118,16 @@ export default {
       this.pageSize = pageSize;
       this.changePage(1);
     },
-    handleDelete() {},
+    hdlDelete() {
+      this.$Modal.confirm({
+        title: "确认删除？",
+        content: "确定删除选中记录?",
+        onOk() {
+          console.log("delete");
+        }
+      });
+      // delRole();
+    },
     reset() {
       this.formItem.name = "";
       this.formItem.roleType = "";
