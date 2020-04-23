@@ -13,10 +13,7 @@ import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
-import cn.com.xinxin.sass.web.form.CreateRoleForm;
-import cn.com.xinxin.sass.web.form.DeleteRoleForm;
-import cn.com.xinxin.sass.web.form.RoleAuthorityForm;
-import cn.com.xinxin.sass.web.form.RoleForm;
+import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
@@ -233,10 +230,10 @@ public class SassRoleRestController extends AclController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/grant",method = RequestMethod.POST)
-    @RequiresPermissions("/role/grant")
+    @RequestMapping(value = "/user/grant",method = RequestMethod.POST)
+    @RequiresPermissions("/role/user/grant")
     @Transactional(rollbackFor = Exception.class)
-    public Object grant(@RequestBody RoleAuthorityForm roleAuthorityForm, HttpServletRequest request){
+    public Object userGrant(@RequestBody RoleAuthorityForm roleAuthorityForm, HttpServletRequest request){
 
         if(roleAuthorityForm == null){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"更新角色参数不能为空");
@@ -258,6 +255,51 @@ public class SassRoleRestController extends AclController {
         }).collect(Collectors.toList());
         userRoleService.createUserRoles(userRoleDOList);
         //TODO 更新缓存
+        return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+    }
+
+
+    /**
+     * 角色授权接口
+     * @param grantForm
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/resource/grant",method = RequestMethod.POST)
+    @RequiresPermissions("/role/resource/grant")
+    @Transactional(rollbackFor = Exception.class)
+    public Object resourceGrant(@RequestBody RoleResourceGrantForm grantForm, HttpServletRequest request){
+
+        if(grantForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "角色资源授权参数不能为空");
+        }
+        logger.info("--------SassRoleRestController.grant.Request:{}--------",JSONObject.toJSONString(grantForm));
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        String roleCode = grantForm.getRoleCode();
+        String roleName = grantForm.getRoleName();
+        List<RoleResourceForm> grantResourceList = grantForm.getResources();
+
+        List<RoleResourceDO> roleResourceDOS = Lists.newArrayList();
+        for(RoleResourceForm roleResourceForm : grantResourceList){
+
+            RoleResourceDO roleResourceDO = new RoleResourceDO();
+            roleResourceDO.setResourceCode(roleResourceForm.getResourceCode());
+            roleResourceDO.setResourceName(roleResourceForm.getResourceName());
+            roleResourceDO.setRoleCode(roleCode);
+            roleResourceDO.setRoleName(roleName);
+            roleResourceDO.setGmtCreator(sassUserInfo.getAccount());
+            roleResourceDO.setGmtUpdater(sassUserInfo.getAccount());
+
+            roleResourceDOS.add(roleResourceDO);
+        }
+
+        // 1.首先根据角色删除角色下面的权限
+        // 2.重新插入角色权限
+        // FIXME: 清除对应的角色的用户的缓存权限信息
+        this.roleResourceService.deleteByRoleCodes(Lists.newArrayList(roleCode));
+        this.roleResourceService.createRoleResources(roleResourceDOS);
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 }
