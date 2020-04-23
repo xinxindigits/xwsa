@@ -72,6 +72,8 @@ public interface UserRoleMapper {
      */
     boolean deleteByAccounts(@Param("accounts") List<String> accounts);
 
+    boolean deleteByAccountsAndRoleCode(@Param("roleCode") String roleCode, @Param("accounts") List<String> accounts);
+
     int updateByRoleCode(UserRoleDO userRoleDO);
 
     int updateByUserAccount(UserRoleDO userRoleDO);
