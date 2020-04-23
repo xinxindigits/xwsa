@@ -1,18 +1,23 @@
 <template>
   <div>
     <Card>
-      <Form :model="formItem" :label-width="70" inline>
-        <FormItem label="角色编号">
-          <Input v-model="formItem.code" placeholder="请输入角色编号"></Input>
+      <Form :model="formItem" inline label-colon>
+        <FormItem>
+          <Input v-model="formItem.code" placeholder="角色编号"></Input>
         </FormItem>
-        <FormItem label="角色名称">
-          <Input v-model="formItem.name" placeholder="请输入角色名称"></Input>
+        <FormItem>
+          <Input v-model="formItem.name" placeholder="角色名称"></Input>
         </FormItem>
-        <FormItem label="角色类型">
-          <Input
+        <FormItem>
+          <Select
             v-model="formItem.roleType"
-            placeholder="请输入角色类型"
-          ></Input>
+            placeholder="角色类型"
+            style="width:160px"
+            filterable
+          >
+            <Option value="admin">admin</Option>
+            <Option value="user">user</Option>
+          </Select>
         </FormItem>
         <FormItem style="float:right">
           <Button type="primary" @click="hdlquery">查询</Button>
@@ -30,7 +35,17 @@
             >删除</Button
           ></Col
         >
-        <!-- <Col><Button icon="md-person-add">权限设置</Button></Col> -->
+        <Col
+          ><Button icon="md-person-add" @click="hdlAccessUpdate"
+            >权限设置</Button
+          ></Col
+        >
+        <role-grant
+          ref="grantModal"
+          v-model="showGrantModal"
+          @on-cancel="showGrantModal = false"
+          @on-grant-role="hdlquery"
+        ></role-grant>
       </Row>
       <role-create
         v-model="showAddModal"
@@ -44,6 +59,7 @@
         v-model="tableData"
         :columns="columns"
         :loading="isLoading"
+        @on-selection-change="hdlSelectionChange"
       />
       <div style="margin: auto; text-align: right;padding-top:10px">
         <Page
@@ -64,17 +80,25 @@
 
 <script>
 import Tables from "@/components/tables";
-import { getRoleList } from "@/api/data";
+import { getRoleList, delRole } from "@/api/data";
 import RoleCreate from "./create";
+import RoleGrant from "./granttree";
 export default {
   name: "role-list",
   components: {
     Tables,
-    RoleCreate
+    RoleCreate,
+    RoleGrant
+  },
+  computed: {
+    delteRoleCodes() {
+      return this.tbSelection.map(item => item.code);
+    }
   },
   data() {
     return {
       showAddModal: false,
+      showGrantModal: false,
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -95,7 +119,8 @@ export default {
         { title: "角色名称", key: "name", align: "center" },
         { title: "角色类别", key: "roleType", align: "center" },
         { title: "角色描述", key: "extension", align: "center" }
-      ]
+      ],
+      tbSelection: []
     };
   },
   methods: {
@@ -119,19 +144,41 @@ export default {
       this.changePage(1);
     },
     hdlDelete() {
-      this.$Modal.confirm({
-        title: "确认删除？",
-        content: "确定删除选中记录?",
-        onOk() {
-          console.log("delete");
-        }
-      });
-      // delRole();
+      const roleCodes = this.delteRoleCodes;
+      if (this.tbSelection.length > 0) {
+        this.$Modal.confirm({
+          title: "确认删除？",
+          content: `确定删除选中记录?`,
+          onOk() {
+            delRole({ roleCodes }).then(() => {
+              this.$Message.success("删除成功！");
+            });
+          }
+        });
+      } else {
+        this.$Message.warning("请选择一条记录!");
+      }
+    },
+    hdlAccessUpdate() {
+      if (this.tbSelection.length > 1) {
+        this.$Message.warning("只能选一条数据！");
+      } else if (this.tbSelection.length == 0) {
+        this.$Message.warning("请选择一条记录!");
+      } else {
+        let { name: roleName, code: roleCode } = this.tbSelection[0];
+        this.$refs.grantModal.queryGrantTree({
+          roleCode,
+          roleName
+        });
+      }
     },
     reset() {
       this.formItem.name = "";
       this.formItem.roleType = "";
       this.formItem.code = "";
+    },
+    hdlSelectionChange(selection) {
+      this.tbSelection = selection;
     }
   },
   mounted() {
