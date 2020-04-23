@@ -10,6 +10,7 @@ import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.CreateRoleForm;
+import cn.com.xinxin.sass.web.form.DeleteRoleForm;
 import cn.com.xinxin.sass.web.form.RoleAuthorityForm;
 import cn.com.xinxin.sass.web.form.RoleForm;
 import cn.com.xinxin.sass.web.vo.RoleVO;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +62,11 @@ public class SassRoleRestController extends AclController {
         }
 
         logger.info("--------SassRoleRestController.createRole.Request:{}--------",JSONObject.toJSONString(createRoleForm));
+        String roleCode = createRoleForm.getCode();
+        RoleDO existedRole = roleService.findByRoleCode(roleCode);
+        if(existedRole != null){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_ALREADY_EXIST,"角色信息已经存在","角色信息已经存在");
+        }
 
         RoleDO roleDO = BaseConvert.convert(createRoleForm, RoleDO.class);
         SassUserInfo sassUserInfo = this.getSassUser(request);
@@ -72,32 +79,23 @@ public class SassRoleRestController extends AclController {
 
     /**
      * 永久删除角色接口
-     * @param roleId
+     * @param deleteRoleForm
      * @param request
      * @return
      */
-    @RequestMapping(value = "/delete/{roleId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @RequiresPermissions("/role/delete")
-    public Object deleteRole(@PathVariable Long roleId, HttpServletRequest request){
+    public Object deleteRole(@RequestBody DeleteRoleForm deleteRoleForm, HttpServletRequest request){
 
-        if(roleId == null){
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"角色id不能为空");
+        if(deleteRoleForm == null || CollectionUtils.isEmpty(deleteRoleForm.getRoleCodes())){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"角色编码不能为空");
         }
-        logger.info("--------SassRoleRestController.deleteRole.Request:{}--------",JSONObject.toJSONString(roleId));
+        logger.info("--------SassRoleRestController.deleteRole.Request:{}--------",JSONObject.toJSONString(deleteRoleForm));
 
-
-        //FIXME: 1.删除之前要去检查角色是否已经关联了用户，如果关联用户不能删除
-        //FIXME: 2.关联资源的可以不用检查
-        RoleDO roleDO = new RoleDO();
-        SassUserInfo sassUserInfo = this.getSassUser(request);
-        roleDO.setGmtUpdater(sassUserInfo.getAccount());
-        roleDO.setId(roleId);
-        roleDO.setDeleted(true);
-        roleService.updateRole(roleDO);
+        roleService.deleteRoles(deleteRoleForm.getRoleCodes());
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
-
 
 
     /**
@@ -106,7 +104,7 @@ public class SassRoleRestController extends AclController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update",method = RequestMethod.GET)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     @RequiresPermissions("/role/update")
     public Object updateRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
 
@@ -160,7 +158,6 @@ public class SassRoleRestController extends AclController {
         logger.info("--------SassRoleRestController.pageQueryRole.Request:{}--------",JSONObject.toJSONString(roleForm));
         
         RoleDO roleDO = SassFormConvert.convertRoleForm2RoleDO(roleForm);
-        roleDO.setDeleted(false);
         PageResultVO page = new PageResultVO();
         page.setPageNumber((roleForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : roleForm.getPageNum());
         page.setPageSize((roleForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : roleForm.getPageSize());
