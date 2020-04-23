@@ -1,21 +1,23 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
-import cn.com.xinxin.sass.biz.service.RoleService;
+import cn.com.xinxin.sass.biz.service.*;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.ResourceMapper;
 import cn.com.xinxin.sass.repository.dao.RoleMapper;
-import cn.com.xinxin.sass.repository.dao.RoleResourceMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
+import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import com.github.pagehelper.PageHelper;
+import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.util.BaseConvert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by dengyunhui on 2018/5/1
@@ -27,42 +29,53 @@ public class RoleServiceImpl implements RoleService {
     private RoleMapper roleMapper;
 
     @Autowired
-    private RoleResourceMapper roleResourceMapper;
+    private RoleResourceService roleResourceService;
 
     @Autowired
-    private ResourceMapper resourceMapper;
+    private ResourceService resourceService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserRoleService userRoleService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public RoleDO createRole(RoleDO roleDO, List<String> resourceList) {
         roleMapper.insertSelective(roleDO);
         if(!CollectionUtils.isEmpty(resourceList)){
-        List<ResourceDO> resourceDOList = resourceMapper.findResources(resourceList);
-        if(!CollectionUtils.isEmpty(resourceDOList)){
-            List<RoleResourceDO> roleResourceDOList = resourceDOList.stream().map(resourceDO -> {
-                RoleResourceDO roleResourceDO = new RoleResourceDO();
-                roleResourceDO.setRoleCode(roleDO.getCode());
-                roleResourceDO.setRoleName(roleDO.getName());
-                roleResourceDO.setResourceCode(resourceDO.getCode());
-                roleResourceDO.setResourceName(resourceDO.getName());
-                roleResourceDO.setGmtUpdater(roleDO.getGmtUpdater());
-                roleResourceDO.setGmtCreator(roleDO.getGmtCreator());
-                return roleResourceDO;
-            }).collect(Collectors.toList());
-            roleResourceMapper.batchInsert(roleResourceDOList);
-            }
+            List<ResourceDO> resourceDOList = resourceService.findResources(resourceList);
+            roleResourceService.createRoleResources(roleDO, resourceDOList);
         }
         return roleDO;
     }
 
     @Override
-    public int updateRole(RoleDO roleDO) {
-        return roleMapper.updateByPrimaryKeySelective(roleDO);
+    @Transactional(rollbackFor = Exception.class)
+    public boolean updateRole(RoleDO roleDO) {
+        roleMapper.updateByCodeSelective(roleDO);
+        UserRoleDO userRoleDO = BaseConvert.convert(roleDO, UserRoleDO.class);
+        userRoleDO.setRoleCode(roleDO.getCode());
+        userRoleDO.setRoleName(roleDO.getName());
+        userRoleService.updateByRoleCode(userRoleDO);
+        RoleResourceDO roleResourceDO = BaseConvert.convert(roleDO, RoleResourceDO.class);
+        roleResourceDO.setRoleName(roleDO.getName());
+        roleResourceDO.setRoleCode(roleDO.getCode());
+        roleResourceService.updateByRoleCode(roleResourceDO);
+        return true;
     }
 
     @Override
-    public int deleteRole(Long roleId) {
-        return roleMapper.deleteByPrimaryKey(roleId);
+    @Transactional(rollbackFor = Exception.class)
+    public boolean deleteRoles(List<String> roleCodes) {
+        if(userRoleService.countByRoleCodes(roleCodes) > 0){
+            throw new BusinessException(SassBizResultCodeEnum.NOT_PERMIT_DELETE);
+        }
+        roleMapper.deleteByCodes(roleCodes);
+        roleResourceService.deleteByRoleCodes(roleCodes);
+        userRoleService.deleteByRoleCodes(roleCodes);
+        return true;
     }
 
     @Override

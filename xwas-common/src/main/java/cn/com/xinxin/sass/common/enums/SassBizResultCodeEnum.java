@@ -33,7 +33,10 @@ public enum SassBizResultCodeEnum implements BizResultCode {
 
     UNAUTHORIZED("UNAUTHORIZED", "无效授权", "无效授权!"),
 
-    /* Enum end */;
+    NOT_PERMIT_DELETE("NOT_PERMIT_DELETE", "存在关联数据,禁止删除", "存在关联数据,禁止删除"),
+
+
+        /* Enum end */;
 
 
     /**

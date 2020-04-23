@@ -13,9 +13,9 @@ public interface RoleService {
 
     RoleDO createRole(RoleDO roleDO, List<String> resourceList);
 
-    int updateRole(RoleDO roleDO);
+    boolean updateRole(RoleDO roleDO);
 
-    int deleteRole(Long roleId);
+    boolean deleteRoles(List<String> roleCode);
 
     RoleDO findOne(long roleId);
 
