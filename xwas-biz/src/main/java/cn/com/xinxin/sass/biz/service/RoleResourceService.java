@@ -22,9 +22,9 @@ public interface RoleResourceService {
 
     boolean deleteRoleResource(long id);
 
-    List<ResourceDO> findResources(String roleCode);
+    List<ResourceDO> findResourcesByRoleCode(String roleCode);
 
-    List<ResourceDO> findResources(List<String> roleCodes);
+    List<ResourceDO> findResourcesByRoleCode(List<String> roleCodes);
 
     PageResultVO<RoleResourceDO> findByConditionPage(PageResultVO page, RoleResourceDO condition);
 

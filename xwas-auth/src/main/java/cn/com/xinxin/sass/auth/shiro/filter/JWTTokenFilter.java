@@ -63,7 +63,7 @@ public class JWTTokenFilter extends AuthenticatingFilter {
         return new JWTToken(loginToken);
     }
 
-    
+
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {

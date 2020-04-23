@@ -40,7 +40,7 @@ public class MenuTreeVO {
     /**
      * 展示时，节点是否选中
      */
-    private Boolean checked;
+    private Boolean checked =false;
 
     /**
      * 连接地址

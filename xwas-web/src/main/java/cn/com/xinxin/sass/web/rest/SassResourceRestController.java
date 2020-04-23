@@ -21,6 +21,8 @@ import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,15 +90,17 @@ public class SassResourceRestController extends AclController {
 
     /**
      * 获取所有权限资源的列表，用于在创建角色或者角色赋值的时候拉去权限值
+     * 如果传递rolecode过来就表示同时查询某个角色下面已经有的权限值
      * @param request
      * @return
      */
     @RequestMapping(value = "/tree",method = RequestMethod.GET)
     @ResponseBody
     @RequiresPermissions("/resource/tree")
-    public Object treeResource(HttpServletRequest request){
+    public Object treeResource(HttpServletRequest request,
+                               @Param("roleCode") String roleCode){
 
-        log.info("ResourceController.treeResource,resourceQueryForm={}");
+        log.info("ResourceController.treeResource,roleCode={}", roleCode);
 
         List<ResourceDO> resourceDOSList = this.resourceService.findAllResources();
 
@@ -106,6 +110,16 @@ public class SassResourceRestController extends AclController {
 
         List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(resourceDOSList);
 
+        List<String> resourceCodeList = Lists.newArrayList();
+
+        if(StringUtils.isNotEmpty(roleCode)){
+            // 如果roleCode不为空，则表示需要查询roleCode的权限值
+            List<ResourceDO> roleResourceDOS = this.roleResourceService.findResourcesByRoleCode(roleCode);
+            resourceCodeList = roleResourceDOS
+                    .stream()
+                    .map(resourceDO -> resourceDO.getCode())
+                    .collect(Collectors.toList());
+        }
 
         // 组装必要的参数
         List<MenuTreeVO> resourceTreeVOList = Lists.newArrayList();
@@ -123,7 +137,7 @@ public class SassResourceRestController extends AclController {
                 }
         );
 
-        List<MenuTreeVO> results = TreeResultUtil.build(resourceTreeVOList);
+        List<MenuTreeVO> results = TreeResultUtil.buildCheckedTree(resourceTreeVOList,resourceCodeList);
         // 返回权限树
         return results;
 
