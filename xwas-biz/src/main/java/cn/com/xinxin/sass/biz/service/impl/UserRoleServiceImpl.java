@@ -86,4 +86,31 @@ public class UserRoleServiceImpl implements UserRoleService {
     public boolean saveOrUpdate(UserRoleDO userRoleDO) {
         return userRoleMapper.saveOrUpdate(userRoleDO) == 1;
     }
+
+    @Override
+    public int updateByUserAccount(UserRoleDO userRoleDO) {
+        return userRoleMapper.updateByUserAccount(userRoleDO);
+    }
+
+    @Override
+    public int updateByRoleCode(UserRoleDO userRoleDO) {
+        return userRoleMapper.updateByRoleCode(userRoleDO);
+    }
+
+    public UserRoleMapper getUserRoleMapper() {
+        return userRoleMapper;
+    }
+
+    public void setUserRoleMapper(UserRoleMapper userRoleMapper) {
+        this.userRoleMapper = userRoleMapper;
+    }
+
+    @Override
+    public int countByRoleCodes(List<String> roleCodes) {
+        return userRoleMapper.countByRoleCode(roleCodes);
+    }
+    @Override
+    public boolean deleteByRoleCodes(List<String> roleCodes){
+        return userRoleMapper.deleteByRoleCodes(roleCodes);
+    }
 }

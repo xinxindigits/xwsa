@@ -37,4 +37,12 @@ public interface UserRoleService {
     UserRoleDO findById(Long id);
 
     boolean saveOrUpdate(UserRoleDO userRoleDO);
+
+    int updateByUserAccount(UserRoleDO userRoleDO);
+
+    int updateByRoleCode(UserRoleDO userRoleDO);
+
+    int countByRoleCodes(List<String> roleCode);
+
+    boolean deleteByRoleCodes(List<String> roleCodes);
 }
