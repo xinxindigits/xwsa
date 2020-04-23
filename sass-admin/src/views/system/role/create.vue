@@ -80,11 +80,9 @@ export default {
   },
   methods: {
     hdlSubmit(name) {
-      console.log(this.formObj);
       this.$refs[name].validate(valid => {
         if (valid) {
-          addRole(this.formObj).then(res => {
-            console.log(res);
+          addRole(this.formObj).then(() => {
             this.curValue = false;
             this.$emit("on-add-role", this.formObj);
           });

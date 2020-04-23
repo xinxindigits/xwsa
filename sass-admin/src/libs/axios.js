@@ -92,6 +92,8 @@ class HttpRequest {
           Message.error("服务器繁忙，请稍后再试！");
         } else if (errorInfo.status === 404) {
           Message.error("请求地址不存在！");
+        } else if (errorInfo.status === 403) {
+          Message.error("服务器禁止访问！");
         } else if (errorInfo.status === 400) {
           Message.error("请求错误，请检查参数或请求头");
         }
