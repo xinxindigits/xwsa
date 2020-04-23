@@ -61,6 +61,8 @@ public interface UserDOMapper {
      */
     UserDO selectByAccount(@Param("account")String account);
 
+    List<UserDO> selectByAccounts(@Param("accounts")List<String> accounts);
+
 
     /**
      * 删除账号信息

@@ -6,21 +6,26 @@ import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
+import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
+import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
+import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.web.vo.RoleVO;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.result.BizResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -33,7 +38,10 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +68,8 @@ public class SassRoleRestController extends AclController {
     @Autowired
     private ResourceService resourceService;
 
+    @Autowired
+    private UserService userService;
     /**
      * 创建角色接口
      * @param createRoleForm
@@ -240,21 +250,46 @@ public class SassRoleRestController extends AclController {
         }
         logger.info("--------SassRoleRestController.grant.Request:{}--------",JSONObject.toJSONString(roleAuthorityForm));
 
-        SassUserInfo sassUserInfo = this.getSassUser(request);
-        userRoleService.deleteByRoleCode(roleAuthorityForm.getRoleCode());
-        List<UserRoleDO> userRoleDOList = roleAuthorityForm.getUserList().stream().map(user -> {
-            UserRoleDO userRoleDO = new UserRoleDO();
-            userRoleDO.setUserAccount(user.getAccount());
-            userRoleDO.setUserName(user.getName());
-            userRoleDO.setExtension(user.getExtension());
-            userRoleDO.setRoleName(roleAuthorityForm.getRoleName() );
-            userRoleDO.setRoleCode(roleAuthorityForm.getRoleCode());
-            userRoleDO.setGmtCreator(sassUserInfo.getAccount());
-            userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
-            return userRoleDO;
-        }).collect(Collectors.toList());
-        userRoleService.createUserRoles(userRoleDOList);
-        //TODO 更新缓存
+        RoleDO roleDO = roleService.findByRoleCode(roleAuthorityForm.getRoleCode());
+        if(roleDO == null){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"不存在该角色");
+        }
+        List<UserRoleDO> oldUserRoleList = userRoleService.findByRoleCode(roleAuthorityForm.getRoleCode());
+        Set<String> oldUserRoles = new HashSet();
+        Set<String> newUserRoles = new HashSet();
+        if(!CollectionUtils.isEmpty(roleAuthorityForm.getUserList())){
+            newUserRoles.addAll(roleAuthorityForm.getUserList());
+        }
+        if(!CollectionUtils.isEmpty(oldUserRoleList)){
+            oldUserRoles = oldUserRoleList.stream().map(UserRoleDO::getUserAccount).collect(Collectors.toSet());;
+        }
+        //需要删除角色的用户
+        Sets.SetView<String> deleteAccounts = Sets.difference(oldUserRoles, newUserRoles);
+        //需要添加角色的用户
+        Sets.SetView<String> createAccounts = Sets.difference(newUserRoles, oldUserRoles);
+        if(!CollectionUtils.isEmpty(deleteAccounts)) {
+            userRoleService.deleteByAccountsAndRoleCode(roleAuthorityForm.getRoleCode(), new ArrayList<>(deleteAccounts));
+            logger.info("delete");
+            deleteAccounts.forEach(account->{userService.refreshSassUserInfo(account);});
+        }
+        if(!CollectionUtils.isEmpty(createAccounts)){
+            List<UserDO> userDOList = userService.findUserByAccounts(new ArrayList<>(createAccounts));
+            SassUserInfo sassUserInfo = this.getSassUser(request);
+            List<UserRoleDO> userRoleDOList = userDOList.stream().map(user -> {
+                UserRoleDO userRoleDO = new UserRoleDO();
+                userRoleDO.setUserAccount(user.getAccount());
+                userRoleDO.setUserName(user.getName());
+                userRoleDO.setRoleName(roleDO.getName());
+                userRoleDO.setRoleCode(roleDO.getCode());
+                userRoleDO.setGmtCreator(sassUserInfo.getAccount());
+                userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
+                return userRoleDO;
+            }).collect(Collectors.toList());
+            userRoleService.createUserRoles(userRoleDOList);
+            logger.info("create");
+            createAccounts.forEach(account->{userService.refreshSassUserInfo(account);});
+        }
+
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 
