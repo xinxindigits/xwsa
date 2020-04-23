@@ -5,6 +5,8 @@ import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -67,10 +69,31 @@ public class JWTTokenFilter extends AuthenticatingFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String loginToken = HttpRequestUtil.getLoginToken(httpServletRequest);
+        HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
         try {
             executeLogin(request, response);
             return true;
         } catch (Exception e) {
+            String msg = e.getMessage();
+            Throwable throwable = e.getCause();
+            if (throwable != null && throwable instanceof SignatureVerificationException) {
+                msg = "Token或者密钥不正确(" + throwable.getMessage() + ")";
+            } else if (throwable != null && throwable instanceof TokenExpiredException) {
+                // AccessToken已过期
+                try {
+                    this.userAclTokenRepository.refreshToken(loginToken, httpServletResponse);
+                    return true;
+                } catch (Exception ex){
+                    log.info("Token已过期(" + throwable.getMessage() + ")");
+                }
+            } else {
+                if (throwable != null) {
+                    msg = throwable.getMessage();
+                }
+            }
             unauthorized(response);
             return false;
         }
