@@ -4,6 +4,7 @@ import cn.com.xinxin.sass.auth.model.JWTToken;
 import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -54,8 +55,15 @@ public class JWTTokenFilter extends AuthenticatingFilter {
         if(StringUtils.isBlank(loginToken)){
             return null;
         }
+
+        if (JWTUtil.isExpired(loginToken)) {
+            throw new AuthenticationException("JWT Token已过期,token:" + loginToken);
+        }
+
         return new JWTToken(loginToken);
     }
+
+
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
@@ -117,12 +125,18 @@ public class JWTTokenFilter extends AuthenticatingFilter {
         httpServletResponse.setHeader("Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", httpServletRequest.getHeader("Access-Control-Request-Headers"));
+        httpServletResponse.setHeader("access-control-expose-headers", "XToken");
         // 跨域时会首先发送一个option请求，给option请求直接返回正常状态
         if (httpServletRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
             httpServletResponse.setStatus(HttpStatus.OK.value());
             return false;
         }
         return super.preHandle(request, response);
+    }
+
+    @Override
+    protected void postHandle(ServletRequest request, ServletResponse response) {
+        request.setAttribute("ddd", true);
     }
 
     @Override

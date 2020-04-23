@@ -69,12 +69,12 @@ public class RoleResourceServiceImpl implements RoleResourceService {
     }
 
     @Override
-    public List<ResourceDO> findResources(String roleCode) {
+    public List<ResourceDO> findResourcesByRoleCode(String roleCode) {
         return roleResourceMapper.findResourceByRoleCode(roleCode);
     }
 
     @Override
-    public List<ResourceDO> findResources(List<String> roleCodes) {
+    public List<ResourceDO> findResourcesByRoleCode(List<String> roleCodes) {
         return roleResourceMapper.findResources(roleCodes);
     }
 
