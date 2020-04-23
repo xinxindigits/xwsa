@@ -107,4 +107,24 @@ public interface RoleResourceMapper {
     List<RoleResourceDO> queryRolesAndResourcesByRSCodeList(@Param("rsCodeList") List<String> rsCodeList);
 
 
+    /**
+     *
+     * @param roleResourceDO
+     * @return
+     */
+    int updateByRoleCode(RoleResourceDO roleResourceDO);
+
+    /**
+     *
+     * @param roleResourceDO
+     * @return
+     */
+    int updateByResourceCode(RoleResourceDO roleResourceDO);
+
+    /**
+     *
+     * @param roleCode
+     * @return
+     */
+    int deleteByRoleCodes(@Param("roleCodes") List<String> roleCode);
 }

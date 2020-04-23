@@ -10,7 +10,7 @@ import java.util.List;
  * @updater:
  * @description: 客户信息暂存表数据库服务
  */
-public interface CustomerReceivedDBService {
+public interface CustomerReceivedService {
     /**
      * 批量插入记录
      * @param customerReceivedDOS 记录

@@ -169,4 +169,67 @@
 
   </delete>
 
+  <delete id="deleteByRoleCodes"  parameterType="java.util.List">
+
+    delete from user_role
+    where role_code in
+    <foreach collection="roleCodes" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </delete>
+
+
+  <update id="updateByRoleCode" parameterType="cn.com.xinxin.sass.repository.model.UserRoleDO">
+    update user_role
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdater != null">
+        gmt_updater = #{gmtUpdater,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdated != null">
+        gmt_updated = #{gmtUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where role_code = #{roleCode,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByUserAccount" parameterType="cn.com.xinxin.sass.repository.model.UserRoleDO">
+    update user_role
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdater != null">
+        gmt_updater = #{gmtUpdater,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdated != null">
+        gmt_updated = #{gmtUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_account = #{userAccount,jdbcType=VARCHAR}
+  </update>
+
+  <select id="countByRoleCode" resultType="java.lang.Integer" parameterType="java.util.List">
+    select count(id) from user_role where role_code in
+    <foreach collection="roleCodes" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+
 </mapper>

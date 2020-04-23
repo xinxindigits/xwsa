@@ -120,4 +120,63 @@
     </foreach>
   </delete>
 
+  <update id="updateByResourceCode" parameterType="cn.com.xinxin.sass.repository.model.RoleResourceDO">
+    update role_resource
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceName != null">
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdater != null">
+        gmt_updater = #{gmtUpdater,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdated != null">
+        gmt_updated = #{gmtUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where resource_code = #{resourceCode,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByRoleCode" parameterType="cn.com.xinxin.sass.repository.model.RoleResourceDO">
+    update role_resource
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceName != null">
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdater != null">
+        gmt_updater = #{gmtUpdater,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdated != null">
+        gmt_updated = #{gmtUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where role_code = #{roleCode,jdbcType=VARCHAR}
+  </update>
+
+  <delete id="deleteByRoleCodes"  parameterType="java.util.List">
+    delete from role_resource
+    where role_code in
+    <foreach collection="roleCodes" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </delete>
+
 </mapper>
