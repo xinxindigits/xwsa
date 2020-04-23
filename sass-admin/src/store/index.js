@@ -8,7 +8,14 @@ Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
   key: "sass",
   storage: window.sessionStorage,
-  reducer: state => ({ user: state.user })
+  reducer: state => ({
+    user: {
+      account: state.user.account,
+      userName: state.user.userName,
+      avatarImgPath: state.user.avatarImgPath,
+      token: state.user.token
+    }
+  })
 });
 export default new Vuex.Store({
   state: {},
