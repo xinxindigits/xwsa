@@ -22,9 +22,9 @@
     <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="alias" jdbcType="VARCHAR" property="alias" />
     <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="ext_attr" jdbcType="VARCHAR" property="extAttr" />
+    <result column="ext_attr" jdbcType="LONGVARCHAR" property="extAttr" />
     <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
-    <result column="external_profile" jdbcType="VARCHAR" property="externalProfile" />
+    <result column="external_profile" jdbcType="LONGVARCHAR" property="externalProfile" />
     <result column="external_position" jdbcType="VARCHAR" property="externalPosition" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="hide_mobile" jdbcType="INTEGER" property="hideMobile" />
@@ -91,8 +91,8 @@
       #{orderList,jdbcType=VARCHAR}, #{memberPosition,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, 
       #{mail,jdbcType=VARCHAR}, #{isLeaderInDept,jdbcType=VARCHAR}, #{avatar,jdbcType=VARCHAR}, 
       #{thumbAvatar,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR}, #{alias,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{extAttr,jdbcType=VARCHAR}, #{qrCode,jdbcType=VARCHAR}, 
-      #{externalProfile,jdbcType=VARCHAR}, #{externalPosition,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{status,jdbcType=INTEGER}, #{extAttr,jdbcType=LONGVARCHAR}, #{qrCode,jdbcType=VARCHAR},
+      #{externalProfile,jdbcType=LONGVARCHAR}, #{externalPosition,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
       #{hideMobile,jdbcType=INTEGER}, #{englishName,jdbcType=VARCHAR}, #{openUserid,jdbcType=VARCHAR}, 
       #{mainDepartment,jdbcType=BIGINT}, #{memberStatus,jdbcType=VARCHAR}, #{taskId,jdbcType=VARCHAR}, 
       #{extension,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP}, #{gmtCreator,jdbcType=VARCHAR}, 
@@ -256,13 +256,13 @@
         #{status,jdbcType=INTEGER},
       </if>
       <if test="extAttr != null">
-        #{extAttr,jdbcType=VARCHAR},
+        #{extAttr,jdbcType=LONGVARCHAR},
       </if>
       <if test="qrCode != null">
         #{qrCode,jdbcType=VARCHAR},
       </if>
       <if test="externalProfile != null">
-        #{externalProfile,jdbcType=VARCHAR},
+        #{externalProfile,jdbcType=LONGVARCHAR},
       </if>
       <if test="externalPosition != null">
         #{externalPosition,jdbcType=VARCHAR},
@@ -361,13 +361,13 @@
         status = #{status,jdbcType=INTEGER},
       </if>
       <if test="extAttr != null">
-        ext_attr = #{extAttr,jdbcType=VARCHAR},
+        ext_attr = #{extAttr,jdbcType=LONGVARCHAR},
       </if>
       <if test="qrCode != null">
         qr_code = #{qrCode,jdbcType=VARCHAR},
       </if>
       <if test="externalProfile != null">
-        external_profile = #{externalProfile,jdbcType=VARCHAR},
+        external_profile = #{externalProfile,jdbcType=LONGVARCHAR},
       </if>
       <if test="externalPosition != null">
         external_position = #{externalPosition,jdbcType=VARCHAR},
@@ -435,9 +435,9 @@
       telephone = #{telephone,jdbcType=VARCHAR},
       alias = #{alias,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
-      ext_attr = #{extAttr,jdbcType=VARCHAR},
+      ext_attr = #{extAttr,jdbcType=LONGVARCHAR},
       qr_code = #{qrCode,jdbcType=VARCHAR},
-      external_profile = #{externalProfile,jdbcType=VARCHAR},
+      external_profile = #{externalProfile,jdbcType=LONGVARCHAR},
       external_position = #{externalPosition,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
       hide_mobile = #{hideMobile,jdbcType=INTEGER},
