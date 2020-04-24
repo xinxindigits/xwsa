@@ -88,6 +88,37 @@ public class SassResourceRestController extends AclController {
     }
 
 
+
+    /**
+     * 资源权限查询接口
+     * 具体功能包括： 1。根据权限Code查询某个权限值以及其子集
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryResourceTrees(HttpServletRequest request,
+                                     @RequestBody ResourceQueryForm resourceQueryForm){
+
+        log.info("ResourceController.queryResourceTrees,resourceQueryForm={}", resourceQueryForm);
+
+        String rsCode = "";
+        String rsType  = resourceQueryForm.getResourceType();
+        String rsParentId = resourceQueryForm.getParentId();
+
+        List<ResourceDO> resourceDOSList = this.resourceService.queryResourceTrees(rsCode,rsType,rsParentId);
+
+        if(CollectionUtils.isEmpty(resourceDOSList)){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"无法查询权限值列表");
+        }
+
+        List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(resourceDOSList);
+
+        return resourceVOList;
+
+    }
+
+
     /**
      * 获取所有权限资源的列表，用于在创建角色或者角色赋值的时候拉去权限值
      * 如果传递rolecode过来就表示同时查询某个角色下面已经有的权限值

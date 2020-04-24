@@ -37,4 +37,9 @@ public interface ResourceService {
     PageResultVO<ResourceDO> findByConditionPage(PageResultVO pageVO, ResourceDO condition);
 
     ResourceDO findByResourceCode(String code);
+
+
+    List<ResourceDO> queryResourceTrees(String code,
+                                        String type,
+                                        String parentId);
 }
