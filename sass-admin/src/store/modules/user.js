@@ -54,6 +54,7 @@ export default {
           .then(res => {
             const data = res.data;
             commit("setUserName", data.name || "");
+            commit("setHasGetInfo", true);
             resolve(data);
           })
           .catch(reject);

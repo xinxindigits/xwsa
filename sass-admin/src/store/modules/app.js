@@ -1,10 +1,5 @@
-import {
-  getBreadCrumbList,
-  getHomeRoute,
-  getMenuByRouter,
-  localSave
-} from "@/libs/util";
-import { loadMenu, formatMenu } from "@/router/routers";
+import { getBreadCrumbList, getHomeRoute, getMenuByRouter } from "@/libs/util";
+import { formatMenu } from "@/router/routers";
 import { getMenuInfo } from "@/api/user";
 import routers from "@/router/routers";
 import config from "@/config";
@@ -12,15 +7,13 @@ const { homeName } = config;
 export default {
   state: {
     homeRoute: {},
-    breadCrumbList: []
+    breadCrumbList: [],
+    hasGetRouter: false,
+    routers: []
   },
   getters: {
-    menuList: (state, getters, rootState) => {
-      return getMenuByRouter(
-        [...routers, ...loadMenu()],
-        rootState.user.access
-      );
-    }
+    menuList: (state, getters, rootState) =>
+      getMenuByRouter(routers.concat(state.routers), rootState.user.access)
   },
   mutations: {
     setHomeRoute(state, routes) {
@@ -29,8 +22,12 @@ export default {
     setBreadCrumb(state, route) {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute);
     },
-    updateMenuList(state, routes) {
-      state.menuList = routes;
+    //从后台获取路由数据
+    setRouters(state, routers) {
+      state.routers = routers;
+    },
+    setHasGetRouter(state, status) {
+      state.hasGetRouter = status;
     }
   },
   actions: {
@@ -38,20 +35,10 @@ export default {
       return new Promise((resolve, reject) => {
         getMenuInfo()
           .then(res => {
-            localSave("route", JSON.stringify(res.data));
-            let list = [];
-            list = formatMenu(res.data);
-            list.push({
-              path: "*",
-              name: "error_404",
-              meta: {
-                hideInMenu: true
-              },
-              component: () => import("@/views/error-page/404.vue")
-            });
-            commit("updateMenuList", list);
-            commit("setHasGetInfo", true, { root: true });
-            resolve();
+            let routers = formatMenu(res.data);
+            commit("setRouters", routers);
+            commit("setHasGetRouter", true);
+            resolve(routers);
           })
           .catch(reject);
       });
