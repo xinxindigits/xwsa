@@ -1,11 +1,13 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.api.enums.ResourceTypeEnum;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
@@ -117,6 +119,57 @@ public class SassResourceRestController extends AclController {
         return resourceVOList;
 
     }
+
+
+    /**
+     * 仅读取menu菜单的权限
+     * 如果传递rolecode过来就表示同时查询某个角色下面已经有的权限值
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/menu/tree",method = RequestMethod.GET)
+    @ResponseBody
+    //@RequiresPermissions("resource/menu/tree")
+    public Object treeMenuResource(HttpServletRequest request){
+
+        log.info("ResourceController.treeMenuResource,roleCode={}");
+
+        List<ResourceDO> resourceDOSList = this.resourceService.findAllResources();
+
+        if(CollectionUtils.isEmpty(resourceDOSList)){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"无法查询权限值列表");
+        }
+
+        List<ResourceDO> menuResourceLists = resourceDOSList
+                .stream()
+                .filter(resourceDO -> StringUtils.isNotEmpty(resourceDO.getResourceType())
+                        ||resourceDO.getResourceType().equals(ResourceTypeEnums.MENU_TYPE))
+                .collect(Collectors.toList());
+
+        List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(menuResourceLists);
+
+        // 组装必要的参数
+        List<MenuTreeVO> resourceTreeVOList = Lists.newArrayList();
+        resourceVOList.stream().forEach(
+                resourceVO -> {
+                    MenuTreeVO menuTreeVO = new MenuTreeVO();
+                    menuTreeVO.setText(resourceVO.getName());
+                    menuTreeVO.setParentId(String.valueOf(resourceVO.getParentId()));
+                    menuTreeVO.setId(String.valueOf(resourceVO.getId()));
+                    menuTreeVO.setCode(resourceVO.getCode());
+                    menuTreeVO.setUrl(resourceVO.getUrl());
+                    menuTreeVO.setAuthority(resourceVO.getAuthority());
+                    menuTreeVO.setOrder(0);
+                    resourceTreeVOList.add(menuTreeVO);
+                }
+        );
+
+        List<MenuTreeVO> results = TreeResultUtil.build(resourceTreeVOList);
+        // 返回权限树
+        return results;
+
+    }
+
 
 
     /**
