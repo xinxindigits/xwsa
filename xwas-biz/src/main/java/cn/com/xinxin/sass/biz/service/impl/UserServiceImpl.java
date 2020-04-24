@@ -20,9 +20,12 @@ import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.sun.prism.impl.BaseContext;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.shiro.crypto.hash.Hash;
+import org.eclipse.jetty.server.Authentication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,14 +214,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO) {
-        UserDO userDO = new UserDO();
-        userDO.setAccount(queryUserConditionVO.getNo());
-        userDO.setName(queryUserConditionVO.getName());
-
+        LOGGER.info("QueryUserConditionVO:{}",JSONObject.toJSONString(queryUserConditionVO));
         com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        // 后面在实现
-        //List<UserDO> userDOS = userDOMapper.findByCondition(userDO);
-        List<UserDO> userDOS = Lists.newArrayList();
+
+        UserDO userDO = BaseConvert.convert(queryUserConditionVO, UserDO.class);
+        if(queryUserConditionVO.getGender() != null){
+            userDO.setGender(queryUserConditionVO.getGender().byteValue());
+        }
+        List<UserDO> userDOS = userDOMapper.findByCondition(userDO, queryUserConditionVO.getStartTime(), queryUserConditionVO.getEndTime());
 
         PageResultVO<UserDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());

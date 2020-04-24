@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.repository.dao;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserDOMapper {
@@ -69,4 +70,6 @@ public interface UserDOMapper {
      * @param accounts
      */
     void deleteByAccounts(@Param("accounts")List<String> accounts);
+
+    List<UserDO> findByCondition(@Param("userDO") UserDO userDO, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 }

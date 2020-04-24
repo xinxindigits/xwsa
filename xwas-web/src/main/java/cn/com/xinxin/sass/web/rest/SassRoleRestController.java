@@ -332,9 +332,13 @@ public class SassRoleRestController extends AclController {
 
         // 1.首先根据角色删除角色下面的权限
         // 2.重新插入角色权限
-        // FIXME: 清除对应的角色的用户的缓存权限信息
         this.roleResourceService.deleteByRoleCodes(Lists.newArrayList(roleCode));
         this.roleResourceService.createRoleResources(roleResourceDOS);
+        // 更新对应的角色的用户的缓存权限信息
+        List<UserRoleDO> userRoleList = userRoleService.findByRoleCode(grantForm.getRoleCode());
+        if(!CollectionUtils.isEmpty(userRoleList)) {
+            userRoleList.stream().forEach(userRoleDO -> userService.refreshSassUserInfo(userRoleDO.getUserAccount()));
+        }
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 }
