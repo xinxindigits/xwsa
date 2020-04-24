@@ -6,7 +6,9 @@ import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.result.CommonResultCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -71,23 +73,31 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
             String account = JWTUtil.getUserAccount(token);
 
             if (account == null) {
-                throw new AuthenticationException("token验证无效，清重新尝试");
+                throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN, "token验证无效，清重新尝试");
+            }
+
+            if (JWTUtil.isExpired(token)) {
+                // 如果token过期，则直接返回token过期异常
+                logger.info("————权限认证 token已经过期————");
+                throw new TokenExpiredException("token已经过期");
             }
 
             SassUserInfo sassUserInfo = this.userAclTokenRepository.getSassUserByUserAccount(account);
 
-            if (sassUserInfo == null){
-                throw new UnknownAccountException();
+            if (sassUserInfo == null) {
+                throw new AuthenticationException("授权认证失败,无法查询到账户信息");
             }
             // 返回值
             SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-                    account, token, ByteSource.Util.bytes(account + "JwtTokenAuthorizingRealm"),getName());
+                    account, token, ByteSource.Util.bytes(account + "JwtTokenAuthorizingRealm"), getName());
 
             return authenticationInfo;
 
         }catch (Exception ex){
-            throw new BusinessException(SessionBizResultCodeEnum.FAIL,"登陆认证失败","登陆认证失败");
+
+            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN, "授权认证失败,请重新登陆");
         }
+
     }
 
 
