@@ -87,6 +87,12 @@
     <if test="url != null and url != ''">
       and url like concat('%',#{url,jdbcType=VARCHAR},'%')
     </if>
+    <if test="parentId != null and parentId != ''">
+      and parent_id = #{parentId,jdbcType=VARCHAR}
+    </if>
+    <if test="resourceType != null and resourceType != ''">
+      and resource_type = #{resourceType,jdbcType=VARCHAR}
+    </if>
     <if test="root != null">
       and root = #{root,jdbcType=BIT}
     </if>
