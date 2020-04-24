@@ -30,8 +30,8 @@ public class MemberConvert {
         memberReceivedDO.setUserId(weChatWorkUserBO.getUserId());
         memberReceivedDO.setMemberName(weChatWorkUserBO.getUserName());
         memberReceivedDO.setMobile(weChatWorkUserBO.getMobile());
-        memberReceivedDO.setDepartmentIdList(weChatWorkUserBO.getDepartmentIds().toString());
-        memberReceivedDO.setOrderList(weChatWorkUserBO.getDepartmentOrders().toString());
+        memberReceivedDO.setDepartmentIdList(convertList(weChatWorkUserBO.getDepartmentIds()));
+        memberReceivedDO.setOrderList(convertList(weChatWorkUserBO.getDepartmentOrders()));
         memberReceivedDO.setMemberPosition(weChatWorkUserBO.getPosition());
         memberReceivedDO.setGender(weChatWorkUserBO.getGender());
         memberReceivedDO.setMail(weChatWorkUserBO.getEmail());
@@ -66,6 +66,17 @@ public class MemberConvert {
         List<MemberReceivedDO> memberReceivedDOList = new ArrayList<>();
         weChatWorkUserBOS.forEach(u -> memberReceivedDOList.add(convert2MemberReceivedDO(u, taskId, orgId)));
         return memberReceivedDOList;
+    }
+
+    /**
+     * 将列表转成固定格式的字符串 格式"@1@2@"
+     * @param list 列表
+     * @return 字符串
+     */
+    private static String convertList(List<Integer> list) {
+        StringBuilder sb = new StringBuilder(CommonConstants.SEPARATOR);
+        list.forEach(l -> sb.append(l).append(CommonConstants.SEPARATOR));
+        return sb.toString();
     }
 
 }
