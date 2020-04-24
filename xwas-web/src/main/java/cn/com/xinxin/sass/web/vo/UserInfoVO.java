@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.web.vo;
 
 import cn.com.xinxin.sass.api.base.ToString;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,9 +21,9 @@ public class UserInfoVO extends ToString{
 
     private Integer gender;
 
-    private String password;
-
     private String extension;
+
+    private Date gmtCreated;
 
     /**
      * 用户对应的角色
@@ -92,11 +93,11 @@ public class UserInfoVO extends ToString{
         this.resources = resources;
     }
 
-    public String getPassword() {
-        return password;
+    public Date getGmtCreated() {
+        return gmtCreated;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setGmtCreated(Date gmtCreated) {
+        this.gmtCreated = gmtCreated;
     }
 }
