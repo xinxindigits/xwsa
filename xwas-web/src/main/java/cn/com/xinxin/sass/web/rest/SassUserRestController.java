@@ -5,7 +5,9 @@ import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
 import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
@@ -19,6 +21,7 @@ import cn.com.xinxin.sass.web.form.UserRoleGrantForm;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
 import cn.com.xinxin.sass.web.vo.RoleVO;
 import cn.com.xinxin.sass.web.vo.UserInfoVO;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -58,6 +61,24 @@ public class SassUserRestController extends AclController {
     @Autowired
     private UserAclTokenRepository userAclTokenRepository;
 
+
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresPermissions("/user/list")
+    public Object pageQueryUser(@RequestBody UserForm userForm, HttpServletRequest request){
+        if(userForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"更新角色参数不能为空");
+        }
+        log.info("--------SassUserRestController.pageQueryUser.Request:{}--------",JSONObject.toJSONString(userForm));
+
+        PageResultVO page = new PageResultVO();
+        page.setPageNumber((userForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : userForm.getPageNum());
+        page.setPageSize((userForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : userForm.getPageSize());
+        QueryUserConditionVO queryUserConditionVO = BaseConvert.convert(userForm, QueryUserConditionVO.class);
+        PageResultVO<UserDO> pageUser = userService.findByConditionPage(page, queryUserConditionVO);
+
+        return pageUser;
+    }
 
     @RequestMapping(value = "/query/{account}",method = RequestMethod.GET)
     @ResponseBody

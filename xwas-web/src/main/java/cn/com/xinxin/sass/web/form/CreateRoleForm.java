@@ -29,10 +29,6 @@ public class CreateRoleForm extends ToString {
      */
     private String extension;
     /**
-     * 状态
-     */
-    private Boolean deleted;
-    /**
      * 资源列表
      */
     private List<String> resourceList;
@@ -69,13 +65,6 @@ public class CreateRoleForm extends ToString {
         this.extension = extension;
     }
 
-    public Boolean getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        this.deleted = deleted;
-    }
 
     public List<String> getResourceList() {
         return resourceList;
