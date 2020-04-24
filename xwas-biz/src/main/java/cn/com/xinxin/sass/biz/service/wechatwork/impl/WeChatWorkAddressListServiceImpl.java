@@ -105,8 +105,11 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
                 weChatWorkDepartmentBOS, taskId, orgId);
         List<MemberReceivedDO> memberReceivedDOS = MemberConvert.convert2MemberReceivedDOList(
                 weChatWorkUserBOS, taskId, orgId);
+
+        // FIXME: whereis memberid?
+
         List<CustomerReceivedDO> customerReceivedDOS = CustomerConvert.convert2CustomerReceivedDOList(
-                weChatWorkCustomerBOS, taskId, orgId);
+                weChatWorkCustomerBOS, taskId, orgId,"" );
 
         //入库
         departmentReceivedService.insertBatch(departmentReceivedDOS);

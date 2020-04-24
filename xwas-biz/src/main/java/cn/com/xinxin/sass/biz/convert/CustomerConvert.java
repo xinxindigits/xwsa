@@ -53,7 +53,9 @@ public class CustomerConvert {
      * @return CustomerReceivedDOList
      */
     public static List<CustomerReceivedDO> convert2CustomerReceivedDOList(List<WeChatWorkCustomerBO> weChatWorkCustomerBOS,
-                                                                          String taskId, String orgId, String memberUserId) {
+                                                                          String taskId,
+                                                                          String orgId,
+                                                                          String memberUserId) {
         List<CustomerReceivedDO> customerReceivedDOS = new ArrayList<>();
         weChatWorkCustomerBOS.forEach(c -> customerReceivedDOS.add(convert2CustomerReceivedDO(c, taskId, orgId, memberUserId)));
         return customerReceivedDOS;
