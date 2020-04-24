@@ -1,6 +1,9 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.MemberDO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface MemberDOMapper {
     /**
@@ -50,4 +53,26 @@ public interface MemberDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(MemberDO record);
+
+    /**
+     * 通过机构id和用户id查询记录
+     * @param orgId 机构id
+     * @param userIdS 用户id
+     * @return 成员列表
+     */
+    List<MemberDO> queryByOrgIdAndUserId(@Param(value = "orgId") String orgId, @Param(value = "userIdS") List<String> userIdS);
+
+    /**
+     * 批量插入
+     * @param memberDOS 成员列表
+     * @return 插入成功数量
+     */
+    int insertBatch(@Param(value = "memberDOS") List<MemberDO> memberDOS);
+
+    /**
+     * 批量更新
+     * @param memberDOS 成员列表
+     * @return 更新成功数量
+     */
+    int updateBatchById(@Param(value = "memberDOS") List<MemberDO> memberDOS);
 }

@@ -17,4 +17,13 @@ public interface MemberReceivedService {
      * @return 插入成功条数
      */
     int insertBatch(List<MemberReceivedDO> memberReceivedDOS);
+
+    /**
+     * 通过takId和orgId和部门id查询记录
+     * @param taskId 任务id
+     * @param orgId 机构id
+     * @param departmentId 部门id
+     * @return 部门暂存信息
+     */
+    List<MemberReceivedDO> queryByTaskIdAndOrgIdAndDepartmentId(String taskId, String orgId, String departmentId);
 }
