@@ -136,7 +136,7 @@ public class SassAuthRestController {
     @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public Object unauthorized(HttpServletRequest request){
         log.info("无效登陆口令，请重新登陆");
-        throw new BusinessException(CommonResultCode.REMOTE_ERROR,"无效登陆口令","无效登陆口令，请重新登陆");
+        throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN,"无效登陆口令","无效登陆口令，请重新登陆");
 
     }
 

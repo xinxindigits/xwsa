@@ -7,6 +7,7 @@ import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -24,6 +25,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author: zhouyang
@@ -31,6 +35,7 @@ import java.io.IOException;
  * @updater:
  * @description:
  */
+
 public class JWTTokenFilter extends AuthenticatingFilter {
 
     private static String UTF8 = "UTF-8";
@@ -81,6 +86,7 @@ public class JWTTokenFilter extends AuthenticatingFilter {
             Throwable throwable = e.getCause();
             if (throwable != null && throwable instanceof SignatureVerificationException) {
                 msg = "Token或者密钥不正确(" + throwable.getMessage() + ")";
+                log.info(msg);
             } else if (throwable != null && throwable instanceof TokenExpiredException) {
                 // AccessToken已过期
                 try {
@@ -92,9 +98,9 @@ public class JWTTokenFilter extends AuthenticatingFilter {
             } else {
                 if (throwable != null) {
                     msg = throwable.getMessage();
+                    log.info(msg);
                 }
             }
-            unauthorized(response);
             return false;
         }
     }
@@ -102,10 +108,30 @@ public class JWTTokenFilter extends AuthenticatingFilter {
 
     @Override
     protected boolean  onAccessDenied(ServletRequest request, ServletResponse response) throws Exception{
+
         HttpServletResponse httpResponse = WebUtils.toHttp(response);
+        fillCorsHeader(WebUtils.toHttp(request), httpResponse);
         httpResponse.setCharacterEncoding("UTF-8");
         httpResponse.setContentType("application/json;charset=utf-8");
         httpResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+
+        Map<String, String> resultMap = new HashMap();
+        resultMap.put("code", SessionBizResultCodeEnum.AUTHENTICATE_FAIL.getCode());
+        resultMap.put("message", SessionBizResultCodeEnum.AUTHENTICATE_FAIL.getAlertMessage());
+        resultMap.put("data", null);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        PrintWriter out = null;
+        try {
+            String json = objectMapper.writeValueAsString(resultMap);
+            response.setCharacterEncoding(UTF8);
+            response.setContentType(CONTENT_TYPE);
+            out = response.getWriter();
+            out.write(json);
+        } catch (Exception e) {
+            e.getMessage();
+        }
         return false;
     }
 
@@ -117,10 +143,17 @@ public class JWTTokenFilter extends AuthenticatingFilter {
     protected boolean executeLogin(ServletRequest request,
                                    ServletResponse response) {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String authorization = HttpRequestUtil.getLoginToken(httpServletRequest);
-        JWTToken token = new JWTToken(authorization);
+        String token = HttpRequestUtil.getLoginToken(httpServletRequest);
+        JWTToken jwtToken = new JWTToken(token);
         // 提交给realm进行登入，如果错误他会抛出异常并被捕获
-        getSubject(request, response).login(token);
+        getSubject(request, response).login(jwtToken);
+        HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
+        try {
+            userAclTokenRepository.refreshToken(token,httpServletResponse);
+        }catch (Exception ex){
+            log.info("Token登陆失败");
+            throw  new BusinessException(SessionBizResultCodeEnum.AUTHENTICATE_FAIL,"登陆授权失败，请重新登陆账户");
+        }
         return true;
     }
 
@@ -159,8 +192,9 @@ public class JWTTokenFilter extends AuthenticatingFilter {
 
     @Override
     protected void postHandle(ServletRequest request, ServletResponse response) {
-        request.setAttribute("ddd", true);
+        this.fillCorsHeader(WebUtils.toHttp(request), WebUtils.toHttp(response));
     }
+
 
     @Override
     protected boolean onLoginSuccess(AuthenticationToken authenticationToken,
@@ -184,6 +218,20 @@ public class JWTTokenFilter extends AuthenticatingFilter {
 
         log.error("登录失败，token:" + token + ",error:" + e.getMessage(), e);
         throw new BusinessException(SessionBizResultCodeEnum.NO_PERMISSION);
+    }
+
+    /**
+     * 添加跨域支持
+     */
+    protected void fillCorsHeader(HttpServletRequest request, HttpServletResponse response) {
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        httpServletResponse.setHeader("Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
+        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
+        httpServletResponse.setHeader("Access-Control-Allow-Headers", httpServletRequest.getHeader("Access-Control-Request-Headers"));
+        httpServletResponse.setHeader("access-control-expose-headers", "XToken");
+
+
     }
 
 }
