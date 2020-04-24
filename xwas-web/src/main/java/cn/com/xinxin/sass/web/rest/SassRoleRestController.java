@@ -2,29 +2,46 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.service.ResourceService;
+import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
+import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
+import cn.com.xinxin.sass.repository.model.RoleResourceDO;
+import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
-import cn.com.xinxin.sass.web.form.CreateRoleForm;
-import cn.com.xinxin.sass.web.form.RoleAuthorityForm;
-import cn.com.xinxin.sass.web.form.RoleForm;
+import cn.com.xinxin.sass.web.form.*;
+import cn.com.xinxin.sass.web.utils.TreeResultUtil;
+import cn.com.xinxin.sass.web.vo.MenuTreeVO;
+import cn.com.xinxin.sass.web.vo.ResourceVO;
+import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.web.vo.RoleVO;
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.result.BizResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +62,14 @@ public class SassRoleRestController extends AclController {
     @Autowired
     private UserRoleService userRoleService;
 
+    @Autowired
+    private RoleResourceService roleResourceService;
+
+    @Autowired
+    private ResourceService resourceService;
+
+    @Autowired
+    private UserService userService;
     /**
      * 创建角色接口
      * @param createRoleForm
@@ -60,6 +85,11 @@ public class SassRoleRestController extends AclController {
         }
 
         logger.info("--------SassRoleRestController.createRole.Request:{}--------",JSONObject.toJSONString(createRoleForm));
+        String roleCode = createRoleForm.getCode();
+        RoleDO existedRole = roleService.findByRoleCode(roleCode);
+        if(existedRole != null){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_ALREADY_EXIST,"角色信息已经存在","角色信息已经存在");
+        }
 
         RoleDO roleDO = BaseConvert.convert(createRoleForm, RoleDO.class);
         SassUserInfo sassUserInfo = this.getSassUser(request);
@@ -72,32 +102,23 @@ public class SassRoleRestController extends AclController {
 
     /**
      * 永久删除角色接口
-     * @param roleId
+     * @param deleteRoleForm
      * @param request
      * @return
      */
-    @RequestMapping(value = "/delete/{roleId}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @RequiresPermissions("/role/delete")
-    public Object deleteRole(@PathVariable Long roleId, HttpServletRequest request){
+    public Object deleteRole(@RequestBody DeleteRoleForm deleteRoleForm, HttpServletRequest request){
 
-        if(roleId == null){
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"角色id不能为空");
+        if(deleteRoleForm == null || CollectionUtils.isEmpty(deleteRoleForm.getRoleCodes())){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"角色编码不能为空");
         }
-        logger.info("--------SassRoleRestController.deleteRole.Request:{}--------",JSONObject.toJSONString(roleId));
+        logger.info("--------SassRoleRestController.deleteRole.Request:{}--------",JSONObject.toJSONString(deleteRoleForm));
 
-
-        //FIXME: 1.删除之前要去检查角色是否已经关联了用户，如果关联用户不能删除
-        //FIXME: 2.关联资源的可以不用检查
-        RoleDO roleDO = new RoleDO();
-        SassUserInfo sassUserInfo = this.getSassUser(request);
-        roleDO.setGmtUpdater(sassUserInfo.getAccount());
-        roleDO.setId(roleId);
-        roleDO.setDeleted(true);
-        roleService.updateRole(roleDO);
+        roleService.deleteRoles(deleteRoleForm.getRoleCodes());
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
-
 
 
     /**
@@ -106,7 +127,7 @@ public class SassRoleRestController extends AclController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/update",method = RequestMethod.GET)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     @RequiresPermissions("/role/update")
     public Object updateRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
 
@@ -160,7 +181,6 @@ public class SassRoleRestController extends AclController {
         logger.info("--------SassRoleRestController.pageQueryRole.Request:{}--------",JSONObject.toJSONString(roleForm));
         
         RoleDO roleDO = SassFormConvert.convertRoleForm2RoleDO(roleForm);
-        roleDO.setDeleted(false);
         PageResultVO page = new PageResultVO();
         page.setPageNumber((roleForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : roleForm.getPageNum());
         page.setPageSize((roleForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : roleForm.getPageSize());
@@ -169,37 +189,156 @@ public class SassRoleRestController extends AclController {
         return pageRole;
     }
 
+
+    /**
+     * 查询某个角色下面的权限值
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/resource/tree",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresPermissions("/role/resource/tree")
+    public Object treeRoleResource(HttpServletRequest request, @Param("roleCode") String roleCode){
+
+        logger.info("ResourceController.treeRoleResource,roleCode={}",roleCode);
+
+        if(StringUtils.isEmpty(roleCode)){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"角色不能为空,无法查询权限值列表");
+        }
+
+        // 如果roleCode不为空，则表示需要查询roleCode的权限值
+        List<ResourceDO> roleResourceDOS = this.roleResourceService.findResourcesByRoleCode(roleCode);
+
+        List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(roleResourceDOS);
+
+        // 组装必要的参数
+        List<MenuTreeVO> resourceTreeVOList = Lists.newArrayList();
+        resourceVOList.stream().forEach(
+                resourceVO -> {
+                    MenuTreeVO menuTreeVO = new MenuTreeVO();
+                    menuTreeVO.setText(resourceVO.getName());
+                    menuTreeVO.setParentId(String.valueOf(resourceVO.getParentId()));
+                    menuTreeVO.setId(String.valueOf(resourceVO.getId()));
+                    menuTreeVO.setCode(resourceVO.getCode());
+                    menuTreeVO.setUrl(resourceVO.getUrl());
+                    menuTreeVO.setAuthority(resourceVO.getAuthority());
+                    menuTreeVO.setOrder(0);
+                    menuTreeVO.setChecked(false);
+                    resourceTreeVOList.add(menuTreeVO);
+                }
+        );
+
+        List<MenuTreeVO> results = TreeResultUtil.build(resourceTreeVOList);
+        // 返回权限树
+        return results;
+
+    }
+
     /**
      * 角色授权接口
      * @param roleAuthorityForm
      * @param request
      * @return
      */
-    @RequestMapping(value = "/grant",method = RequestMethod.POST)
-    @RequiresPermissions("/role/grant")
+    @RequestMapping(value = "/user/grant",method = RequestMethod.POST)
+    @RequiresPermissions("/role/user/grant")
     @Transactional(rollbackFor = Exception.class)
-    public Object grant(@RequestBody RoleAuthorityForm roleAuthorityForm, HttpServletRequest request){
+    public Object userGrant(@RequestBody RoleAuthorityForm roleAuthorityForm, HttpServletRequest request){
 
         if(roleAuthorityForm == null){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"更新角色参数不能为空");
         }
         logger.info("--------SassRoleRestController.grant.Request:{}--------",JSONObject.toJSONString(roleAuthorityForm));
 
+        RoleDO roleDO = roleService.findByRoleCode(roleAuthorityForm.getRoleCode());
+        if(roleDO == null){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"不存在该角色");
+        }
+        List<UserRoleDO> oldUserRoleList = userRoleService.findByRoleCode(roleAuthorityForm.getRoleCode());
+        Set<String> oldUserRoles = new HashSet();
+        Set<String> newUserRoles = new HashSet();
+        if(!CollectionUtils.isEmpty(roleAuthorityForm.getUserList())){
+            newUserRoles.addAll(roleAuthorityForm.getUserList());
+        }
+        if(!CollectionUtils.isEmpty(oldUserRoleList)){
+            oldUserRoles = oldUserRoleList.stream().map(UserRoleDO::getUserAccount).collect(Collectors.toSet());;
+        }
+        //需要删除角色的用户
+        Sets.SetView<String> deleteAccounts = Sets.difference(oldUserRoles, newUserRoles);
+        //需要添加角色的用户
+        Sets.SetView<String> createAccounts = Sets.difference(newUserRoles, oldUserRoles);
+        if(!CollectionUtils.isEmpty(deleteAccounts)) {
+            userRoleService.deleteByAccountsAndRoleCode(roleAuthorityForm.getRoleCode(), new ArrayList<>(deleteAccounts));
+            logger.info("delete");
+            deleteAccounts.forEach(account->{userService.refreshSassUserInfo(account);});
+        }
+        if(!CollectionUtils.isEmpty(createAccounts)){
+            List<UserDO> userDOList = userService.findUserByAccounts(new ArrayList<>(createAccounts));
+            SassUserInfo sassUserInfo = this.getSassUser(request);
+            List<UserRoleDO> userRoleDOList = userDOList.stream().map(user -> {
+                UserRoleDO userRoleDO = new UserRoleDO();
+                userRoleDO.setUserAccount(user.getAccount());
+                userRoleDO.setUserName(user.getName());
+                userRoleDO.setRoleName(roleDO.getName());
+                userRoleDO.setRoleCode(roleDO.getCode());
+                userRoleDO.setGmtCreator(sassUserInfo.getAccount());
+                userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
+                return userRoleDO;
+            }).collect(Collectors.toList());
+            userRoleService.createUserRoles(userRoleDOList);
+            logger.info("create");
+            createAccounts.forEach(account->{userService.refreshSassUserInfo(account);});
+        }
+
+        return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+    }
+
+
+    /**
+     * 角色授权接口
+     * @param grantForm
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/resource/grant",method = RequestMethod.POST)
+    @RequiresPermissions("/role/resource/grant")
+    @Transactional(rollbackFor = Exception.class)
+    public Object resourceGrant(@RequestBody RoleResourceGrantForm grantForm, HttpServletRequest request){
+
+        if(grantForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "角色资源授权参数不能为空");
+        }
+        logger.info("--------SassRoleRestController.grant.Request:{}--------",JSONObject.toJSONString(grantForm));
+
         SassUserInfo sassUserInfo = this.getSassUser(request);
-        userRoleService.deleteByRoleCode(roleAuthorityForm.getRoleCode());
-        List<UserRoleDO> userRoleDOList = roleAuthorityForm.getUserList().stream().map(user -> {
-            UserRoleDO userRoleDO = new UserRoleDO();
-            userRoleDO.setUserAccount(user.getAccount());
-            userRoleDO.setUserName(user.getName());
-            userRoleDO.setExtension(user.getExtension());
-            userRoleDO.setRoleName(roleAuthorityForm.getRoleName() );
-            userRoleDO.setRoleCode(roleAuthorityForm.getRoleCode());
-            userRoleDO.setGmtCreator(sassUserInfo.getAccount());
-            userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
-            return userRoleDO;
-        }).collect(Collectors.toList());
-        userRoleService.createUserRoles(userRoleDOList);
-        //TODO 更新缓存
+
+        String roleCode = grantForm.getRoleCode();
+        String roleName = grantForm.getRoleName();
+        List<RoleResourceForm> grantResourceList = grantForm.getResources();
+
+        List<RoleResourceDO> roleResourceDOS = Lists.newArrayList();
+        for(RoleResourceForm roleResourceForm : grantResourceList){
+
+            RoleResourceDO roleResourceDO = new RoleResourceDO();
+            roleResourceDO.setResourceCode(roleResourceForm.getResourceCode());
+            roleResourceDO.setResourceName(roleResourceForm.getResourceName());
+            roleResourceDO.setRoleCode(roleCode);
+            roleResourceDO.setRoleName(roleName);
+            roleResourceDO.setGmtCreator(sassUserInfo.getAccount());
+            roleResourceDO.setGmtUpdater(sassUserInfo.getAccount());
+
+            roleResourceDOS.add(roleResourceDO);
+        }
+
+        // 1.首先根据角色删除角色下面的权限
+        // 2.重新插入角色权限
+        this.roleResourceService.deleteByRoleCodes(Lists.newArrayList(roleCode));
+        this.roleResourceService.createRoleResources(roleResourceDOS);
+        // 更新对应的角色的用户的缓存权限信息
+        List<UserRoleDO> userRoleList = userRoleService.findByRoleCode(grantForm.getRoleCode());
+        if(!CollectionUtils.isEmpty(userRoleList)) {
+            userRoleList.stream().forEach(userRoleDO -> userService.refreshSassUserInfo(userRoleDO.getUserAccount()));
+        }
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 }

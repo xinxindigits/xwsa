@@ -30,6 +30,7 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkMemberSyncServiceImpl.class);
 
     private final MemberReceivedService memberReceivedService;
+
     private final MemberService memberService;
 
     public WeChatWorkMemberSyncServiceImpl(final MemberReceivedService memberReceivedService,

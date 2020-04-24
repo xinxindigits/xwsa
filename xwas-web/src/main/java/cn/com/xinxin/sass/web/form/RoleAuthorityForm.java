@@ -14,9 +14,7 @@ public class RoleAuthorityForm extends ToString {
 
     private String roleCode;
 
-    private String roleName;
-
-    private List<UserForm> userList;
+    private List<String> userList;
 
     public String getRoleCode() {
         return roleCode;
@@ -26,19 +24,11 @@ public class RoleAuthorityForm extends ToString {
         this.roleCode = roleCode;
     }
 
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public List<UserForm> getUserList() {
+    public List<String> getUserList() {
         return userList;
     }
 
-    public void setUserList(List<UserForm> userList) {
+    public void setUserList(List<String> userList) {
         this.userList = userList;
     }
 }

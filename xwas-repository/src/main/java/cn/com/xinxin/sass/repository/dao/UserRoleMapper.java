@@ -71,4 +71,15 @@ public interface UserRoleMapper {
      * @return
      */
     boolean deleteByAccounts(@Param("accounts") List<String> accounts);
+
+    boolean deleteByAccountsAndRoleCode(@Param("roleCode") String roleCode, @Param("accounts") List<String> accounts);
+
+    int updateByRoleCode(UserRoleDO userRoleDO);
+
+    int updateByUserAccount(UserRoleDO userRoleDO);
+
+    int countByRoleCode(@Param("roleCodes") List<String> roleCodes);
+
+    boolean deleteByRoleCodes(@Param("roleCodes") List<String> roleCodes);
+
 }

@@ -25,10 +25,13 @@ public class JWTUtil {
     public static final Logger log = LoggerFactory.getLogger(JWTUtil.class);
 
     // 过期时间480分钟分钟
-    public static final long TOKEN_EXPIRE_TIME = 480 * 60 * 1000;
+   public static final long TOKEN_EXPIRE_TIME = 480 * 60 * 1000;
+
+    // 过期时间480分钟分钟
+    //public static final long TOKEN_EXPIRE_TIME = 60 * 1000;
 
     // 默认token倒计时失效60秒
-    public static final Integer TOKEN_EXPIRE_TIME_COUNT = 10;
+    public static final Integer TOKEN_EXPIRE_TIME_COUNT = 10 ;
 
     public static final String TOKEN_NAME = "XToken";
 
@@ -107,6 +110,16 @@ public class JWTUtil {
             log.info("token 解密失败  ex = {}", ex.getMessage());
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
         }
+    }
+
+
+
+    public static boolean isExpired(String token){
+        Date expireDate = getExpiresTime(token);
+        if (expireDate == null) {
+            return true;
+        }
+        return expireDate.before(new Date());
     }
 
     /**

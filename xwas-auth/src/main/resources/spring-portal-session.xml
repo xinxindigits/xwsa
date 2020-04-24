@@ -55,12 +55,27 @@
         <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
     </bean>
 
+    <!--<bean id="filterRegistration" >-->
+
+    <!--</bean>-->
+
+    <bean id="firstSuccessfulStrategy" class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"/>
+
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+
+        <property name="authenticationStrategy" ref="firstSuccessfulStrategy"/>
+        <property name="realms">
+            <util:list>
+                <ref bean="jwtTokenAuthorizingRealmRealm"/>
+            </util:list>
+        </property>
+    </bean>
 
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/auth"/>
+        <property name="successUrl" value="/authorized"/>
         <property name="unauthorizedUrl" value="/unauthorized"/>
-        <property name="successUrl" value="/index"/>
         <property name="filters">
             <util:map>
                 <entry key="jwtFilter" value-ref="jwtTokenFilter"/>
@@ -78,6 +93,8 @@
         <property name="filterChainDefinitions">
             <value>
                 /auth = anon
+                /rememberMe = anon
+                / = anon
                 /register = anon
                 /unauthorized = anon
                 /static/** = anon

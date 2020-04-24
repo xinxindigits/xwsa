@@ -1,11 +1,13 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.api.enums.ResourceTypeEnum;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
@@ -21,6 +23,8 @@ import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.portal.view.result.PortalPageViewResultVO;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.ibatis.annotations.Param;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,19 +90,25 @@ public class SassResourceRestController extends AclController {
     }
 
 
+
     /**
-     * 获取所有权限资源的列表，用于在创建角色或者角色赋值的时候拉去权限值
+     * 资源权限查询接口
+     * 具体功能包括： 1。根据权限Code查询某个权限值以及其子集
      * @param request
      * @return
      */
-    @RequestMapping(value = "/tree",method = RequestMethod.GET)
+    @RequestMapping(value = "/query/tree",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/resource/tree")
-    public Object treeResource(HttpServletRequest request){
+    public Object queryResourceTrees(HttpServletRequest request,
+                                     @RequestBody ResourceQueryForm resourceQueryForm){
 
-        log.info("ResourceController.treeResource,resourceQueryForm={}");
+        log.info("ResourceController.queryResourceTrees,resourceQueryForm={}", resourceQueryForm);
 
-        List<ResourceDO> resourceDOSList = this.resourceService.findAllResources();
+        String rsCode = "";
+        String rsType  = resourceQueryForm.getResourceType();
+        String rsParentId = resourceQueryForm.getParentId();
+
+        List<ResourceDO> resourceDOSList = this.resourceService.queryResourceTrees(rsCode,rsType,rsParentId);
 
         if(CollectionUtils.isEmpty(resourceDOSList)){
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"无法查询权限值列表");
@@ -106,6 +116,37 @@ public class SassResourceRestController extends AclController {
 
         List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(resourceDOSList);
 
+        return resourceVOList;
+
+    }
+
+
+    /**
+     * 仅读取menu菜单的权限
+     * 如果传递rolecode过来就表示同时查询某个角色下面已经有的权限值
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/menu/tree",method = RequestMethod.GET)
+    @ResponseBody
+    //@RequiresPermissions("resource/menu/tree")
+    public Object treeMenuResource(HttpServletRequest request){
+
+        log.info("ResourceController.treeMenuResource,roleCode={}");
+
+        List<ResourceDO> resourceDOSList = this.resourceService.findAllResources();
+
+        if(CollectionUtils.isEmpty(resourceDOSList)){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"无法查询权限值列表");
+        }
+
+        List<ResourceDO> menuResourceLists = resourceDOSList
+                .stream()
+                .filter(resourceDO -> StringUtils.isNotEmpty(resourceDO.getResourceType())
+                        ||resourceDO.getResourceType().equals(ResourceTypeEnums.MENU_TYPE))
+                .collect(Collectors.toList());
+
+        List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(menuResourceLists);
 
         // 组装必要的参数
         List<MenuTreeVO> resourceTreeVOList = Lists.newArrayList();
@@ -124,6 +165,63 @@ public class SassResourceRestController extends AclController {
         );
 
         List<MenuTreeVO> results = TreeResultUtil.build(resourceTreeVOList);
+        // 返回权限树
+        return results;
+
+    }
+
+
+
+    /**
+     * 获取所有权限资源的列表，用于在创建角色或者角色赋值的时候拉去权限值
+     * 如果传递rolecode过来就表示同时查询某个角色下面已经有的权限值
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/tree",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresPermissions("/resource/tree")
+    public Object treeResource(HttpServletRequest request,
+                               @Param("roleCode") String roleCode){
+
+        log.info("ResourceController.treeResource,roleCode={}", roleCode);
+
+        List<ResourceDO> resourceDOSList = this.resourceService.findAllResources();
+
+        if(CollectionUtils.isEmpty(resourceDOSList)){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"无法查询权限值列表");
+        }
+
+        List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(resourceDOSList);
+
+        List<String> resourceCodeList = Lists.newArrayList();
+
+        if(StringUtils.isNotEmpty(roleCode)){
+            // 如果roleCode不为空，则表示需要查询roleCode的权限值
+            List<ResourceDO> roleResourceDOS = this.roleResourceService.findResourcesByRoleCode(roleCode);
+            resourceCodeList = roleResourceDOS
+                    .stream()
+                    .map(resourceDO -> resourceDO.getCode())
+                    .collect(Collectors.toList());
+        }
+
+        // 组装必要的参数
+        List<MenuTreeVO> resourceTreeVOList = Lists.newArrayList();
+        resourceVOList.stream().forEach(
+                resourceVO -> {
+                    MenuTreeVO menuTreeVO = new MenuTreeVO();
+                    menuTreeVO.setText(resourceVO.getName());
+                    menuTreeVO.setParentId(String.valueOf(resourceVO.getParentId()));
+                    menuTreeVO.setId(String.valueOf(resourceVO.getId()));
+                    menuTreeVO.setCode(resourceVO.getCode());
+                    menuTreeVO.setUrl(resourceVO.getUrl());
+                    menuTreeVO.setAuthority(resourceVO.getAuthority());
+                    menuTreeVO.setOrder(0);
+                    resourceTreeVOList.add(menuTreeVO);
+                }
+        );
+
+        List<MenuTreeVO> results = TreeResultUtil.buildCheckedTree(resourceTreeVOList,resourceCodeList);
         // 返回权限树
         return results;
 
@@ -199,5 +297,6 @@ public class SassResourceRestController extends AclController {
 
         return result;
     }
+
 
 }

@@ -1,8 +1,8 @@
 export default {
   title: "sass-admin",
   baseUrl: {
-    dev: "",
-    pro: ""
+    dev: "sass",
+    pro: "sass"
   },
   homeName: "home"
 };

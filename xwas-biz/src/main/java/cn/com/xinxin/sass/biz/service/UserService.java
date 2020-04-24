@@ -43,6 +43,7 @@ public interface UserService {
      */
     void deleteUserByAccounts(List<String> accounts);
 
+    List<UserDO> findUserByAccounts(List<String> accounts);
 
     UserDO findByUserAccount(String account);
 
@@ -69,4 +70,6 @@ public interface UserService {
     UserDO getLoginUser(String sessionId);
 
     Boolean hasPermission(String sessionId,String url);
+
+    void refreshSassUserInfo(String account);
 }

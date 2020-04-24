@@ -15,6 +15,42 @@ import java.util.Objects;
  */
 public class TreeResultUtil {
 
+
+
+    public static List<MenuTreeVO> buildCheckedTree(List<MenuTreeVO> nodes,List<String> checkList){
+
+        if (nodes == null){
+            return null;
+        }
+
+        List<MenuTreeVO> root = new ArrayList<>();
+
+        Iterator<MenuTreeVO> iterator = nodes.iterator();
+
+        while (iterator.hasNext()){
+
+            MenuTreeVO node = iterator.next();
+
+            if(checkList.contains(node.getCode())){
+                // 如果已经checked，选中
+                node.setChecked(true);
+            }else{
+                node.setChecked(false);
+            }
+
+            if (Objects.equals("0",node.getParentId()) || Objects.equals(node.getParentId(),node.getId())){
+                node.setExpanded(true);
+                root.add(node);
+                iterator.remove();
+            }
+        }
+
+        buildChildren(root,nodes);
+
+        return root;
+    }
+
+
     public static List<MenuTreeVO> build(List<MenuTreeVO> nodes){
         if (nodes == null){
             return null;

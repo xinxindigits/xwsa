@@ -42,6 +42,18 @@
     and deleted=0
   </select>
 
+  <select id="selectByAccounts"  parameterType="java.util.List" resultMap="BaseResultMapExt">
+
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where account in
+    <foreach collection="accounts" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </select>
+
   <delete id="deleteByAccounts"  parameterType="java.util.List">
 
     delete from user
@@ -51,5 +63,24 @@
     </foreach>
 
   </delete>
+
+  <select id="findByCondition" resultMap="BaseResultMapExt">
+    select id, account, name, gender, expire_date, status, gmt_creator, gmt_created,
+     gmt_updated, extension from user
+    <where>
+    <if test="userDO.account != null">
+      and account = #{userDO.account,jdbcType=VARCHAR}
+    </if>
+    <if test="userDO.name != null">
+      and name = #{userDO.name,jdbcType=VARCHAR}
+    </if>
+    <if test="userDO.gender != null">
+      and gender = #{userDO.gender,jdbcType=TINYINT}
+    </if>
+    <if test="startTime != null and endTime != null">
+      and <![CDATA[gmt_created >= #{startTime,jdbcType=TIMESTAMP} and gmt_created < #{endTime,jdbcType=TIMESTAMP}]]>
+    </if>
+    </where>
+  </select>
 
 </mapper>
