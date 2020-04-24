@@ -1,6 +1,5 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
-import cn.com.xinxin.sass.api.enums.ResourceTypeEnum;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
@@ -9,6 +8,7 @@ import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.biz.vo.UserPwdVO;
 
+import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.UserDOMapper;
@@ -167,7 +167,10 @@ public class UserServiceImpl implements UserService {
         List<ResourceDO> resourceDOS = findResourcesByAccount(account);
 
         if (!CollectionUtils.isEmpty(resourceDOS)){
-            return resourceDOS.stream().filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnum.FUNCTION.name())).collect(Collectors.toList());
+            return resourceDOS
+                    .stream()
+                    .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnums.FUNCTION_TYPE.getCode()))
+                    .collect(Collectors.toList());
         }
 
         return null;
@@ -193,7 +196,7 @@ public class UserServiceImpl implements UserService {
         }
 
         List<ResourceDO> resourceDOList = resourceDOS.stream().distinct()
-                    .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnum.MENU.getCode()))
+                    .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnums.MENU_TYPE.getCode()))
                     .collect(Collectors.toList());
         return resourceDOList;
 
@@ -207,7 +210,7 @@ public class UserServiceImpl implements UserService {
         }
 
         List<ResourceDO> resourceDOList = resourceDOS.stream().distinct()
-                .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnum.FUNCTION.getCode()))
+                .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnums.FUNCTION_TYPE.getCode()))
                 .collect(Collectors.toList());
         return resourceDOList;
     }
