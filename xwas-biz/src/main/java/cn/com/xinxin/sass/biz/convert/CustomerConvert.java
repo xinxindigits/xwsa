@@ -20,11 +20,13 @@ public class CustomerConvert {
      * @param weChatWorkCustomerBO 企业微信客户BO
      * @param taskId 任务id
      * @param orgId 机构id
+     * @param memberUserId 成员memberUserId
      * @return CustomerReceivedDO
      */
     public static CustomerReceivedDO convert2CustomerReceivedDO(WeChatWorkCustomerBO weChatWorkCustomerBO,
-                                                                String taskId, String orgId) {
+                                                                String taskId, String orgId, String memberUserId) {
         CustomerReceivedDO customerReceivedDO = new CustomerReceivedDO();
+        customerReceivedDO.setMemberUserId(memberUserId);
         customerReceivedDO.setTaskId(taskId);
         customerReceivedDO.setOrgId(orgId);
         customerReceivedDO.setUserId(weChatWorkCustomerBO.getExternalUserId());
@@ -47,12 +49,13 @@ public class CustomerConvert {
      * @param weChatWorkCustomerBOS 企业微信客户BOList
      * @param taskId 任务id
      * @param orgId 机构id
+     * @param memberUserId 成员memberUserId
      * @return CustomerReceivedDOList
      */
     public static List<CustomerReceivedDO> convert2CustomerReceivedDOList(List<WeChatWorkCustomerBO> weChatWorkCustomerBOS,
-                                                                          String taskId, String orgId) {
+                                                                          String taskId, String orgId, String memberUserId) {
         List<CustomerReceivedDO> customerReceivedDOS = new ArrayList<>();
-        weChatWorkCustomerBOS.forEach(c -> customerReceivedDOS.add(convert2CustomerReceivedDO(c, taskId, orgId)));
+        weChatWorkCustomerBOS.forEach(c -> customerReceivedDOS.add(convert2CustomerReceivedDO(c, taskId, orgId, memberUserId)));
         return customerReceivedDOS;
     }
 

@@ -60,4 +60,16 @@ public interface MemberReceivedDOMapper {
      * @return 插入成功条数
      */
     int insertBatch(@Param(value = "memberReceivedDOS") List<MemberReceivedDO> memberReceivedDOS);
+
+
+    /**
+     * 通过takId和orgId和部门id查询记录
+     * @param taskId 任务id
+     * @param orgId 机构id
+     * @param departmentId 部门id
+     * @return 部门暂存信息
+     */
+    List<MemberReceivedDO> queryByTaskIdAndOrgIdAndDepartmentId(@Param(value = "taskId") String taskId,
+                                                                @Param(value = "orgId") String orgId,
+                                                                @Param(value = "departmentId") String departmentId);
 }
