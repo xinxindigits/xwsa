@@ -17,4 +17,15 @@ public interface CustomerReceivedService {
      * @return 插入成功条数
      */
     int insertBatch(List<CustomerReceivedDO> customerReceivedDOS);
+
+    /**
+     * 分页查询记录
+     * @param taskId 任务id
+     * @param memberUserIdS 成员userid列表
+     * @param startId 开始的id
+     * @param pageSize 页的大小
+     * @return 客户暂存信息
+     */
+    List<CustomerReceivedDO> selectByTaskIdMemberUserIdS(String taskId, List<String> memberUserIdS, Long startId,
+                                                         Long pageSize);
 }

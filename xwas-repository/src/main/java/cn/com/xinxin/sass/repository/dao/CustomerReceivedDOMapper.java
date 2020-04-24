@@ -60,4 +60,18 @@ public interface CustomerReceivedDOMapper {
      * @return 插入成功条数
      */
     int insertBatch(@Param(value = "customerReceivedDOS") List<CustomerReceivedDO> customerReceivedDOS);
+
+
+    /**
+     * 分页查询记录
+     * @param taskId 任务id
+     * @param memberUserIdS 成员userid列表
+     * @param startId 开始的id
+     * @param pageSize 页的大小
+     * @return 客户暂存信息
+     */
+    List<CustomerReceivedDO> selectByTaskIdMemberUserIdS(@Param(value = "taskId") String taskId,
+                                                   @Param(value = "memberUserIdS") List<String> memberUserIdS,
+                                                   @Param(value = "startId") Long startId,
+                                                   @Param(value = "pageSize") Long pageSize);
 }

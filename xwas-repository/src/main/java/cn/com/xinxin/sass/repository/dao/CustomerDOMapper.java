@@ -1,6 +1,9 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.CustomerDO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CustomerDOMapper {
     /**
@@ -50,4 +53,27 @@ public interface CustomerDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(CustomerDO record);
+
+    /**
+     * 通过机构id和客户userId查询客户信息
+     * @param orgId 机构id
+     * @param userIdS 客户userid
+     * @return 客户信息
+     */
+    List<CustomerDO> selectByOrgIdAndUserId(@Param(value = "orgId") String orgId,
+                                            @Param(value = "userIdS") List<String> userIdS);
+
+    /**
+     * 批量插入记录
+     * @param customerDOS 客户信息
+     * @return 成功插入数量
+     */
+    int insertBatch(@Param(value = "customerDOS") List<CustomerDO> customerDOS);
+
+    /**
+     * 批量更新数据
+     * @param customerDOS 客户信息
+     * @return 成功更新条数
+     */
+    int updateBatch(@Param(value = "customerDOS") List<CustomerDO> customerDOS);
 }
