@@ -1,9 +1,12 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.CustomerReceivedService;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.dao.CustomerReceivedDOMapper;
 import cn.com.xinxin.sass.repository.model.CustomerReceivedDO;
+import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -39,5 +42,35 @@ public class CustomerReceivedServiceImpl implements CustomerReceivedService {
             return 0;
         }
         return customerReceivedDOMapper.insertBatch(customerReceivedDOS);
+    }
+
+    /**
+     * 分页查询记录
+     * @param taskId 任务id
+     * @param memberUserIdS 成员userid列表
+     * @param startId 开始的id
+     * @param pageSize 页的大小
+     * @return 客户暂存信息
+     */
+    @Override
+    public List<CustomerReceivedDO> selectByTaskIdMemberUserIdS(String taskId, List<String> memberUserIdS, Long startId,
+                                                          Long pageSize) {
+        if (StringUtils.isBlank(taskId)) {
+            LOGGER.error("分页查询记录, taskId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "分页查询记录, taskId不能为空");
+        }
+        if (CollectionUtils.isEmpty(memberUserIdS)) {
+            LOGGER.error("分页查询记录, memberUserIdS不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "分页查询记录, memberUserIdS不能为空");
+        }
+        if (null == startId) {
+            LOGGER.error("分页查询记录, startId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "分页查询记录, startId不能为空");
+        }
+        if (null == pageSize) {
+            LOGGER.error("分页查询记录, pageSize不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "分页查询记录, pageSize不能为空");
+        }
+        return customerReceivedDOMapper.selectByTaskIdMemberUserIdS(taskId, memberUserIdS, startId, pageSize);
     }
 }

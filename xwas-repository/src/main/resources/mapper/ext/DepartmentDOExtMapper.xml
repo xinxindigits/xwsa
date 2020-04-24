@@ -25,7 +25,7 @@
   <select id="selectByOrgId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from department
-    where org_id= #{orgId}
+    where org_id= #{orgId} and deleted = 0
   </select>
   <insert id="insertBatch" parameterType="java.util.List">
     insert into department (org_id, department_id,

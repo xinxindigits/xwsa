@@ -40,6 +40,6 @@
     <select id="selectByTaskIdAndOrgId" resultMap="BaseResultMapExt">
         select <include refid="Base_Column_List_Ext"/>
         from department_received
-        where task_id = #{taskId} and org_id =#{orgId} and deleted = '0'
+        where task_id = #{taskId} and org_id =#{orgId} and deleted = 0
     </select>
 </mapper>

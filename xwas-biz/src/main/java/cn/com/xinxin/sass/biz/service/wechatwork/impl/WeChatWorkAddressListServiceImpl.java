@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -86,32 +87,32 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
 
         //获取部门列表
         List<WeChatWorkDepartmentBO> weChatWorkDepartmentBOS = weChatWorkDepartmentClient.queryDepartmentList(addressListToken);
+        List<DepartmentReceivedDO> departmentReceivedDOS = DepartmentConvert.convert2DepartmentReceivedDOList(
+                weChatWorkDepartmentBOS, taskId, orgId);
+        departmentReceivedService.insertBatch(departmentReceivedDOS);
 
         //获取成员列表
         List<WeChatWorkUserBO> weChatWorkUserBOS = weChatWorkUserClient.queryUserList(addressListToken,
                 weChatWorkDepartmentBOS.stream().map(WeChatWorkDepartmentBO::getDepartmentId).collect(Collectors.toList()));
+        List<MemberReceivedDO> memberReceivedDOS = MemberConvert.convert2MemberReceivedDOList(
+                weChatWorkUserBOS, taskId, orgId);
+        //fixME 分批插入
+        memberReceivedService.insertBatch(memberReceivedDOS.stream()
+                .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()));
 
         //获取外部联系人管理应用api所需要的token
         String customerContactToken =  weChatWorkInteractionClient.fetchToken(corporationId, customerContactSecret);
 
         //获取客户列表
-        List<String> customerUserId = weChatWorkCustomerClient.queryCustomerUserId(customerContactToken,
-                weChatWorkUserBOS.stream().map(WeChatWorkUserBO::getUserId).collect(Collectors.toList()));
-        List<WeChatWorkCustomerBO> weChatWorkCustomerBOS = weChatWorkCustomerClient.queryCustomerDetail(
-                customerContactToken, customerUserId);
-
-        //将BO转化为DO
-        List<DepartmentReceivedDO> departmentReceivedDOS = DepartmentConvert.convert2DepartmentReceivedDOList(
-                weChatWorkDepartmentBOS, taskId, orgId);
-        List<MemberReceivedDO> memberReceivedDOS = MemberConvert.convert2MemberReceivedDOList(
-                weChatWorkUserBOS, taskId, orgId);
-        List<CustomerReceivedDO> customerReceivedDOS = CustomerConvert.convert2CustomerReceivedDOList(
-                weChatWorkCustomerBOS, taskId, orgId);
-
-        //入库
-        departmentReceivedService.insertBatch(departmentReceivedDOS);
-        memberReceivedService.insertBatch(memberReceivedDOS.stream()
-                .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()));
+        List<CustomerReceivedDO> customerReceivedDOS = new ArrayList<>();
+        weChatWorkUserBOS.forEach(u -> {
+            List<String> customerUserIdS = weChatWorkCustomerClient.queryCustomerUserId(customerContactToken, u.getUserId());
+            List<WeChatWorkCustomerBO> weChatWorkCustomerBOS = weChatWorkCustomerClient.queryCustomerDetail(
+                    customerContactToken, customerUserIdS);
+            customerReceivedDOS.addAll(CustomerConvert.convert2CustomerReceivedDOList(
+                    weChatWorkCustomerBOS, taskId, orgId, u.getUserId()));
+        });
+        //fixME 分批插入
         customerReceivedService.insertBatch(customerReceivedDOS.stream()
                 .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()));
     }
