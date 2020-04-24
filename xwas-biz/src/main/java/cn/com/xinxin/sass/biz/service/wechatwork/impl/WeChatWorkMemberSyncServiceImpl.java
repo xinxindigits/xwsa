@@ -60,9 +60,9 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
                 memberReceivedDOS.stream().map(MemberReceivedDO::getUserId).collect(Collectors.toList()));
 
         //待插入的记录
-        List<MemberDO> insertmemberDOS = new ArrayList<>();
+        List<MemberDO> insertMemberDOS = new ArrayList<>();
         //待更新的记录
-        List<MemberDO> updatememberDOS = new ArrayList<>();
+        List<MemberDO> updateMemberDOS = new ArrayList<>();
 
         memberReceivedDOS.forEach(m -> {
             //获取userId相同的成员
@@ -72,16 +72,16 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
 
             if (null == memberDO) {
                 //如果找不到成员，说明该成员需要新增
-                fetchInsertMember(m, insertmemberDOS);
+                fetchInsertMember(m, insertMemberDOS);
             } else {
                 //对比成员信息，如果需要更新，则将更新信息后的DO放在updatememberDOS中
-                fetchUpdateMember(m, memberDO, updatememberDOS);
+                fetchUpdateMember(m, memberDO, updateMemberDOS);
             }
         });
         //插入记录
-        memberService.insertBatch(insertmemberDOS);
+        memberService.insertBatch(insertMemberDOS);
         //更新记录
-        memberService.updateBatchById(updatememberDOS);
+        memberService.updateBatchById(updateMemberDOS);
     }
 
     /**
@@ -102,7 +102,7 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门成员，orgId不能为空");
         }
 
-        if (StringUtils.isBlank(orgId)) {
+        if (StringUtils.isBlank(departmentId)) {
             LOGGER.error("同步部门成员，departmentId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门成员，departmentId不能为空");
         }
@@ -111,9 +111,9 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
     /**
      * 获取需要插入的记录
      * @param memberReceivedDO 成员信息暂存表
-     * @param insertmemberDOS 待插入的成员信息
+     * @param insertMemberDOS 待插入的成员信息
      */
-    private void fetchInsertMember(MemberReceivedDO memberReceivedDO, List<MemberDO> insertmemberDOS) {
+    private void fetchInsertMember(MemberReceivedDO memberReceivedDO, List<MemberDO> insertMemberDOS) {
         MemberDO memberDO = new MemberDO();
         memberDO.setOrgId(memberReceivedDO.getOrgId());
         memberDO.setUserId(memberReceivedDO.getUserId());
@@ -143,16 +143,16 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
         memberDO.setTaskId(memberReceivedDO.getTaskId());
         memberDO.setGmtCreator(CommonConstants.GMT_CREATOR_SYSTEM);
         LOGGER.info("此次同步成员列表，新增成员[{}]", memberDO.getMemberName());
-        insertmemberDOS.add(memberDO);
+        insertMemberDOS.add(memberDO);
     }
 
     /**
      * 获取需要更新到成员信息
      * @param memberReceivedDO 成员信息暂存表
      * @param memberDO 成员信息
-     * @param updatememberDOS 待更新的成员信息
+     * @param updateMemberDOS 待更新的成员信息
      */
-    private void fetchUpdateMember(MemberReceivedDO memberReceivedDO, MemberDO memberDO, List<MemberDO> updatememberDOS) {
+    private void fetchUpdateMember(MemberReceivedDO memberReceivedDO, MemberDO memberDO, List<MemberDO> updateMemberDOS) {
         MemberDO updatememberDO = new MemberDO();
         int count = 0;
         if (!StringUtils.equals(memberDO.getMemberName(), memberReceivedDO.getMemberName())) {
@@ -253,8 +253,8 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
             updatememberDO.setId(memberDO.getId());
             updatememberDO.setTaskId(memberReceivedDO.getTaskId());
             updatememberDO.setGmtUpdater(CommonConstants.GMT_CREATOR_SYSTEM);
-            LOGGER.info("此次同步部门列表，部门[{}]更新[{}]个属性", memberReceivedDO.getMemberName(), count);
-            updatememberDOS.add(updatememberDO);
+            LOGGER.info("此次同步成员列表，成员[{}]更新[{}]个属性", memberReceivedDO.getMemberName(), count);
+            updateMemberDOS.add(updatememberDO);
         }
     }
 }

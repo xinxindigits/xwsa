@@ -9,4 +9,5 @@ package cn.com.xinxin.sass.common.constants;
 public class CommonConstants {
     public static final String GMT_CREATOR_SYSTEM = "system";
     public static final String SEPARATOR = "@";
+    public static final Long PAGE_SIZE = 900L;
 }
