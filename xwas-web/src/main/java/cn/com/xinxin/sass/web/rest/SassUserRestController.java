@@ -13,7 +13,7 @@ import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
-import cn.com.xinxin.sass.sal.wesdk.Finance;
+import com.tencent.wework.Finance;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
 import cn.com.xinxin.sass.web.form.UserLoginForm;
@@ -306,6 +306,8 @@ public class SassUserRestController extends AclController {
         //System.loadLibrary("WeWorkFinanceSdk_Java");
 
         long sdk = Finance.NewSdk();
+
+        System.out.println(Finance.Init(sdk,  "wwd08c8e7c775ab44d","zJ6k0naVVQ--gt9PUSSEvs03zW_nlDVmjLCTOTAfrew"));
 
         Map<String, Object> result = new HashMap<String, Object>();
 

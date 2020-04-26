@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.sal.wesdk;
+package com.tencent.wework;
 
 
 public class Finance {
