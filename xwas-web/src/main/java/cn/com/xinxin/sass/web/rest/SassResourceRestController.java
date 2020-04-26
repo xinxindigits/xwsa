@@ -140,7 +140,7 @@ public class SassResourceRestController extends AclController {
         List<ResourceDO> menuResourceLists = resourceDOSList
                 .stream()
                 .filter(resourceDO -> StringUtils.isNotEmpty(resourceDO.getResourceType())
-                        ||resourceDO.getResourceType().equals(ResourceTypeEnums.MENU_TYPE))
+                        &&resourceDO.getResourceType().equals(ResourceTypeEnums.MENU_TYPE))
                 .collect(Collectors.toList());
 
         List<ResourceVO> resourceVOList = SassFormConvert.convertResourceDO2VO(menuResourceLists);
