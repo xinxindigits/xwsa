@@ -11,9 +11,9 @@ import java.util.List;
  **/
 public interface OrganizationService {
 
-    OrganizationDO createOrganization(OrganizationDO organizationDO);
+    int createOrganization(OrganizationDO organizationDO);
 
-    OrganizationDO updateOrganization(OrganizationDO organizationDO);
+    int updateOrganization(OrganizationDO organizationDO);
 
     OrganizationDO findById(Long id);
 
@@ -21,6 +21,10 @@ public interface OrganizationService {
 
     Boolean deleteById(Long id);
 
+    int deleteByCodes(List<String> codes);
+
     List<OrganizationDO> queryOrgList();
+
+    OrganizationDO findByCode(String code);
 
 }

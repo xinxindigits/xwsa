@@ -57,7 +57,7 @@
     select
     <include refid="Base_Column_List_Ext"/>
     from role
-    where code = #{code,jdbcType=VARCHAR}
+    where code = #{code,jdbcType=VARCHAR} and deleted = 0;
   </select>
 
   <update id="updateByCodeSelective" parameterType="cn.com.xinxin.sass.repository.model.RoleDO">

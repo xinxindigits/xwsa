@@ -61,7 +61,7 @@ public class SassUserRestController extends AclController {
     private UserAclTokenRepository userAclTokenRepository;
 
 
-    @RequestMapping(value = "/list",method = RequestMethod.GET)
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/list")
     public Object pageQueryUser(@RequestBody UserForm userForm, HttpServletRequest request){
@@ -130,9 +130,9 @@ public class SassUserRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
         this.userService.resetPassword(userAccount,userPwd,sassUserInfo.getAccount());
-
         //FIXME: 重置密码同时需要清除用户缓存以及对应的token
-
+        userAclTokenRepository.cleanSassUserTokenCache(userAccount);
+        userAclTokenRepository.cleanSassUserInfoCache(userAccount);
         return SassBizResultCodeEnum.SUCCESS;
     }
 
@@ -194,14 +194,10 @@ public class SassUserRestController extends AclController {
     }
 
 
-    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/delete")
-    public Object deleteUserInfo(HttpServletRequest request, @RequestParam List<String> accounts){
-
-        if(null == accounts){
-            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
-        }
+    public Object deleteUserInfo(HttpServletRequest request, @RequestParam(value = "accounts[]") List<String> accounts){
 
         if(CollectionUtils.isEmpty(accounts)){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
@@ -210,7 +206,10 @@ public class SassUserRestController extends AclController {
         // FIXME: 删除的时候同时需要清除token等缓存信息
 
         this.userService.deleteUserByAccounts(accounts);
-
+        accounts.stream().forEach(account->{
+            userAclTokenRepository.cleanSassUserTokenCache(account);
+            userAclTokenRepository.cleanSassUserInfoCache(account);
+        });
         return SassBizResultCodeEnum.SUCCESS;
 
     }
@@ -275,6 +274,8 @@ public class SassUserRestController extends AclController {
                 Set<String> roleCodes = new HashSet<>(userRoleDOS.size());
                 userRoleDOS.forEach(userRoleDO -> roleCodes.add(userRoleDO.getRoleCode()));
                 grantedUserInfo.setRoles(roleCodes);
+            }else{
+                grantedUserInfo.setRoles(new HashSet<>());
             }
 
             List<ResourceDO> resourceDOS = userService.findResourcesByAccount(grantedUserAccount);
@@ -282,6 +283,8 @@ public class SassUserRestController extends AclController {
                 Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
                 resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getAuthority()));
                 grantedUserInfo.setStringPermissions(permissionUrls);
+            }else{
+                grantedUserInfo.setStringPermissions(new HashSet<>());
             }
             // 设置用户的token以及角色，权限等信息缓存
             userAclTokenRepository.setSassUserByUserAccount(grantedUserAccount,grantedUserInfo);
