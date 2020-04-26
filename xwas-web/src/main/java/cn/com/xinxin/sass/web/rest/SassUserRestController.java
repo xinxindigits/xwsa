@@ -294,4 +294,16 @@ public class SassUserRestController extends AclController {
     }
 
 
+    @RequestMapping(value = "/system",method = RequestMethod.GET)
+    @ResponseBody
+    public Object system(HttpServletRequest request){
+
+        System.out.println(System.getProperties().get("java.library.path"));
+
+        return System.getProperties().get("java.library.path");
+
+    }
+
+
+
 }
