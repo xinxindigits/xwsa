@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -65,4 +66,11 @@ public interface OrganizationMapper {
 
 
     List<OrganizationDO> selectAllOrgs();
+
+    OrganizationDO findByCode(@Param("code") String code);
+
+    int updateByCodeSelective(OrganizationDO record);
+
+    int deleteByCodes(@Param("codes") List<String> codes);
+
 }

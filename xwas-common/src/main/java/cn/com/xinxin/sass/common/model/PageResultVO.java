@@ -25,7 +25,11 @@ public class PageResultVO<T> extends ToString{
     private List<T> items;
 
     public Integer getPageSize() {
-        return pageSize;
+        if(pageSize != null) {
+            return pageSize;
+        }else {
+            return DEFAULT_PAGE_SIZE;
+        }
     }
 
     public void setPageSize(Integer pageSize) {
@@ -33,7 +37,11 @@ public class PageResultVO<T> extends ToString{
     }
 
     public Integer getPageNumber() {
-        return pageNumber;
+        if(pageNumber != null){
+            return pageNumber;
+        }else{
+            return DEFAULT_PAGE_NUM;
+        }
     }
 
     public void setPageNumber(Integer pageNumber) {

@@ -1,7 +1,10 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.OrgBaseInfoDO;
+import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OrgBaseInfoDOMapper {
     /**
@@ -58,4 +61,8 @@ public interface OrgBaseInfoDOMapper {
      * @return 机构基础信息
      */
     OrgBaseInfoDO selectByOrgId(@Param(value = "orgId") String orgId);
+
+    int updateByOrgIdSelective(OrgBaseInfoDO orgBaseInfoDO);
+
+    int deleteByCodes(@Param("codes") List<String> codes);
 }

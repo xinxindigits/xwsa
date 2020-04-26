@@ -2,6 +2,8 @@ package cn.com.xinxin.sass.biz.service;
 
 import cn.com.xinxin.sass.repository.model.OrgBaseInfoDO;
 
+import java.util.List;
+
 /**
  * @author: liuhangzhou
  * @created: 2020/4/21.
@@ -17,4 +19,9 @@ public interface OrgBaseInfoService {
      */
     OrgBaseInfoDO selectByOrgId(String orgId);
 
+    boolean createOrgBaseInfo(OrgBaseInfoDO orgBaseInfoDO);
+
+    boolean updateByOrgId(OrgBaseInfoDO orgBaseInfoDO);
+
+    int deleteByCodes(List<String> codes);
 }

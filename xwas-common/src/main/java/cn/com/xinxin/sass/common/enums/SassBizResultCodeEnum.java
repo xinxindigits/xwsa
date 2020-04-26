@@ -35,6 +35,8 @@ public enum SassBizResultCodeEnum implements BizResultCode {
 
     NOT_PERMIT_DELETE("NOT_PERMIT_DELETE", "存在关联数据,禁止删除", "存在关联数据,禁止删除"),
 
+    GENERATE_ID_ERROR("GENERATE_ID_ERROR","生成id失败,请稍候再试","生成id失败,请稍候再试"),
+
 
         /* Enum end */;
 

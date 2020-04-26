@@ -159,7 +159,7 @@ public class SassResourceRestController extends AclController {
         resourceDO.setGmtUpdater(userAccount);
         ResourceDO resultDO = resourceService.createResource(resourceDO);
 
-        if(null == resultDO){
+        if(null != resultDO){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else{
             throw new BusinessException(SassBizResultCodeEnum.FAIL,"创建资源出错","清检查参数是否正确");
