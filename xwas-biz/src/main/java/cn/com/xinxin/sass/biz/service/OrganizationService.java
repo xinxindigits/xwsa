@@ -13,7 +13,7 @@ public interface OrganizationService {
 
     int createOrganization(OrganizationDO organizationDO);
 
-    OrganizationDO updateOrganization(OrganizationDO organizationDO);
+    int updateOrganization(OrganizationDO organizationDO);
 
     OrganizationDO findById(Long id);
 
