@@ -10,7 +10,7 @@ import java.util.List;
  **/
 public interface ResourceService {
 
-    ResourceDO createResource(ResourceDO resourceDO);
+    int createResource(ResourceDO resourceDO);
 
     int updateResource(ResourceDO resourceDO);
 

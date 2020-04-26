@@ -238,9 +238,9 @@ public class SassResourceRestController extends AclController {
         ResourceDO resourceDO = SassFormConvert.convertResourceForm2ResourceDO(resourceForm);
         resourceDO.setGmtCreator(userAccount);
         resourceDO.setGmtUpdater(userAccount);
-        ResourceDO resultDO = resourceService.createResource(resourceDO);
+        int result = resourceService.createResource(resourceDO);
 
-        if(null == resultDO){
+        if(result>0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else{
             throw new BusinessException(SassBizResultCodeEnum.FAIL,"创建资源出错","清检查参数是否正确");

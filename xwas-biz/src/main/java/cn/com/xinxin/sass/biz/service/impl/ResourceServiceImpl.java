@@ -21,9 +21,8 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceMapper resourceMapper;
 
     @Override
-    public ResourceDO createResource(ResourceDO resourceDO) {
-        resourceMapper.insertSelective(resourceDO);
-        return resourceDO;
+    public int createResource(ResourceDO resourceDO) {
+        return resourceMapper.insertSelective(resourceDO);
     }
 
     @Override
