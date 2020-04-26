@@ -25,9 +25,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public OrganizationDO updateOrganization(OrganizationDO organizationDO) {
-        organizationMapper.updateByCodeSelective(organizationDO);
-        return organizationDO;
+    public int updateOrganization(OrganizationDO organizationDO) {
+        return organizationMapper.updateByCodeSelective(organizationDO);
     }
 
     @Override

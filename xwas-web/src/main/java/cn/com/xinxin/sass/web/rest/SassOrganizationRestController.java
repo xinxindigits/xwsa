@@ -167,7 +167,7 @@ public class SassOrganizationRestController extends AclController {
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
 
         // 创建对象
-        this.organizationService.createOrganization(organizationDO);
+        int result = this.organizationService.createOrganization(organizationDO);
 
         OrgBaseInfoDO orgBaseInfoDO = BaseConvert.convert(orgForm, OrgBaseInfoDO.class);
         orgBaseInfoDO.setOrgId(code.toString());
@@ -177,7 +177,11 @@ public class SassOrganizationRestController extends AclController {
 
         orgBaseInfoService.createOrgBaseInfo(orgBaseInfoDO);
 
-        return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        if(result > 0){
+            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        }else {
+            return SassBizResultCodeEnum.FAIL.getAlertMessage();
+        }
 
     }
 
@@ -202,7 +206,7 @@ public class SassOrganizationRestController extends AclController {
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
 
         // 创建对象
-        this.organizationService.updateOrganization(organizationDO);
+        int result = this.organizationService.updateOrganization(organizationDO);
 
         OrgBaseInfoDO orgBaseInfoDO = BaseConvert.convert(orgForm, OrgBaseInfoDO.class);
         orgBaseInfoDO.setOrgId(orgForm.getCode());
@@ -210,7 +214,11 @@ public class SassOrganizationRestController extends AclController {
         orgBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
         this.orgBaseInfoService.updateByOrgId(orgBaseInfoDO);
 
-        return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        if(result > 0){
+            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        }else {
+            return SassBizResultCodeEnum.FAIL.getAlertMessage();
+        }
 
     }
 
@@ -227,7 +235,7 @@ public class SassOrganizationRestController extends AclController {
         int result = this.organizationService.deleteByCodes(codes);
         this.orgBaseInfoService.deleteByCodes(codes);
         if(result > 0){
-        return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else {
             return SassBizResultCodeEnum.FAIL.getAlertMessage();
         }
