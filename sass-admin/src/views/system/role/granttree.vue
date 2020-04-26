@@ -11,7 +11,6 @@
   </Modal>
 </template>
 <script>
-/* eslint-disable */
 import { getGrantTree, grantRole } from "@/api/data";
 export default {
   name: "grant-tree",
@@ -68,11 +67,12 @@ export default {
         let obj = {
           title,
           expand,
-          checked,
           code
         };
         if (item.children && item.children.length > 0) {
           obj.children = this.formatData(item.children);
+        } else {
+          obj.checked = checked; //有children的节点不需要checked属性
         }
         arr.push(obj);
       });

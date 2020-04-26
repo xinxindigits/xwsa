@@ -54,8 +54,13 @@
 </template>
 
 <script>
+/* eslint-disable */
 import ResourceListFunction from "./function";
-import { getResourceMenuTree, getResourceQueryTree } from "@/api/data";
+import {
+  getResourceMenuTree,
+  getResourceQueryTree,
+  updateResource
+} from "@/api/data";
 export default {
   name: "resource-list",
   components: {
@@ -67,6 +72,7 @@ export default {
       selectedTreeData: {},
       tableData: [],
       form1: {
+        id: "",
         parentId: "",
         name: "",
         code: "",
@@ -75,6 +81,9 @@ export default {
         extension: ""
       },
       rules: {
+        parentId: [
+          { required: true, message: "上级ID不能为空", trigger: "blur" }
+        ],
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         url: [{ required: true, message: "URI不能为空", trigger: "blur" }],
         authority: [
@@ -119,11 +128,25 @@ export default {
         "authority",
         "name",
         "url",
-        "extension"
+        "extension",
+        "id"
       );
       this.query(n);
     },
-    hdlqModifyMenu() {},
+    hdlqModifyMenu() {
+      let data = this.selectedTreeData;
+      this.$refs["form1"].validate(valid => {
+        if (valid) {
+          updateResource({ ...this.form1, resourceType: "menu" }).then(() => {
+            this.curValue = false;
+            this.init().then(() => {
+              this.query(data);
+            });
+          });
+        }
+      });
+      // updateResource()
+    },
     formatData(data) {
       let arr = [];
       let self = this;
@@ -155,13 +178,22 @@ export default {
       this.$Message.success(
         `${type == "create" ? "新增成功！" : "修改成功！"}`
       );
-      this.query();
+      let data = this.selectedTreeData;
+      this.init().then(() => {
+        this.query(data);
+      });
+    },
+    init() {
+      return new Promise(resolve => {
+        getResourceMenuTree({}).then(res => {
+          this.treedata = this.formatData(res.data);
+          resolve();
+        });
+      });
     }
   },
   mounted() {
-    getResourceMenuTree({}).then(res => {
-      this.treedata = this.formatData(res.data);
-    });
+    this.init();
   }
 };
 </script>
