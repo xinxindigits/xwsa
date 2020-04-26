@@ -305,9 +305,9 @@ public class SassUserRestController extends AclController {
 
         System.out.println(systempath);
 
-        System.loadLibrary("WeWorkFinanceSdk_Java");
+        //System.loadLibrary("WeWorkFinanceSdk_Java");
 
-       long sdk = Finance.NewSdk();
+        long sdk = Finance.NewSdk();
 
         Map<String, Object> result = new HashMap<String, Object>();
 
