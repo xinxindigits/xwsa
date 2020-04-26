@@ -11,6 +11,7 @@
   </Modal>
 </template>
 <script>
+/* eslint-disable */
 import { getGrantTree, grantRole } from "@/api/data";
 export default {
   name: "grant-tree",
@@ -35,7 +36,7 @@ export default {
       });
     },
     hdlSubmit() {
-      let arr = this.$refs.tree.getCheckedNodes();
+      let arr = this.$refs.tree.getCheckedAndIndeterminateNodes();
       let resources = arr.map(item => {
         return {
           resourceCode: item.code,
