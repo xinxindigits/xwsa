@@ -13,6 +13,7 @@ import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
+import cn.com.xinxin.sass.sal.wesdk.Finance;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
 import cn.com.xinxin.sass.web.form.UserLoginForm;
@@ -34,9 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author: zhouyang
@@ -298,9 +297,22 @@ public class SassUserRestController extends AclController {
     @ResponseBody
     public Object system(HttpServletRequest request){
 
-        System.out.println(System.getProperties().get("java.library.path"));
 
-        return System.getProperties().get("java.library.path");
+        Object systempath = System.getProperties().get("java.library.path");
+
+        System.out.println(systempath);
+
+        System.loadLibrary("WeWorkFinanceSdk_Java");
+
+        long sdk = Finance.NewSdk();
+
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        result.put("systempath",systempath);
+        result.put("sdk",sdk);
+
+        return result;
+
 
     }
 
