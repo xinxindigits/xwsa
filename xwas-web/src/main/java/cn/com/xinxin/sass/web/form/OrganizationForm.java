@@ -30,6 +30,13 @@ public class OrganizationForm extends ToString {
 
     private String extension;
 
+    private String corpId;
+
+    private String privateKey;
+
+    private String addressListSecret;
+
+    private String customerContactSecret;
 
     public Long getId() {
         return id;
@@ -101,5 +108,37 @@ public class OrganizationForm extends ToString {
 
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    public String getAddressListSecret() {
+        return addressListSecret;
+    }
+
+    public void setAddressListSecret(String addressListSecret) {
+        this.addressListSecret = addressListSecret;
+    }
+
+    public String getCustomerContactSecret() {
+        return customerContactSecret;
+    }
+
+    public void setCustomerContactSecret(String customerContactSecret) {
+        this.customerContactSecret = customerContactSecret;
+    }
+
+    public String getCorpId() {
+        return corpId;
+    }
+
+    public void setCorpId(String corpId) {
+        this.corpId = corpId;
     }
 }
