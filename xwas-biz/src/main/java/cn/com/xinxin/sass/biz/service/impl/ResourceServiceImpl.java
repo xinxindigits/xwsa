@@ -7,6 +7,7 @@ import cn.com.xinxin.sass.repository.model.ResourceDO;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -20,9 +21,8 @@ public class ResourceServiceImpl implements ResourceService {
     private ResourceMapper resourceMapper;
 
     @Override
-    public ResourceDO createResource(ResourceDO resourceDO) {
-        resourceMapper.insertSelective(resourceDO);
-        return resourceDO;
+    public int createResource(ResourceDO resourceDO) {
+        return resourceMapper.insertSelective(resourceDO);
     }
 
     @Override
@@ -96,5 +96,31 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public ResourceDO findByResourceCode(String code) {
         return resourceMapper.findByResourceCode(code);
+    }
+
+
+    @Override
+    public List<ResourceDO> queryResourceTrees(String code,
+                                               String type,
+                                               String parentId) {
+
+
+        ResourceDO condition = new ResourceDO();
+
+        if(!StringUtils.isEmpty(code)){
+            condition.setCode(code);
+        }
+
+        if(!StringUtils.isEmpty(type)){
+            condition.setResourceType(type);
+        }
+
+        if(!StringUtils.isEmpty(parentId)){
+            condition.setParentId(Long.valueOf(parentId));
+        }
+
+        List<ResourceDO> resourceDOS = resourceMapper.findByCondition(condition);
+
+        return resourceDOS;
     }
 }

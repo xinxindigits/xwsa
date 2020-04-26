@@ -62,6 +62,8 @@ public class MenuTreeVO {
      */
     private String authority;
 
+    private String extension;
+
 
     public List<ResourceVO> getFunctions() {
         return functions;
@@ -149,5 +151,13 @@ public class MenuTreeVO {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 }

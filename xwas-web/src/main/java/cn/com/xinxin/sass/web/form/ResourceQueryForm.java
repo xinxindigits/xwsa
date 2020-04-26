@@ -13,19 +13,22 @@ public class ResourceQueryForm extends ToString {
 
     private static final long serialVersionUID = 6396726120024456388L;
 
-    private Integer pageSize;
-
-    private Integer pageIndex;
-
     private String code;
-
-    private String resourceType;
 
     private String name;
 
     private String url;
 
     private Boolean root;
+
+    private String parentId;
+
+    private String resourceType;
+
+    private Integer pageSize;
+
+    private Integer pageIndex;
+
 
     public Integer getPageSize() {
         return pageSize;
@@ -81,5 +84,13 @@ public class ResourceQueryForm extends ToString {
 
     public void setRoot(Boolean root) {
         this.root = root;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
     }
 }

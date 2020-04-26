@@ -10,7 +10,7 @@ import java.util.List;
  **/
 public interface ResourceService {
 
-    ResourceDO createResource(ResourceDO resourceDO);
+    int createResource(ResourceDO resourceDO);
 
     int updateResource(ResourceDO resourceDO);
 
@@ -37,4 +37,9 @@ public interface ResourceService {
     PageResultVO<ResourceDO> findByConditionPage(PageResultVO pageVO, ResourceDO condition);
 
     ResourceDO findByResourceCode(String code);
+
+
+    List<ResourceDO> queryResourceTrees(String code,
+                                        String type,
+                                        String parentId);
 }

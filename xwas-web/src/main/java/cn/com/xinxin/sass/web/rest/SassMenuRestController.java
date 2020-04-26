@@ -1,10 +1,10 @@
 package cn.com.xinxin.sass.web.rest;
 
-import cn.com.xinxin.sass.api.enums.ResourceTypeEnum;
 import cn.com.xinxin.sass.api.enums.SassResultCodeEnum;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.collect;
 
 /**
  * @author: zhouyang
@@ -69,11 +71,11 @@ public class SassMenuRestController extends AclController {
 
         // 获取到用户的菜单资源权限等
         List<ResourceVO> menuResourceDOList =  userResourceVOList.stream().distinct()
-                .filter(resourceVO -> resourceVO.getResourceType().equals(ResourceTypeEnum.MENU.getCode()))
+                .filter(resourceVO -> resourceVO.getResourceType().equals(ResourceTypeEnums.MENU_TYPE.getCode()))
                 .collect(Collectors.toList());
 
         List<ResourceVO> functionResourceDOList = userResourceVOList.stream().distinct()
-                .filter(resourceVO -> resourceVO.getResourceType().equals(ResourceTypeEnum.FUNCTION.getCode()))
+                .filter(resourceVO -> resourceVO.getResourceType().equals(ResourceTypeEnums.FUNCTION_TYPE.getCode()))
                 .collect(Collectors.toList());
 
 

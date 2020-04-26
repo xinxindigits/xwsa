@@ -18,9 +18,9 @@
     <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="alias" jdbcType="VARCHAR" property="alias" />
     <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="ext_attr" jdbcType="VARCHAR" property="extAttr" />
+    <result column="ext_attr" jdbcType="LONGVARCHAR" property="extAttr" />
     <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
-    <result column="external_profile" jdbcType="VARCHAR" property="externalProfile" />
+    <result column="external_profile" jdbcType="LONGVARCHAR" property="externalProfile" />
     <result column="external_position" jdbcType="VARCHAR" property="externalPosition" />
     <result column="address" jdbcType="VARCHAR" property="address" />
     <result column="hide_mobile" jdbcType="INTEGER" property="hideMobile" />
@@ -51,6 +51,7 @@
     <foreach collection="userIdS" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
+    and deleted = 0
   </select>
 
   <insert id="insertBatch" parameterType="java.util.List">
