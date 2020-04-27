@@ -31,4 +31,12 @@ public interface DepartmentService {
      * @return 更新成功条数
      */
     int updateBatchById(List<DepartmentDO> departmentDOS);
+
+
+    /**
+     *
+     * @return
+     */
+    List<DepartmentDO>  listAllWechatDepts();
+
 }
