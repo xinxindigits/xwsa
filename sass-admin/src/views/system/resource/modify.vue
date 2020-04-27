@@ -12,28 +12,29 @@
       :label-width="150"
       :rules="rules"
     >
-      <FormItem label="角色编号" prop="code">
+      <FormItem label="资源编码" prop="code">
         <Input
           v-model="formObj.code"
           style="width: 250px"
-          :disabled="code_editable"
+          :disabled="type == 'update'"
         ></Input>
       </FormItem>
-      <FormItem label="角色名称" prop="name">
-        <Input v-model="formObj.name" style="width: 250px"></Input>
+      <FormItem label="资源权限" prop="authority">
+        <Input v-model="formObj.authority" style="width: 250px"></Input>
       </FormItem>
-      <FormItem label="角色类型" prop="roleType">
-        <Select v-model="formObj.roleType" style="width: 250px">
-          <Option
-            v-for="item in statusEnum"
-            :value="item.roleType"
-            :key="item.roleType"
-          >
-            {{ item.extension }}
-          </Option>
+      <FormItem label="资源类型" prop="resourceType">
+        <Select v-model="formObj.resourceType" style="width: 250px">
+          <Option value="menu">菜单</Option>
+          <Option value="function">功能</Option>
         </Select>
       </FormItem>
-      <FormItem label="角色描述" prop="extension">
+      <FormItem label="名称" prop="name">
+        <Input v-model="formObj.name" style="width: 250px"></Input>
+      </FormItem>
+      <FormItem label="组件URI" prop="url">
+        <Input v-model="formObj.url" style="width: 250px"></Input>
+      </FormItem>
+      <FormItem label="描述" prop="extension">
         <Input
           v-model="formObj.extension"
           type="textarea"
@@ -52,21 +53,21 @@
 </template>
 
 <script>
-import { addRole, updateRole } from "@/api/data";
+import { createResource, updateResource } from "@/api/data";
 const _config = {
   create: {
-    title: "新增角色",
-    success_evt: "on-add-role",
-    submit: addRole
+    title: "新增",
+    success_evt: "on-create-resource",
+    submit: createResource
   },
   update: {
-    title: "更新角色",
-    success_evt: "on-update-role",
-    submit: updateRole
+    title: "更新",
+    success_evt: "on-update-resource",
+    submit: updateResource
   }
 };
 export default {
-  name: "role-update",
+  name: "resource-update",
   props: {
     value: Boolean,
     type: {
@@ -84,49 +85,58 @@ export default {
     return {
       code_editable: false,
       curValue: false,
-      statusEnum: [
-        { roleType: "admin", extension: "管理员" },
-        { roleType: "user", extension: "用户" }
-      ],
       formObj: {
+        authority: "",
         name: "",
         code: "",
-        roleType: "",
-        extension: ""
+        parentId: "",
+        resourceType: "",
+        url: "",
+        root: false,
+        extension: "",
+        id: ""
       },
       rules: {
         code: [
-          { required: true, message: "角色编号不能为空", trigger: "blur" }
+          { required: true, message: "资源编号不能为空", trigger: "blur" }
+        ],
+        resourceType: [
+          { required: true, message: "资源类型不能为空", trigger: "blur" }
+        ],
+        authority: [
+          { required: true, message: "资源权限不能为空", trigger: "blur" }
         ],
         name: [
-          { required: true, message: "角色名称不能为空", trigger: "blur" }
+          { required: true, message: "资源名称不能为空", trigger: "blur" }
         ],
-        roleType: [
-          { required: true, message: "请选择角色类型", trigger: "blur" }
-        ]
+        url: [{ required: true, message: "组件URI不能为空", trigger: "blur" }]
       }
     };
   },
   methods: {
     setData(obj) {
+      this.formObj.authority = obj.authority;
       this.formObj.code = obj.code;
       this.formObj.extension = obj.extension;
-      this.formObj.roleType = obj.roleType;
       this.formObj.name = obj.name;
-      this.code_editable = true;
+      this.formObj.parentId = obj.parentId;
+      this.formObj.resourceType = obj.resourceType;
+      this.formObj.url = obj.url;
+      this.formObj.root = false;
+      this.formObj.id = obj.id;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
           _config[this.type].submit(this.formObj).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.formObj);
+            this.$emit(_config[this.type].success_evt, this.type);
           });
         }
       });
     },
     hdlCancel() {
-      this.$emit("on-cancel");
+      this.$emit("on-resource-modify-cancel");
     }
   },
   watch: {

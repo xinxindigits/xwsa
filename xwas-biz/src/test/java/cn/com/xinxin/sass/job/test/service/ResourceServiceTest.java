@@ -1,8 +1,9 @@
 package cn.com.xinxin.sass.job.test.service;
 
-import cn.com.xinxin.sass.api.enums.ResourceTypeEnum;
+
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
+import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.job.test.base.SpringBaseTest;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
@@ -38,7 +39,7 @@ public class ResourceServiceTest extends SpringBaseTest {
         resourceDO.setParentId(2l);
         resourceDO.setRoot(false);
         resourceDO.setUrl("/credit/custom");
-        resourceDO.setResourceType(ResourceTypeEnum.MENU.name());
+        resourceDO.setResourceType(ResourceTypeEnums.MENU_TYPE.name());
 
         ResourceDO resourceDO2 = new ResourceDO();
         resourceDO2.setCode("2002");
@@ -46,7 +47,7 @@ public class ResourceServiceTest extends SpringBaseTest {
         resourceDO2.setParentId(2l);
         resourceDO2.setRoot(false);
         resourceDO2.setUrl("/credit/account");
-        resourceDO2.setResourceType(ResourceTypeEnum.MENU.name());
+        resourceDO2.setResourceType(ResourceTypeEnums.MENU_TYPE.name());
 
         ResourceDO resourceDO3 = new ResourceDO();
         resourceDO3.setCode("2003");
@@ -54,7 +55,7 @@ public class ResourceServiceTest extends SpringBaseTest {
         resourceDO3.setParentId(2l);
         resourceDO3.setRoot(false);
         resourceDO3.setUrl("/credit/microcredit");
-        resourceDO3.setResourceType(ResourceTypeEnum.MENU.name());
+        resourceDO3.setResourceType(ResourceTypeEnums.MENU_TYPE.name());
 
         resourceService.createResource(resourceDO);
         resourceService.createResource(resourceDO2);

@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author: liuhangzhou
  * @created: 2020/4/21.
@@ -40,5 +42,20 @@ public class OrgBaseInfoServiceImpl implements OrgBaseInfoService {
         }
 
         return orgBaseInfoDOMapper.selectByOrgId(orgId);
+    }
+
+    @Override
+    public boolean createOrgBaseInfo(OrgBaseInfoDO orgBaseInfoDO) {
+        return orgBaseInfoDOMapper.insertSelective(orgBaseInfoDO) == 1;
+    }
+
+    @Override
+    public boolean updateByOrgId(OrgBaseInfoDO orgBaseInfoDO) {
+        return orgBaseInfoDOMapper.updateByOrgIdSelective(orgBaseInfoDO) == 1;
+    }
+
+    @Override
+    public int deleteByCodes(List<String> codes) {
+        return orgBaseInfoDOMapper.deleteByCodes(codes);
     }
 }

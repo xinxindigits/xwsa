@@ -35,7 +35,7 @@ export default {
       });
     },
     hdlSubmit() {
-      let arr = this.$refs.tree.getCheckedNodes();
+      let arr = this.$refs.tree.getCheckedAndIndeterminateNodes();
       let resources = arr.map(item => {
         return {
           resourceCode: item.code,
@@ -67,11 +67,12 @@ export default {
         let obj = {
           title,
           expand,
-          checked,
           code
         };
         if (item.children && item.children.length > 0) {
           obj.children = this.formatData(item.children);
+        } else {
+          obj.checked = checked; //有children的节点不需要checked属性
         }
         arr.push(obj);
       });

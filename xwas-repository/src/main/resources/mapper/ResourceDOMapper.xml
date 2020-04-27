@@ -87,7 +87,7 @@
         name,
       </if>
       <if test="authority != null">
-        url,
+        authority,
       </if>
       <if test="url != null">
         url,
@@ -127,7 +127,7 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
+      <if test="authority != null">
         #{authority,jdbcType=VARCHAR},
       </if>
       <if test="url != null">

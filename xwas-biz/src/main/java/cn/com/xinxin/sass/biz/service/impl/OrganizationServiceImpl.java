@@ -20,15 +20,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     private OrganizationMapper organizationMapper;
 
     @Override
-    public OrganizationDO createOrganization(OrganizationDO organizationDO) {
-        organizationMapper.insertSelective(organizationDO);
-        return organizationDO;
+    public int createOrganization(OrganizationDO organizationDO) {
+        return organizationMapper.insertSelective(organizationDO);
     }
 
     @Override
-    public OrganizationDO updateOrganization(OrganizationDO organizationDO) {
-        organizationMapper.updateByPrimaryKeySelective(organizationDO);
-        return organizationDO;
+    public int updateOrganization(OrganizationDO organizationDO) {
+        return organizationMapper.updateByCodeSelective(organizationDO);
     }
 
     @Override
@@ -62,5 +60,15 @@ public class OrganizationServiceImpl implements OrganizationService {
         List<OrganizationDO> organizationDOS = this.organizationMapper.selectAllOrgs();
 
         return organizationDOS;
+    }
+
+    @Override
+    public OrganizationDO findByCode(String code) {
+        return organizationMapper.findByCode(code);
+    }
+
+    @Override
+    public int deleteByCodes(List<String> codes) {
+        return organizationMapper.deleteByCodes(codes);
     }
 }
