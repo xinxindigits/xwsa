@@ -14,4 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/user",produces = "application/json; charset=UTF-8")
 public class WechatOrgMemberRestController extends AclController {
+
+
+
 }
