@@ -26,6 +26,7 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {},
+      silent: false,
       validateStatus: function(status) {
         return (status >= 200 && status < 300) || status === 460;
       }
@@ -57,7 +58,7 @@ class HttpRequest {
     instance.interceptors.response.use(
       res => {
         this.destroy(url);
-        const { data, status } = res;
+        const { data, status, config } = res;
         if (!res.config.headers.isRetry && status && status === 460) {
           if (res.headers && res.headers.XToken) {
             store.commit("setToken", res.headers.XToken);
@@ -73,7 +74,7 @@ class HttpRequest {
           }
           return this.request(oldReq);
         } else if (data && data.code != "SUCCESS") {
-          Message.error(data.message);
+          !config.silent && Message.error(data.message);
           const err = new Error(data.message);
           err.data = data;
           err.response = res;
