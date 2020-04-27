@@ -12,26 +12,35 @@
       :label-width="150"
       :rules="rules"
     >
-      <FormItem label="角色编号" prop="code">
+      <FormItem label="账号" prop="account">
         <Input
-          v-model="formObj.code"
+          v-model="formObj.account"
           style="width: 250px"
-          :disabled="code_editable"
+          :disabled="type == 'update'"
         ></Input>
       </FormItem>
-      <FormItem label="角色名称" prop="name">
+      <FormItem label="姓名" prop="name">
         <Input v-model="formObj.name" style="width: 250px"></Input>
       </FormItem>
-      <FormItem label="角色类型" prop="roleType">
-        <Select v-model="formObj.roleType" style="width: 250px">
+      <FormItem label="性别" prop="gender">
+        <Select v-model="formObj.gender" style="width: 250px">
           <Option
             v-for="item in statusEnum"
-            :value="item.roleType"
-            :key="item.roleType"
+            :value="item.gender"
+            :key="item.gender"
           >
             {{ item.extension }}
           </Option>
         </Select>
+      </FormItem>
+      <FormItem label="密码" prop="password" v-if="type == 'create'">
+        <Input
+          v-model="formObj.password"
+          style="width: 250px"
+          type="password"
+          password
+          maxlength="16"
+        ></Input>
       </FormItem>
       <FormItem label="角色描述" prop="extension">
         <Input
@@ -52,17 +61,15 @@
 </template>
 
 <script>
-import { addRole, updateRole } from "@/api/data";
+import { addUser, updateUser } from "@/api/data_user";
 const _config = {
   create: {
-    title: "新增角色",
-    success_evt: "on-add-role",
-    submit: addRole
+    title: "新增用户",
+    submit: addUser
   },
   update: {
-    title: "更新角色",
-    success_evt: "on-update-role",
-    submit: updateRole
+    title: "更新用户",
+    submit: updateUser
   }
 };
 export default {
@@ -82,51 +89,51 @@ export default {
   },
   data() {
     return {
-      code_editable: false,
       curValue: false,
       statusEnum: [
-        { roleType: "admin", extension: "管理员" },
-        { roleType: "user", extension: "用户" }
+        { gender: 1, extension: "男" },
+        { gender: 2, extension: "女" }
       ],
       formObj: {
+        account: "",
         name: "",
-        code: "",
-        roleType: "",
+        password: "",
+        gender: "",
         extension: ""
       },
       rules: {
-        code: [
-          { required: true, message: "角色编号不能为空", trigger: "blur" }
-        ],
-        name: [
-          { required: true, message: "角色名称不能为空", trigger: "blur" }
-        ],
-        roleType: [
-          { required: true, message: "请选择角色类型", trigger: "blur" }
+        account: [{ required: true, message: "账号不能为空", trigger: "blur" }],
+        name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+        gender: [
+          {
+            required: true,
+            message: "请选择性别",
+            trigger: "blur",
+            type: "number"
+          }
         ]
       }
     };
   },
   methods: {
     setData(obj) {
-      this.formObj.code = obj.code;
-      this.formObj.extension = obj.extension;
-      this.formObj.roleType = obj.roleType;
+      this.formObj.account = obj.account;
       this.formObj.name = obj.name;
-      this.code_editable = true;
+      this.formObj.gender = obj.gender;
+      this.formObj.extension = obj.extension;
     },
     hdlSubmit(name) {
+      console.log(this.formObj);
       this.$refs[name].validate(valid => {
         if (valid) {
           _config[this.type].submit(this.formObj).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.formObj);
+            this.$emit("user-modified", this.type);
           });
         }
       });
     },
     hdlCancel() {
-      this.curValue = false;
       this.$emit("on-cancel");
     }
   },
