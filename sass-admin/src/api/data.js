@@ -81,18 +81,6 @@ export const getResourceList = ({
   });
 };
 
-// export const grantRole = ({ roleCode, roleName, resources }) => {
-//   let data = {
-//     roleCode,
-//     roleName,
-//     resources
-//   };
-//   return axios.request({
-//     url: "role/resource/grant",
-//     method: "post",
-//     data
-//   });
-// };
 //获取菜单权限树
 export const getResourceMenuTree = () => {
   return axios.request({
