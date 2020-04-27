@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.OrgDataSyncLogDO;
+import org.apache.ibatis.annotations.Param;
 
 public interface OrgDataSyncLogDOMapper {
     /**
@@ -50,4 +51,11 @@ public interface OrgDataSyncLogDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(OrgDataSyncLogDO record);
+
+    /**
+     * 插入记录并将生成的id保存到orgDataSyncLogDO的id字段
+     * @param orgDataSyncLogDO 机构同步任务日志
+     * @return 插入记录成功的条数
+     */
+    int insertReturnId(@Param(value = "orgDataSyncLogDO") OrgDataSyncLogDO orgDataSyncLogDO);
 }

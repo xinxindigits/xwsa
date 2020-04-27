@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.OrgDataSyncConfigDO;
+import org.apache.ibatis.annotations.Param;
 
 public interface OrgDataSyncConfigDOMapper {
     /**
@@ -50,4 +51,13 @@ public interface OrgDataSyncConfigDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(OrgDataSyncConfigDO record);
+
+    /**
+     * 通过机构id和任务类型查询记录
+     * @param orgId 机构id
+     * @param taskType 任务类型
+     * @return 机构同步配置信息
+     */
+    OrgDataSyncConfigDO selectByOrgIdAndTaskType(@Param(value = "orgId") String orgId,
+                                                 @Param(value = "taskType")String taskType);
 }

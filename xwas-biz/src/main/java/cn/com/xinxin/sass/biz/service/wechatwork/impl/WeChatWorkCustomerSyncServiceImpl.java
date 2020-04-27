@@ -58,16 +58,15 @@ public class WeChatWorkCustomerSyncServiceImpl implements WeChatWorkCustomerSync
 
         //根据成员列表分页同步客户信息
         Long startId = 0L;
-        List<CustomerReceivedDO> customerReceivedDOS;
         int count = 0;
-        do {
+        while (true) {
             //客户暂存信息
-            customerReceivedDOS = customerReceivedService.selectByTaskIdMemberUserIdS(taskId, memberUserIdS, startId,
-                    CommonConstants.PAGE_SIZE);
+            List<CustomerReceivedDO> customerReceivedDOS = customerReceivedService.selectByTaskIdMemberUserIdS(
+                    taskId, memberUserIdS, startId, CommonConstants.PAGE_SIZE);
 
             if (CollectionUtils.isEmpty(customerReceivedDOS)) {
                 LOGGER.info("查询客户信息为0，当前已处理[{}]条记录", count);
-                return;
+                break;
             }
 
             //客户信息
@@ -77,10 +76,13 @@ public class WeChatWorkCustomerSyncServiceImpl implements WeChatWorkCustomerSync
             //处理记录
             handleRecordS(customerReceivedDOS, customerDOS);
 
+            //记录总数
+            count = count + customerReceivedDOS.size();
+
             LOGGER.info("当前已处理[{}]条记录", count);
 
             startId = customerReceivedDOS.get(customerReceivedDOS.size() - 1).getId();
-        } while (CommonConstants.PAGE_SIZE == customerReceivedDOS.size());
+        }
     }
 
     /**
