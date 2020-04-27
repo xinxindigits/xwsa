@@ -85,4 +85,20 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         return departmentDOList;
     }
+
+    @Override
+    public List<DepartmentDO> queryDeptsByNameOrId(String deptId, String deptName, String deptEngName) {
+
+
+        List<DepartmentDO> departmentDOList = this.departmentDOMapper.queryDeptsByNameOrId(deptId,deptName,deptEngName);
+
+        if (CollectionUtils.isEmpty(departmentDOList)) {
+            LOGGER.warn("DepartmentServiceImpl,queryDeptsByNameOrId, is null"  );
+            throw  new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"查询不到任何数据");
+        }
+
+        return departmentDOList;
+
+
+    }
 }

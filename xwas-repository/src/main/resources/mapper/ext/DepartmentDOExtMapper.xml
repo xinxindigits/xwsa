@@ -104,4 +104,22 @@
 
   </select>
 
+
+  <select id="queryDeptsByNameOrId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from department
+    where deleted = 0
+    <if test="deptId != null and deptId != ''">
+      and department_id = #{deptId,jdbcType=VARCHAR},
+    </if>
+    <if test="deptName != null and deptName != ''">
+      and department_name like concat('%',#{deptName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="deptEngName != null and deptEngName != ''">
+      and english_name like concat('%',#{deptEngName,jdbcType=VARCHAR},'%')
+    </if>
+
+  </select>
+
 </mapper>
