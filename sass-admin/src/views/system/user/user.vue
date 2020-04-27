@@ -8,7 +8,7 @@
         <FormItem>
           <Input v-model="formItem.name" placeholder="姓名"></Input>
         </FormItem>
-        <FormItem style="float:right">
+        <FormItem>
           <Button type="primary" @click="hdlquery">查询</Button>
           <Button style="margin-left: 8px" @click="reset">重置</Button>
         </FormItem>
@@ -43,6 +43,9 @@
         </template>
         <template slot-scope="{ row }" slot="status">
           <span>{{ $mapd("userStatus", row.status) }}</span>
+        </template>
+        <template slot-scope="{ row }" slot="create_time">
+          <span>{{ row.gmtCreated | timeFilter }}</span>
         </template>
         <template slot-scope="{ row }" slot="action">
           <Button
@@ -121,7 +124,12 @@ export default {
         { title: "姓名", key: "name", align: "center" },
         { title: "性别", key: "gender", align: "center", slot: "gender" },
         { title: "状态", key: "status", align: "center", slot: "status" },
-        { title: "创建时间", key: "gmtCreated", align: "center" },
+        {
+          title: "创建时间",
+          key: "gmtCreated",
+          align: "center",
+          slot: "create_time"
+        },
         { title: "备注", key: "extension", align: "center" },
         {
           title: "操作",
