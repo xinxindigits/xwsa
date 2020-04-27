@@ -123,7 +123,6 @@ export default {
       this.formObj.extension = obj.extension;
     },
     hdlSubmit(name) {
-      console.log(this.formObj);
       this.$refs[name].validate(valid => {
         if (valid) {
           _config[this.type].submit(this.formObj).then(() => {

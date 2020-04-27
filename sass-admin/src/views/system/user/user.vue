@@ -122,6 +122,7 @@ export default {
         { title: "性别", key: "gender", align: "center", slot: "gender" },
         { title: "状态", key: "status", align: "center", slot: "status" },
         { title: "创建时间", key: "gmtCreated", align: "center" },
+        { title: "备注", key: "extension", align: "center" },
         {
           title: "操作",
           slot: "action",
