@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.web.utils;
 
 import cn.com.xinxin.sass.web.vo.DeptTreeVO;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -157,11 +158,19 @@ public class TreeResultUtil {
 
         buildDeptTreeChildren(root,nodes);
 
+        // 如果不需要构建树形结构，直接返回
+        if(CollectionUtils.isEmpty(root)){
+            return nodes;
+        }
+
         return root;
     }
 
 
     private static void buildDeptTreeChildren(List<DeptTreeVO> parents, List<DeptTreeVO> nodes){
+
+
+
         for (DeptTreeVO parent : parents){
             String pid = parent.getDepartmentId();
 

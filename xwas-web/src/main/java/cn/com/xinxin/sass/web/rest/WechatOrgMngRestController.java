@@ -7,6 +7,8 @@ import cn.com.xinxin.sass.web.form.WechatOrgQueryForm;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.DeptTreeVO;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,10 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/wechat/dept/",produces = "application/json; charset=UTF-8")
 public class WechatOrgMngRestController extends AclController {
+
+
+
+    private static final Logger log = LoggerFactory.getLogger(WechatOrgMngRestController.class);
 
 
 
@@ -65,13 +71,53 @@ public class WechatOrgMngRestController extends AclController {
     }
 
 
+
+
     @RequestMapping(value = "/query",method = RequestMethod.POST)
     @ResponseBody
     public Object queryDeptsTree(@RequestBody WechatOrgQueryForm orgQueryForm, HttpServletRequest request){
 
 
+        log.info("WechatOrgMngRestController.queryDeptsTree,orgQueryForm ={} ", orgQueryForm);
 
-        return null;
+        String deptId = orgQueryForm.getDepartmentId();
+
+        String deptName = orgQueryForm.getDepartmentName();
+
+        String deptEngName = orgQueryForm.getEnglishName();
+
+
+        log.info("WechatOrgMngRestController.queryDeptsTree,deptId ={},deptName={},deptEngName={}",
+                deptId,deptName,deptEngName);
+
+        List<DepartmentDO> wechatDepts = this.departmentService.queryDeptsByNameOrId(deptId,deptName,deptEngName);
+
+
+        List<DeptTreeVO> deptTreeVOS = Lists.newArrayList();
+
+
+        wechatDepts.stream().forEach(
+                departmentDO -> {
+                    // 组装必要的参数
+                    DeptTreeVO deptTreeVO = new DeptTreeVO();
+                    deptTreeVO.setId(String.valueOf(departmentDO.getId()));
+                    deptTreeVO.setOrgId(departmentDO.getOrgId());
+                    deptTreeVO.setDepartmentId(String.valueOf(departmentDO.getDepartmentId()));
+                    deptTreeVO.setDepartmentName(departmentDO.getDepartmentName());
+                    deptTreeVO.setEnglishName(departmentDO.getEnglishName());
+                    deptTreeVO.setParentId(String.valueOf(departmentDO.getParentId()));
+                    deptTreeVO.setDepartmentOrder(departmentDO.getDepartmentOrder());
+                    deptTreeVO.setStatus(departmentDO.getStatus());
+                    deptTreeVO.setExtension(departmentDO.getExtension());
+                    deptTreeVO.setGmtCreated(departmentDO.getGmtCreated());
+                    deptTreeVO.setGmtUpdated(departmentDO.getGmtUpdated());
+                    deptTreeVOS.add(deptTreeVO);
+
+                });
+
+        List<DeptTreeVO> resultTrees = TreeResultUtil.buildDeptTrees(deptTreeVOS);
+
+        return resultTrees;
     }
 
 }

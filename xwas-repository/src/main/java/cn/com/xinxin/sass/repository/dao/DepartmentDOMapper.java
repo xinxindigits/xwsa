@@ -81,4 +81,15 @@ public interface DepartmentDOMapper {
      * @return
      */
     List<DepartmentDO> listAllWechatDepts();
+
+    /**
+     *
+     * @param deptId
+     * @param deptName
+     * @param deptEngName
+     * @return
+     */
+    List<DepartmentDO>  queryDeptsByNameOrId(@Param("deptId") String deptId,
+                                             @Param("deptName") String deptName,
+                                             @Param("deptEngName") String deptEngName);
 }
