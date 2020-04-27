@@ -75,4 +75,12 @@ public interface MemberDOMapper {
      * @return 更新成功数量
      */
     int updateBatchById(@Param(value = "memberDOS") List<MemberDO> memberDOS);
+
+
+    /**
+     *
+     * @param deptId
+     * @return
+     */
+    List<MemberDO> queryDeptId(@Param("deptId") String deptId);
 }

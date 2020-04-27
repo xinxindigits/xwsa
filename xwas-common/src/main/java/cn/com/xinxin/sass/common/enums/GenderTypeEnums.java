@@ -9,11 +9,11 @@ package cn.com.xinxin.sass.common.enums;
 public enum  GenderTypeEnums {
 
 
-    MALE("MALE","男性"),
+    MALE("MALE","男性",1),
 
-    FEMALE("FEMALE","女性"),
+    FEMALE("FEMALE","女性",2),
 
-    UNKNOWN("UNKNOWN","未知")
+    UNKNOWN("UNKNOWN","未知",0),
 
     ;
 
@@ -22,9 +22,12 @@ public enum  GenderTypeEnums {
 
     private String desc;
 
-    GenderTypeEnums(String code, String desc) {
+    private Integer number;
+
+    GenderTypeEnums(String code, String desc, Integer number) {
         this.code = code;
         this.desc = desc;
+        this.number = number;
     }
 
     /**
@@ -33,7 +36,7 @@ public enum  GenderTypeEnums {
      * @param value 枚举值
      * @return <value>FilmServiceErrors</value>
      */
-    static GenderTypeEnums getEnumByCode(final String value) {
+    public static GenderTypeEnums getEnumByCode(final String value) {
 
 
         // value为空，返回null
@@ -44,6 +47,24 @@ public enum  GenderTypeEnums {
         // 遍历
         for (final GenderTypeEnums errEnum : values()) {
             if (value.equals(String.valueOf(errEnum.getCode()))) {
+                return errEnum;
+            }
+        }
+        // 找不到匹配的，返回null
+        return null;
+    }
+
+    public static GenderTypeEnums getEnumByNum(final String value) {
+
+
+        // value为空，返回null
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+
+        // 遍历
+        for (final GenderTypeEnums errEnum : values()) {
+            if (value.equals(String.valueOf(errEnum.getNumber()))) {
                 return errEnum;
             }
         }
@@ -66,5 +87,13 @@ public enum  GenderTypeEnums {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public Integer getNumber() {
+        return number;
+    }
+
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 }

@@ -31,4 +31,24 @@ public interface DepartmentService {
      * @return 更新成功条数
      */
     int updateBatchById(List<DepartmentDO> departmentDOS);
+
+
+    /**
+     *
+     * @return
+     */
+    List<DepartmentDO>  listAllWechatDepts();
+
+
+    /**
+     * 查询微信部门ID
+     * @param deptId
+     * @param deptName
+     * @param deptEngName
+     * @return
+     */
+    List<DepartmentDO>  queryDeptsByNameOrId(String deptId,
+                                             String deptName,
+                                             String deptEngName);
+
 }

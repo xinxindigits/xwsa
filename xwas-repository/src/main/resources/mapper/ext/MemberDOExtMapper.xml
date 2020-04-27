@@ -189,4 +189,13 @@
     </foreach>
   </update>
 
+  <select id="queryDeptId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where main_department = #{deptId,jdbcType=VARCHAR}
+    and deleted = 0
+
+  </select>
+
 </mapper>
