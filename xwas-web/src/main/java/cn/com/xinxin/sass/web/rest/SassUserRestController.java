@@ -13,12 +13,9 @@ import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
+import cn.com.xinxin.sass.web.form.*;
 import com.tencent.wework.Finance;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
-import cn.com.xinxin.sass.web.form.UserForm;
-import cn.com.xinxin.sass.web.form.UserLoginForm;
-import cn.com.xinxin.sass.web.form.UserRoleForm;
-import cn.com.xinxin.sass.web.form.UserRoleGrantForm;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
 import cn.com.xinxin.sass.web.vo.RoleVO;
 import cn.com.xinxin.sass.web.vo.UserInfoVO;
@@ -215,16 +212,20 @@ public class SassUserRestController extends AclController {
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/delete")
-    public Object deleteUserInfo(HttpServletRequest request, @RequestParam(value = "accounts[]") List<String> accounts){
+    public Object deleteUserInfo(HttpServletRequest request,@RequestBody DeleteUserForm deleteUserForm){
 
-        if(CollectionUtils.isEmpty(accounts)){
+        if(deleteUserForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER);
+        }
+
+        if(CollectionUtils.isEmpty(deleteUserForm.getAccounts())){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
         }
 
         // FIXME: 删除的时候同时需要清除token等缓存信息
 
-        this.userService.deleteUserByAccounts(accounts);
-        accounts.stream().forEach(account->{
+        this.userService.deleteUserByAccounts(deleteUserForm.getAccounts());
+        deleteUserForm.getAccounts().stream().forEach(account->{
             userAclTokenRepository.cleanSassUserTokenCache(account);
             userAclTokenRepository.cleanSassUserInfoCache(account);
         });
