@@ -19,7 +19,7 @@
             <Option value="user">user</Option>
           </Select>
         </FormItem>
-        <FormItem style="float:right">
+        <FormItem>
           <Button type="primary" @click="hdlquery">查询</Button>
           <Button style="margin-left: 8px" @click="reset">重置</Button>
         </FormItem>
