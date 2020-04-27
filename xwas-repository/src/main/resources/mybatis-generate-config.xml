@@ -90,5 +90,7 @@
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
         <!--<table tableName="customer" domainObjectName="CustomerDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
+        <!--<table tableName="msg_record" domainObjectName="MsgRecordDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
     </context>
 </generatorConfiguration>

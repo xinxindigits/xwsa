@@ -42,23 +42,23 @@
   </select>
 
   <insert id="insertBatch" parameterType="java.util.List">
-    insert into customer (id, org_id, member_user_id, user_id,
+    insert into customer (org_id, member_user_id, user_id,
       customer_name, avatar, customer_type,
       gender, union_id, customer_position,
       corp_name, corp_full_name, external_profile,
       follow_user, status, task_id,
       extension, gmt_created, gmt_creator,
-      gmt_updated, gmt_updater, deleted
+      gmt_updated, gmt_updater
       )
     values
     <foreach collection="customerDOS" item="item" index="index" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.orgId,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR},
+      (#{item.orgId,jdbcType=VARCHAR},#{item.memberUserId,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR},
       #{item.customerName,jdbcType=VARCHAR}, #{item.avatar,jdbcType=VARCHAR}, #{item.customerType,jdbcType=INTEGER},
       #{item.gender,jdbcType=INTEGER}, #{item.unionId,jdbcType=VARCHAR}, #{item.customerPosition,jdbcType=VARCHAR},
       #{item.corpName,jdbcType=VARCHAR}, #{item.corpFullName,jdbcType=VARCHAR}, #{item.externalProfile,jdbcType=LONGVARCHAR},
       #{item.followUser,jdbcType=LONGVARCHAR}, #{item.status,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR},
       #{item.extension,jdbcType=VARCHAR}, #{item.gmtCreated,jdbcType=TIMESTAMP}, #{item.gmtCreator,jdbcType=VARCHAR},
-      #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR}, #{item.deleted,jdbcType=TINYINT}
+      #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR}
       )
     </foreach>
   </insert>

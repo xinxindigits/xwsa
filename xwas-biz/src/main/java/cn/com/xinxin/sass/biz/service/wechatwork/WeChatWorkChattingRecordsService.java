@@ -12,5 +12,5 @@ public interface WeChatWorkChattingRecordsService {
      * 获取聊天记录
      * @param orgId 机构id
      */
-    void fetchChattingRecords(String orgId);
+    void syncChattingRecords(String orgId);
 }

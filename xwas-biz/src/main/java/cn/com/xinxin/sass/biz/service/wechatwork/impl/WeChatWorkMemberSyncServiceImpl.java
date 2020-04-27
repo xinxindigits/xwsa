@@ -9,6 +9,7 @@ import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.repository.model.MemberReceivedDO;
 import com.xinxinfinance.commons.exception.BusinessException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,12 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
 
         //成员信息暂存表
         List<MemberReceivedDO> memberReceivedDOS = memberReceivedService.queryByTaskIdAndOrgIdAndDepartmentId(
-                taskId, orgId, departmentId);
+                taskId, orgId, CommonConstants.SEPARATOR + departmentId + CommonConstants.SEPARATOR);
+
+        if (CollectionUtils.isEmpty(memberReceivedDOS)) {
+            LOGGER.warn("该部门不存在成员，机构[{}]，部门id[{}]", orgId, departmentId);
+            return;
+        }
 
         //成员信息
         List<MemberDO> memberDOS = memberService.queryByOrgIdAndUserId(orgId,
@@ -159,7 +165,7 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
             updatememberDO.setMemberName(memberReceivedDO.getMemberName());
             count++;
         }
-        if (!StringUtils.equals(memberDO.getMobile(), memberReceivedDO.getMemberName())) {
+        if (!StringUtils.equals(memberDO.getMobile(), memberReceivedDO.getMobile())) {
             updatememberDO.setMobile(memberReceivedDO.getMobile());
             count++;
         }

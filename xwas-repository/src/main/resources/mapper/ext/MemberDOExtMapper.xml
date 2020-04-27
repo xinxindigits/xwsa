@@ -65,7 +65,7 @@
       hide_mobile, english_name, open_userid,
       main_department, member_status, task_id,
       extension, gmt_created, gmt_creator,
-      gmt_updated, gmt_updater, deleted
+      gmt_updated, gmt_updater
       )
     values
     <foreach collection="memberDOS" item="item" index="index" separator=",">
@@ -79,7 +79,7 @@
       #{item.hideMobile,jdbcType=INTEGER}, #{item.englishName,jdbcType=VARCHAR}, #{item.openUserid,jdbcType=VARCHAR},
       #{item.mainDepartment,jdbcType=BIGINT}, #{item.memberStatus,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR},
       #{item.extension,jdbcType=VARCHAR}, #{item.gmtCreated,jdbcType=TIMESTAMP}, #{item.gmtCreator,jdbcType=VARCHAR},
-      #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR}, #{item.deleted,jdbcType=TINYINT}
+      #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR}
       )
     </foreach>
   </insert>
