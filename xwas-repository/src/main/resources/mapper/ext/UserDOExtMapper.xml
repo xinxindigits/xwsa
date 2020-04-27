@@ -68,15 +68,18 @@
     select id, account, name, gender, expire_date, status, gmt_creator, gmt_created,
      gmt_updated, extension from user
     <where>
-    <if test="userDO.account != null">
+    <if test="userDO.account != null and userDO.account != ''">
       and account = #{userDO.account,jdbcType=VARCHAR}
     </if>
-    <if test="userDO.name != null">
+    <if test="userDO.name != null and userDO.name != ''">
       and name = #{userDO.name,jdbcType=VARCHAR}
     </if>
-    <if test="userDO.gender != null">
+    <if test="userDO.gender != null" >
       and gender = #{userDO.gender,jdbcType=TINYINT}
     </if>
+      <if test="userDO.status != null">
+        and status = #{userDO.status,jdbcType=TINYINT}
+      </if>
     <if test="startTime != null and endTime != null">
       and <![CDATA[gmt_created >= #{startTime,jdbcType=TIMESTAMP} and gmt_created < #{endTime,jdbcType=TIMESTAMP}]]>
     </if>
