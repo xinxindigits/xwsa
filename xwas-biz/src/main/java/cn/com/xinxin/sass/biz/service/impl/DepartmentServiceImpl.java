@@ -71,4 +71,18 @@ public class DepartmentServiceImpl implements DepartmentService {
         }
         return departmentDOMapper.updateBatchById(departmentDOS);
     }
+
+
+    @Override
+    public List<DepartmentDO> listAllWechatDepts() {
+
+
+        List<DepartmentDO> departmentDOList = this.departmentDOMapper.listAllWechatDepts();
+
+        if (CollectionUtils.isEmpty(departmentDOList)) {
+            LOGGER.warn("DepartmentServiceImpl,listAllWechatDepts, is null"  );
+            throw  new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"查询不到任何数据");
+        }
+        return departmentDOList;
+    }
 }

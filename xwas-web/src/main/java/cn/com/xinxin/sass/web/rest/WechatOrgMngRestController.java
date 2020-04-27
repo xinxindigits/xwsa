@@ -1,10 +1,17 @@
 package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.web.AclController;
-import cn.com.xinxin.sass.web.form.UserForm;
+import cn.com.xinxin.sass.biz.service.DepartmentService;
+import cn.com.xinxin.sass.repository.model.DepartmentDO;
+import cn.com.xinxin.sass.web.form.WechatOrgQueryForm;
+import cn.com.xinxin.sass.web.utils.TreeResultUtil;
+import cn.com.xinxin.sass.web.vo.DeptTreeVO;
+import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author: zhouyang
@@ -19,9 +26,50 @@ public class WechatOrgMngRestController extends AclController {
 
 
 
-    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @Autowired
+    private DepartmentService departmentService;
+
+
+    @RequestMapping(value = "/list",method = RequestMethod.GET)
     @ResponseBody
-    public Object listAllDeptsTree(@RequestBody UserForm userForm, HttpServletRequest request){
+    public Object listAllDeptsTree(HttpServletRequest request){
+
+        List<DepartmentDO> wechatDepts = this.departmentService.listAllWechatDepts();
+
+
+        List<DeptTreeVO> deptTreeVOS = Lists.newArrayList();
+
+
+        wechatDepts.stream().forEach(
+                departmentDO -> {
+
+                    DeptTreeVO deptTreeVO = new DeptTreeVO();
+                    deptTreeVO.setId(String.valueOf(departmentDO.getId()));
+                    deptTreeVO.setOrgId(departmentDO.getOrgId());
+                    deptTreeVO.setDepartmentId(String.valueOf(departmentDO.getDepartmentId()));
+                    deptTreeVO.setDepartmentName(departmentDO.getDepartmentName());
+                    deptTreeVO.setEnglishName(departmentDO.getEnglishName());
+                    deptTreeVO.setParentId(String.valueOf(departmentDO.getParentId()));
+                    deptTreeVO.setDepartmentOrder(departmentDO.getDepartmentOrder());
+                    deptTreeVO.setStatus(departmentDO.getStatus());
+                    deptTreeVO.setExtension(departmentDO.getExtension());
+                    deptTreeVO.setGmtCreated(departmentDO.getGmtCreated());
+                    deptTreeVO.setGmtUpdated(departmentDO.getGmtUpdated());
+                    deptTreeVOS.add(deptTreeVO);
+
+        });
+
+        List<DeptTreeVO> resultTrees = TreeResultUtil.buildDeptTrees(deptTreeVOS);
+
+        return resultTrees;
+    }
+
+
+    @RequestMapping(value = "/query",method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryDeptsTree(@RequestBody WechatOrgQueryForm orgQueryForm, HttpServletRequest request){
+
+
 
         return null;
     }

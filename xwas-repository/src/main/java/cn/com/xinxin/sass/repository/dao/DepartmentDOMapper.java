@@ -74,4 +74,11 @@ public interface DepartmentDOMapper {
      * @return 更新成功条数
      */
     int updateBatchById(@Param(value = "departmentDOS")List<DepartmentDO> departmentDOS);
+
+
+    /**
+     * 查询所有的部门
+     * @return
+     */
+    List<DepartmentDO> listAllWechatDepts();
 }
