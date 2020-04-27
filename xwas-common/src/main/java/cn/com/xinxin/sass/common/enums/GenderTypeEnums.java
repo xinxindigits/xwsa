@@ -36,7 +36,7 @@ public enum  GenderTypeEnums {
      * @param value 枚举值
      * @return <value>FilmServiceErrors</value>
      */
-    static GenderTypeEnums getEnumByCode(final String value) {
+    public static GenderTypeEnums getEnumByCode(final String value) {
 
 
         // value为空，返回null
@@ -54,7 +54,7 @@ public enum  GenderTypeEnums {
         return null;
     }
 
-    static GenderTypeEnums getEnumByNum(final String value) {
+    public static GenderTypeEnums getEnumByNum(final String value) {
 
 
         // value为空，返回null

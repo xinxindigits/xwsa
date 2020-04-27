@@ -2,8 +2,11 @@ package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.MemberDOMapper;
 import cn.com.xinxin.sass.repository.model.MemberDO;
+import cn.com.xinxin.sass.repository.model.UserDO;
+import com.github.pagehelper.PageHelper;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -77,5 +80,23 @@ public class MemberServiceImpl implements MemberService {
             return 0;
         }
         return memberDOMapper.updateBatchById(memberDOS);
+    }
+
+
+    @Override
+    public PageResultVO<MemberDO> queryByDeptId(String deptId, PageResultVO page) {
+
+        com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+
+
+        List<MemberDO> memberDOList = this.memberDOMapper.queryDeptId(deptId);
+
+        PageResultVO<MemberDO> result = new PageResultVO<>();
+        result.setPageNumber(page.getPageNumber());
+        result.setPageSize(page.getPageSize());
+        result.setTotal(doPage.getTotal());
+        result.setItems(memberDOList);
+
+        return result;
     }
 }
