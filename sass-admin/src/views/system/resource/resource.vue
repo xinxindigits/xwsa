@@ -60,7 +60,6 @@
 </template>
 
 <script>
-/* eslint-disable */
 import ResourceListFunction from "./function";
 import {
   getResourceMenuTree,
