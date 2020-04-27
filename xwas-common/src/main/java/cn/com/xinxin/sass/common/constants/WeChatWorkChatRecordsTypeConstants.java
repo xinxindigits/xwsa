@@ -10,97 +10,102 @@ public class WeChatWorkChatRecordsTypeConstants {
     /**
      * 文本
      */
-    public static final String text = "text";
+    public static final String TEXT = "text";
     /**
      * 图片
      */
-    public static final String image = "image";
+    public static final String IMAGE = "image";
     /**
      * 撤回消息
      */
-    public static final String revoke = "revoke";
+    public static final String REVOKE = "revoke";
     /**
      * 同意会话聊天内容
      */
-    public static final String agree = "agree";
+    public static final String AGREE = "agree";
     /**
      * 不同意会话聊天内容
      */
-    public static final String disagree = "disagree";
+    public static final String DISAGREE = "disagree";
     /**
      * 语音
      */
-    public static final String voice = "voice";
+    public static final String VOICE = "voice";
     /**
      * 视频
      */
-    public static final String video = "video";
+    public static final String VIDEO = "video";
     /**
      * 名片
      */
-    public static final String card = "card";
+    public static final String CARD = "card";
     /**
      * 位置
      */
-    public static final String location = "location";
+    public static final String LOCATION = "location";
     /**
      * 表情
      */
-    public static final String emotion = "emotion";
+    public static final String EMOTION = "emotion";
     /**
      * 文件
      */
-    public static final String file = "file";
+    public static final String FILE = "file";
     /**
      * 链接
      */
-    public static final String link = "link";
+    public static final String LINK = "link";
     /**
      * 小程序
      */
-    public static final String weapp = "weapp";
+    public static final String WEAPP = "weapp";
     /**
      * 会话记录消息
      */
-    public static final String chatrecord = "chatrecord";
+    public static final String CHATRECORD = "chatrecord";
     /**
      * 待办消息
      */
-    public static final String todo = "todo";
+    public static final String TODO = "todo";
     /**
      * 投票消息
      */
-    public static final String vote = "vote";
+    public static final String VOTE = "vote";
     /**
      * 填表消息
      */
-    public static final String collect = "collect";
+    public static final String COLLECT = "collect";
     /**
      * 红包消息
      */
-    public static final String redpacket = "redpacket";
+    public static final String REDPACKET = "redpacket";
     /**
      * 会议邀请消息
      */
-    public static final String meeting = "meeting";
+    public static final String MEETING = "meeting";
     /**
      * 在线文档消息
      */
-    public static final String docmsg = "docmsg";
+    public static final String DOCMSG = "docmsg";
     /**
      * MarkDown格式消息
      */
-    public static final String markdown = "markdown";
+    public static final String MARKDOWN = "markdown";
     /**
      * 图文消息
      */
-    public static final String news = "news";
+    public static final String NEWS = "news";
     /**
      * 日程消息
      */
-    public static final String calendar = "calendar";
+    public static final String CALENDAR = "calendar";
     /**
      * 混合消息
      */
-    public static final String mixed = "mixed";
+    public static final String MIXED = "mixed";
+
+    /**
+     * 切换企业
+     */
+    public static final String SWITCH = "switch";
 }

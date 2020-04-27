@@ -148,6 +148,16 @@ public class WeChatWorkChattingRecordsBO {
      */
     private String mixed;
 
+    /**
+     * 切换企业的时间戳
+     */
+    private String time;
+
+    /**
+     * 切换企业的用户
+     */
+    private String user;
+
     public String getMsgId() {
         return msgId;
     }
@@ -396,6 +406,22 @@ public class WeChatWorkChattingRecordsBO {
         this.mixed = mixed;
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
     @Override
     public String toString() {
         return "WeChatWorkChattingRecordsBO{" +
@@ -430,6 +456,8 @@ public class WeChatWorkChattingRecordsBO {
                 ", news='" + news + '\'' +
                 ", calendar='" + calendar + '\'' +
                 ", mixed='" + mixed + '\'' +
+                ", time='" + time + '\'' +
+                ", user='" + user + '\'' +
                 '}';
     }
 }

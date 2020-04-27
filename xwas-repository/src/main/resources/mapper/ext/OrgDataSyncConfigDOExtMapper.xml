@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xinxin.sass.repository.dao.OrgDataSyncConfigDOMapper">
+  <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.OrgDataSyncConfigDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+    <result column="cron_expression" jdbcType="VARCHAR" property="cronExpression" />
+    <result column="fetched_seq_no" jdbcType="BIGINT" property="fetchedSeqNo" />
+    <result column="stocked_seq_no" jdbcType="BIGINT" property="stockedSeqNo" />
+    <result column="count_ceiling" jdbcType="INTEGER" property="countCeiling" />
+    <result column="time_interval" jdbcType="INTEGER" property="timeInterval" />
+    <result column="extension" jdbcType="VARCHAR" property="extension" />
+    <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+    <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
+    <result column="gmt_updated" jdbcType="TIMESTAMP" property="gmtUpdated" />
+    <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List_Ext">
+    id, org_id, task_type, cron_expression, fetched_seq_no, stocked_seq_no, count_ceiling, 
+    time_interval, extension, gmt_created, gmt_creator, gmt_updated, gmt_updater, deleted
+  </sql>
+  <select id="selectByOrgIdAndTaskType" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from org_data_sync_config
+    where org_id = #{orgId} and task_type = #{taskType} and deleted = 0 limit 1;
+  </select>
+
+</mapper>

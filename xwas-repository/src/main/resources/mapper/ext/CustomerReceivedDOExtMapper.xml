@@ -31,7 +31,7 @@
   </sql>
 
     <insert id="insertBatch" parameterType="java.util.List">
-        insert into customer_received (id, task_id, org_id, member_user_id,
+        insert into customer_received (task_id, org_id, member_user_id,
         user_id, customer_name, avatar,
         customer_type, gender, union_id,
         customer_position, corp_name, corp_full_name,
@@ -40,7 +40,7 @@
         gmt_updater)
         values
         <foreach collection="customerReceivedDOS" item="item" index="index" separator=",">
-            (#{item.id,jdbcType=BIGINT}, #{item.taskId,jdbcType=VARCHAR}, #{item.orgId,jdbcType=VARCHAR},
+            (#{item.taskId,jdbcType=VARCHAR}, #{item.orgId,jdbcType=VARCHAR}, #{item.memberUserId,jdbcType=VARCHAR},
             #{item.userId,jdbcType=VARCHAR}, #{item.customerName,jdbcType=VARCHAR}, #{item.avatar,jdbcType=VARCHAR},
             #{item.customerType,jdbcType=INTEGER}, #{item.gender,jdbcType=INTEGER}, #{item.unionId,jdbcType=VARCHAR},
             #{item.customerPosition,jdbcType=VARCHAR}, #{item.corpName,jdbcType=VARCHAR},
@@ -61,8 +61,9 @@
             #{item}
         </foreach>
         and id <![CDATA[>]]> #{startId}
+        and deleted = 0
         order by id
-        limit #{pageSize} and deleted = 0
+        limit #{pageSize}
     </select>
 
 </mapper>
