@@ -1,11 +1,16 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.ResourceService;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.ResourceMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import com.github.pagehelper.PageHelper;
+import com.xinxinfinance.commons.exception.BusinessException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -17,12 +22,29 @@ import java.util.List;
 @Service
 public class ResourceServiceImpl implements ResourceService {
 
+
+    private static final Logger log = LoggerFactory.getLogger(ResourceServiceImpl.class);
+
     @Autowired
     private ResourceMapper resourceMapper;
 
     @Override
     public int createResource(ResourceDO resourceDO) {
-        return resourceMapper.insertSelective(resourceDO);
+
+        try {
+
+            return resourceMapper.insertSelective(resourceDO);
+        }catch (DuplicateKeyException ex){
+            log.info("ResourceServiceImpl.createResource rs code = {} 重复",resourceDO.getCode());
+
+            throw new BusinessException(SassBizResultCodeEnum.DATA_ALREADY_EXIST,"资源权限重复，请检查参数设置");
+
+        }catch (Exception ex){
+
+            throw new BusinessException(SassBizResultCodeEnum.FAIL,"资源权限创建失败，请检查参数后重试");
+
+        }
+
     }
 
     @Override
