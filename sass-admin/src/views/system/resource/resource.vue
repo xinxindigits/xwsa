@@ -28,6 +28,12 @@
             <FormItem label="资源权限值" prop="authority">
               <Input v-model="form1.authority"></Input>
             </FormItem>
+            <FormItem label="资源类型" prop="resourceType">
+              <Select v-model="form1.resourceType" disabled>
+                <Option value="menu">菜单</Option>
+                <Option value="function">功能</Option>
+              </Select>
+            </FormItem>
             <FormItem label="组件URI" prop="url">
               <Input v-model="form1.url"></Input>
             </FormItem>
@@ -78,13 +84,15 @@ export default {
         code: "",
         url: "",
         authority: "",
-        extension: ""
+        extension: "",
+        resourceType:""
       },
       rules: {
         parentId: [
           { required: true, message: "上级ID不能为空", trigger: "blur" }
         ],
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        resourceType: [{ required: true, message: "权限类型不能为空", trigger: "blur" }],
         url: [{ required: true, message: "URI不能为空", trigger: "blur" }],
         authority: [
           { required: true, message: "权限值不能为空", trigger: "blur" }
@@ -121,6 +129,7 @@ export default {
     hdlTreeSelected(i, n) {
       console.log(n);
       n.extension = n.extension || "";
+      n.resourceType='menu';
       this.form1 = this._.pick(
         n,
         "code",
@@ -129,7 +138,8 @@ export default {
         "name",
         "url",
         "extension",
-        "id"
+        "id",
+        "resourceType"
       );
       this.query(n);
     },

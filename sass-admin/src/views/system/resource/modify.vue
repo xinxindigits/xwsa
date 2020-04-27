@@ -46,8 +46,13 @@
       </FormItem>
     </Form>
     <div slot="footer">
-      <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
-      <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
+      <Button @click="hdlCancel">取消</Button>
+      <Button
+        style="margin-left: 8px"
+        type="primary"
+        @click="hdlSubmit('formObj')"
+        >确认</Button
+      >
     </div>
   </Modal>
 </template>
@@ -136,6 +141,7 @@ export default {
       });
     },
     hdlCancel() {
+      this.curValue = false;
       this.$emit("on-resource-modify-cancel");
     }
   },
