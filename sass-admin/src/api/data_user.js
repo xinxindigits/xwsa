@@ -15,8 +15,8 @@ export const addUser = ({ account, extension, name, gender, password }) => {
     method: "post"
   });
 };
-export const updateUser = ({ account, name, gender }) => {
-  let data = { account, name, gender };
+export const updateUser = ({ account, name, gender, extension }) => {
+  let data = { account, name, gender, extension };
   return axios.request({
     url: "user/update",
     data,
