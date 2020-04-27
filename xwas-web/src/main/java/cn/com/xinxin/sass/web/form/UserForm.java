@@ -35,6 +35,10 @@ public class UserForm extends ToString {
     /**
      * 状态
      */
+    private Integer status;
+    /**
+     * 备注
+     */
     private String extension;
     /**
      *
@@ -55,6 +59,14 @@ public class UserForm extends ToString {
      * 页码
      */
     private Integer pageNum;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Long getId() {
         return id;

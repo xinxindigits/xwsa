@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author: zhouyang
@@ -75,8 +76,18 @@ public class SassUserRestController extends AclController {
         page.setPageSize((userForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : userForm.getPageSize());
         QueryUserConditionVO queryUserConditionVO = BaseConvert.convert(userForm, QueryUserConditionVO.class);
         PageResultVO<UserDO> pageUser = userService.findByConditionPage(page, queryUserConditionVO);
-
-        return pageUser;
+        PageResultVO<UserInfoVO> resultVO = BaseConvert.convert(pageUser, PageResultVO.class);
+        List<UserInfoVO> userInfoVOS = new ArrayList<>();
+        if(!CollectionUtils.isEmpty(pageUser.getItems())){
+            userInfoVOS = pageUser.getItems().stream().map(userDO -> {
+                UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
+                userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
+                userInfoVO.setStatus(userDO.getStatus() == null ? null : userDO.getStatus().intValue());
+                return userInfoVO;
+            }).collect(Collectors.toList());
+        }
+        resultVO.setItems(userInfoVOS);
+        return resultVO;
     }
 
     @RequestMapping(value = "/query/{account}",method = RequestMethod.GET)
@@ -89,7 +100,8 @@ public class SassUserRestController extends AclController {
         UserDO userDO = this.userService.findByUserAccount(account);
 
         UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
-
+        userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
+        userInfoVO.setStatus(userDO.getStatus() == null ? null : userDO.getStatus().intValue());
         /**
          * 用户对应的角色值
          */
@@ -186,7 +198,13 @@ public class SassUserRestController extends AclController {
         if(StringUtils.isNotEmpty(userForm.getName())){
             userDO.setName(userForm.getName());
         }
-        userDO.setGender(Byte.valueOf(String.valueOf(userForm.getGender())));
+        userDO.setExtension(userForm.getExtension());
+        if(userForm.getGender() != null){
+            userDO.setGender(userForm.getGender().byteValue());
+        }
+        if(userForm.getStatus() != null){
+            userDO.setGender(userForm.getStatus().byteValue());
+        }
         userDO.setGmtUpdater(sassUserInfo.getAccount());
 
         boolean result = this.userService.updateUser(userDO);

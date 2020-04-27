@@ -21,6 +21,8 @@ public class UserInfoVO extends ToString{
 
     private Integer gender;
 
+    private Integer status;
+
     private String extension;
 
     private Date gmtCreated;
@@ -67,6 +69,14 @@ public class UserInfoVO extends ToString{
 
     public void setGender(Integer gender) {
         this.gender = gender;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
     public String getExtension() {
