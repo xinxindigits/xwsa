@@ -9,6 +9,7 @@ import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.OrgBaseInfoDO;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
+import cn.com.xinxin.sass.web.form.DeleteOrgForm;
 import cn.com.xinxin.sass.web.form.OrgQueryForm;
 import cn.com.xinxin.sass.web.form.OrganizationForm;
 import cn.com.xinxin.sass.web.vo.OrganizationVO;
@@ -226,14 +227,18 @@ public class SassOrganizationRestController extends AclController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/organization/delete")
-    public Object deleteOrganization(@RequestParam(value = "codes[]") List<String> codes,HttpServletRequest request){
+    public Object deleteOrganization(@RequestBody DeleteOrgForm deleteOrgForm, HttpServletRequest request){
 
-        if(CollectionUtils.isEmpty(codes)){
+        if(deleteOrgForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER);
+        }
+
+        if(CollectionUtils.isEmpty(deleteOrgForm.getCodes())){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"组织机构列表不能为空");
         }
 
-        int result = this.organizationService.deleteByCodes(codes);
-        this.orgBaseInfoService.deleteByCodes(codes);
+        int result = this.organizationService.deleteByCodes(deleteOrgForm.getCodes());
+        this.orgBaseInfoService.deleteByCodes(deleteOrgForm.getCodes());
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else {
