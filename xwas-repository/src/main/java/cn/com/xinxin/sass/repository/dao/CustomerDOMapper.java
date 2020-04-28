@@ -76,4 +76,36 @@ public interface CustomerDOMapper {
      * @return 成功更新条数
      */
     int updateBatch(@Param(value = "customerDOS") List<CustomerDO> customerDOS);
+
+    /**
+     * 根据成员UserId列表，以及添加客户的时间范围查询成员添加的客户
+     * @param memberUserIdS 成员UserId列表
+     * @param startTime 起始时间
+     * @param endTime 终止时间
+     * @param index 页码
+     * @param pageSize 页大小
+     * @param orgId 机构id
+     * @return 分页查询的客户信息
+     */
+    List<CustomerDO> selectPageByOrgIdAndMemberUserIdSAndTime(@Param(value = "memberUserIdS") List<String> memberUserIdS,
+                                   @Param(value = "startTime") String startTime,
+                                   @Param(value = "endTime") String endTime,
+                                   @Param(value = "index") Long index,
+                                   @Param(value = "pageSize") Integer pageSize,
+                                   @Param(value = "orgId") String orgId);
+
+    /**
+     * 根据成员UserId列表，以及添加客户的时间范围查询成员添加的客户数量
+     * @param memberUserIdS 成员UserId列表
+     * @param startTime 起始时间
+     * @param endTime 终止时间
+     * @param orgId 机构id
+     * @return 分页查询的客户信息
+     */
+    Long selectCountByOrgIdAndMemberUserIdSAndTime(@Param(value = "memberUserIdS") List<String> memberUserIdS,
+                                                  @Param(value = "startTime") String startTime,
+                                                  @Param(value = "endTime") String endTime,
+                                                  @Param(value = "orgId") String orgId);
+
+
 }

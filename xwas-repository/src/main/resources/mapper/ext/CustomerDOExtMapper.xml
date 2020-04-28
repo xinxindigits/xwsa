@@ -135,4 +135,44 @@
     </foreach>
   </update>
 
+  <select id="selectPageByOrgIdAndMemberUserIdSAndTime" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from customer
+    <where>
+      deleted = 0 and org_id = #{orgId}
+      <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(memberUserIdS)">
+        and member_user_id in
+        <foreach collection="memberUserIdS" item="item" index="index" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and gmt_created >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and gmt_created <= #{endTime}]]>
+      </if>
+      order by id limit #{index}, #{pageSize}
+    </where>
+  </select>
+
+  <select id="selectCountByOrgIdAndMemberUserIdSAndTime" resultType="java.lang.Long">
+    select count(id)
+    from customer
+    <where>
+      deleted = 0 and org_id = #{orgId}
+      <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(memberUserIdS)">
+        and member_user_id in
+        <foreach collection="memberUserIdS" item="item" index="index" open="(" close=")" separator=",">
+          #{item}
+        </foreach>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and gmt_created >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and gmt_created <= #{endTime}]]>
+      </if>
+    </where>
+  </select>
 </mapper>
