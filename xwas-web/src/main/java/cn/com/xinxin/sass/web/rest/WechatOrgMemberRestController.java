@@ -82,6 +82,8 @@ public class WechatOrgMemberRestController extends AclController {
 
         MemberDetailVO memberDetailVO = BaseConvert.convert(memberDO,MemberDetailVO.class);
 
+        memberDetailVO.setGender(GenderTypeEnums.getEnumByNum(String.valueOf(memberDO.getGender())).getDesc());
+
         return memberDetailVO;
     }
 
