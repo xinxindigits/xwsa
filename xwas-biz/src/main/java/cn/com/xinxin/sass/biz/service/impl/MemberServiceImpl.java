@@ -29,6 +29,8 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberDOMapper memberDOMapper;
 
+
+
     public MemberServiceImpl(final MemberDOMapper memberDOMapper) {
         this.memberDOMapper = memberDOMapper;
     }
@@ -86,7 +88,10 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public PageResultVO<MemberDO> queryByDeptId(String deptId, PageResultVO page) {
 
+
         com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+
+
 
 
         List<MemberDO> memberDOList = this.memberDOMapper.queryDeptId(deptId);
@@ -98,5 +103,29 @@ public class MemberServiceImpl implements MemberService {
         result.setItems(memberDOList);
 
         return result;
+    }
+
+    @Override
+    public PageResultVO<MemberDO> queryMembersByPages(PageResultVO page) {
+
+
+        com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+
+
+        List<MemberDO> memberDOList = this.memberDOMapper.queryAllMembersByPage();
+
+        PageResultVO<MemberDO> result = new PageResultVO<>();
+        result.setPageNumber(page.getPageNumber());
+        result.setPageSize(page.getPageSize());
+        result.setTotal(doPage.getTotal());
+        result.setItems(memberDOList);
+
+        return result;
+    }
+
+    @Override
+    public MemberDO queryMemberDetailById(String memberId) {
+        MemberDO memberDO = this.memberDOMapper.selectByPrimaryKey(Long.valueOf(memberId));
+        return memberDO;
     }
 }

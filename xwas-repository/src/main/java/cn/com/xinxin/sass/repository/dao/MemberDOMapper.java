@@ -83,4 +83,10 @@ public interface MemberDOMapper {
      * @return
      */
     List<MemberDO> queryDeptId(@Param("deptId") String deptId);
+
+    /**
+     *
+     * @return
+     */
+    List<MemberDO> queryAllMembersByPage();
 }

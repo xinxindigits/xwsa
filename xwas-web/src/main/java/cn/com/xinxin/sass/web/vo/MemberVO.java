@@ -29,6 +29,11 @@ public class MemberVO extends ToString {
 
     private String address;
 
+    private String deptName;
+
+    private String telephone;
+
+
 
     public long getId() {
         return id;
@@ -92,5 +97,21 @@ public class MemberVO extends ToString {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getDeptName() {
+        return deptName;
+    }
+
+    public void setDeptName(String deptName) {
+        this.deptName = deptName;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
 }

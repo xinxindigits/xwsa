@@ -43,6 +43,17 @@ public interface MemberService {
     PageResultVO<MemberDO> queryByDeptId(String deptId, PageResultVO page);
 
 
+    /**
+     * @param page
+     * @return
+     */
+    PageResultVO<MemberDO> queryMembersByPages(PageResultVO page);
 
+
+    /**
+     * @param memeberId
+     * @return
+     */
+    MemberDO queryMemberDetailById(String memeberId);
 
 }
