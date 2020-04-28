@@ -207,4 +207,15 @@
   </select>
 
 
+  <select id="queryDeptIdList" parameterType="java.util.List" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where deleted = 0
+    and main_department in
+    <foreach collection="deptIds" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
 </mapper>

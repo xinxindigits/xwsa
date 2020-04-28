@@ -1,9 +1,11 @@
 package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.service.DepartmentService;
 import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.common.enums.GenderTypeEnums;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.repository.model.DepartmentDO;
 import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.WechatmemberQueryForm;
@@ -41,6 +43,10 @@ public class WechatOrgMemberRestController extends AclController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private DepartmentService departmentService;
+
 
 
 
@@ -80,7 +86,13 @@ public class WechatOrgMemberRestController extends AclController {
 
         MemberDO  memberDO = this.memberService.queryMemberDetailById(memberId);
 
+        DepartmentDO departmentDO =
+                this.departmentService.queryDeptByDeptId(String.valueOf(memberDO.getMainDepartment()));
+
         MemberDetailVO memberDetailVO = BaseConvert.convert(memberDO,MemberDetailVO.class);
+
+        memberDetailVO.setGender(GenderTypeEnums.getEnumByNum(String.valueOf(memberDO.getGender())).getDesc());
+        memberDetailVO.setMainDepartmentName(departmentDO.getDepartmentName());
 
         return memberDetailVO;
     }
