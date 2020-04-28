@@ -50,7 +50,7 @@
           </div>
           <Content class="content-wrapper">
             <keep-alive :include="cacheList">
-              <router-view />
+              <router-view v-if="isKeepAlive" />
             </keep-alive>
           </Content>
         </Layout>
@@ -103,6 +103,7 @@ export default {
   },
   data() {
     return {
+      isKeepAlive: true,
       collapsed: false,
       userAvatar: minLogo,
       maxLogo,
@@ -134,6 +135,7 @@ export default {
         params,
         query
       });
+      if (name == this.$route.name) this.reload();
     },
     handleCloseTag(res, type, route) {
       if (type !== "others") {
@@ -149,6 +151,10 @@ export default {
     },
     handleClick(item) {
       this.turnToPage(item);
+    },
+    reload() {
+      this.isKeepAlive = false;
+      this.$nextTick(() => (this.isKeepAlive = true));
     }
   },
   mounted() {
