@@ -1,8 +1,8 @@
 <template>
   <div>
-    <Row :gutter="10">
+    <Row :gutter="10" type="flex">
       <Col span="6">
-        <Card>
+        <Card style="height:100%">
           <Tree
             ref="tree"
             :data="treedata"
@@ -84,14 +84,16 @@ export default {
         url: "",
         authority: "",
         extension: "",
-        resourceType:""
+        resourceType: ""
       },
       rules: {
         parentId: [
           { required: true, message: "上级ID不能为空", trigger: "blur" }
         ],
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
-        resourceType: [{ required: true, message: "权限类型不能为空", trigger: "blur" }],
+        resourceType: [
+          { required: true, message: "权限类型不能为空", trigger: "blur" }
+        ],
         url: [{ required: true, message: "URI不能为空", trigger: "blur" }],
         authority: [
           { required: true, message: "权限值不能为空", trigger: "blur" }
@@ -128,7 +130,7 @@ export default {
     hdlTreeSelected(i, n) {
       console.log(n);
       n.extension = n.extension || "";
-      n.resourceType='menu';
+      n.resourceType = "menu";
       this.form1 = this._.pick(
         n,
         "code",
@@ -154,7 +156,6 @@ export default {
           });
         }
       });
-      // updateResource()
     },
     formatData(data) {
       let arr = [];
