@@ -96,9 +96,7 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public PageResultVO<MemberDO> queryByDeptId(String deptId, PageResultVO page) {
 
-
-        com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-
+        com.github.pagehelper.Page doPage = new com.github.pagehelper.Page();
 
         List<MemberDO> memberDOList = Lists.newArrayList();
 
@@ -106,13 +104,15 @@ public class MemberServiceImpl implements MemberService {
 
         if(departmentDO.getParentId().equals("0")){
             // 根结点，则查询所有的用户信息
+            doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
             memberDOList = this.memberDOMapper.queryAllMembersByPage();
         }else{
+            doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
             List<String> subDepartIds = this.departmentDOMapper.selectSubDeptsByDeptId(Lists.newArrayList(deptId));
             subDepartIds.add(deptId);
             memberDOList = this.memberDOMapper.queryDeptIdList(subDepartIds);
         }
-        
+
         PageResultVO<MemberDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());
         result.setPageSize(page.getPageSize());
