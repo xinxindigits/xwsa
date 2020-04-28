@@ -40,8 +40,16 @@
       </Header>
       <Content class="main-content-con">
         <Layout class="main-layout-con">
+          <div class="tag-nav-wrapper">
+            <tags-nav
+              :value="$route"
+              @input="handleClick"
+              :list="tagNavList"
+              @on-close="handleCloseTag"
+            />
+          </div>
           <Content class="content-wrapper">
-            <keep-alive>
+            <keep-alive :include="cacheList">
               <router-view />
             </keep-alive>
           </Content>
@@ -53,6 +61,7 @@
 
 <script>
 import HeaderBar from "./components/header-bar";
+import TagsNav from "./components/tags-nav";
 import User from "./components/user";
 import SideMenu from "./components/side-menu";
 import maxLogo from "@/assets/images/logo-bg.png";
@@ -60,18 +69,33 @@ import minLogo from "@/assets/images/logo-min.png";
 import { mapMutations } from "vuex";
 import routers from "@/router/routers";
 import bread_crumb from "./components/custom-bread-crumb/mixin";
+import { getNewTagList, routeEqual } from "@/libs/util";
 import "./main.less";
 export default {
   name: "Main",
   mixins: [bread_crumb],
   components: {
     HeaderBar,
+    TagsNav,
     User,
     SideMenu
   },
   computed: {
     menuList() {
       return this.$store.getters.menuList;
+    },
+    tagNavList() {
+      return this.$store.state.app.tagNavList;
+    },
+    cacheList() {
+      const list = [
+        ...(this.tagNavList.length
+          ? this.tagNavList
+              .filter(item => !(item.meta && item.meta.notCache))
+              .map(item => item.name)
+          : [])
+      ];
+      return list;
     },
     account() {
       return this.$store.state.user.account;
@@ -89,7 +113,7 @@ export default {
     this.setHomeRoute(routers);
   },
   methods: {
-    ...mapMutations(["setHomeRoute"]),
+    ...mapMutations(["setHomeRoute", "setTagNavList", "addTag", "closeTag"]),
     handleCollapsedChange(state) {
       this.collapsed = state;
     },
@@ -110,11 +134,45 @@ export default {
         params,
         query
       });
+    },
+    handleCloseTag(res, type, route) {
+      if (type !== "others") {
+        if (type === "all") {
+          this.turnToPage(this.$config.homeName);
+        } else {
+          if (routeEqual(this.$route, route)) {
+            this.closeTag(route);
+          }
+        }
+      }
+      this.setTagNavList(res);
+    },
+    handleClick(item) {
+      this.turnToPage(item);
     }
   },
-  mounted() {},
+  mounted() {
+    this.setTagNavList();
+    const { name, params, query, meta } = this.$route;
+    this.addTag({
+      route: { name, params, query, meta }
+    });
+    // 如果当前打开页面不在标签栏中，跳到homeName页
+    if (!this.tagNavList.find(item => item.name === this.$route.name)) {
+      this.$router.push({
+        name: this.$config.homeName
+      });
+    }
+  },
   watch: {
     $route(newRoute) {
+      const { name, query, params, meta } = newRoute;
+      this.addTag({
+        route: { name, query, params, meta },
+        type: "push"
+      });
+      this.setTagNavList(getNewTagList(this.tagNavList, newRoute));
+
       this.$refs.sideMenu.updateOpenName(newRoute.name);
     }
   }
