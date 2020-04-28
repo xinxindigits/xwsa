@@ -105,6 +105,18 @@
   </select>
 
 
+  <select id="selectByDeptId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from department
+    where deleted = 0
+    <if test="deptId != null and deptId != ''">
+    and department_id = #{deptId,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+
+
   <select id="queryDeptsByNameOrId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
 
     select <include refid="Base_Column_List_Ext"/>
@@ -119,6 +131,18 @@
     <if test="deptEngName != null and deptEngName != ''">
       and english_name like concat('%',#{deptEngName,jdbcType=VARCHAR},'%')
     </if>
+
+  </select>
+
+
+  <select id="selectSubDeptsByDeptId"  parameterType="java.util.List" resultType="java.lang.String">
+    select department_id
+    from department
+    where deleted = 0
+    and parent_id in
+    <foreach collection="deptIds" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
 
   </select>
 
