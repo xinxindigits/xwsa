@@ -22,16 +22,16 @@ let routes_config = {
     },
     component: () => import("@/views/system/user/user.vue")
   },
-  ["/weixin"]: {
-    path: "/wexin",
-    name: "weixin",
+  ["/wechat"]: {
+    path: "/wechat",
+    name: "wechat",
     meta: {
       icon: "ios-hammer",
       title: "企业微信管理",
       showAlways: true
     }
   },
-  ["/org/list"]: {
+  ["/dept/list"]: {
     name: "org_list",
     meta: {
       title: "部门管理"
@@ -43,7 +43,7 @@ let routes_config = {
     meta: {
       title: "员工管理"
     },
-    component: () => import("@/views/wechat/org/org.vue")
+    component: () => import("@/views/wechat/staff/staff.vue")
   },
   ["/message/list"]: {
     name: "message_list",
@@ -65,6 +65,13 @@ let routes_config = {
       title: "权限资源管理"
     },
     component: () => import("@/views/system/resource/resource.vue")
-  }
+  },
+  ["/organization/list"]: {
+    name: "organization_list",
+    meta: {
+      title: "组织结构管理"
+    },
+      component: () => import("@/views/system/organization/organization.vue")
+    }
 };
 export default routes_config;

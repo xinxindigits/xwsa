@@ -20,6 +20,8 @@ public class OrganizationVO extends ToString {
 
     private String customerContactSecret;
 
+    private String chatRecordSecret;
+
     private String privateKey;
 
     private String extension;
@@ -78,5 +80,13 @@ public class OrganizationVO extends ToString {
 
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    public String getChatRecordSecret() {
+        return chatRecordSecret;
+    }
+
+    public void setChatRecordSecret(String chatRecordSecret) {
+        this.chatRecordSecret = chatRecordSecret;
     }
 }

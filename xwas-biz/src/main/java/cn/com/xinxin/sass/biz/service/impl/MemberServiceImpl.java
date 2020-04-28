@@ -1,12 +1,16 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
+import cn.com.xinxin.sass.biz.service.DepartmentService;
 import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.repository.dao.DepartmentDOMapper;
 import cn.com.xinxin.sass.repository.dao.MemberDOMapper;
+import cn.com.xinxin.sass.repository.model.DepartmentDO;
 import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,8 +33,14 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberDOMapper memberDOMapper;
 
-    public MemberServiceImpl(final MemberDOMapper memberDOMapper) {
+    private final DepartmentDOMapper departmentDOMapper;
+
+
+
+    public MemberServiceImpl(final MemberDOMapper memberDOMapper,
+                             final DepartmentDOMapper departmentDOMapper) {
         this.memberDOMapper = memberDOMapper;
+        this.departmentDOMapper = departmentDOMapper;
     }
 
     /**
@@ -86,10 +96,43 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public PageResultVO<MemberDO> queryByDeptId(String deptId, PageResultVO page) {
 
+
+
+        DepartmentDO departmentDO = this.departmentDOMapper.selectByDeptId(deptId);
+
+        PageResultVO<MemberDO> result = new PageResultVO<>();
+        result.setPageNumber(page.getPageNumber());
+        result.setPageSize(page.getPageSize());
+
+
+        if(departmentDO.getParentId().equals("0")){
+            // 根结点，则查询所有的用户信息
+            com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+            List<MemberDO> memberDOList = this.memberDOMapper.queryAllMembersByPage();
+            result.setTotal(doPage.getTotal());
+            result.setItems(memberDOList);
+        }else{
+
+            List<String> subDepartIds = this.departmentDOMapper.selectSubDeptsByDeptId(Lists.newArrayList(deptId));
+            subDepartIds.add(deptId);
+
+            com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+            List<MemberDO> memberDOList = this.memberDOMapper.queryDeptIdList(subDepartIds);
+            result.setTotal(doPage.getTotal());
+            result.setItems(memberDOList);
+        }
+
+        return result;
+    }
+
+    @Override
+    public PageResultVO<MemberDO> queryMembersByPages(PageResultVO page) {
+
+
         com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
 
 
-        List<MemberDO> memberDOList = this.memberDOMapper.queryDeptId(deptId);
+        List<MemberDO> memberDOList = this.memberDOMapper.queryAllMembersByPage();
 
         PageResultVO<MemberDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());
@@ -98,5 +141,11 @@ public class MemberServiceImpl implements MemberService {
         result.setItems(memberDOList);
 
         return result;
+    }
+
+    @Override
+    public MemberDO queryMemberDetailById(String memberId) {
+        MemberDO memberDO = this.memberDOMapper.selectByPrimaryKey(Long.valueOf(memberId));
+        return memberDO;
     }
 }

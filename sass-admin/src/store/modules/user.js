@@ -42,6 +42,7 @@ export default {
             commit("setToken", data.token);
             commit("setAccount", data.account);
             localStorage.removeItem("route");
+            localStorage.removeItem("tagNaveList");
             resolve();
           })
           .catch(reject);

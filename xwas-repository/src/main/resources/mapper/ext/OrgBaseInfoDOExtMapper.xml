@@ -47,6 +47,9 @@
       <if test="customerContactSecret != null">
         customer_contact_secret = #{customerContactSecret,jdbcType=VARCHAR},
       </if>
+      <if test="chatRecordSecret != null">
+        chat_record_secret = #{chatRecordSecret,jdbcType=VARCHAR},
+      </if>
       <if test="privateKey != null">
         private_key = #{privateKey,jdbcType=VARCHAR},
       </if>
