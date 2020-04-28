@@ -54,6 +54,8 @@ public class MemberDetailVO extends ToString {
 
     private Long mainDepartment;
 
+    private String mainDepartmentName;
+
     private String memberStatus;
 
     private String extension;
@@ -242,5 +244,13 @@ public class MemberDetailVO extends ToString {
 
     public void setGmtCreated(Date gmtCreated) {
         this.gmtCreated = gmtCreated;
+    }
+
+    public String getMainDepartmentName() {
+        return mainDepartmentName;
+    }
+
+    public void setMainDepartmentName(String mainDepartmentName) {
+        this.mainDepartmentName = mainDepartmentName;
     }
 }
