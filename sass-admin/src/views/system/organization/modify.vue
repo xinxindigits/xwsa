@@ -11,27 +11,30 @@
             :label-width="150"
             :rules="rules"
         >
-            <FormItem label="机构编号" prop="code" v-if="addFlowFlag">
+            <FormItem label="机构编号" prop="code" v-if="type == 'update'">
                 <Input
                         v-model="formObj.code"
-                        style="width: 250px"
-                        :disabled="code_editable"
+                        style="width: 280px"
+                        :disabled="type == 'update'"
                 ></Input>
             </FormItem>
             <FormItem label="机构名称" prop="name">
-                <Input v-model="formObj.name" style="width: 250px"></Input>
+                <Input v-model="formObj.name" style="width: 280px"></Input>
             </FormItem>
             <FormItem label="企业微信corpId" prop="corpId">
-                <Input v-model="formObj.corpId" style="width: 250px"></Input>
+                <Input v-model="formObj.corpId" style="width: 280px"></Input>
             </FormItem>
             <FormItem label="私钥" prop="privateKey">
-                <Input v-model="formObj.privateKey" style="width: 250px"></Input>
+                <Input v-model="formObj.privateKey" style="width: 280px"></Input>
             </FormItem>
             <FormItem label="通讯录应用secret" prop="addressListSecret">
-                <Input v-model="formObj.addressListSecret" style="width: 250px"></Input>
+                <Input v-model="formObj.addressListSecret" style="width: 280px"></Input>
             </FormItem>
             <FormItem label="联系人应用secret" prop="customerContactSecret">
-                <Input v-model="formObj.customerContactSecret" style="width: 250px"></Input>
+                <Input v-model="formObj.customerContactSecret" style="width: 280px"></Input>
+            </FormItem>
+            <FormItem label="会话应用secret" prop="chatRecordSecret">
+                <Input v-model="formObj.chatRecordSecret" style="width: 280px"></Input>
             </FormItem>
             <FormItem label="状态" prop="state">
                 <RadioGroup v-model="formObj.state">
@@ -44,7 +47,7 @@
                         v-model="formObj.remark"
                         type="textarea"
                         :maxlength="50"
-                        style="width: 250px"
+                        style="width: 280px"
                         :show-word-limit="true"
                         :rows="5"
                 ></Input>
@@ -101,9 +104,7 @@
             };
 
             return{
-                code_editable:true,
                 curValue:false,
-                addFlowFlag:false,
                 formObj: {
                     name: "",
                     code: "",
@@ -111,10 +112,10 @@
                     corpId:"",
                     addressListSecret:"",
                     customerContactSecret:"",
+                    chatRecordSecret:"",
                     state:"Y",
                     remark: "",
                     parentId:0,
-                    isLeaf:0,
                     orgType:"COMP",
                 },
                 rules: {
@@ -124,17 +125,8 @@
                     name: [
                         { required: true, message: "角色名称不能为空", trigger: "blur" }
                     ],
-                    privateKey: [
-                        { required: true, message: "私钥不能为空", trigger: "blur" }
-                    ],
                     corpId: [
                         { required: true, message: "企业微信corpId不能为空", trigger: "blur" }
-                    ],
-                    addressListSecret: [
-                        { required: true, message: "通讯录应用secret不能为空", trigger: "blur" }
-                    ],
-                    customerContactSecret: [
-                        { required: true, message: "联系人应用secret不能为空", trigger: "blur" }
                     ],
                     state: [
                         { required: true, message: '状态不能为空', trigger: 'change' }
@@ -144,11 +136,16 @@
             }
         },
         methods:{
-            setData(obj) {
+            setData({obj,remark,state}) {
                 this.formObj.code = obj.code;
                 this.formObj.name = obj.name;
-                this.code_editable = true;
-                this.addFlowFlag = false;
+                this.formObj.remark = remark;
+                this.formObj.state = state;
+                this.formObj.privateKey = obj.privateKey;
+                this.formObj.corpId = obj.corpId;
+                this.formObj.addressListSecret = obj.addressListSecret;
+                this.formObj.customerContactSecret = obj.customerContactSecret;
+                this.formObj.chatRecordSecret = obj.chatRecordSecret;
             },
             hdlSubmit(name) {
                 this.$refs[name].validate(valid => {

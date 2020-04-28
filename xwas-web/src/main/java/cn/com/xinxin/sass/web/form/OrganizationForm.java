@@ -36,6 +36,8 @@ public class OrganizationForm extends ToString {
 
     private String addressListSecret;
 
+    private String chatRecordSecret;
+
     private String customerContactSecret;
 
     public Long getId() {
@@ -140,5 +142,21 @@ public class OrganizationForm extends ToString {
 
     public void setCorpId(String corpId) {
         this.corpId = corpId;
+    }
+
+    public boolean isLeaf() {
+        return isLeaf;
+    }
+
+    public void setLeaf(boolean leaf) {
+        isLeaf = leaf;
+    }
+
+    public String getChatRecordSecret() {
+        return chatRecordSecret;
+    }
+
+    public void setChatRecordSecret(String chatRecordSecret) {
+        this.chatRecordSecret = chatRecordSecret;
     }
 }
