@@ -37,6 +37,9 @@
                 :loading="isLoanding"
                 @on-selection-change="hdlSelectionChange"
                 >
+                <template slot-scope="{ row }" slot="state">
+                    <span>{{ $mapd("organizationState", row.state) }}</span>
+                </template>
                 <template slot-scope="{ row }" slot="create_time">
                     <span>{{ row.gmtCreated | timeFilter }}</span>
                 </template>
@@ -47,7 +50,7 @@
                             style="margin-right: 5px"
                             @click="hdlSingleModified(row)"
                     >
-                        修改
+                        详情
                     </Button>
                     <Button type="error" size="small" @click="hdlDelete([row.code])">
                         删除
@@ -76,7 +79,7 @@
             <organization-update
                     type="update"
                     v-model="showUpdateModal"
-                    @on-update-role="hdlquery"
+                    @on-update-organization="hdlquery"
                     ref="updateModal"
             ></organization-update>
         </Card>
@@ -84,7 +87,7 @@
 </template>
 
 <script>
-    import { getOrganizationList, delOrganization } from "@/api/data_organization";
+    import { getOrganizationList, delOrganization,queryOrganization } from "@/api/data_organization";
     import OrganizationUpdate from "./modify";
     export default {
         name: "organization",
@@ -101,6 +104,7 @@
                 showAddModal: false,
                 showGrantModal: false,
                 showUpdateModal: false,
+                isLoading: false,
                 pageSize: 10,
                 total: 0,
                 page: 1,
@@ -118,12 +122,11 @@
                     },
                     {title:'机构编码',key:'code',align:'center'},
                     {title:'机构名称',key:'name',align:'center'},
-                    {title:'创建时间',key:'gmtCreated',align:'center', slot: "create_time"},
                     {title:'备注',key:'remark',align:'center'},
-                    {title:'状态',key:'state',align:'center'},
-                    {title:'操作',key:'action',align:'center',width:150}
+                    {title:'状态',slot:'state',align:'center'},
+                    {title:'创建时间',key:'gmtCreated',align:'center', slot: "create_time"},
+                    {title:'操作',slot:'action',align:'center',width:150}
                 ],
-                isLoading: false,
                 tableData: [],
                 tbSelection:[],
             }
@@ -176,8 +179,19 @@
                 this.showAddModal = true;
             },
             hdlSingleModified(data) {
-                this.$refs.updateModal.setData(data);
-                this.showUpdateModal = true;
+                queryOrganization({code:data.code}).then(res =>{
+
+                    // let datail = res.data;
+                 //   detail.remark = data.remark;
+
+                    // this.formObj.privateKey = data.privateKey;
+                    // this.formObj.corpId = data.corpId;
+                    // this.formObj.addressListSecret = data.addressListSecret;
+                    // this.formObj.customerContactSecret = data.customerContactSecret;
+                    // this.formObj.chatRecordSecret = data.chatRecordSecret;
+                    this.$refs.updateModal.setData({obj:res.data,remark:data.remark,state:data.state});
+                    this.showUpdateModal = true;
+                })
             },
             hdlSelectionChange(selection) {
                 this.tbSelection = selection;
