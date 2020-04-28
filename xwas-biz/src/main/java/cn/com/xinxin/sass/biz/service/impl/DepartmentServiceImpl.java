@@ -101,4 +101,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
 
     }
+
+    @Override
+    public DepartmentDO queryDeptByDeptId(String deptId) {
+
+        DepartmentDO departmentDO = this.departmentDOMapper.selectByDeptId(deptId);
+
+        return departmentDO;
+    }
 }
