@@ -61,7 +61,7 @@ public class SassOrganizationRestController extends AclController {
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/organization/list")
-    public Object OrganizationList(HttpServletRequest request, @RequestBody OrgQueryForm orgForm){
+    public Object organizationList(HttpServletRequest request, @RequestBody OrgQueryForm orgForm){
 
         if(null == orgForm){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"组织机构查询参数不能为空","组织机构查询参数");
@@ -76,12 +76,8 @@ public class SassOrganizationRestController extends AclController {
         page.setPageSize(orgForm.getPageSize());
         page.setPageNumber(orgForm.getPageIndex());
 
-        OrganizationDO condition = new OrganizationDO();
-        condition.setCode(orgForm.getCode());
-        condition.setName(orgForm.getName());
-        condition.setOrgType(orgForm.getOrgType());
-
-        PageResultVO result = organizationService.findByCondition(page, condition);
+        OrganizationDO condition = BaseConvert.convert(orgForm,OrganizationDO.class);
+        PageResultVO result = organizationService.findByCondition(page, condition,orgForm.getStartTime(), orgForm.getEndTime());
 
 
         return result;
@@ -91,7 +87,7 @@ public class SassOrganizationRestController extends AclController {
     @RequestMapping(value = "/query/{code}",method = RequestMethod.GET)
     @ResponseBody
     @RequiresPermissions("/organization/query")
-    public Object OrganizationList(HttpServletRequest request, @PathVariable(value = "code")String code){
+    public Object queryOrganization(HttpServletRequest request, @PathVariable(value = "code")String code){
 
         if(StringUtils.isEmpty(code)){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"组织机构查询参数不能为空","组织机构查询参数");
@@ -101,9 +97,11 @@ public class SassOrganizationRestController extends AclController {
 
         //OrganizationDO organizationDO = organizationService.findByCode(code);
         OrgBaseInfoDO orgBaseInfoDO = orgBaseInfoService.selectByOrgId(code);
+        if(orgBaseInfoDO == null){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST);
+        }
         OrganizationVO result = BaseConvert.convert(orgBaseInfoDO, OrganizationVO.class);
         result.setCode(orgBaseInfoDO.getOrgId());
-        //result.setExtension(organizationDO.getExtension());
         result.setName(orgBaseInfoDO.getOrgName());
 
         return result;
