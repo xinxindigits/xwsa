@@ -1,12 +1,16 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
+import cn.com.xinxin.sass.biz.service.DepartmentService;
 import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.repository.dao.DepartmentDOMapper;
 import cn.com.xinxin.sass.repository.dao.MemberDOMapper;
+import cn.com.xinxin.sass.repository.model.DepartmentDO;
 import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,10 +33,14 @@ public class MemberServiceImpl implements MemberService {
 
     private final MemberDOMapper memberDOMapper;
 
+    private final DepartmentDOMapper departmentDOMapper;
 
 
-    public MemberServiceImpl(final MemberDOMapper memberDOMapper) {
+
+    public MemberServiceImpl(final MemberDOMapper memberDOMapper,
+                             final DepartmentDOMapper departmentDOMapper) {
         this.memberDOMapper = memberDOMapper;
+        this.departmentDOMapper = departmentDOMapper;
     }
 
     /**
@@ -92,10 +100,19 @@ public class MemberServiceImpl implements MemberService {
         com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
 
 
+        List<MemberDO> memberDOList = Lists.newArrayList();
 
+        DepartmentDO departmentDO = this.departmentDOMapper.selectByDeptId(deptId);
 
-        List<MemberDO> memberDOList = this.memberDOMapper.queryDeptId(deptId);
-
+        if(departmentDO.getParentId().equals("0")){
+            // 根结点，则查询所有的用户信息
+            memberDOList = this.memberDOMapper.queryAllMembersByPage();
+        }else{
+            List<String> subDepartIds = this.departmentDOMapper.selectSubDeptsByDeptId(Lists.newArrayList(deptId));
+            subDepartIds.add(deptId);
+            memberDOList = this.memberDOMapper.queryDeptIdList(subDepartIds);
+        }
+        
         PageResultVO<MemberDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());
         result.setPageSize(page.getPageSize());
