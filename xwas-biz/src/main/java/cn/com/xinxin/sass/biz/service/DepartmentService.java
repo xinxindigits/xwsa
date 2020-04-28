@@ -51,4 +51,12 @@ public interface DepartmentService {
                                              String deptName,
                                              String deptEngName);
 
+
+
+    /**
+     * 查询微信部门ID
+     * @param deptId
+     * @return
+     */
+    DepartmentDO  queryDeptByDeptId(String deptId);
 }
