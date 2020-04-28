@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.repository.dao;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrganizationMapper {
@@ -62,7 +63,7 @@ public interface OrganizationMapper {
      */
     int updateByPrimaryKey(OrganizationDO record);
 
-    List<OrganizationDO> findByCondition(OrganizationDO condition);
+    List<OrganizationDO> findByCondition(@Param("condition") OrganizationDO condition, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
 
 
     List<OrganizationDO> selectAllOrgs();

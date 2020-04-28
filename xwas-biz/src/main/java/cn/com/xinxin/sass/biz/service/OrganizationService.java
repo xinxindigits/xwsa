@@ -4,6 +4,7 @@ package cn.com.xinxin.sass.biz.service;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public interface OrganizationService {
 
     OrganizationDO findById(Long id);
 
-    PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition);
+    PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition, Date startTime, Date endTime);
 
     Boolean deleteById(Long id);
 

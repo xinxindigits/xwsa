@@ -31,19 +31,26 @@
     gmt_updater, gmt_updated, extension, deleted
   </sql>
 
-  <select id="findByCondition" parameterType="cn.com.xinxin.sass.repository.model.OrganizationDO" resultMap="BaseResultMapExt">
+  <select id="findByCondition" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from organization
-    where  1=1
-    <if test="code !=null and code != ''">
-      and code like concat('%',#{code,jdbcType=VARCHAR},'%')
+  <where>
+    <if test="condition.code !=null and condition.code != ''">
+      and condition.code like concat('%',#{condition.code,jdbcType=VARCHAR},'%')
     </if>
-    <if test="name != null and name != ''">
-      and name like concat('%',#{name,jdbcType=VARCHAR},'%')
+    <if test="condition.name != null and condition.name != ''">
+      and condition.name like concat('%',#{condition.name,jdbcType=VARCHAR},'%')
     </if>
-    <if test="orgType != null and orgType != ''">
-      and org_type = #{orgType,jdbcType=VARCHAR}
+    <if test="condition.orgType != null and condition.orgType != ''">
+      and condition.org_type = #{condition.orgType,jdbcType=VARCHAR}
     </if>
+    <if test="condition.status != null and condition.status != ''">
+      and condition.status = #{condition.status,jdbcType=VARCHAR}
+    </if>
+    <if test="startTime != null and endTime != null">
+      and <![CDATA[gmt_created >= #{startTime,jdbcType=TIMESTAMP} and gmt_created < #{endTime,jdbcType=TIMESTAMP}]]>
+    </if>
+  </where>
     order by gmt_created desc
   </select>
 

@@ -76,12 +76,8 @@ public class SassOrganizationRestController extends AclController {
         page.setPageSize(orgForm.getPageSize());
         page.setPageNumber(orgForm.getPageIndex());
 
-        OrganizationDO condition = new OrganizationDO();
-        condition.setCode(orgForm.getCode());
-        condition.setName(orgForm.getName());
-        condition.setOrgType(orgForm.getOrgType());
-
-        PageResultVO result = organizationService.findByCondition(page, condition);
+        OrganizationDO condition = BaseConvert.convert(orgForm,OrganizationDO.class);
+        PageResultVO result = organizationService.findByCondition(page, condition,orgForm.getStartTime(), orgForm.getEndTime());
 
 
         return result;
