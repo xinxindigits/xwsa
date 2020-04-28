@@ -8,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,9 +36,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition) {
+    public PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition,Date startTime,Date endTime) {
         com.github.pagehelper.Page page1 = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        List<OrganizationDO> organizationDOS = organizationMapper.findByCondition(condition);
+        List<OrganizationDO> organizationDOS = organizationMapper.findByCondition(condition,startTime,endTime);
 
         PageResultVO<OrganizationDO> result = new PageResultVO<>();
         result.setTotal(page1.getTotal());
