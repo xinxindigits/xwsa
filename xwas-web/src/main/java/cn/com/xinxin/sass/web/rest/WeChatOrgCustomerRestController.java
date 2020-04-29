@@ -37,6 +37,43 @@ public class WeChatOrgCustomerRestController extends AclController {
     }
 
 
+
+    /**
+     * 查询客户信息
+     * @param request http请求
+     * @param queryForm 请求参数
+     * @return 客户信息
+     */
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    public Object listWechatCustomers(HttpServletRequest request,
+                                                     @RequestBody WeChatCustomerQueryForm queryForm){
+
+        //参数检查
+        if (null == queryForm) {
+            LOGGER.error("查询企业微信客户信息，参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，参数不能为空");
+        }
+
+        PageResultVO page = new PageResultVO();
+        page.setPageNumber((queryForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageNum());
+        page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
+
+        //查询客户信息
+        PageResultVO<CustomerDO> pageResultDO = customerService.queryCustomerByPages(page);
+
+        //将DO装换为VO
+        PageResultVO<CustomerVO> pageResultVO = new PageResultVO<>();
+        pageResultVO.setPageNumber(pageResultDO.getPageNumber());
+        pageResultVO.setPageSize(pageResultDO.getPageSize());
+        pageResultVO.setTotal(pageResultDO.getTotal());
+        pageResultVO.setItems(CustomerConvert.convert2CustomerVOList(pageResultDO.getItems()));
+
+        return pageResultVO;
+    }
+
+
+
     /**
      * 查询客户信息
      * @param request http请求

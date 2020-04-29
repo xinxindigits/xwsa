@@ -5,6 +5,8 @@ import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.CustomerDOMapper;
 import cn.com.xinxin.sass.repository.model.CustomerDO;
+import cn.com.xinxin.sass.repository.model.MemberDO;
+import com.github.pagehelper.PageHelper;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -129,4 +131,24 @@ public class CustomerServiceImpl implements CustomerService {
         return resultVO;
     }
 
+
+
+    @Override
+    public PageResultVO<CustomerDO> queryCustomerByPages(PageResultVO page) {
+
+
+        com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+
+
+        List<CustomerDO> customerDOS = this.customerDOMapper.queryAllCustomerByPages();
+
+        PageResultVO<CustomerDO> result = new PageResultVO<>();
+        result.setPageNumber(page.getPageNumber());
+        result.setPageSize(page.getPageSize());
+        result.setTotal(doPage.getTotal());
+        result.setItems(customerDOS);
+
+        return result;
+
+    }
 }
