@@ -9,6 +9,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -46,7 +48,14 @@ public class OrgDataSyncConfigServiceImpl implements OrgDataSyncConfigService {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
                     "通过机构id和任务类型查询记录, taskType不能为空");
         }
-        return orgDataSyncConfigDOMapper.selectByOrgIdAndTaskType(orgId, taskType);
+        OrgDataSyncConfigDO orgDataSyncConfigDO = orgDataSyncConfigDOMapper.selectByOrgIdAndTaskType(orgId, taskType);
+
+        if (null == orgDataSyncConfigDO) {
+            LOGGER.error("无法通过机构id[{}]找到机构同步[{}]任务配置信息", orgId, taskType);
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构同步任务配置信息");
+        }
+
+        return orgDataSyncConfigDO;
     }
 
     /**
@@ -55,6 +64,7 @@ public class OrgDataSyncConfigServiceImpl implements OrgDataSyncConfigService {
      * @return 更新成功的条数
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int updateById(OrgDataSyncConfigDO orgDataSyncConfigDO) {
         if (null == orgDataSyncConfigDO) {
             LOGGER.error("根据id更新记录记录, orgDataSyncConfigDO不能为空");

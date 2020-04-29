@@ -60,4 +60,34 @@ public interface MsgRecordDOMapper {
      * @return 插入记录条数
      */
     int insertBatch(@Param(value = "msgRecordDOS") List<MsgRecordDO> msgRecordDOS);
+
+    /**
+     * 通过机构id，userid，消息发送时间范围查询记录
+     * @param userId 用户id
+     * @param startTime 消息发送时间范围之起始时间
+     * @param endTime 消息发送时间范围之终止时间
+     * @param index 消息记录起始
+     * @param pageSize 页大小
+     * @param orgId 机构id
+     * @return 消息记录
+     */
+    List<MsgRecordDO> selectPageByOrgIdAndUserIdAndTime(@Param(value = "userId") String userId,
+                                                    @Param(value = "startTime") String startTime,
+                                                    @Param(value = "endTime") String endTime,
+                                                    @Param(value = "index") Long index,
+                                                    @Param(value = "pageSize") Integer pageSize,
+                                                    @Param(value = "orgId") String orgId);
+
+    /**
+     * 通过机构id，userid，消息发送时间范围查询记录总数
+     * @param userId 用户id
+     * @param startTime 消息发送时间范围之起始时间
+     * @param endTime 消息发送时间范围之终止时间
+     * @param orgId 机构id
+     * @return 消息记录总数
+     */
+    Long selectCountByOrgIdAndUserIdAndTime(@Param(value = "userId") String userId,
+                                                    @Param(value = "startTime") String startTime,
+                                                    @Param(value = "endTime") String endTime,
+                                                    @Param(value = "orgId") String orgId);
 }

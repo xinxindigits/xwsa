@@ -175,4 +175,12 @@
       </if>
     </where>
   </select>
+
+
+  <select id="queryAllCustomerByPages" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from customer
+    where  deleted = 0
+  </select>
+
 </mapper>

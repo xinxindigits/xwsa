@@ -106,4 +106,10 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.findByRoleCode(code);
     }
 
+    @Override
+    public List<RoleDO> queryByRoleCodes(List<String> roleCodes) {
+
+        return roleMapper.findRolesByCodes(roleCodes);
+
+    }
 }

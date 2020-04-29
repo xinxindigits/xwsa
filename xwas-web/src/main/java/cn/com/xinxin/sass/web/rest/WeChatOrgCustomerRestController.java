@@ -4,6 +4,7 @@ import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.CustomerService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.common.utils.DateUtils;
 import cn.com.xinxin.sass.repository.model.CustomerDO;
 import cn.com.xinxin.sass.web.convert.CustomerConvert;
 import cn.com.xinxin.sass.web.form.WeChatCustomerQueryForm;
@@ -36,13 +37,50 @@ public class WeChatOrgCustomerRestController extends AclController {
     }
 
 
+
     /**
      * 查询客户信息
      * @param request http请求
      * @param queryForm 请求参数
      * @return 客户信息
      */
-    @PostMapping(value = "/query")
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @ResponseBody
+    public Object listWechatCustomers(HttpServletRequest request,
+                                                     @RequestBody WeChatCustomerQueryForm queryForm){
+
+        //参数检查
+        if (null == queryForm) {
+            LOGGER.error("查询企业微信客户信息，参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，参数不能为空");
+        }
+
+        PageResultVO page = new PageResultVO();
+        page.setPageNumber((queryForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageNum());
+        page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
+
+        //查询客户信息
+        PageResultVO<CustomerDO> pageResultDO = customerService.queryCustomerByPages(page);
+
+        //将DO装换为VO
+        PageResultVO<CustomerVO> pageResultVO = new PageResultVO<>();
+        pageResultVO.setPageNumber(pageResultDO.getPageNumber());
+        pageResultVO.setPageSize(pageResultDO.getPageSize());
+        pageResultVO.setTotal(pageResultDO.getTotal());
+        pageResultVO.setItems(CustomerConvert.convert2CustomerVOList(pageResultDO.getItems()));
+
+        return pageResultVO;
+    }
+
+
+
+    /**
+     * 查询客户信息
+     * @param request http请求
+     * @param queryForm 请求参数
+     * @return 客户信息
+     */
+    @RequestMapping(value = "/query",method = RequestMethod.POST)
     @ResponseBody
     public Object listByOrgIdAndMemberUserIdSAndTime(HttpServletRequest request,
                                             @RequestBody WeChatCustomerQueryForm queryForm){
@@ -61,9 +99,15 @@ public class WeChatOrgCustomerRestController extends AclController {
         page.setPageNumber((queryForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageNum());
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
+        //将时间戳格式转化为string
+        String startTime = StringUtils.isBlank(queryForm.getStartTime()) ? ""
+                : DateUtils.formatTime(new Long(queryForm.getStartTime()), DateUtils.DATE_FORMAT_WHIPP_TIME);
+        String endTime = StringUtils.isBlank(queryForm.getEndTime()) ? ""
+                : DateUtils.formatTime(new Long(queryForm.getEndTime()), DateUtils.DATE_FORMAT_WHIPP_TIME);
+
         //查询客户信息
         PageResultVO<CustomerDO> pageResultDO = customerService.queryByOrgIdAndMemberUserIdSAndTime(
-                queryForm.getMemberUserIds(), queryForm.getStartTime(), queryForm.getEndTime(), page, queryForm.getOrgId());
+                queryForm.getMemberUserIds(), startTime, endTime, page, queryForm.getOrgId());
 
         //将DO装换为VO
         PageResultVO<CustomerVO> pageResultVO = new PageResultVO<>();

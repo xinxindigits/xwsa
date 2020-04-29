@@ -45,4 +45,10 @@ public interface CustomerService {
      */
     PageResultVO<CustomerDO> queryByOrgIdAndMemberUserIdSAndTime(List<String> memberUserIdS, String startTime,
                                                                  String endTime, PageResultVO page, String orgId);
+
+
+
+    PageResultVO<CustomerDO> queryCustomerByPages(PageResultVO page);
+
+
 }
