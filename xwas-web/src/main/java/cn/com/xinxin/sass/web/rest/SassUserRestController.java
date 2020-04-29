@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
@@ -57,6 +58,9 @@ public class SassUserRestController extends AclController {
 
     @Autowired
     private UserAclTokenRepository userAclTokenRepository;
+
+    @Autowired
+    private RoleService roleService;
 
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -155,6 +159,8 @@ public class SassUserRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"用户创建信息不能为空","用户信息不能为空");
         }
 
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
         // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
         String userAccount = userForm.getAccount();
         // 查询已经存在的用户信息
@@ -169,6 +175,27 @@ public class SassUserRestController extends AclController {
         userCreateDO.setGender(Byte.valueOf(String.valueOf(userForm.getGender())));
 
         int result = this.userService.createUser(userCreateDO);
+
+
+        if(CollectionUtils.isNotEmpty(userForm.getRoles())){
+            // 创建用户的角色信息
+            List<UserRoleDO> userRoleDOS = Lists.newArrayList();
+            List<RoleDO> roleDOList = this.roleService.queryByRoleCodes(userForm.getRoles());
+            for(RoleDO roleDO : roleDOList){
+
+                UserRoleDO userRoleDO = new UserRoleDO();
+                userRoleDO.setUserAccount(userCreateDO.getAccount());
+                userRoleDO.setUserName(userCreateDO.getName());
+                userRoleDO.setRoleCode(roleDO.getCode());
+                userRoleDO.setRoleName(roleDO.getName());
+                userRoleDO.setGmtCreator(sassUserInfo.getAccount());
+                userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
+                userRoleDOS.add(userRoleDO);
+            }
+
+            this.userRoleService.createUserRoles(userRoleDOS);
+
+        }
 
         return result;
     }
@@ -205,6 +232,28 @@ public class SassUserRestController extends AclController {
         userDO.setGmtUpdater(sassUserInfo.getAccount());
 
         boolean result = this.userService.updateUser(userDO);
+
+        if(CollectionUtils.isNotEmpty(userForm.getRoles())){
+            // 首先批量删除用户下面的权限值
+            this.userRoleService.deleteByAccounts(Lists.newArrayList(userDO.getAccount()));
+            // 创建用户的角色信息
+            List<UserRoleDO> userRoleDOS = Lists.newArrayList();
+            List<RoleDO> roleDOList = this.roleService.queryByRoleCodes(userForm.getRoles());
+            for(RoleDO roleDO : roleDOList){
+                UserRoleDO userRoleDO = new UserRoleDO();
+                userRoleDO.setUserAccount(userDO.getAccount());
+                userRoleDO.setUserName(userDO.getName());
+                userRoleDO.setRoleCode(roleDO.getCode());
+                userRoleDO.setRoleName(roleDO.getName());
+                userRoleDO.setGmtCreator(sassUserInfo.getAccount());
+                userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
+                userRoleDOS.add(userRoleDO);
+            }
+
+            this.userRoleService.createUserRoles(userRoleDOS);
+
+        }
+
         return result;
     }
 

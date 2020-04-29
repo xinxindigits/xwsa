@@ -64,4 +64,11 @@ public interface RoleMapper {
 
     int deleteByCodes(@Param("roleCodes") List<String> roleCodes);
 
+    /**
+     *
+     * @param roleCodes
+     * @return
+     */
+    List<RoleDO> findRolesByCodes(@Param("roleCodes") List<String> roleCodes);
+
 }
