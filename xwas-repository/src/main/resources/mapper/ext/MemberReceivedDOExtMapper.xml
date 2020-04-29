@@ -73,7 +73,7 @@
     <select id="queryByTaskIdAndOrgIdAndDepartmentId" resultMap="BaseResultMapExt">
         select <include refid="Base_Column_List_Ext"/>
         from member_received
-        where task_Id = #{taskId} and org_id = #{orgId} and department_id_list like #{departmentId}
+        where task_Id = #{taskId} and org_id = #{orgId} and department_id_list like concat('%', #{departmentId}, '%')
         and deleted = 0
     </select>
 
