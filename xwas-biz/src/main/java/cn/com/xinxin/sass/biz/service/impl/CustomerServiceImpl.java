@@ -90,11 +90,13 @@ public class CustomerServiceImpl implements CustomerService {
      * @param endTime 终止时间
      * @param page 分页信息
      * @param orgId 机构id
+     * @param customerName 客户名称
      * @return 分页查询的客户信息
      */
     @Override
     public PageResultVO<CustomerDO> queryByOrgIdAndMemberUserIdSAndTime(List<String> memberUserIdS, String startTime,
-                                                                        String endTime, PageResultVO page, String orgId) {
+                                                                        String endTime, PageResultVO page,
+                                                                        String orgId, String customerName) {
 
         if (StringUtils.isBlank(orgId)) {
             LOGGER.error("根据成员UserId列表，以及添加客户的时间范围查询成员添加的客户,orgId不能为空");
@@ -110,7 +112,8 @@ public class CustomerServiceImpl implements CustomerService {
         //计算分页的起始偏移量
         Long index = (page.getPageNumber() - 1) * page.getPageSize().longValue();
 
-        Long count = customerDOMapper.selectCountByOrgIdAndMemberUserIdSAndTime(memberUserIdS, startTime, endTime, orgId);
+        Long count = customerDOMapper.selectCountByOrgIdAndMemberUserIdSAndTimeAndCustName(
+                memberUserIdS, startTime, endTime, orgId, customerName);
 
         List<CustomerDO> customerDOS = new ArrayList<>();
 
@@ -122,8 +125,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         if (count > 0L) {
             //客户信息
-            customerDOS = customerDOMapper.selectPageByOrgIdAndMemberUserIdSAndTime(memberUserIdS, startTime,
-                    endTime, index, page.getPageSize(), orgId);
+            customerDOS = customerDOMapper.selectPageByOrgIdAndMemberUserIdSAndTimeAndCustName(memberUserIdS, startTime,
+                    endTime, index, page.getPageSize(), orgId, customerName);
         }
 
         resultVO.setItems(customerDOS);
@@ -150,5 +153,20 @@ public class CustomerServiceImpl implements CustomerService {
 
         return result;
 
+    }
+
+    /**
+     * 通过id查询
+     * @param id 数据库主键
+     * @return 客户信息
+     */
+    @Override
+    public CustomerDO queryById(Long id) {
+        if (null == id) {
+            LOGGER.error("通过id查询客户,id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过id查询客户,id不能为空");
+        }
+        return customerDOMapper.selectByPrimaryKey(id);
     }
 }

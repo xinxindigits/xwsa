@@ -96,4 +96,19 @@ public class MsgRecordServiceImpl implements MsgRecordService {
 
         return resultVO;
     }
+
+    /**
+     * 通过id查询会话详情
+     * @param id id
+     * @return 消息纪录
+     */
+    @Override
+    public MsgRecordDO queryById(Long id) {
+        if (null == id) {
+            LOGGER.error("通过id查询会话详情,Id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过id查询会话详情,Id不能为空");
+        }
+        return msgRecordDOMapper.selectByPrimaryKey(id);
+    }
 }
