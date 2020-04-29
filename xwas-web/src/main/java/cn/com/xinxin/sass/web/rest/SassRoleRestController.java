@@ -182,7 +182,7 @@ public class SassRoleRestController extends AclController {
         
         RoleDO roleDO = SassFormConvert.convertRoleForm2RoleDO(roleForm);
         PageResultVO page = new PageResultVO();
-        page.setPageNumber((roleForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : roleForm.getPageNum());
+        page.setPageNumber((roleForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : roleForm.getPageIndex());
         page.setPageSize((roleForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : roleForm.getPageSize());
         PageResultVO<RoleDO> pageRole = roleService.findByConditionPage(page, roleDO);
 

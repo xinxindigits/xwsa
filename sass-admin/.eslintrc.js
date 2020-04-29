@@ -15,6 +15,6 @@ module.exports = {
       {
         "x-invalid-end-tag": false
       }
-    ],
+    ]
   }
 };

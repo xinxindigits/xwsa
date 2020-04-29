@@ -71,7 +71,7 @@ let routes_config = {
     meta: {
       title: "组织结构管理"
     },
-      component: () => import("@/views/system/organization/organization.vue")
-    }
+    component: () => import("@/views/system/organization/organization.vue")
+  }
 };
 export default routes_config;
