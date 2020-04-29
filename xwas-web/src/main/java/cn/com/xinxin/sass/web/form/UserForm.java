@@ -4,6 +4,7 @@ import cn.com.xinxin.sass.api.base.ToString;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: zhouyang
@@ -40,6 +41,10 @@ public class UserForm extends ToString {
      * 备注
      */
     private String extension;
+
+    private List<String> roles;
+
+
     /**
      *
      */
@@ -148,4 +153,13 @@ public class UserForm extends ToString {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
+    }
+
 }
