@@ -100,8 +100,10 @@ public class WeChatOrgCustomerRestController extends AclController {
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
         //将时间戳格式转化为string
-        String startTime = DateUtils.formatTime(queryForm.getStartTime(), DateUtils.DATE_FORMAT_WHIPP_TIME);
-        String endTime = DateUtils.formatTime(queryForm.getEndTime(), DateUtils.DATE_FORMAT_WHIPP_TIME);
+        String startTime = StringUtils.isBlank(queryForm.getStartTime()) ? ""
+                : DateUtils.formatTime(new Long(queryForm.getStartTime()), DateUtils.DATE_FORMAT_WHIPP_TIME);
+        String endTime = StringUtils.isBlank(queryForm.getEndTime()) ? ""
+                : DateUtils.formatTime(new Long(queryForm.getEndTime()), DateUtils.DATE_FORMAT_WHIPP_TIME);
 
         //查询客户信息
         PageResultVO<CustomerDO> pageResultDO = customerService.queryByOrgIdAndMemberUserIdSAndTime(

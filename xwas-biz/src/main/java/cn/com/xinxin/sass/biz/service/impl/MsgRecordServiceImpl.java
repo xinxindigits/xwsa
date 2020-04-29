@@ -7,6 +7,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -33,6 +35,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
      * @return 插入记录条数
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int insertBatch(List<MsgRecordDO> msgRecordDOS) {
         if (CollectionUtils.isEmpty(msgRecordDOS)) {
             LOGGER.warn("批量插入消息记录， msgRecordDOS为空");
