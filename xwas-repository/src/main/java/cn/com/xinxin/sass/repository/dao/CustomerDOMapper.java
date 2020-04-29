@@ -108,4 +108,13 @@ public interface CustomerDOMapper {
                                                   @Param(value = "orgId") String orgId);
 
 
+    /**
+     *
+     * @return
+     */
+    List<CustomerDO> queryAllCustomerByPages();
+
+
+
+
 }
