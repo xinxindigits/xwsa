@@ -43,4 +43,40 @@
       )
     </foreach>
   </insert>
+
+  <select id="selectPageByOrgIdAndUserIdAndTime" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from msg_record
+    <where>
+      org_id = #{orgId} and deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userId)">
+        and (from_user_id = #{userId} or to_user_id like concat('%', #{userId}, '%'))
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and msg_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and msg_time <= #{endTime}]]>
+      </if>
+      order by id limit #{index}, #{pageSize}
+    </where>
+  </select>
+
+  <select id="selectCountByOrgIdAndUserIdAndTime" resultType="java.lang.Long">
+    select count(id)
+    from msg_record
+    <where>
+      org_id = #{orgId} and deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userId)">
+        and (from_user_id = #{userId} or to_user_id like concat('%', #{userId}, '%'))
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and msg_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and msg_time <= #{endTime}]]>
+      </if>
+    </where>
+  </select>
+
 </mapper>
