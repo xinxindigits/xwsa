@@ -38,10 +38,18 @@ public class OrgBaseInfoServiceImpl implements OrgBaseInfoService {
     public OrgBaseInfoDO selectByOrgId(String orgId) {
         if (StringUtils.isBlank(orgId)) {
             LOGGER.error("通过机构id查询机构基础信息，orgId不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.FAIL, "通过机构id查询机构基础信息，orgId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过机构id查询机构基础信息，orgId不能为空");
         }
 
-        return orgBaseInfoDOMapper.selectByOrgId(orgId);
+        OrgBaseInfoDO orgBaseInfoDO = orgBaseInfoDOMapper.selectByOrgId(orgId);
+
+        if (null == orgBaseInfoDO) {
+            LOGGER.error("无法通过机构id[{}]找到机构信息", orgId);
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构信息");
+        }
+
+        return orgBaseInfoDO;
     }
 
     @Override
