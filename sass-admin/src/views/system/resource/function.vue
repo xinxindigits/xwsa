@@ -31,7 +31,7 @@
         <Button
           type="error"
           size="small"
-          @click="hdlDelete({ parentId: row.parentId, list: [row.id] })"
+          @click="hdlDelete({ id: row.parentId, list: [row.id] })"
         >
           删除
         </Button>
@@ -76,6 +76,7 @@ export default {
       columns: [
         { title: "权限值", key: "authority", align: "center" },
         { title: "名称", key: "name", align: "center" },
+        { title: "类型", key: "resourceType", align: "center" },
         {
           title: "操作",
           slot: "action",
