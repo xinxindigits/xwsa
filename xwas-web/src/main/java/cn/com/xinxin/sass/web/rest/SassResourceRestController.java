@@ -19,6 +19,7 @@ import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
@@ -238,13 +239,19 @@ public class SassResourceRestController extends AclController {
         ResourceDO resourceDO = SassFormConvert.convertResourceForm2ResourceDO(resourceForm);
         resourceDO.setGmtCreator(userAccount);
         resourceDO.setGmtUpdater(userAccount);
+
         int result = resourceService.createResource(resourceDO);
 
-        if(result>0){
-            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
-        }else{
+        if(result==0){
             throw new BusinessException(SassBizResultCodeEnum.FAIL,"创建资源出错","清检查参数是否正确");
         }
+
+        ResourceDO createdResourceDO = this.resourceService.findByResourceCode(resourceForm.getCode());
+
+        ResourceVO createResVO = BaseConvert.convert(createdResourceDO, ResourceVO.class);
+
+        return createResVO;
+
     }
 
     @RequestMapping(value = "/update",method = RequestMethod.POST)
@@ -288,6 +295,14 @@ public class SassResourceRestController extends AclController {
             // 如果某个资源关联角色，则不能删除该权限资源
             throw new BusinessException(SassBizResultCodeEnum.FAIL,
                     "该资源权限已经使用，删除需要移除关联角色","该资源权限已经使用，删除需要移除关联角色");
+        }
+
+        List<ResourceDO> subResourceDOList =
+                this.resourceService.findChildrenByParentIds(Lists.newArrayList(Long.valueOf(id)));
+
+        if(CollectionUtils.isNotEmpty(subResourceDOList)){
+            throw new BusinessException(SassBizResultCodeEnum.FAIL,
+                    "该资源权限已经使用，并且关联其他资源类型无法删除","该资源权限已经使用，并且关联其他资源类型无法删除");
         }
 
         boolean result = resourceService.deleteById(Long.valueOf(id));
