@@ -148,4 +148,26 @@ public class MemberServiceImpl implements MemberService {
         MemberDO memberDO = this.memberDOMapper.selectByPrimaryKey(Long.valueOf(memberId));
         return memberDO;
     }
+
+    @Override
+    public PageResultVO<MemberDO> queryByNameAndMobile(String memberName,
+                                                       String mobile,
+                                                       PageResultVO page) {
+
+        com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+
+
+        List<MemberDO> memberDOList = this.memberDOMapper.queryByNameAndMobile(memberName,mobile);
+
+
+        PageResultVO<MemberDO> result = new PageResultVO<>();
+        result.setPageNumber(page.getPageNumber());
+        result.setPageSize(page.getPageSize());
+        result.setTotal(doPage.getTotal());
+        result.setItems(memberDOList);
+
+        return result;
+
+
+    }
 }

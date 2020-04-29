@@ -56,4 +56,18 @@ public interface MemberService {
      */
     MemberDO queryMemberDetailById(String memeberId);
 
+
+    /**
+     *
+     * @param memberName
+     * @param mobile
+     * @param page
+     * @return
+     */
+    PageResultVO<MemberDO> queryByNameAndMobile(String memberName,
+                                                String mobile,
+                                                PageResultVO page);
+
+
+
 }

@@ -297,6 +297,14 @@ public class SassResourceRestController extends AclController {
                     "该资源权限已经使用，删除需要移除关联角色","该资源权限已经使用，删除需要移除关联角色");
         }
 
+        List<ResourceDO> subResourceDOList =
+                this.resourceService.findChildrenByParentIds(Lists.newArrayList(Long.valueOf(id)));
+
+        if(CollectionUtils.isNotEmpty(subResourceDOList)){
+            throw new BusinessException(SassBizResultCodeEnum.FAIL,
+                    "该资源权限已经使用，并且关联其他资源类型无法删除","该资源权限已经使用，并且关联其他资源类型无法删除");
+        }
+
         boolean result = resourceService.deleteById(Long.valueOf(id));
 
         return result;

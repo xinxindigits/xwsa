@@ -130,6 +130,39 @@ public class WechatOrgMemberRestController extends AclController {
     }
 
 
+    @RequestMapping(value = "/query",method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryMembers(HttpServletRequest request,
+                                            @RequestBody WechatmemberQueryForm queryForm){
+
+
+        String memberName = queryForm.getMemberName();
+        String mobile = queryForm.getMobile();
+
+
+        Integer pageIndex = queryForm.getPageIndex();
+        Integer pageSize = queryForm.getPageSize();
+
+        PageResultVO page = new PageResultVO();
+        page.setPageNumber((pageIndex == null) ? PageResultVO.DEFAULT_PAGE_NUM : pageIndex);
+        page.setPageSize((pageSize == null) ? PageResultVO.DEFAULT_PAGE_SIZE : pageSize);
+
+
+        PageResultVO<MemberDO> pageResultDO = this.memberService.queryByNameAndMobile(memberName, mobile, page);
+
+
+        PageResultVO<MemberVO> results = BaseConvert.convert(pageResultDO,PageResultVO.class);
+
+        List<MemberVO> memberVOList = Lists.newArrayList();
+        // 转换数据
+        if(!CollectionUtils.isEmpty(pageResultDO.getItems())){
+            memberVOList = this.convertMemberGenders(pageResultDO.getItems());
+        }
+        results.setItems(memberVOList);
+
+        return results;
+    }
+
 
     private List<MemberVO> convertMemberGenders(List<MemberDO> memberVOList){
 
