@@ -27,6 +27,12 @@ public interface RoleService {
      */
     List<RoleDO> findRoles(List<Long> roleIds);
 
+    /**
+     * @param roleCodes
+     * @return
+     */
+    List<RoleDO> queryByRoleCodes(List<String> roleCodes);
+
     RoleDO findByRoleCode(String code);
 
 }
