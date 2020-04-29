@@ -85,14 +85,17 @@ public interface CustomerDOMapper {
      * @param index 页码
      * @param pageSize 页大小
      * @param orgId 机构id
+     * @param customerName 客户名称
      * @return 分页查询的客户信息
      */
-    List<CustomerDO> selectPageByOrgIdAndMemberUserIdSAndTime(@Param(value = "memberUserIdS") List<String> memberUserIdS,
+    List<CustomerDO> selectPageByOrgIdAndMemberUserIdSAndTimeAndCustName(
+                                    @Param(value = "memberUserIdS") List<String> memberUserIdS,
                                    @Param(value = "startTime") String startTime,
                                    @Param(value = "endTime") String endTime,
                                    @Param(value = "index") Long index,
                                    @Param(value = "pageSize") Integer pageSize,
-                                   @Param(value = "orgId") String orgId);
+                                   @Param(value = "orgId") String orgId,
+                                   @Param(value = "customerName") String customerName);
 
     /**
      * 根据成员UserId列表，以及添加客户的时间范围查询成员添加的客户数量
@@ -100,12 +103,14 @@ public interface CustomerDOMapper {
      * @param startTime 起始时间
      * @param endTime 终止时间
      * @param orgId 机构id
+     * @param customerName 客户名称
      * @return 分页查询的客户信息
      */
-    Long selectCountByOrgIdAndMemberUserIdSAndTime(@Param(value = "memberUserIdS") List<String> memberUserIdS,
+    Long selectCountByOrgIdAndMemberUserIdSAndTimeAndCustName(@Param(value = "memberUserIdS") List<String> memberUserIdS,
                                                   @Param(value = "startTime") String startTime,
                                                   @Param(value = "endTime") String endTime,
-                                                  @Param(value = "orgId") String orgId);
+                                                  @Param(value = "orgId") String orgId,
+                                                  @Param(value = "customerName") String customerName);
 
 
     /**

@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class WeChatCustomerQueryForm extends ToString {
 
-    private static final long serialVersionUID = -3698949467566984990L;
 
+    private static final long serialVersionUID = 8064363806982333584L;
     /**
      * 机构id
      */
@@ -37,12 +37,18 @@ public class WeChatCustomerQueryForm extends ToString {
     /**
      * 页码
      */
-    private Integer pageNum;
+    private Integer pageIndex;
 
     /**
      * 页大小
      */
     private Integer pageSize;
+
+    /**
+     * 客户名称
+     */
+    private String customerName;
+
 
     public String getOrgId() {
         return orgId;
@@ -76,12 +82,12 @@ public class WeChatCustomerQueryForm extends ToString {
         this.endTime = endTime;
     }
 
-    public Integer getPageNum() {
-        return pageNum;
+    public Integer getPageIndex() {
+        return pageIndex;
     }
 
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
     }
 
     public Integer getPageSize() {
@@ -92,6 +98,14 @@ public class WeChatCustomerQueryForm extends ToString {
         this.pageSize = pageSize;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
     @Override
     public String toString() {
         return "WeChatCustomerQueryForm{" +
@@ -99,9 +113,9 @@ public class WeChatCustomerQueryForm extends ToString {
                 ", memberUserIds=" + memberUserIds +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +
-                ", pageNum=" + pageNum +
+                ", pageNum=" + pageIndex +
                 ", pageSize=" + pageSize +
+                ", customerName='" + customerName + '\'' +
                 '}';
     }
-
 }

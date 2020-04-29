@@ -22,11 +22,17 @@ public class CustomerConvert {
      */
     public static CustomerVO convert2CustomerVO(CustomerDO customerDO) {
         CustomerVO customerVO = new CustomerVO();
+        if (null == customerDO) {
+            return customerVO;
+        }
+        customerVO.setId(customerDO.getId());
         customerVO.setMemberUserId(customerDO.getMemberUserId());
         customerVO.setUserId(customerDO.getUserId());
         customerVO.setCustomerName(customerDO.getCustomerName());
         customerVO.setCustomerType(customerDO.getCustomerType());
-        customerVO.setGender(GenderTypeEnums.getEnumByNum(String.valueOf(customerDO.getGender())).getDesc());
+        if (null != customerDO.getGender()) {
+            customerVO.setGender(GenderTypeEnums.getEnumByNum(String.valueOf(customerDO.getGender())).getDesc());
+        }
         customerVO.setUnionId(customerDO.getUnionId());
         customerVO.setCustomerPosition(customerDO.getCustomerPosition());
         customerVO.setCorpName(customerDO.getCorpName());

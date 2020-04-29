@@ -20,6 +20,10 @@ public class MessageConvert {
      */
     public static MsgRecordVO convert2MsgRecordVO(MsgRecordDO msgRecordDO) {
         MsgRecordVO msgRecordVO = new MsgRecordVO();
+        if (null == msgRecordDO) {
+            return msgRecordVO;
+        }
+        msgRecordVO.setId(msgRecordDO.getId());
         msgRecordVO.setOrgId(msgRecordDO.getOrgId());
         msgRecordVO.setSeqId(msgRecordDO.getSeqId());
         msgRecordVO.setMsgId(msgRecordDO.getMsgId());

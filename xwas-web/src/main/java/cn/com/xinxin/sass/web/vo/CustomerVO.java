@@ -13,6 +13,11 @@ public class CustomerVO extends ToString {
     private static final long serialVersionUID = -5131016140971315036L;
 
     /**
+     * 数据库主键
+     */
+    private Long id;
+
+    /**
      * 成员userId
      */
     private String memberUserId;
@@ -76,6 +81,14 @@ public class CustomerVO extends ToString {
      * 头像地址
      */
     private String avatar;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getMemberUserId() {
         return memberUserId;

@@ -41,14 +41,23 @@ public interface CustomerService {
      * @param endTime 终止时间
      * @param page 分页信息
      * @param orgId 机构id
+     * @param customerName 客户名称
      * @return 分页查询的客户信息
      */
     PageResultVO<CustomerDO> queryByOrgIdAndMemberUserIdSAndTime(List<String> memberUserIdS, String startTime,
-                                                                 String endTime, PageResultVO page, String orgId);
+                                                                 String endTime, PageResultVO page,
+                                                                 String orgId, String customerName);
 
 
 
     PageResultVO<CustomerDO> queryCustomerByPages(PageResultVO page);
+
+    /**
+     * 通过id查询
+     * @param id 数据库主键
+     * @return 客户信息
+     */
+    CustomerDO queryById(Long id);
 
 
 }

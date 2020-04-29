@@ -12,6 +12,11 @@ public class MsgRecordVO extends ToString {
 
 
     private static final long serialVersionUID = 4141052108991606074L;
+
+    /**
+     * 数据库主键
+     */
+    private Long id;
     /**
      * 机构id
      */
@@ -61,6 +66,14 @@ public class MsgRecordVO extends ToString {
      * 消息内容
      */
     private String content;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getOrgId() {
         return orgId;
