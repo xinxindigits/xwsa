@@ -4,18 +4,21 @@
     <List>
       <ListItem>
         <ListItemMeta :title="detail.memberName" :description="description">
-          <div class="test" slot="avatar">
+          <div class="avatar-wrapper" slot="avatar">
             <img :src="detail.avatar" class="avatar" alt="成员图片" />
           </div>
         </ListItemMeta>
-        <template slot="action"> </template>
       </ListItem>
     </List>
     <CellGroup>
-      <Cell>
-        <img :src="detail.qrCode" class="avatar" alt="微信二维码" />
-      </Cell>
       <Divider dashed></Divider>
+      <Cell>
+        <div>
+          微信二维码：
+          <img :src="detail.qrCode" class="qrcode" alt="微信二维码" />
+        </div>
+      </Cell>
+
       <Cell>
         <span>手机：{{ detail.mobile }}</span>
       </Cell>
@@ -89,17 +92,47 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.test {
+img:after {
+  content: "\f1c5""" attr(alt);
+  font-size: 12px;
+  color: rgb(100, 100, 100);
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
+img[src=""],
+img:not([src]) {
+  opacity: 0;
+}
+fieldset,
+img {
+  border: none;
+  background-color: white;
+}
+.avatar-wrapper {
   position: relative;
   float: left;
+  width: 60px;
+  height: 60px;
+}
+.qrcode {
+  vertical-align: top;
+  width: 80px;
+  height: 80px;
+  border: none;
 }
 .avatar {
   vertical-align: top;
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 100%;
   border: none;
 }
-.test:after {
+.avatar-wrapper:after {
   content: " ";
   position: absolute;
   left: 0;

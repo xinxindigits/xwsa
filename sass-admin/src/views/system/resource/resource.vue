@@ -3,10 +3,15 @@
     <Row :gutter="10" type="flex">
       <Col span="6">
         <Card style="height:100%">
+          <Button type="primary" @click="hdlClick">新增</Button>
+
           <Tree
             ref="tree"
             :data="treedata"
-            @on-select-change="hdlTreeSelected"
+            show-checkbox
+            check-strictly
+            check-directly
+            @on-check-change="hdlTreeSelected"
           ></Tree>
         </Card>
       </Col>
@@ -21,6 +26,9 @@
           >
             <FormItem label="上级ID" prop="parentId">
               <Input v-model="form1.parentId" disabled></Input>
+            </FormItem>
+            <FormItem label="编号" prop="code">
+              <Input v-model="form1.code" :disabled="isUpdate"></Input>
             </FormItem>
             <FormItem label="名称" prop="name">
               <Input v-model="form1.name"></Input>
@@ -41,7 +49,16 @@
               <Input v-model="form1.extension"></Input>
             </FormItem>
             <FormItem>
-              <Button type="primary" @click="hdlqModifyMenu">修改</Button>
+              <Button type="primary" @click="hdlqModifyMenu">{{
+                modifyButtonText
+              }}</Button>
+              <Button
+                type="error"
+                @click="hdlDelete"
+                style="margin-left:8px"
+                v-if="isUpdate"
+                >删除</Button
+              >
             </FormItem>
           </Form>
         </Card>
@@ -64,7 +81,9 @@ import ResourceListFunction from "./function";
 import {
   getResourceMenuTree,
   getResourceQueryTree,
-  updateResource
+  updateResource,
+  createResource,
+  deleteResource
 } from "@/api/data";
 export default {
   name: "resource-list",
@@ -73,6 +92,10 @@ export default {
   },
   data() {
     return {
+      isUpdate: false,
+      modifyButtonText: "新增",
+      submit: createResource,
+
       treedata: [],
       selectedTreeData: {},
       tableData: [],
@@ -83,13 +106,14 @@ export default {
         code: "",
         url: "",
         authority: "",
-        extension: "",
-        resourceType: ""
+        resourceType: "",
+        extension: ""
       },
       rules: {
         parentId: [
           { required: true, message: "上级ID不能为空", trigger: "blur" }
         ],
+        code: [{ required: true, message: "编号不能为空", trigger: "blur" }],
         name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
         resourceType: [
           { required: true, message: "权限类型不能为空", trigger: "blur" }
@@ -98,16 +122,68 @@ export default {
         authority: [
           { required: true, message: "权限值不能为空", trigger: "blur" }
         ]
-      },
-      styles: {
-        height: "calc(100% - 55px)",
-        overflow: "auto",
-        paddingBottom: "53px",
-        position: "static"
       }
     };
   },
   methods: {
+    hdlClick() {
+      let arr = this.$refs.tree.getCheckedNodes();
+      if (arr.length > 1) {
+        this.$Message.warning("只能勾选一个父节点进行新增操作");
+      } else {
+        this.form1 = {
+          parentId: arr.length == 1 ? arr[0].id : "0",
+          code: "",
+          authority: "/",
+          name: "",
+          extension: "",
+          url: "/",
+          resourceType: "menu"
+        };
+        this.tableData = [];
+        this.selectedTreeData = {};
+        this.isUpdate = false;
+      }
+    },
+    reset() {
+      this.form1 = {
+        parentId: "0",
+        code: "",
+        authority: "/",
+        name: "",
+        extension: "",
+        url: "/",
+        resourceType: "menu"
+      };
+      this.tableData = [];
+      this.selectedTreeData = {};
+      this.isUpdate = false;
+    },
+    hdlDelete() {
+      if (this.isUpdate) {
+        return;
+      }
+      let arr = this.$refs.tree.getCheckedNodes();
+      let self = this;
+      if (arr.length > 1) {
+        this.$Message.warning("只能勾选一个节点进行新增操作");
+      } else if (arr.length > 0) {
+        this.$Modal.confirm({
+          title: "确认删除？",
+          content: `确定删除选中记录?`,
+          onOk() {
+            deleteResource({ id: this.form1.id }).then(() => {
+              this.$Message.success("删除成功！");
+              self.init().then(() => {
+                self.reset();
+              });
+            });
+          }
+        });
+      } else {
+        this.$Message.warning("请选择一条记录!");
+      }
+    },
     query(data) {
       this.tableData = [];
       if (!data) {
@@ -142,16 +218,22 @@ export default {
         "id",
         "resourceType"
       );
+      this.isUpdate = true;
       this.query(n);
     },
     hdlqModifyMenu() {
       let data = this.selectedTreeData;
       this.$refs["form1"].validate(valid => {
         if (valid) {
-          updateResource({ ...this.form1, resourceType: "menu" }).then(() => {
+          this.submit({ ...this.form1, resourceType: "menu" }).then(res => {
             this.curValue = false;
+            let cbkdata = this.isUpdate ? data : res.data;
             this.init().then(() => {
-              this.query(data);
+              if (this.isUpdate) {
+                this.query(cbkdata);
+              } else {
+                this.reset();
+              }
             });
           });
         }
@@ -203,7 +285,15 @@ export default {
     }
   },
   mounted() {
+    this.reset();
     this.init();
+  },
+  watch: {
+    isUpdate(isUpdate) {
+      debugger;
+      this.submit = isUpdate ? updateResource : createResource;
+      this.modifyButtonText = isUpdate ? "修改" : "新增";
+    }
   }
 };
 </script>
