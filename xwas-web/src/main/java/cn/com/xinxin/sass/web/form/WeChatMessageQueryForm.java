@@ -34,7 +34,7 @@ public class WeChatMessageQueryForm extends ToString {
     /**
      * 页码
      */
-    private Integer pageNum;
+    private Integer pageIndex;
 
     /**
      * 页大小
@@ -73,12 +73,12 @@ public class WeChatMessageQueryForm extends ToString {
         this.endTime = endTime;
     }
 
-    public Integer getPageNum() {
-        return pageNum;
+    public Integer getPageIndex() {
+        return pageIndex;
     }
 
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
     }
 
     public Integer getPageSize() {

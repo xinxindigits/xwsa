@@ -56,7 +56,7 @@ public class WeChatOrgCustomerRestController extends AclController {
         }
 
         PageResultVO page = new PageResultVO();
-        page.setPageNumber((queryForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageNum());
+        page.setPageNumber((queryForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageIndex());
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
         //查询客户信息
@@ -96,7 +96,7 @@ public class WeChatOrgCustomerRestController extends AclController {
         }
 
         PageResultVO page = new PageResultVO();
-        page.setPageNumber((queryForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageNum());
+        page.setPageNumber((queryForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageIndex());
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
         //将时间戳格式转化为string
@@ -107,7 +107,7 @@ public class WeChatOrgCustomerRestController extends AclController {
 
         //查询客户信息
         PageResultVO<CustomerDO> pageResultDO = customerService.queryByOrgIdAndMemberUserIdSAndTime(
-                queryForm.getMemberUserIds(), startTime, endTime, page, queryForm.getOrgId());
+                queryForm.getMemberUserIds(), startTime, endTime, page, queryForm.getOrgId(), queryForm.getCustomerName());
 
         //将DO装换为VO
         PageResultVO<CustomerVO> pageResultVO = new PageResultVO<>();
@@ -119,6 +119,25 @@ public class WeChatOrgCustomerRestController extends AclController {
         return pageResultVO;
     }
 
+    /**
+     * 根据id查询客户详情
+     * @param request 请求
+     * @param id id
+     * @return 客户详情
+     */
+    @RequestMapping(value = "/detail/{id}",method = RequestMethod.GET)
+    @ResponseBody
+    public Object queryWeChatCustomerDetail(HttpServletRequest request,
+                                          @PathVariable Long id) {
+        if (null == id) {
+            LOGGER.error("查询企业微信客户信息，id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，id不能为空");
+        }
+
+        CustomerDO customerDO =  customerService.queryById(id);
+
+        return CustomerConvert.convert2CustomerVO(customerDO);
+    }
 
 
 }

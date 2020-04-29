@@ -31,4 +31,11 @@ public interface MsgRecordService {
      */
     PageResultVO<MsgRecordDO> queryByOrgIdAndMemberUserIdAndTime(String userId, String startTime,
                                                                   String endTime, PageResultVO page, String orgId);
+
+    /**
+     * 通过id查询会话详情
+     * @param id id
+     * @return 消息纪录
+     */
+    MsgRecordDO queryById(Long id);
 }
