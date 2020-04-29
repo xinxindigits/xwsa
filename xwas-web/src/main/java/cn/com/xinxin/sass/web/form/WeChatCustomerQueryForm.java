@@ -27,12 +27,12 @@ public class WeChatCustomerQueryForm extends ToString {
     /**
      * 客户的创建时间应大于startTime
      */
-    private String startTime;
+    private Long startTime;
 
     /**
      * 客户的创建时间应小于endTime
      */
-    private String endTime;
+    private Long endTime;
 
     /**
      * 页码
@@ -60,19 +60,19 @@ public class WeChatCustomerQueryForm extends ToString {
         this.memberUserIds = memberUserIds;
     }
 
-    public String getStartTime() {
+    public Long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Long startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Long getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Long endTime) {
         this.endTime = endTime;
     }
 
