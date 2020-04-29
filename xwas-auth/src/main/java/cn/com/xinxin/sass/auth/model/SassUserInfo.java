@@ -29,12 +29,21 @@ public class SassUserInfo implements Serializable {
 
     private String device;
 
+    private String orgCode;
+
     protected Set<String> roles;
 
     protected Set<String> stringPermissions;
 
     protected Set<Permission> objectPermissions;
 
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
 
     public String getSalt() {
         return salt;
