@@ -66,9 +66,31 @@
                <!--enableUpdateByExample="false">-->
             <!--<generatedKey column="ID" sqlStatement="MySQL" identity="true"/>-->
         <!--</table>-->
-        <table tableName="account" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+        <!--<table tableName="account" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
                enableUpdateByExample="false">
             <generatedKey column="ID" sqlStatement="MySQL" identity="true"/>
-        </table>
+        </table>-->
+        <!--<table tableName="org_base_info" domainObjectName="OrgBaseInfoDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="org_data_sync_config" domainObjectName="OrgDataSyncConfigDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="org_data_sync_log" domainObjectName="OrgDataSyncLogDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="org_data_sync_excp" domainObjectName="OrgDataSyncExcpDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="department_received" domainObjectName="DepartmentReceivedDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="department" domainObjectName="DepartmentDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="member_received" domainObjectName="MemberReceivedDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="member" domainObjectName="MemberDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
+        <!--<table tableName="customer_received" domainObjectName="CustomerReceivedDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
+        <!--<table tableName="customer" domainObjectName="CustomerDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
+        <!--<table tableName="msg_record" domainObjectName="MsgRecordDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
     </context>
 </generatorConfiguration>

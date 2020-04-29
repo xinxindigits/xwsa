@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xinxin.sass.repository.dao.MemberDOMapper">
+  <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.MemberDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="department_id_list" jdbcType="VARCHAR" property="departmentIdList" />
+    <result column="order_list" jdbcType="VARCHAR" property="orderList" />
+    <result column="member_position" jdbcType="VARCHAR" property="memberPosition" />
+    <result column="gender" jdbcType="INTEGER" property="gender" />
+    <result column="mail" jdbcType="VARCHAR" property="mail" />
+    <result column="is_leader_in_dept" jdbcType="VARCHAR" property="isLeaderInDept" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="thumb_avatar" jdbcType="VARCHAR" property="thumbAvatar" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
+    <result column="alias" jdbcType="VARCHAR" property="alias" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="ext_attr" jdbcType="LONGVARCHAR" property="extAttr" />
+    <result column="qr_code" jdbcType="VARCHAR" property="qrCode" />
+    <result column="external_profile" jdbcType="LONGVARCHAR" property="externalProfile" />
+    <result column="external_position" jdbcType="VARCHAR" property="externalPosition" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="hide_mobile" jdbcType="INTEGER" property="hideMobile" />
+    <result column="english_name" jdbcType="VARCHAR" property="englishName" />
+    <result column="open_userid" jdbcType="VARCHAR" property="openUserid" />
+    <result column="main_department" jdbcType="BIGINT" property="mainDepartment" />
+    <result column="member_status" jdbcType="VARCHAR" property="memberStatus" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="extension" jdbcType="VARCHAR" property="extension" />
+    <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+    <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
+    <result column="gmt_updated" jdbcType="TIMESTAMP" property="gmtUpdated" />
+    <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List_Ext">
+    id, org_id, user_id, member_name, mobile, department_id_list, order_list, member_position, 
+    gender, mail, is_leader_in_dept, avatar, thumb_avatar, telephone, alias, status, 
+    ext_attr, qr_code, external_profile, external_position, address, hide_mobile, english_name, 
+    open_userid, main_department, member_status, task_id, extension, gmt_created, gmt_creator, 
+    gmt_updated, gmt_updater, deleted
+  </sql>
+
+  <select id="queryByOrgIdAndUserId" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where org_id = #{orgId} and user_id in
+    <foreach collection="userIdS" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    and deleted = 0
+  </select>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into member (id, org_id, user_id,
+      member_name, mobile, department_id_list,
+      order_list, member_position, gender,
+      mail, is_leader_in_dept, avatar,
+      thumb_avatar, telephone, alias,
+      status, ext_attr, qr_code,
+      external_profile, external_position, address,
+      hide_mobile, english_name, open_userid,
+      main_department, member_status, task_id,
+      extension, gmt_created, gmt_creator,
+      gmt_updated, gmt_updater
+      )
+    values
+    <foreach collection="memberDOS" item="item" index="index" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.orgId,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR},
+      #{item.memberName,jdbcType=VARCHAR}, #{item.mobile,jdbcType=VARCHAR}, #{item.departmentIdList,jdbcType=VARCHAR},
+      #{item.orderList,jdbcType=VARCHAR}, #{item.memberPosition,jdbcType=VARCHAR}, #{item.gender,jdbcType=INTEGER},
+      #{item.mail,jdbcType=VARCHAR}, #{item.isLeaderInDept,jdbcType=VARCHAR}, #{item.avatar,jdbcType=VARCHAR},
+      #{item.thumbAvatar,jdbcType=VARCHAR}, #{item.telephone,jdbcType=VARCHAR}, #{item.alias,jdbcType=VARCHAR},
+      #{item.status,jdbcType=INTEGER}, #{item.extAttr,jdbcType=LONGVARCHAR}, #{item.qrCode,jdbcType=VARCHAR},
+      #{item.externalProfile,jdbcType=LONGVARCHAR}, #{item.externalPosition,jdbcType=VARCHAR}, #{item.address,jdbcType=VARCHAR},
+      #{item.hideMobile,jdbcType=INTEGER}, #{item.englishName,jdbcType=VARCHAR}, #{item.openUserid,jdbcType=VARCHAR},
+      #{item.mainDepartment,jdbcType=BIGINT}, #{item.memberStatus,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR},
+      #{item.extension,jdbcType=VARCHAR}, #{item.gmtCreated,jdbcType=TIMESTAMP}, #{item.gmtCreator,jdbcType=VARCHAR},
+      #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+
+  <update id="updateBatchById" parameterType="java.util.List">
+    <foreach collection="memberDOS" item="item" index="index" separator=",">
+    update member
+    <set>
+      <if test="item.orgId != null">
+        org_id = #{item.orgId,jdbcType=VARCHAR},
+      </if>
+      <if test="item.userId != null">
+        user_id = #{item.userId,jdbcType=VARCHAR},
+      </if>
+      <if test="item.memberName != null">
+        member_name = #{item.memberName,jdbcType=VARCHAR},
+      </if>
+      <if test="item.mobile != null">
+        mobile = #{item.mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="item.departmentIdList != null">
+        department_id_list = #{item.departmentIdList,jdbcType=VARCHAR},
+      </if>
+      <if test="item.orderList != null">
+        order_list = #{item.orderList,jdbcType=VARCHAR},
+      </if>
+      <if test="item.memberPosition != null">
+        member_position = #{item.memberPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="item.gender != null">
+        gender = #{item.gender,jdbcType=INTEGER},
+      </if>
+      <if test="item.mail != null">
+        mail = #{item.mail,jdbcType=VARCHAR},
+      </if>
+      <if test="item.isLeaderInDept != null">
+        is_leader_in_dept = #{item.isLeaderInDept,jdbcType=VARCHAR},
+      </if>
+      <if test="item.avatar != null">
+        avatar = #{item.avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="item.thumbAvatar != null">
+        thumb_avatar = #{item.thumbAvatar,jdbcType=VARCHAR},
+      </if>
+      <if test="item.telephone != null">
+        telephone = #{item.telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="item.alias != null">
+        alias = #{item.alias,jdbcType=VARCHAR},
+      </if>
+      <if test="item.status != null">
+        status = #{item.status,jdbcType=INTEGER},
+      </if>
+      <if test="item.extAttr != null">
+        ext_attr = #{item.extAttr,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="item.qrCode != null">
+        qr_code = #{item.qrCode,jdbcType=VARCHAR},
+      </if>
+      <if test="item.externalProfile != null">
+        external_profile = #{item.externalProfile,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="item.externalPosition != null">
+        external_position = #{item.externalPosition,jdbcType=VARCHAR},
+      </if>
+      <if test="item.address != null">
+        address = #{item.address,jdbcType=VARCHAR},
+      </if>
+      <if test="item.hideMobile != null">
+        hide_mobile = #{item.hideMobile,jdbcType=INTEGER},
+      </if>
+      <if test="item.englishName != null">
+        english_name = #{item.englishName,jdbcType=VARCHAR},
+      </if>
+      <if test="item.openUserid != null">
+        open_userid = #{item.openUserid,jdbcType=VARCHAR},
+      </if>
+      <if test="item.mainDepartment != null">
+        main_department = #{item.mainDepartment,jdbcType=BIGINT},
+      </if>
+      <if test="item.memberStatus != null">
+        member_status = #{item.memberStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="item.taskId != null">
+        task_id = #{item.taskId,jdbcType=VARCHAR},
+      </if>
+      <if test="item.extension != null">
+        extension = #{item.extension,jdbcType=VARCHAR},
+      </if>
+      <if test="item.gmtCreated != null">
+        gmt_created = #{item.gmtCreated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.gmtCreator != null">
+        gmt_creator = #{item.gmtCreator,jdbcType=VARCHAR},
+      </if>
+      <if test="item.gmtUpdated != null">
+        gmt_updated = #{item.gmtUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="item.gmtUpdater != null">
+        gmt_updater = #{item.gmtUpdater,jdbcType=VARCHAR},
+      </if>
+      <if test="item.deleted != null">
+        deleted = #{item.deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where id = #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <select id="queryDeptId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where main_department = #{deptId,jdbcType=VARCHAR}
+    and deleted = 0
+
+  </select>
+
+  <select id="queryAllMembersByPage" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where deleted = 0
+
+  </select>
+
+  <select id="queryByNameAndMobile" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where  deleted = 0
+    <if test="memberName != null and memberName != ''">
+      and member_name like concat('%',#{memberName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+
+
+  <select id="queryDeptIdList" parameterType="java.util.List" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where deleted = 0
+    and main_department in
+    <foreach collection="deptIds" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+</mapper>

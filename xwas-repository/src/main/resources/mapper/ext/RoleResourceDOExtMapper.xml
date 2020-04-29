@@ -33,6 +33,7 @@
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
     <result column="resource_type" jdbcType="VARCHAR" property="resourceType" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="authority" jdbcType="VARCHAR" property="authority" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="root" jdbcType="TINYINT" property="root" />
     <result column="extension" jdbcType="VARCHAR" property="extension" />
@@ -40,7 +41,7 @@
   </resultMap>
 
   <select id="findResourceByRoleCode" resultMap="ResourceMap" parameterType="java.util.Map">
-    select r.id,r.code,r.parent_id,r.resource_type,r.name,r.url,r.root,r.extension,r.deleted
+    select r.id,r.code,r.parent_id,r.resource_type,r.name,r.authority,r.url,r.root,r.extension,r.deleted
     from role_resource rr,resource r
     where rr.role_code = #{roleCode,jdbcType=VARCHAR}
     and rr.resource_code = r.code
@@ -48,7 +49,7 @@
   </select>
 
   <select id="findResources" resultMap="ResourceMap" parameterType="java.util.List">
-    select r.id,r.code,r.parent_id,r.resource_type,r.name,r.url,r.root,r.extension,r.deleted
+    select r.id,r.code,r.parent_id,r.resource_type,r.name,r.authority,r.url,r.root,r.extension,r.deleted
     from role_resource rr,resource r
     where
     rr.resource_code = r.code
@@ -60,12 +61,12 @@
   </select>
 
   <insert id="batchInsert" parameterType="java.util.List">
-    insert into role_resource (role_code, role_name,resource_code,resource_name, gmt_creator)
+    insert into role_resource (role_code, role_name,resource_code,resource_name, gmt_creator, gmt_updater)
     values
     <foreach collection="list" item="item" separator=",">
       (#{item.roleCode,jdbcType=VARCHAR}, #{item.roleName,jdbcType=VARCHAR},
       #{item.resourceCode,jdbcType=VARCHAR},#{item.resourceName,jdbcType=VARCHAR},
-      #{item.gmtCreator,jdbcType=VARCHAR})
+      #{item.gmtCreator,jdbcType=VARCHAR},#{item.gmtUpdater,jdbcType=VARCHAR})
     </foreach>
   </insert>
 
@@ -88,6 +89,27 @@
     order by gmt_created desc
   </select>
 
+
+  <select id="queryRolesAndResourcesByRSCode" resultMap="BaseResultMapExt" parameterType="java.lang.String">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from role_resource
+    where resource_code = #{rsCode,jdbcType=VARCHAR}
+
+  </select>
+
+
+  <select id="queryRolesAndResourcesByRSCodeList" resultMap="BaseResultMapExt" parameterType="java.util.List">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from role_resource
+    where resource_code in
+    <foreach collection="rsCodeList" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </select>
+
   <delete id="delete" parameterType="java.util.Map">
     delete from role_resource
     where
@@ -96,6 +118,65 @@
     <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
+  </delete>
+
+  <update id="updateByResourceCode" parameterType="cn.com.xinxin.sass.repository.model.RoleResourceDO">
+    update role_resource
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceName != null">
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdater != null">
+        gmt_updater = #{gmtUpdater,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdated != null">
+        gmt_updated = #{gmtUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where resource_code = #{resourceCode,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByRoleCode" parameterType="cn.com.xinxin.sass.repository.model.RoleResourceDO">
+    update role_resource
+    <set>
+      <if test="roleName != null">
+        role_name = #{roleName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceName != null">
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdater != null">
+        gmt_updater = #{gmtUpdater,jdbcType=VARCHAR},
+      </if>
+      <if test="gmtUpdated != null">
+        gmt_updated = #{gmtUpdated,jdbcType=TIMESTAMP},
+      </if>
+      <if test="extension != null">
+        extension = #{extension,jdbcType=VARCHAR},
+      </if>
+      <if test="deleted != null">
+        deleted = #{deleted,jdbcType=TINYINT},
+      </if>
+    </set>
+    where role_code = #{roleCode,jdbcType=VARCHAR}
+  </update>
+
+  <delete id="deleteByRoleCodes"  parameterType="java.util.List">
+    delete from role_resource
+    where role_code in
+    <foreach collection="roleCodes" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
   </delete>
 
 </mapper>

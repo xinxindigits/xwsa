@@ -23,6 +23,8 @@ public enum SassBizResultCodeEnum implements BizResultCode {
 
     DATA_NOT_EXIST("NTC00004", "数据不存在", "暂无数据，请稍后再试!"),
 
+    DATA_ALREADY_EXIST("NTC00007", "数据存在", "数据存在,无重复创建!"),
+
     PARAMETER_NULL("NTC00005", "空参数", "参数为空，请重新操作!"),
 
     INVALID_SESSION_ID("NTC00005", "session为空", "session为空，请登陆操作!"),
@@ -31,7 +33,12 @@ public enum SassBizResultCodeEnum implements BizResultCode {
 
     UNAUTHORIZED("UNAUTHORIZED", "无效授权", "无效授权!"),
 
-    /* Enum end */;
+    NOT_PERMIT_DELETE("NOT_PERMIT_DELETE", "存在关联数据,禁止删除", "存在关联数据,禁止删除"),
+
+    GENERATE_ID_ERROR("GENERATE_ID_ERROR","生成id失败,请稍候再试","生成id失败,请稍候再试"),
+
+
+        /* Enum end */;
 
 
     /**

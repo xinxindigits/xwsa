@@ -1,13 +1,14 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.OrganizationService;
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.OrganizationMapper;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,15 +21,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     private OrganizationMapper organizationMapper;
 
     @Override
-    public OrganizationDO createOrganization(OrganizationDO organizationDO) {
-        organizationMapper.insertSelective(organizationDO);
-        return organizationDO;
+    public int createOrganization(OrganizationDO organizationDO) {
+        return organizationMapper.insertSelective(organizationDO);
     }
 
     @Override
-    public OrganizationDO updateOrganization(OrganizationDO organizationDO) {
-        organizationMapper.updateByPrimaryKeySelective(organizationDO);
-        return organizationDO;
+    public int updateOrganization(OrganizationDO organizationDO) {
+        return organizationMapper.updateByCodeSelective(organizationDO);
     }
 
     @Override
@@ -37,13 +36,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public Page<OrganizationDO> findByCondition(Page page, OrganizationDO condition) {
+    public PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition,Date startTime,Date endTime) {
         com.github.pagehelper.Page page1 = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        List<OrganizationDO> organizationDOS = organizationMapper.findByCondition(condition);
+        List<OrganizationDO> organizationDOS = organizationMapper.findByCondition(condition,startTime,endTime);
 
-        Page<OrganizationDO> result = new Page<>();
+        PageResultVO<OrganizationDO> result = new PageResultVO<>();
         result.setTotal(page1.getTotal());
-        result.setRows(organizationDOS);
+        result.setItems(organizationDOS);
         result.setPageSize(page.getPageSize());
         result.setPageNumber(page.getPageNumber());
 
@@ -56,4 +55,21 @@ public class OrganizationServiceImpl implements OrganizationService {
         return n == 1;
     }
 
+    @Override
+    public List<OrganizationDO> queryOrgList() {
+
+        List<OrganizationDO> organizationDOS = this.organizationMapper.selectAllOrgs();
+
+        return organizationDOS;
+    }
+
+    @Override
+    public OrganizationDO findByCode(String code) {
+        return organizationMapper.findByCode(code);
+    }
+
+    @Override
+    public int deleteByCodes(List<String> codes) {
+        return organizationMapper.deleteByCodes(codes);
+    }
 }

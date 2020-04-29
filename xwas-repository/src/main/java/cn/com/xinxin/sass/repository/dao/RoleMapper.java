@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.RoleDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -58,4 +59,16 @@ public interface RoleMapper {
     List<RoleDO> findByCondition(RoleDO condition);
 
     RoleDO findByRoleCode(String code);
+
+    int updateByCodeSelective(RoleDO record);
+
+    int deleteByCodes(@Param("roleCodes") List<String> roleCodes);
+
+    /**
+     *
+     * @param roleCodes
+     * @return
+     */
+    List<RoleDO> findRolesByCodes(@Param("roleCodes") List<String> roleCodes);
+
 }

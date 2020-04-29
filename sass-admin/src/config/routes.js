@@ -65,6 +65,13 @@ let routes_config = {
       title: "权限资源管理"
     },
     component: () => import("@/views/system/resource/resource.vue")
-  }
+  },
+  ["/organization/list"]: {
+    name: "organization_list",
+    meta: {
+      title: "组织结构管理"
+    },
+      component: () => import("@/views/system/organization/organization.vue")
+    }
 };
 export default routes_config;

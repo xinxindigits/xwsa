@@ -2,7 +2,7 @@ package cn.com.xinxin.sass.biz.api;
 
 import cn.com.xinxin.sass.api.XSassUserFacade;
 import cn.com.xinxin.sass.api.model.UserDTO;
-import cn.com.xinxin.sass.api.enums.XPortalResultCodeEnum;
+import cn.com.xinxin.sass.api.enums.SassResultCodeEnum;
 import cn.com.xinxin.sass.biz.convert.UserConvert;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.repository.model.UserDO;
@@ -20,16 +20,16 @@ class XSassUserFacadeImpl implements XSassUserFacade {
     private UserService userService;
 
     @Override
-    public SingleResult<XPortalResultCodeEnum, UserDTO> getLoginUser(String sessionId) {
+    public SingleResult<SassResultCodeEnum, UserDTO> getLoginUser(String sessionId) {
         UserDO userDO = userService.getLoginUser(sessionId);
         UserDTO userDTO = UserConvert.convert2UserDTO(userDO);
-        return Results.singleResult(XPortalResultCodeEnum.SUCCESS,userDTO);
+        return Results.singleResult(SassResultCodeEnum.SUCCESS,userDTO);
     }
 
     @Override
-    public SingleResult<XPortalResultCodeEnum, Boolean> hasPermission(String sessionId, String url) {
+    public SingleResult<SassResultCodeEnum, Boolean> hasPermission(String sessionId, String url) {
         Boolean result = userService.hasPermission(sessionId,url);
 
-        return Results.singleResult(XPortalResultCodeEnum.SUCCESS,result);
+        return Results.singleResult(SassResultCodeEnum.SUCCESS,result);
     }
 }

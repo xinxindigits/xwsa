@@ -8,7 +8,6 @@ import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
-import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
 import cn.com.xinxin.sass.web.form.UserLoginForm;
@@ -26,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +41,7 @@ import java.util.Set;
 @RequestMapping(produces = "application/json; charset=UTF-8")
 public class SassAuthRestController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(SassAuthRestController.class);
 
     @Autowired
     private UserService userService;
@@ -50,7 +50,7 @@ public class SassAuthRestController {
     private UserAclTokenRepository userAclTokenRepository;
 
 
-    @RequestMapping(value = "/register",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
     public Object register(HttpServletRequest request, @RequestBody UserForm userForm){
 
@@ -64,8 +64,10 @@ public class SassAuthRestController {
 
     }
 
-    @RequestMapping(value = "/auth",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-    public Object login(HttpServletRequest request, @RequestBody UserLoginForm userLoginForm){
+    @RequestMapping(value = "/auth",method = RequestMethod.POST)
+    public Object login(HttpServletRequest request,
+                        HttpServletResponse response,
+                        @RequestBody UserLoginForm userLoginForm){
 
         String userAccount = userLoginForm.getAccount();
 
@@ -105,17 +107,22 @@ public class SassAuthRestController {
             List<ResourceDO> resourceDOS = userService.findResourcesByAccount(userAccount);
             if (!CollectionUtils.isEmpty(resourceDOS)){
                 Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
-                resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getUrl()));
+                resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getAuthority()));
                 sassUserInfo.setStringPermissions(permissionUrls);
             }
             // 设置用户的token以及角色，权限等信息缓存
             userAclTokenRepository.setSassUserByUserAccount(userAccount,sassUserInfo);
             userAclTokenRepository.setSassUserTokenCache(userAccount,token);
-
+            response.setHeader(JWTUtil.TOKEN_NAME,token);
+            response.setHeader("Access-control-Allow-Origin", request.getHeader("Origin"));
+            response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
+            response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+            response.setHeader("access-control-expose-headers", "XToken");
             return userTokenVO;
+
         }else{
             // 登陆失败
-            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败","登陆失败");
+            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败,用户名或者密码错误","登陆失败,用户名或者密码错误");
         }
     }
 
@@ -129,7 +136,7 @@ public class SassAuthRestController {
     @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public Object unauthorized(HttpServletRequest request){
         log.info("无效登陆口令，请重新登陆");
-        throw new BusinessException(CommonResultCode.REMOTE_ERROR,"无效登陆口令","无效登陆口令，请重新登陆");
+        throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN,"无效登陆口令","无效登陆口令，请重新登陆");
 
     }
 

@@ -1,31 +1,40 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
-import cn.com.xinxin.sass.api.enums.ResourceTypeEnum;
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.biz.vo.UserPwdVO;
-import cn.com.xinxin.sass.common.Page;
 
+import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.UserDOMapper;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.repository.model.UserRoleDO;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.sun.prism.impl.BaseContext;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.time.DateUtils;
+import org.apache.shiro.crypto.hash.Hash;
+import org.eclipse.jetty.server.Authentication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import javax.management.relation.Role;
+import java.util.*;
+
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +43,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final static Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Autowired
     private UserDOMapper userDOMapper;
@@ -48,6 +58,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserAclTokenRepository userAclTokenRepository;
 
+    @Autowired
+    private UserService userService;
     @Override
     public int createUser(UserDO userDO) {
         UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getAccount(), userDO.getPassword());
@@ -59,8 +71,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(Long userId, String newPassword,String updater) {
-        UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
+    public void resetPassword(String account,
+                              String newPassword,
+                              String updater) {
+        UserDO userDO = userDOMapper.selectByAccount(account);
         if (userDO != null){
             userDO.setPassword(newPassword);
             UserPwdVO userPwdVO = PasswordUtils.encryptPassword(userDO.getAccount(),userDO.getPassword());
@@ -76,8 +90,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void modifyPassword(Long userId, String originPassword, String newPassword, String updater) {
-        UserDO userDO = userDOMapper.selectByPrimaryKey(userId);
+    public void modifyPassword(String account,
+                               String originPassword,
+                               String newPassword,
+                               String updater) {
+        UserDO userDO = userDOMapper.selectByAccount(account);
+
         if (userDO == null){
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"根据用户id找不到对应的用户");
         }
@@ -99,6 +117,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void deleteUserByAccounts(List<String> accounts) {
+
+        // 删除用户信息
+        this.userDOMapper.deleteByAccounts(accounts);
+        // 删除角色权限相关的信息
+        this.userRoleService.deleteByAccounts(accounts);
+
+    }
+
+    @Override
+    public List<UserDO> findUserByAccounts(List<String> accounts) {
+        return userDOMapper.selectByAccounts(accounts);
+    }
+
+    @Override
     public UserDO findByUserAccount(String account) {
         return userDOMapper.selectByAccount(account);
     }
@@ -116,23 +149,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<ResourceDO> findResourcesByAccount(String account) {
+
         List<RoleDO> roleDOS = userRoleService.findRoleByUserAccount(account);
 
         if (!CollectionUtils.isEmpty(roleDOS)){
             List<String> roleCodes = roleDOS.stream().map(RoleDO::getCode).collect(Collectors.toList());
 
-            return roleResourceService.findResources(roleCodes);
+            return roleResourceService.findResourcesByRoleCode(roleCodes);
         }
 
         return null;
     }
+
 
     @Override
     public List<ResourceDO> findPermissionsByAccount(String account) {
         List<ResourceDO> resourceDOS = findResourcesByAccount(account);
 
         if (!CollectionUtils.isEmpty(resourceDOS)){
-            return resourceDOS.stream().filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnum.FUNCTION.name())).collect(Collectors.toList());
+            return resourceDOS
+                    .stream()
+                    .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnums.FUNCTION_TYPE.getCode()))
+                    .collect(Collectors.toList());
         }
 
         return null;
@@ -158,28 +196,41 @@ public class UserServiceImpl implements UserService {
         }
 
         List<ResourceDO> resourceDOList = resourceDOS.stream().distinct()
-                    .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnum.MENU.getCode()))
+                    .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnums.MENU_TYPE.getCode()))
                     .collect(Collectors.toList());
         return resourceDOList;
 
     }
 
     @Override
-    public Page<UserDO> findByConditionPage(Page page,QueryUserConditionVO queryUserConditionVO) {
-        UserDO userDO = new UserDO();
-        userDO.setAccount(queryUserConditionVO.getNo());
-        userDO.setName(queryUserConditionVO.getName());
+    public List<ResourceDO> findFunctionsByAccount(String account) {
+        List<ResourceDO> resourceDOS = findResourcesByAccount(account);
+        if (CollectionUtils.isEmpty(resourceDOS)){
+            return null;
+        }
 
+        List<ResourceDO> resourceDOList = resourceDOS.stream().distinct()
+                .filter(resourceDO -> resourceDO.getResourceType().equals(ResourceTypeEnums.FUNCTION_TYPE.getCode()))
+                .collect(Collectors.toList());
+        return resourceDOList;
+    }
+
+    @Override
+    public PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO) {
+        LOGGER.info("QueryUserConditionVO:{}",JSONObject.toJSONString(queryUserConditionVO));
         com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        // 后面在实现
-        //List<UserDO> userDOS = userDOMapper.findByCondition(userDO);
-        List<UserDO> userDOS = Lists.newArrayList();
 
-        Page<UserDO> result = new Page<>();
+        UserDO userDO = BaseConvert.convert(queryUserConditionVO, UserDO.class);
+        if(queryUserConditionVO.getGender() != null){
+            userDO.setGender(queryUserConditionVO.getGender().byteValue());
+        }
+        List<UserDO> userDOS = userDOMapper.findByCondition(userDO, queryUserConditionVO.getStartTime(), queryUserConditionVO.getEndTime());
+
+        PageResultVO<UserDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());
         result.setPageSize(page.getPageSize());
         result.setTotal(doPage.getTotal());
-        result.setRows(userDOS);
+        result.setItems(userDOS);
         return result;
     }
 
@@ -230,4 +281,38 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public void refreshSassUserInfo(String account) {
+        LOGGER.info("refreshSassUserInfo:{}",account);
+        SassUserInfo grantedUserInfo = userAclTokenRepository.getSassUserByUserAccount(account);
+        if(null != grantedUserInfo){
+            // 缓存信息以及存在用户登陆，在需要更新用户权限值
+            //跟新用户缓存的角色以及权限值
+
+            List<RoleDO> roleDOS = userService.findRolesByAccount(account);
+            if (!org.apache.commons.collections4.CollectionUtils.isEmpty(roleDOS)){
+                LOGGER.info("account:{},roleList:{}",account,JSONObject.toJSONString(roleDOS));
+                Set<String> roleCodes = new HashSet<>(roleDOS.size());
+                roleDOS.forEach(roleDO -> roleCodes.add(roleDO.getCode()));
+                grantedUserInfo.setRoles(roleCodes);
+            }else{
+                grantedUserInfo.setRoles(new HashSet<>());
+            }
+
+            List<ResourceDO> resourceDOS = this.findResourcesByAccount(account);
+            if (!org.apache.commons.collections4.CollectionUtils.isEmpty(resourceDOS)){
+                LOGGER.info("account:{},resourceList:{}",account,JSONObject.toJSONString(resourceDOS));
+                Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
+                resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getAuthority()));
+                grantedUserInfo.setStringPermissions(permissionUrls);
+            }else{
+                grantedUserInfo.setStringPermissions(new HashSet<>());
+            }
+            // 设置用户的token以及角色，权限等信息缓存
+            LOGGER.info("account:{},grantedUserInfo:{}",account,JSONObject.toJSONString(grantedUserInfo));
+            userAclTokenRepository.setSassUserByUserAccount(account,grantedUserInfo);
+        }else{
+            LOGGER.info("grantRoleUserInfo, 无需更新用户权限值");
+        }
+    }
 }
