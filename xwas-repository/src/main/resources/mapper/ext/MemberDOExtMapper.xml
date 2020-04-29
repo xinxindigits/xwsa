@@ -206,6 +206,20 @@
 
   </select>
 
+  <select id="queryByNameAndMobile" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where  deleted = 0
+    <if test="memberName != null and memberName != ''">
+      and member_name like concat('%',#{memberName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+
 
   <select id="queryDeptIdList" parameterType="java.util.List" resultMap="BaseResultMapExt">
 

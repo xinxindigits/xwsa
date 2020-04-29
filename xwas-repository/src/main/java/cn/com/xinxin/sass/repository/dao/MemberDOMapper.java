@@ -96,4 +96,16 @@ public interface MemberDOMapper {
      * @return
      */
     List<MemberDO> queryDeptIdList(@Param("deptIds") List<String> deptIds);
+
+
+    /**
+     *
+     * @param memberName
+     * @param mobile
+     * @return
+     */
+    List<MemberDO> queryByNameAndMobile(@Param("memberName")String memberName,
+                                        @Param("mobile") String mobile);
+
+
 }
