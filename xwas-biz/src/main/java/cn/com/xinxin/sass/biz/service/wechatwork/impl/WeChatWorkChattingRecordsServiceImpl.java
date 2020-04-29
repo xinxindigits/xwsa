@@ -23,6 +23,7 @@ import cn.com.xinxin.sass.sal.model.wechatwork.response.WeChatWorkChattingRecord
 import cn.com.xinxin.sass.sal.wechatwork.WeChatWorkInteractionClient;
 import com.tencent.wework.ChattingRecordsUtils;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.result.BizResultCode;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -74,15 +75,42 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
             throw new BusinessException(SassBizResultCodeEnum.FAIL, "获取聊天记录，orgId不能为空");
         }
 
-        //初始化任务日志
+        //初始化任务日志,并保存到日志表中
         OrgDataSyncLogDO orgDataSyncLogDO = initLog(orgId);
 
         //此次更新的数量
         Integer count = 0;
 
         try {
-            //拉取数据
-            count = handle(orgDataSyncLogDO);
+            //机构基础信息
+            OrgBaseInfoDO orgBaseInfoDO = orgBaseInfoService.selectByOrgId(orgDataSyncLogDO.getOrgId());
+
+            //机构任务配置信息
+            OrgDataSyncConfigDO orgDataSyncConfigDO = orgDataSyncConfigService.selectByOrgIdAndTaskType(
+                    orgBaseInfoDO.getOrgId(), TaskTypeEnum.MESSAGE_SYNC.getType());
+
+            //初始化sdk
+            long sdk = ChattingRecordsUtils.initSdk(orgBaseInfoDO.getCorpId(), orgBaseInfoDO.getChatRecordSecret());
+
+            //拉取数据的请求BO
+            WeChatWorkChattingRecordsReqBO reqBO = new WeChatWorkChattingRecordsReqBO();
+            reqBO.setLimit(orgDataSyncConfigDO.getCountCeiling().longValue());
+            reqBO.setSdk(sdk);
+            reqBO.setTimeout(orgDataSyncConfigDO.getTimeInterval().longValue());
+            reqBO.setStartSeq(orgDataSyncConfigDO.getFetchedSeqNo());
+
+            //拉取数据并保存
+            try {
+                count = fetchAndStockData(reqBO, orgBaseInfoDO.getPrivateKey(), orgDataSyncLogDO.getOrgId(),
+                        orgDataSyncLogDO.getTaskId());
+            } finally {
+                //更新配置表中消息序号
+                OrgDataSyncConfigDO updateOrgDataSyncConfig = new OrgDataSyncConfigDO();
+                updateOrgDataSyncConfig.setId(orgDataSyncConfigDO.getId());
+                updateOrgDataSyncConfig.setFetchedSeqNo(reqBO.getStartSeq());
+                orgDataSyncConfigService.updateById(updateOrgDataSyncConfig);
+            }
+
             //更新成功日志
             updateSuccessRecord(orgDataSyncLogDO, count);
         } catch (Exception e) {
@@ -91,50 +119,6 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
             //更新失败日志
             updateFailRecord(orgDataSyncLogDO, count, e.getMessage());
         }
-    }
-
-    /**
-     * 任务处理
-     * @param orgDataSyncLogDO 日志
-     * @return 此次成功的数量
-     */
-    private Integer handle(OrgDataSyncLogDO orgDataSyncLogDO) {
-        //机构基础信息
-        OrgBaseInfoDO orgBaseInfoDO = orgBaseInfoService.selectByOrgId(orgDataSyncLogDO.getOrgId());
-        if (null == orgBaseInfoDO) {
-            LOGGER.error("无法通过机构id[{}]找到机构信息", orgDataSyncLogDO.getOrgId());
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "找不到机构信息");
-        }
-
-        //机构任务配置信息
-        OrgDataSyncConfigDO orgDataSyncConfigDO = orgDataSyncConfigService.selectByOrgIdAndTaskType(
-                orgBaseInfoDO.getOrgId(), TaskTypeEnum.MESSAGE_SYNC.getType());
-        if (null == orgDataSyncConfigDO) {
-            LOGGER.error("无法通过机构id[{}]找到机构同步任务配置信息", orgDataSyncLogDO.getOrgId());
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "找不到机构同步任务配置信息");
-        }
-
-        //初始化sdk
-        long sdk = ChattingRecordsUtils.initSdk(orgBaseInfoDO.getCorpId(), orgBaseInfoDO.getChatRecordSecret());
-
-        //拉取数据的请求BO
-        WeChatWorkChattingRecordsReqBO reqBO = new WeChatWorkChattingRecordsReqBO();
-        reqBO.setLimit(orgDataSyncConfigDO.getCountCeiling().longValue());
-        reqBO.setSdk(sdk);
-        reqBO.setTimeout(orgDataSyncConfigDO.getTimeInterval().longValue());
-        reqBO.setStartSeq(orgDataSyncConfigDO.getFetchedSeqNo());
-
-        //拉取数据并保存
-        Integer count = fetchAndStockData(reqBO, orgBaseInfoDO.getPrivateKey(), orgDataSyncLogDO.getOrgId(),
-                orgDataSyncLogDO.getTaskId());
-
-        //更新配置表中消息序号
-        OrgDataSyncConfigDO updateOrgDataSyncConfig = new OrgDataSyncConfigDO();
-        updateOrgDataSyncConfig.setId(orgDataSyncConfigDO.getId());
-        updateOrgDataSyncConfig.setFetchedSeqNo(reqBO.getStartSeq());
-        orgDataSyncConfigService.updateById(updateOrgDataSyncConfig);
-
-        return count;
     }
 
     /**
