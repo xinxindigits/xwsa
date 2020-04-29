@@ -4,6 +4,7 @@ import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.CustomerService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.common.utils.DateUtils;
 import cn.com.xinxin.sass.repository.model.CustomerDO;
 import cn.com.xinxin.sass.web.convert.CustomerConvert;
 import cn.com.xinxin.sass.web.form.WeChatCustomerQueryForm;
@@ -98,9 +99,13 @@ public class WeChatOrgCustomerRestController extends AclController {
         page.setPageNumber((queryForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageNum());
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
+        //将时间戳格式转化为string
+        String startTime = DateUtils.formatTime(queryForm.getStartTime(), DateUtils.DATE_FORMAT_WHIPP_TIME);
+        String endTime = DateUtils.formatTime(queryForm.getEndTime(), DateUtils.DATE_FORMAT_WHIPP_TIME);
+
         //查询客户信息
         PageResultVO<CustomerDO> pageResultDO = customerService.queryByOrgIdAndMemberUserIdSAndTime(
-                queryForm.getMemberUserIds(), queryForm.getStartTime(), queryForm.getEndTime(), page, queryForm.getOrgId());
+                queryForm.getMemberUserIds(), startTime, endTime, page, queryForm.getOrgId());
 
         //将DO装换为VO
         PageResultVO<CustomerVO> pageResultVO = new PageResultVO<>();
