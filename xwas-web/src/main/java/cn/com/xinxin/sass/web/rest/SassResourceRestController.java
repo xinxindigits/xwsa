@@ -19,6 +19,7 @@ import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
@@ -238,13 +239,19 @@ public class SassResourceRestController extends AclController {
         ResourceDO resourceDO = SassFormConvert.convertResourceForm2ResourceDO(resourceForm);
         resourceDO.setGmtCreator(userAccount);
         resourceDO.setGmtUpdater(userAccount);
+
         int result = resourceService.createResource(resourceDO);
 
-        if(result>0){
-            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
-        }else{
+        if(result==0){
             throw new BusinessException(SassBizResultCodeEnum.FAIL,"创建资源出错","清检查参数是否正确");
         }
+
+        ResourceDO createdResourceDO = this.resourceService.findByResourceCode(resourceForm.getCode());
+
+        ResourceVO createResVO = BaseConvert.convert(createdResourceDO, ResourceVO.class);
+
+        return createResVO;
+
     }
 
     @RequestMapping(value = "/update",method = RequestMethod.POST)
