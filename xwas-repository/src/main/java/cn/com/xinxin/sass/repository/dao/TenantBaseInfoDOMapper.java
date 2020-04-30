@@ -64,4 +64,8 @@ public interface TenantBaseInfoDOMapper {
     int updateByOrgIdSelective(TenantBaseInfoDO tenantBaseInfoDO);
 
     int deleteByCodes(@Param("codes") List<String> codes);
+
+    List<TenantBaseInfoDO> listAlltenants();
+
+
 }

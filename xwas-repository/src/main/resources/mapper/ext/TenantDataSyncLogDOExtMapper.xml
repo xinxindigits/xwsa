@@ -33,7 +33,7 @@
     <selectKey resultType="long" order="AFTER" keyProperty="id">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into org_data_sync_log (id, task_id, tenant_id,
+    insert into tenant_sync_log (id, task_id, tenant_id,
     task_type, task_date, task_time,
     message_count, department_count, member_count,
     customer_count, task_status, error_code,

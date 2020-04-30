@@ -4,7 +4,9 @@ import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.TenantBaseInfoDOMapper;
+import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
+import com.github.pagehelper.PageHelper;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -71,6 +73,16 @@ public class TenantBaseInfoServiceImpl implements TenantBaseInfoService {
 
     @Override
     public PageResultVO<TenantBaseInfoDO> listAllTenants(PageResultVO page) {
-        return null;
+
+        com.github.pagehelper.Page helper = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+        List<TenantBaseInfoDO> tenantBaseInfoDOList = tenantBaseInfoDOMapper.listAlltenants();
+
+        PageResultVO<TenantBaseInfoDO> result = new PageResultVO<>();
+        result.setPageNumber(page.getPageNumber());
+        result.setPageSize(page.getPageSize());
+        result.setItems(tenantBaseInfoDOList);
+        result.setTotal(helper.getTotal());
+        return result;
+
     }
 }
