@@ -70,7 +70,7 @@ public class UserForm extends ToString {
     /**
      * 页码
      */
-    private Integer pageNum;
+    private Integer pageIndex;
 
     public Integer getStatus() {
         return status;
@@ -137,12 +137,12 @@ public class UserForm extends ToString {
         this.pageSize = pageSize;
     }
 
-    public Integer getPageNum() {
-        return pageNum;
+    public Integer getPageIndex() {
+        return pageIndex;
     }
 
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
+    public void setPageIndex(Integer pageIndex) {
+        this.pageIndex = pageIndex;
     }
 
     public Date getStartTime() {

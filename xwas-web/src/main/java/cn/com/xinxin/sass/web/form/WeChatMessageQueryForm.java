@@ -2,27 +2,24 @@ package cn.com.xinxin.sass.web.form;
 
 import cn.com.xinxin.sass.api.base.ToString;
 
-import java.util.List;
-
 /**
  * @author: liuhangzhou
- * @created: 2020/4/28.
+ * @created: 2020/4/29.
  * @updater:
- * @description: 企业微信客户查询表单
+ * @description: 企业微信会话消息查询参数
  */
-public class WeChatCustomerQueryForm extends ToString {
+public class WeChatMessageQueryForm extends ToString {
 
-
-    private static final long serialVersionUID = 8064363806982333584L;
+    private static final long serialVersionUID = -5377565182974958749L;
     /**
      * 机构id
      */
     private String orgId;
 
     /**
-     * 成员userId
+     * 成员userid或客户userid
      */
-    private List<String> memberUserIds;
+    private String userId;
 
     /**
      * 客户的创建时间应大于startTime
@@ -44,12 +41,6 @@ public class WeChatCustomerQueryForm extends ToString {
      */
     private Integer pageSize;
 
-    /**
-     * 客户名称
-     */
-    private String customerName;
-
-
     public String getOrgId() {
         return orgId;
     }
@@ -58,12 +49,12 @@ public class WeChatCustomerQueryForm extends ToString {
         this.orgId = orgId;
     }
 
-    public List<String> getMemberUserIds() {
-        return memberUserIds;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setMemberUserIds(List<String> memberUserIds) {
-        this.memberUserIds = memberUserIds;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getStartTime() {
@@ -96,26 +87,5 @@ public class WeChatCustomerQueryForm extends ToString {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    @Override
-    public String toString() {
-        return "WeChatCustomerQueryForm{" +
-                "orgId='" + orgId + '\'' +
-                ", memberUserIds=" + memberUserIds +
-                ", startTime='" + startTime + '\'' +
-                ", endTime='" + endTime + '\'' +
-                ", pageNum=" + pageIndex +
-                ", pageSize=" + pageSize +
-                ", customerName='" + customerName + '\'' +
-                '}';
     }
 }

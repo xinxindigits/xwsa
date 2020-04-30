@@ -73,7 +73,7 @@ public class SassUserRestController extends AclController {
         log.info("--------SassUserRestController.pageQueryUser.Request:{}--------",JSONObject.toJSONString(userForm));
 
         PageResultVO page = new PageResultVO();
-        page.setPageNumber((userForm.getPageNum() == null) ? PageResultVO.DEFAULT_PAGE_NUM : userForm.getPageNum());
+        page.setPageNumber((userForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : userForm.getPageIndex());
         page.setPageSize((userForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : userForm.getPageSize());
         QueryUserConditionVO queryUserConditionVO = BaseConvert.convert(userForm, QueryUserConditionVO.class);
         PageResultVO<UserDO> pageUser = userService.findByConditionPage(page, queryUserConditionVO);

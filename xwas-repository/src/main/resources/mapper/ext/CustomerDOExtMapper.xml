@@ -135,8 +135,8 @@
     </foreach>
   </update>
 
-  <select id="selectPageByOrgIdAndMemberUserIdSAndTime" resultMap="BaseResultMapExt">
-    select <include refid="Base_Column_List_Ext"/>
+  <select id="selectPageByOrgIdAndMemberUserIdSAndTimeAndCustName" resultMap="BaseResultMapExt">
+    select id, customer_name, corp_name, corp_full_name
     from customer
     <where>
       deleted = 0 and org_id = #{orgId}
@@ -152,11 +152,14 @@
       <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
         <![CDATA[and gmt_created <= #{endTime}]]>
       </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(customerName)">
+        and customer_name like concat('%', #{customerName}, '%')
+      </if>
       order by id limit #{index}, #{pageSize}
     </where>
   </select>
 
-  <select id="selectCountByOrgIdAndMemberUserIdSAndTime" resultType="java.lang.Long">
+  <select id="selectCountByOrgIdAndMemberUserIdSAndTimeAndCustName" resultType="java.lang.Long">
     select count(id)
     from customer
     <where>
@@ -172,6 +175,9 @@
       </if>
       <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
         <![CDATA[and gmt_created <= #{endTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(customerName)">
+        and customer_name like concat('%', #{customerName}, '%')
       </if>
     </where>
   </select>
