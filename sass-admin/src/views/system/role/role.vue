@@ -157,10 +157,10 @@ export default {
     hdlquery() {
       this.changePage(1);
     },
-    changePage(pageNum) {
+    changePage(pageIndex) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      getRoleList({ pageNum, pageSize, ...this.formItem })
+      getRoleList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
           this.reset();

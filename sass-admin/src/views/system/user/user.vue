@@ -146,10 +146,10 @@ export default {
     hdlquery() {
       this.changePage(1);
     },
-    changePage(pageNum) {
+    changePage(pageIndex) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      getUserList({ pageNum, pageSize, ...this.formItem })
+      getUserList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
           this.tableData = data.items;
@@ -207,7 +207,7 @@ export default {
     }
   },
   mounted() {
-    getRoleList({ pageNum: 1, pageSize: 1000 }).then(rolelist => {
+    getRoleList({ pageIndex: 1, pageSize: 1000 }).then(rolelist => {
       this.$refs.modifyModal.setRoleList(rolelist.data.items);
     });
     this.changePage(1);
