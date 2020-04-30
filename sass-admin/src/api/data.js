@@ -32,7 +32,7 @@ export const delRole = ({ roleCodes }) => {
     method: "post"
   });
 };
-//角色管理-角色授权
+//角色管理-角色资源授权
 export const grantRole = ({ roleCode, roleName, resources }) => {
   let data = {
     roleCode,

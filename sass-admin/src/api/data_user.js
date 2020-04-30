@@ -43,3 +43,15 @@ export const getUserDetail = ({ account }) => {
     method: "get"
   });
 };
+export const grantUserRoles = ({
+  userAccount,
+  userName,
+  userRoles,
+  extension
+}) => {
+  return axios.request({
+    url: "user/grant",
+    method: "post",
+    data: { userAccount, userName, userRoles, extension }
+  });
+};
