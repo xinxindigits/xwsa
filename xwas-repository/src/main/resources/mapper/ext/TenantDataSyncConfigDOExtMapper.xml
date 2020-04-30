@@ -23,7 +23,7 @@
   </sql>
   <select id="selectByOrgIdAndTaskType" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
-    from org_data_sync_config
+    from tenant_sync_config
     where tenant_id = #{tenantId} and task_type = #{taskType} and deleted = 0 limit 1;
   </select>
 
