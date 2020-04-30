@@ -23,10 +23,24 @@
           ><Button
             icon="md-trash"
             type="error"
-            @click="hdlDelete(delteAccounts)"
+            @click="hdlDelete(selectedAccounts)"
             >删除</Button
           ></Col
         >
+        <Col>
+          <Button
+            icon="md-person-add"
+            @click="hdlAccessUpdate(selectedAccounts)"
+          >
+            角色授权
+          </Button>
+          <grant-role
+            ref="showRoleGrantModal"
+            v-model="showRoleGrantModal"
+            @on-user-grant-role="hdlRoleGrant"
+            :roleList="roleList"
+          ></grant-role>
+        </Col>
       </Row>
 
       <Table
@@ -48,6 +62,15 @@
           <span>{{ row.gmtCreated | timeFilter }}</span>
         </template>
         <template slot-scope="{ row }" slot="action">
+          <Button
+            type="info"
+            size="small"
+            style="margin-right: 5px"
+            @click="hdlQueryInfo(row)"
+            ghost
+          >
+            详情
+          </Button>
           <Button
             type="primary"
             size="small"
@@ -83,27 +106,47 @@
       >
       </modify>
     </Card>
+    <Modal v-model="showUserDetail" title="用户详情" footer-hide>
+      <Row class="row-detail">
+        <Col span="12">账号：{{ userDetail.account }}</Col>
+        <Col span="12">id：{{ userDetail.id }}</Col>
+      </Row>
+      <Row class="row-detail">
+        <Col span="12">名称：{{ userDetail.name }}</Col>
+        <Col span="12">角色：{{ userDetail.roleName }}</Col>
+      </Row>
+      <Row class="row-detail">
+        <Col span="24">创建时间：{{ userDetail.gmtCreated | timeFilter }}</Col>
+      </Row>
+      <Row class="row-detail">
+        <Col span="24">备注：{{ userDetail.extension }}</Col>
+      </Row>
+    </Modal>
   </div>
 </template>
 
 <script>
-import { getUserList, deleteUser, getUserDetail } from "@/api/data_user";
+import { getUserList, deleteUser, getUserDetail } from "@/api";
 import { getRoleList } from "@/api/data";
 import modify from "./modify";
+import GrantRole from "./grant";
 export default {
   name: "user-list",
-  components: { modify },
+  components: { modify, GrantRole },
   computed: {
-    delteAccounts() {
+    selectedAccounts() {
       return this.tbSelection.map(item => item.account);
     }
   },
   data() {
     return {
+      showRoleGrantModal: false,
       modifyType: "create",
       showModal: false,
       showGrantModal: false,
       showUpdateModal: false,
+      showUserDetail: false,
+
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -122,7 +165,7 @@ export default {
           align: "center"
         },
         { title: "账号", key: "account", align: "center" },
-        { title: "姓名", key: "name", align: "center" },
+        { title: "名称", key: "name", align: "center" },
         { title: "性别", key: "gender", align: "center", slot: "gender" },
         { title: "状态", key: "status", align: "center", slot: "status" },
         {
@@ -135,11 +178,20 @@ export default {
         {
           title: "操作",
           slot: "action",
-          width: 150,
+          width: 200,
           align: "center"
         }
       ],
-      tbSelection: []
+      tbSelection: [],
+      userDetail: {
+        account: "",
+        extension: "",
+        gmtCreated: "",
+        id: "",
+        name: "",
+        roleName: ""
+      },
+      roleList: []
     };
   },
   methods: {
@@ -178,6 +230,7 @@ export default {
         this.$Message.warning("请选择一条记录!");
       }
     },
+
     reset() {
       this.formItem.name = "";
       this.formItem.account = "";
@@ -191,24 +244,51 @@ export default {
       this.showModal = true;
       this.$refs.modifyModal.reset();
     },
-    hdlSingleModified(data) {
-      this.modifyType = "update";
-      console.log(data);
-      let { account } = data;
+    hdlAccessUpdate(arr) {
+      if (arr.length == 0) {
+        this.$Message.warning("请选择授权用户");
+      } else if (arr.length > 1) {
+        this.$Message.warning("当前接口支持一个用户进行授权");
+      } else {
+        getUserDetail({ account: arr[0] }).then(({ data }) => {
+          this.showRoleGrantModal = true;
+          let codeArr = data.roles.map(n => {
+            return n.code;
+          });
+          this.$refs.showRoleGrantModal.setData({ userRoles: codeArr });
+        });
+      }
+    },
+    hdlRoleGrant() {},
+    hdlSingleModified({ account }) {
       getUserDetail({ account }).then(res => {
-        let { data } = res;
+        this.modifyType = "update";
         this.showModal = true;
+        let { data } = res;
         let codeArr = data.roles.map(n => {
           return n.code;
         });
         data.roles = codeArr;
         this.$refs.modifyModal.setData(data);
       });
+    },
+    hdlQueryInfo({ account }) {
+      getUserDetail({ account }).then(res => {
+        let { data } = res;
+        data.roleName = data.roles
+          .map(n => {
+            return n.name;
+          })
+          .join("、");
+        this.userDetail = data;
+        this.showUserDetail = true;
+      });
     }
   },
   mounted() {
-    getRoleList({ pageIndex: 1, pageSize: 1000 }).then(rolelist => {
-      this.$refs.modifyModal.setRoleList(rolelist.data.items);
+    getRoleList({ pageIndex: 1, pageSize: 1000 }).then(({ data }) => {
+      this.roleList = data.items;
+      this.$refs.modifyModal.setRoleList(data.items);
     });
     this.changePage(1);
   }
@@ -218,5 +298,9 @@ export default {
 <style lang="less" scoped>
 .row-operation {
   padding: 10px 0;
+}
+.row-detail {
+  margin-bottom: 10px;
+  font-size: 16px;
 }
 </style>
