@@ -22,12 +22,12 @@
       <FormItem label="资源权限" prop="authority">
         <Input v-model="formObj.authority" style="width: 250px"></Input>
       </FormItem>
-      <FormItem label="资源类型" prop="resourceType">
+      <!-- <FormItem label="资源类型" prop="resourceType">
         <Select v-model="formObj.resourceType" style="width: 250px">
           <Option value="menu">菜单</Option>
           <Option value="function">功能</Option>
         </Select>
-      </FormItem>
+      </FormItem> -->
       <FormItem label="名称" prop="name">
         <Input v-model="formObj.name" style="width: 250px"></Input>
       </FormItem>

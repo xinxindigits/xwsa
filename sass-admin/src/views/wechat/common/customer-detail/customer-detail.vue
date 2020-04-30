@@ -3,7 +3,7 @@
     <Button @click="hdlCancel">返回</Button>
     <List>
       <ListItem>
-        <ListItemMeta :title="detail.memberName" :description="description">
+        <ListItemMeta :title="detail.customerName" :description="description">
           <div class="avatar-wrapper" slot="avatar">
             <img :src="detail.avatar" class="avatar" alt="头像" />
           </div>
@@ -11,37 +11,34 @@
       </ListItem>
     </List>
     <CellGroup>
+      <Cell>
+        <span>状态：{{ detail.status }}</span>
+      </Cell>
+      <Cell>
+        <span>性别：{{ detail.gender }}</span>
+      </Cell>
+      <Cell>
+        <span>客户类型：{{ detail.customerType }}</span>
+      </Cell>
       <Divider dashed></Divider>
       <Cell>
-        <div>
-          微信二维码：
-          <img :src="detail.qrCode" class="qrcode" alt="微信二维码" />
-        </div>
+        <span>公司名称：{{ detail.corpFullName }}</span>
+      </Cell>
+      <Cell>
+        <span>职位：{{ detail.customerPosition }}</span>
+      </Cell>
+      <Divider dashed></Divider>
+      <Cell>
+        <span>添加人：{{ detail.memberUserId }}</span>
       </Cell>
 
+      <Divider orientation="left" dashed> 其他</Divider>
       <Cell>
-        <span>手机：{{ detail.mobile }}</span>
+        <span>externalProfile：{{ detail.externalProfile }}</span>
       </Cell>
       <Cell>
-        <span>座机：{{ detail.telephone }}</span>
+        <span>unionId:{{ detail.unionId }}</span>
       </Cell>
-      <Cell>
-        <span>邮箱：{{ detail.mail }}</span>
-      </Cell>
-      <Cell>
-        <span>地址：{{ detail.address }}</span>
-      </Cell>
-      <Divider dashed></Divider>
-      <Cell>
-        <span>部门：{{ detail.mainDepartmentName }}</span>
-      </Cell>
-      <Cell>
-        <span>职位：{{ detail.memberPosition }}</span>
-      </Cell>
-      <Cell>
-        <span>状态：{{ detail.memberStatus }}</span>
-      </Cell>
-      <Divider dashed></Divider>
     </CellGroup>
   </Card>
 </template>
@@ -54,24 +51,24 @@ export default {
   },
   computed: {
     description() {
-      return `账号：${this.detail.userId}`;
+      return `账号：${this.detail.userId || ""}`;
     }
   },
   data() {
     return {
       detail: {
         avatar: "",
-        memberName: "",
-        userId: "",
-        mobile: "",
-        address: "",
-        mail: "",
-        mainDepartmentName: "",
-        telephone: "",
-        memberPosition: "",
-        extension: "",
-        qrCode: "",
-        memberStatus: ""
+        corpFullName: "",
+        customerPosition: "",
+        customerName: "",
+        customerType: "",
+        externalProfile: "",
+        gender: "",
+        id: "",
+        memberUserId: "",
+        status: "",
+        unionId: "",
+        userId: ""
       }
     };
   },

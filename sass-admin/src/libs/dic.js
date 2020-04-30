@@ -8,13 +8,13 @@ const userStatus = {
   [1]: "禁用"
 };
 const organizationState = {
-    ["Y"]: "启用",
-    ["N"]: "禁用"
+  ["Y"]: "启用",
+  ["N"]: "禁用"
 };
 const dic = {
   gender,
   userStatus,
-  organizationState,
+  organizationState
 };
 const mapDic = function(key, val) {
   if (dic[key]) {

@@ -193,7 +193,10 @@ export default {
         }
         data = this.$refs.tree.getSelectedNodes()[0];
       }
-      getResourceQueryTree({ parentId: data.id }, { silent: true })
+      getResourceQueryTree(
+        { parentId: data.id, resourceType: "function" },
+        { silent: true }
+      )
         .then(res => {
           this.tableData = res.data;
           this.selectedTreeData = data;
@@ -290,7 +293,6 @@ export default {
   },
   watch: {
     isUpdate(isUpdate) {
-      debugger;
       this.submit = isUpdate ? updateResource : createResource;
       this.modifyButtonText = isUpdate ? "修改" : "新增";
     }
