@@ -61,7 +61,7 @@ public class SassTenantRestController extends AclController {
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/tenant/list")
+//    @RequiresPermissions("/tenant/list")
     public Object tenantList(HttpServletRequest request, @RequestBody OrgQueryForm orgForm){
 
         if(null == orgForm){
@@ -77,7 +77,7 @@ public class SassTenantRestController extends AclController {
         page.setPageSize(orgForm.getPageSize());
         page.setPageNumber(orgForm.getPageIndex());
 
-        PageResultVO result = tenantBaseInfoService.listAllTenants(page);
+        PageResultVO<TenantBaseInfoDO> result = tenantBaseInfoService.listAllTenants(page);
 
         PageResultVO<TenantInfoVO> results = BaseConvert.convert(result,PageResultVO.class);
 
