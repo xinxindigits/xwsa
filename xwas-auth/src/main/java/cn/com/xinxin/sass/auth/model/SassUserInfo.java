@@ -17,6 +17,11 @@ public class SassUserInfo implements Serializable {
 
     private Long id;
 
+    /**
+     * 租户编码
+     */
+    private String tenantId;
+
     private String name;
 
     private String account;
@@ -29,12 +34,21 @@ public class SassUserInfo implements Serializable {
 
     private String device;
 
+    private String orgCode;
+
     protected Set<String> roles;
 
     protected Set<String> stringPermissions;
 
     protected Set<Permission> objectPermissions;
 
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
 
     public String getSalt() {
         return salt;
@@ -114,6 +128,15 @@ public class SassUserInfo implements Serializable {
 
     public void setObjectPermissions(Set<Permission> objectPermissions) {
         this.objectPermissions = objectPermissions;
+    }
+
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     @Override

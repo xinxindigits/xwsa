@@ -194,7 +194,13 @@ public class SassUserRestController extends AclController {
             }
 
             this.userRoleService.createUserRoles(userRoleDOS);
+        }
 
+        String userOrgCode = userForm.getOrgCode();
+
+        if(StringUtils.isNotEmpty(userOrgCode)){
+            // 如果组织机构编码不为空，则需要创建组装与用户的关系
+            
         }
 
         return result;
