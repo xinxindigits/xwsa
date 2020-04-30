@@ -92,7 +92,8 @@ export default {
         name: "",
         code: "",
         roleType: "",
-        extension: ""
+        extension: "",
+        roles: []
       },
       rules: {
         code: [

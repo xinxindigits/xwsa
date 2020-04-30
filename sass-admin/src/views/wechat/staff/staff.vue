@@ -3,6 +3,15 @@
     <Row :gutter="10" v-show="showList">
       <Col span="24">
         <Card>
+          <Form :model="formItem" inline label-colon v-show="false">
+            <FormItem>
+              <Input v-model="formItem.memberName" placeholder="姓名"></Input>
+            </FormItem>
+            <FormItem>
+              <Button type="primary">查询</Button>
+              <Button style="margin-left: 8px" @click="reset">重置</Button>
+            </FormItem>
+          </Form>
           <Table
             stripe
             border
@@ -10,7 +19,6 @@
             :data="tableData"
             :columns="columns"
             :loading="isLoading"
-            @on-selection-change="hdlSelectionChange"
           >
             <template slot-scope="{ row }" slot="action">
               <Button
@@ -52,9 +60,6 @@
 </template>
 
 <script>
-//搜索查部门、个人；点击查个人详情/部门员工列表
-//初始查根节点部门；点击查当前节点员工列表
-
 import { getMemberList, getMemberDetail } from "@/api";
 import MemberDetail from "../common/member-detail/member-detail";
 export default {
@@ -67,12 +72,11 @@ export default {
       showList: true,
       memberDetail: {},
 
+      formItem: {
+        memberName: ""
+      },
+
       columns: [
-        // {
-        //   type: "selection",
-        //   width: 60,
-        //   align: "center"
-        // },
         { title: "id", key: "id", width: 80 },
         { title: "名称", key: "memberName" },
         { title: "微信号", key: "userId", ellipsis: true },
@@ -86,7 +90,6 @@ export default {
           align: "center"
         }
       ],
-      test: false,
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -98,20 +101,7 @@ export default {
           { required: true, message: "权限值不能为空", trigger: "blur" }
         ]
       },
-      formItem: {
-        name: "",
-        code: ""
-      },
-      tableData: [],
-
-      tbSelection: [],
-      showDrawer: false,
-      styles: {
-        height: "calc(100% - 55px)",
-        overflow: "auto",
-        paddingBottom: "53px",
-        position: "static"
-      }
+      tableData: []
     };
   },
   methods: {
@@ -140,14 +130,8 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.name = "";
-      this.formItem.code = "";
-    },
-    hdlSelectionChange(selection) {
-      this.tbSelection = selection;
-    },
-    hdlShowDrawer() {
-      this.showDrawer = true;
+      this.formItem.memberName = "";
+      this.hdlquery();
     }
   },
   mounted() {
