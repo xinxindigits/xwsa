@@ -76,7 +76,6 @@ export default {
       columns: [
         { title: "权限值", key: "authority", align: "center" },
         { title: "名称", key: "name", align: "center" },
-        { title: "类型", key: "resourceType", align: "center" },
         {
           title: "操作",
           slot: "action",
@@ -98,12 +97,12 @@ export default {
       this.modifyType = "create";
       this.$refs.modifyModal.setData({
         parentId: self.curTreeData.id,
-        authority: "",
+        authority: "/",
         code: "",
         extension: "",
         name: "",
-        resourceType: "",
-        url: ""
+        resourceType: "function",
+        url: "/"
       });
       this.showModal = true;
     },
