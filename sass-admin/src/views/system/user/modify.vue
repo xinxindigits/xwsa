@@ -69,7 +69,6 @@
 
 <script>
 import { addUser, updateUser } from "@/api/data_user";
-// import { getRoleList } from "@/api/data";
 const _config = {
   create: {
     title: "新增用户",
@@ -170,10 +169,6 @@ export default {
     },
     curValue(newValue) {
       this.$emit("input", newValue);
-      // getRoleList({ pageNum: 1, pageSize: 1000 }).then(res => {
-      //   let { data } = res;
-      //   this.roles = data.items;
-      // });
     }
   }
 };
