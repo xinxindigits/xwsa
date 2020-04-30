@@ -2,7 +2,7 @@
   <div>
     <Row :gutter="5" v-show="showList">
       <Col :xs="8" :sm="8" :md="8" :lg="6">
-        <Card>
+        <Card style="height:100%">
           <Form inline>
             <!-- <FormItem props="departmentId">
               <Input

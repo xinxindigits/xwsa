@@ -87,7 +87,8 @@
 </template>
 
 <script>
-import { getUserList, deleteUser } from "@/api/data_user";
+import { getUserList, deleteUser, getUserDetail } from "@/api/data_user";
+import { getRoleList } from "@/api/data";
 import modify from "./modify";
 export default {
   name: "user-list",
@@ -145,10 +146,10 @@ export default {
     hdlquery() {
       this.changePage(1);
     },
-    changePage(pageNum) {
+    changePage(pageIndex) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      getUserList({ pageNum, pageSize, ...this.formItem })
+      getUserList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
           this.tableData = data.items;
@@ -188,14 +189,27 @@ export default {
     hdlSingleCreate() {
       this.modifyType = "create";
       this.showModal = true;
+      this.$refs.modifyModal.reset();
     },
     hdlSingleModified(data) {
       this.modifyType = "update";
-      this.$refs.modifyModal.setData(data);
-      this.showModal = true;
+      console.log(data);
+      let { account } = data;
+      getUserDetail({ account }).then(res => {
+        let { data } = res;
+        this.showModal = true;
+        let codeArr = data.roles.map(n => {
+          return n.code;
+        });
+        data.roles = codeArr;
+        this.$refs.modifyModal.setData(data);
+      });
     }
   },
   mounted() {
+    getRoleList({ pageIndex: 1, pageSize: 1000 }).then(rolelist => {
+      this.$refs.modifyModal.setRoleList(rolelist.data.items);
+    });
     this.changePage(1);
   }
 };

@@ -31,7 +31,7 @@
         <Button
           type="error"
           size="small"
-          @click="hdlDelete({ parentId: row.parentId, list: [row.id] })"
+          @click="hdlDelete({ id: row.parentId, list: [row.id] })"
         >
           删除
         </Button>
@@ -97,12 +97,12 @@ export default {
       this.modifyType = "create";
       this.$refs.modifyModal.setData({
         parentId: self.curTreeData.id,
-        authority: "",
+        authority: "/",
         code: "",
         extension: "",
         name: "",
-        resourceType: "",
-        url: ""
+        resourceType: "function",
+        url: "/"
       });
       this.showModal = true;
     },
