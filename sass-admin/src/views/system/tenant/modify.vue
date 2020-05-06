@@ -70,17 +70,17 @@
 </template>
 
 <script>
-import { addOrganization, updateOrganization } from "@/api/data_organization";
+import { addTenant, updateTenant } from "@/api/data_tenant";
 const _config = {
   create: {
     title: "新增租户",
     success_evt: "on-add-organization",
-    submit: addOrganization
+    submit: addTenant
   },
   update: {
     title: "更新租户",
     success_evt: "on-update-organization",
-    submit: updateOrganization
+    submit: updateTenant
   }
 };
 export default {
@@ -119,8 +119,6 @@ export default {
         chatRecordSecret: "",
         state: "Y",
         remark: "",
-        parentId: 0,
-        orgType: "COMP"
       },
       rules: {
         code: [{ validator: validateCode, trigger: "blur" }],
