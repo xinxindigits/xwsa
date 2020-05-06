@@ -41,7 +41,10 @@ public class MsgRecordVO extends ToString {
      * 发送人
      */
     private String fromUserId;
-
+    /**
+     * 发送人姓名
+     */
+    private String fromUserName;
     /**
      * 群名
      */
@@ -61,7 +64,6 @@ public class MsgRecordVO extends ToString {
      * 接受人
      */
     private String toUserId;
-
     /**
      * 消息内容
      */
@@ -155,6 +157,14 @@ public class MsgRecordVO extends ToString {
         this.content = content;
     }
 
+    public String getFromUserName() {
+        return fromUserName;
+    }
+
+    public void setFromUserName(String fromUserName) {
+        this.fromUserName = fromUserName;
+    }
+
     @Override
     public String toString() {
         return "MsgRecordVO{" +
@@ -163,6 +173,7 @@ public class MsgRecordVO extends ToString {
                 ", msgId='" + msgId + '\'' +
                 ", action='" + action + '\'' +
                 ", fromUserId='" + fromUserId + '\'' +
+                ", fromUserName='" + fromUserName+ '\'' +
                 ", roomId='" + roomId + '\'' +
                 ", msgTime='" + msgTime + '\'' +
                 ", msgType='" + msgType + '\'' +

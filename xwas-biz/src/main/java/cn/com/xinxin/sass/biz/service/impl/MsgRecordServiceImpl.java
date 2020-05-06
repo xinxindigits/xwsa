@@ -1,10 +1,19 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
+import cn.com.xinxin.sass.biz.service.CustomerService;
+import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
+import cn.com.xinxin.sass.biz.vo.ChatUserVO;
+import cn.com.xinxin.sass.common.enums.ChatUserEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.repository.dao.MemberDOMapper;
 import cn.com.xinxin.sass.repository.dao.MsgRecordDOMapper;
+import cn.com.xinxin.sass.repository.model.CustomerDO;
+import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
+import cn.com.xinxin.sass.repository.model.ResourceDO;
+import com.github.pagehelper.PageHelper;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +24,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -30,8 +40,14 @@ public class MsgRecordServiceImpl implements MsgRecordService {
 
     private final MsgRecordDOMapper msgRecordDOMapper;
 
-    public MsgRecordServiceImpl(final MsgRecordDOMapper msgRecordDOMapper) {
+    private final MemberService memberService;
+
+    private final CustomerService customerService;
+
+    public MsgRecordServiceImpl(MsgRecordDOMapper msgRecordDOMapper, MemberService memberService, CustomerService customerService) {
         this.msgRecordDOMapper = msgRecordDOMapper;
+        this.memberService = memberService;
+        this.customerService = customerService;
     }
 
     /**
@@ -110,5 +126,68 @@ public class MsgRecordServiceImpl implements MsgRecordService {
                     "通过id查询会话详情,Id不能为空");
         }
         return msgRecordDOMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public PageResultVO<MsgRecordDO> selectMsgRecordBetweenPersons(PageResultVO page,String orgId, String userIdOne, String userIdTwo) {
+        if (StringUtils.isBlank(orgId)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "机构编码不能为空");
+        }
+        if (StringUtils.isBlank(userIdOne) || StringUtils.isBlank(userIdTwo)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "用户id不能为空");
+        }
+        com.github.pagehelper.Page pageHelper = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+        List<MsgRecordDO> resourceDOS = msgRecordDOMapper.selectMsgRecordBetweenPersons(orgId,userIdOne,userIdTwo);
+        PageResultVO<MsgRecordDO> result = new PageResultVO<>();
+        result.setTotal(pageHelper.getTotal());
+        result.setItems(resourceDOS);
+        result.setPageSize(page.getPageSize());
+        result.setPageNumber(page.getPageNumber());
+        return result;
+    }
+
+    @Override
+    public PageResultVO<MsgRecordDO> selectRoomMsgRecord(PageResultVO page, String orgId, String roomId) {
+        if (StringUtils.isBlank(orgId)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "机构编码不能为空");
+        }
+        if (StringUtils.isBlank(roomId)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "群聊id不能为空");
+        }
+        com.github.pagehelper.Page pageHelper = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
+        List<MsgRecordDO> resourceDOS = msgRecordDOMapper.selectRoomMsgRecord(orgId,roomId);
+        PageResultVO<MsgRecordDO> result = new PageResultVO<>();
+        result.setTotal(pageHelper.getTotal());
+        result.setItems(resourceDOS);
+        result.setPageSize(page.getPageSize());
+        result.setPageNumber(page.getPageNumber());
+        return result;
+    }
+
+    @Override
+    public ChatUserVO getChatUser(String orgId, String chatUserId) {
+        if (StringUtils.isBlank(orgId)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "机构编码不能为空");
+        }
+        if (StringUtils.isBlank(chatUserId)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "用户id不能为空");
+        }
+        ChatUserVO result = new ChatUserVO();
+        result.setChatUserId(chatUserId);
+        List<MemberDO> member = memberService.queryByOrgIdAndUserId(orgId,Arrays.asList(chatUserId));
+        if(!CollectionUtils.isEmpty(member)){
+            result.setChatUserName(member.get(0).getMemberName());
+            result.setChatUserType(ChatUserEnum.MEMBER.getCode());
+        }else{
+            List<CustomerDO> customer = customerService.selectByOrgIdAndUserId(orgId,Arrays.asList(chatUserId));
+            if(!CollectionUtils.isEmpty(customer)){
+                result.setChatUserName(customer.get(0).getCustomerName());
+                result.setChatUserType(ChatUserEnum.CUSTOMER.getCode());
+            }else{
+                result.setChatUserName(chatUserId);
+                result.setChatUserType(ChatUserEnum.OTHER.getCode());
+            }
+        }
+        return result;
     }
 }
