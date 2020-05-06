@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.biz.service;
 
+import cn.com.xinxin.sass.biz.model.bo.ChatPartyBO;
 import cn.com.xinxin.sass.biz.vo.ChatUserVO;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
@@ -45,4 +46,12 @@ public interface MsgRecordService {
     PageResultVO<MsgRecordDO> selectRoomMsgRecord(PageResultVO page,String orgId, String roomId);
 
     ChatUserVO getChatUser(String orgId, String chatUserId);
+
+    /**
+     * 通过租户id和成员userid查询聊天方
+     * @param tenantId 租户id
+     * @param userId 成员userid
+     * @return 聊天方
+     */
+    List<ChatPartyBO> selectByMemberUserId(String tenantId, String userId);
 }

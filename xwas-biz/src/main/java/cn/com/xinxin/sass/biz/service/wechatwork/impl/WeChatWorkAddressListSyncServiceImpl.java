@@ -6,6 +6,7 @@ import cn.com.xinxin.sass.biz.service.TenantDataSyncLogService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkAddressListService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkAddressListSyncService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkDepartmentSyncService;
+import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.enums.TaskErrorEnum;
 import cn.com.xinxin.sass.common.enums.TaskStatusEnum;
@@ -92,6 +93,7 @@ public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkAddressLi
         tenantDataSyncLogDO.setCustomerCount(0);
         tenantDataSyncLogDO.setMemberCount(0);
         tenantDataSyncLogDO.setTaskStatus(TaskStatusEnum.INIT.getStatus());
+        tenantDataSyncLogDO.setGmtCreator(CommonConstants.GMT_CREATOR_SYSTEM);
         tenantDataSyncLogService.insertReturnId(tenantDataSyncLogDO);
         return tenantDataSyncLogDO;
     }
