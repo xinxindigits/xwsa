@@ -94,7 +94,7 @@ public class SassOrganizationRestController extends AclController {
         loger.info("SassOrganizationRestController,createOrganization, code = {}",code);
 
         //OrganizationDO organizationDO = organizationService.findByCode(code);
-        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByOrgId(code);
+        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByTenantId(code);
         if(tenantBaseInfoDO == null){
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST);
         }

@@ -82,7 +82,7 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
 
         try {
             //机构基础信息
-            TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByOrgId(tenantDataSyncLogDO.getTenantId());
+            TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByTenantId(tenantDataSyncLogDO.getTenantId());
 
             //机构任务配置信息
             TenantDataSyncConfigDO tenantDataSyncConfigDO = tenantDataSyncConfigService.selectByOrgIdAndTaskType(

@@ -24,35 +24,11 @@ public class TenantInfoVO extends ToString{
 
     private String tenantName;
 
+    private String remark;
 
-    private String corpId;
-
-
-    private String addressListSecret;
-
-
-    private String chatRecordSecret;
-
-
-    private String customerContactSecret;
-
-
-    private String privateKey;
-
-
-    private String extension;
-
+    private String state;
 
     private Date gmtCreated;
-
-
-    private String gmtCreator;
-
-
-    private Date gmtUpdated;
-
-
-    private String gmtUpdater;
 
     public Long getId() {
         return id;
@@ -78,52 +54,20 @@ public class TenantInfoVO extends ToString{
         this.tenantName = tenantName;
     }
 
-    public String getCorpId() {
-        return corpId;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setCorpId(String corpId) {
-        this.corpId = corpId;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 
-    public String getAddressListSecret() {
-        return addressListSecret;
+    public String getState() {
+        return state;
     }
 
-    public void setAddressListSecret(String addressListSecret) {
-        this.addressListSecret = addressListSecret;
-    }
-
-    public String getChatRecordSecret() {
-        return chatRecordSecret;
-    }
-
-    public void setChatRecordSecret(String chatRecordSecret) {
-        this.chatRecordSecret = chatRecordSecret;
-    }
-
-    public String getCustomerContactSecret() {
-        return customerContactSecret;
-    }
-
-    public void setCustomerContactSecret(String customerContactSecret) {
-        this.customerContactSecret = customerContactSecret;
-    }
-
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
+    public void setState(String state) {
+        this.state = state;
     }
 
     public Date getGmtCreated() {
@@ -132,29 +76,5 @@ public class TenantInfoVO extends ToString{
 
     public void setGmtCreated(Date gmtCreated) {
         this.gmtCreated = gmtCreated;
-    }
-
-    public String getGmtCreator() {
-        return gmtCreator;
-    }
-
-    public void setGmtCreator(String gmtCreator) {
-        this.gmtCreator = gmtCreator;
-    }
-
-    public Date getGmtUpdated() {
-        return gmtUpdated;
-    }
-
-    public void setGmtUpdated(Date gmtUpdated) {
-        this.gmtUpdated = gmtUpdated;
-    }
-
-    public String getGmtUpdater() {
-        return gmtUpdater;
-    }
-
-    public void setGmtUpdater(String gmtUpdater) {
-        this.gmtUpdater = gmtUpdater;
     }
 }
