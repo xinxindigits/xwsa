@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
+import cn.com.xinxin.sass.biz.model.bo.ChatPartyBO;
 import cn.com.xinxin.sass.biz.service.CustomerService;
 import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
@@ -23,9 +24,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author: liuhangzhou
@@ -189,5 +189,64 @@ public class MsgRecordServiceImpl implements MsgRecordService {
             }
         }
         return result;
+    }
+
+    /**
+     * 通过租户id和成员userid查询聊天方
+     * @param tenantId 租户id
+     * @param userId 成员userid
+     * @return 聊天方
+     */
+    @Override
+    public List<ChatPartyBO> selectByMemberUserId(String tenantId, String userId) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("通过租户id和成员userid查询会话记录, tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过租户id和成员userid查询会话记录, tenantId不能为空");
+        }
+        if (StringUtils.isBlank(userId)) {
+            LOGGER.error("通过租户id和成员userid查询会话记录, userId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过租户id和成员userid查询会话记录, userId不能为空");
+        }
+        List<MsgRecordDO> msgRecordDOS = msgRecordDOMapper.selectByMemberUserId(tenantId, userId);
+
+        Map<String, ChatPartyBO> chatPartyPersonBOMap = new HashMap<>();
+        Map<String, ChatPartyBO> chatPartyRoomBOMap = new HashMap<>();
+
+        //组装聊天方信息
+        msgRecordDOS.forEach(r -> {
+            if (!StringUtils.equals(r.getFromUserId(), userId) && !chatPartyPersonBOMap.containsKey(r.getFromUserId())) {
+                ChatPartyBO chatPartyBO = new ChatPartyBO();
+                chatPartyBO.setType(0);
+                chatPartyBO.setUserId(r.getFromUserId());
+                chatPartyPersonBOMap.put(r.getFromUserId(), chatPartyBO);
+            }
+
+
+            if (StringUtils.isBlank(r.getRoomId())) {
+                String toUserId = r.getToUserId().replace("[", "").replace("]", "");
+                if (!chatPartyPersonBOMap.containsKey(toUserId) && !StringUtils.equals(toUserId, userId)) {
+                    ChatPartyBO chatPartyBO = new ChatPartyBO();
+                    chatPartyBO.setType(0);
+                    chatPartyBO.setUserId(toUserId);
+                    chatPartyPersonBOMap.put(toUserId, chatPartyBO);
+                }
+            } else {
+                if (!chatPartyRoomBOMap.containsKey(r.getRoomId())) {
+                    ChatPartyBO chatPartyBO = new ChatPartyBO();
+                    chatPartyBO.setType(1);
+                    chatPartyBO.setRoomId(r.getRoomId());
+                    //Fixme 暂时写死
+                    chatPartyBO.setRommName("群聊" + chatPartyRoomBOMap.size());
+                    chatPartyRoomBOMap.put(r.getRoomId(), chatPartyBO);
+                }
+            }
+        });
+
+        List<ChatPartyBO> chatPartyBOS = new ArrayList<>(chatPartyPersonBOMap.values());
+        chatPartyBOS.addAll(chatPartyRoomBOMap.values());
+
+        return chatPartyBOS;
     }
 }

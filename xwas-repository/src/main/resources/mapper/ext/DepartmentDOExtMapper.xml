@@ -45,7 +45,7 @@
   </insert>
 
   <update id="updateBatchById" parameterType="java.util.List">
-    <foreach collection="departmentDOS" item="item" index="index" separator=",">
+    <foreach collection="departmentDOS" item="item" index="index" separator=";">
       update department
       <set>
         <if test="item.tenantId != null">

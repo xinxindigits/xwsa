@@ -20,7 +20,7 @@ public class DeptTreeVO extends ToString {
     private String id;
 
 
-    private String orgId;
+    private String tenantId;
 
 
     private String departmentId;
@@ -70,12 +70,12 @@ public class DeptTreeVO extends ToString {
         this.id = id;
     }
 
-    public String getOrgId() {
-        return orgId;
+    public String getTenantId() {
+        return tenantId;
     }
 
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getDepartmentId() {

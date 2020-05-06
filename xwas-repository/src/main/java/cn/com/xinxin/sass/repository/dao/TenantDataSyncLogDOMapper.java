@@ -57,5 +57,5 @@ public interface TenantDataSyncLogDOMapper {
      * @param tenantDataSyncLogDO 机构同步任务日志
      * @return 插入记录成功的条数
      */
-    int insertReturnId(@Param(value = "tenantDataSyncLogDO") TenantDataSyncLogDO tenantDataSyncLogDO);
+    int insertReturnId(TenantDataSyncLogDO tenantDataSyncLogDO);
 }
