@@ -59,9 +59,25 @@ public class SassTagsRestController extends AclController {
     //@RequiresPermissions("/tags/create")
     public Object createTags(@RequestBody TagForm tagForm, HttpServletRequest request){
 
-        
+        logger.info("SassTagsRestController,createTags,tagForm ={}",tagForm);
 
-        return null;
+        if(null == tagForm){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"标签参数不能为空");
+        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        TagsDO createTags = BaseConvert.convert(tagForm,TagsDO.class);
+        if(StringUtils.isEmpty(createTags.getCode())){
+            createTags.setCode("TG"+System.currentTimeMillis());
+        }
+        if(StringUtils.isEmpty(createTags.getTagType())){
+            createTags.setCode("COMMON");
+        }
+        createTags.setTenantId(sassUserInfo.getTenantId());
+        createTags.setGmtCreator(sassUserInfo.getAccount());
+        createTags.setGmtUpdater(sassUserInfo.getAccount());
+        int result = this.tagsService.createTags(createTags);
+
+        return result;
 
     }
 }
