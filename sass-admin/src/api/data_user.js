@@ -7,16 +7,23 @@ export const getUserList = data => {
     method: "post"
   });
 };
-export const addUser = ({ account, extension, name, gender, password }) => {
-  let data = { account, extension, name, gender, password };
+export const addUser = ({
+  account,
+  extension,
+  name,
+  gender,
+  password,
+  roles
+}) => {
+  let data = { account, extension, name, gender, password, roles };
   return axios.request({
     url: "user/create",
     data,
     method: "post"
   });
 };
-export const updateUser = ({ account, name, gender, extension }) => {
-  let data = { account, name, gender, extension };
+export const updateUser = ({ account, name, gender, extension, roles }) => {
+  let data = { account, name, gender, extension, roles };
   return axios.request({
     url: "user/update",
     data,
@@ -28,5 +35,23 @@ export const deleteUser = ({ accounts }) => {
     url: "user/delete",
     method: "post",
     data: { accounts }
+  });
+};
+export const getUserDetail = ({ account }) => {
+  return axios.request({
+    url: "user/query/" + account,
+    method: "get"
+  });
+};
+export const grantUserRoles = ({
+  userAccount,
+  userName,
+  userRoles,
+  extension
+}) => {
+  return axios.request({
+    url: "user/grant",
+    method: "post",
+    data: { userAccount, userName, userRoles, extension }
   });
 };

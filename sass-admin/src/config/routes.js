@@ -45,6 +45,13 @@ let routes_config = {
     },
     component: () => import("@/views/wechat/staff/staff.vue")
   },
+  ["/customer"]: {
+    name: "wc_customer",
+    meta: {
+      title: "客户管理"
+    },
+    component: () => import("@/views/wechat/customer/customer.vue")
+  },
   ["/message/list"]: {
     name: "message_list",
     meta: {

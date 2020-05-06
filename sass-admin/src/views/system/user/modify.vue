@@ -19,6 +19,13 @@
           :disabled="type == 'update'"
         ></Input>
       </FormItem>
+      <FormItem label="角色" prop="roles">
+        <Select multiple v-model="formObj.roles" style="width: 250px">
+          <Option v-for="item in roles" :value="item.code" :key="item.code">
+            {{ item.name }}
+          </Option>
+        </Select>
+      </FormItem>
       <FormItem label="姓名" prop="name">
         <Input v-model="formObj.name" style="width: 250px"></Input>
       </FormItem>
@@ -94,12 +101,14 @@ export default {
         { gender: 1, extension: "男" },
         { gender: 2, extension: "女" }
       ],
+      roles: [],
       formObj: {
         account: "",
         name: "",
         password: "",
         gender: "",
-        extension: ""
+        extension: "",
+        roles: []
       },
       rules: {
         account: [{ required: true, message: "账号不能为空", trigger: "blur" }],
@@ -121,8 +130,23 @@ export default {
       this.formObj.name = obj.name;
       this.formObj.gender = obj.gender;
       this.formObj.extension = obj.extension;
+      this.formObj.roles = obj.roles;
+    },
+    setRoleList(data) {
+      this.roles = data;
+    },
+    reset() {
+      this.formObj = {
+        account: "",
+        name: "",
+        password: "",
+        gender: "",
+        extension: "",
+        roles: []
+      };
     },
     hdlSubmit(name) {
+      console.log(this.formObj);
       this.$refs[name].validate(valid => {
         if (valid) {
           _config[this.type].submit(this.formObj).then(() => {
