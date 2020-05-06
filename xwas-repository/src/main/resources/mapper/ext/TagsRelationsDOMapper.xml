@@ -27,5 +27,5 @@
     id, tenant_id, tag_id, key_id, key_name, description, gmt_creator, gmt_created, gmt_updater, 
     gmt_updated, extension, deleted
   </sql>
- 
+
 </mapper>
