@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.xinxin.sass.repository.dao.TagsRelationsMapper">
+<mapper namespace="cn.com.xinxin.sass.repository.dao.TagsRelationsDOMapper">
   <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.TagsRelationsDO">
     <!--
       WARNING - @mbg.generated
@@ -27,5 +27,5 @@
     id, tenant_id, tag_id, key_id, key_name, description, gmt_creator, gmt_created, gmt_updater, 
     gmt_updated, extension, deleted
   </sql>
- 
+
 </mapper>
