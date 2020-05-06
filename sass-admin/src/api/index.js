@@ -7,7 +7,8 @@ import {
   grantUserRoles
 } from "./data_user";
 import { getOrgList, queryOrgList, queryMemberByDeptId } from "./wc_org";
-import { getMemberDetail, getMemberList } from "./wc_mem";
+import { getMemberDetail, getMemberList, queryMember } from "./wc_mem";
+import { queryMsgList, getMsgByMsgId } from "./wc_msg";
 import {
   getCustomerList,
   queryCustomerList,
@@ -25,6 +26,9 @@ export {
   queryMemberByDeptId,
   getMemberDetail,
   getMemberList,
+  queryMember,
+  queryMsgList,
+  getMsgByMsgId,
   getCustomerList,
   queryCustomerList,
   getCustomerDetail
