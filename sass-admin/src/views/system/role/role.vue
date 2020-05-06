@@ -1,56 +1,15 @@
 <template>
   <div>
     <Card>
-      <Form :model="formItem" inline label-colon>
-        <FormItem>
-          <Input v-model="formItem.code" placeholder="角色编号"></Input>
-        </FormItem>
-        <FormItem>
-          <Input v-model="formItem.name" placeholder="角色名称"></Input>
-        </FormItem>
-        <FormItem>
-          <Select
-            v-model="formItem.roleType"
-            placeholder="角色类型"
-            style="width:160px"
-            filterable
-          >
-            <Option value="admin">admin</Option>
-            <Option value="user">user</Option>
-          </Select>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" @click="hdlquery">查询</Button>
-          <Button style="margin-left: 8px" @click="reset">重置</Button>
-        </FormItem>
-      </Form>
-      <Row type="flex" :gutter="20" class="row-operation">
-        <Col
-          ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
-            >新增</Button
-          >
-        </Col>
-        <Col
-          ><Button
-            icon="md-trash"
-            type="error"
-            @click="hdlDelete(delteRoleCodes)"
-            >删除</Button
-          ></Col
-        >
-        <Col
-          ><Button icon="md-person-add" @click="hdlAccessUpdate"
-            >权限设置</Button
-          ></Col
-        >
-        <role-grant
-          ref="grantModal"
-          v-model="showGrantModal"
-          @on-cancel="showGrantModal = false"
-          @on-grant-role="hdlquery"
-        ></role-grant>
-      </Row>
-
+      <role-query
+        v-model="formItem"
+        @on-role-query="changePage(1)"
+      ></role-query>
+      <role-operation
+        @on-role-create="hdlSingleModified('create')"
+        @on-role-delete="hdlDelete(delteRoleCodes)"
+        @on-role-grant="hdlAccessUpdate"
+      ></role-operation>
       <Table
         stripe
         border
@@ -65,7 +24,7 @@
             type="primary"
             size="small"
             style="margin-right: 5px"
-            @click="hdlSingleModified(row)"
+            @click="hdlSingleModified('update', row)"
           >
             修改
           </Button>
@@ -87,17 +46,18 @@
           transfer
         ></Page>
       </div>
+      <role-grant
+        ref="grantModal"
+        v-model="showGrantModal"
+        @on-cancel="showGrantModal = false"
+        @on-grant-role="hdlqueryAfterReset"
+      ></role-grant>
       <role-update
-        type="create"
+        :type="modify"
         v-model="showAddModal"
         @on-cancel="showAddModal = false"
-        @on-add-role="hdlquery"
-      ></role-update>
-      <role-update
-        type="update"
-        v-model="showUpdateModal"
-        @on-update-role="hdlquery"
-        ref="updateModal"
+        @role-modified="hdlqueryAfterReset"
+        ref="modifyModal"
       ></role-update>
     </Card>
   </div>
@@ -105,13 +65,14 @@
 
 <script>
 import { getRoleList, delRole } from "@/api/data";
-import RoleUpdate from "./modify";
-import RoleGrant from "./granttree";
+import { RoleGrant, RoleUpdate, RoleQuery, RoleOperation } from "./components";
 export default {
   name: "role-list",
   components: {
     RoleUpdate,
-    RoleGrant
+    RoleGrant,
+    RoleQuery,
+    RoleOperation
   },
   computed: {
     delteRoleCodes() {
@@ -120,6 +81,7 @@ export default {
   },
   data() {
     return {
+      modify: "create",
       showAddModal: false,
       showGrantModal: false,
       showUpdateModal: false,
@@ -154,16 +116,16 @@ export default {
     };
   },
   methods: {
-    hdlquery() {
+    hdlqueryAfterReset() {
+      this.reset();
       this.changePage(1);
     },
-    changePage(pageIndex) {
+    changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
       getRoleList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
-          this.reset();
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -182,7 +144,7 @@ export default {
           onOk() {
             delRole({ roleCodes }).then(() => {
               this.$Message.success("删除成功！");
-              self.hdlquery();
+              self.hdlqueryAfterReset();
             });
           }
         });
@@ -211,12 +173,16 @@ export default {
     hdlSelectionChange(selection) {
       this.tbSelection = selection;
     },
-    hdlSingleCreate() {
+    hdlSingleModified(type = "create", data) {
+      this.modify = type;
+      let d = data || {
+        name: "",
+        code: "",
+        roleType: "",
+        extension: ""
+      };
+      this.$refs.modifyModal.setData(d);
       this.showAddModal = true;
-    },
-    hdlSingleModified(data) {
-      this.$refs.updateModal.setData(data);
-      this.showUpdateModal = true;
     }
   },
   mounted() {
