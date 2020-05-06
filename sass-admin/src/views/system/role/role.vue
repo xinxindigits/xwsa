@@ -2,6 +2,7 @@
   <div>
     <Card>
       <role-query
+        ref="query"
         v-model="formItem"
         @on-role-query="changePage(1)"
       ></role-query>
@@ -37,6 +38,7 @@
         <Page
           :total="total"
           :current="page"
+          :page-size="pageSize"
           :page-size-opts="[10, 20, 50, 100]"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
@@ -117,7 +119,7 @@ export default {
   },
   methods: {
     hdlqueryAfterReset() {
-      this.reset();
+      this.$refs.query.reset();
       this.changePage(1);
     },
     changePage(pageIndex = 1) {
@@ -164,11 +166,6 @@ export default {
           roleName
         });
       }
-    },
-    reset() {
-      this.formItem.name = "";
-      this.formItem.roleType = "";
-      this.formItem.code = "";
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;
