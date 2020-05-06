@@ -29,6 +29,6 @@ public class TagsServiceImpl implements TagsService {
     public int createTags(TagsDO tagsDO) {
 
         return tagsDOMapper.insertSelective(tagsDO);
-        
+
     }
 }
