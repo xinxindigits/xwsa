@@ -56,11 +56,11 @@ public interface CustomerDOMapper {
 
     /**
      * 通过机构id和客户userId查询客户信息
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @param userIdS 客户userid
      * @return 客户信息
      */
-    List<CustomerDO> selectByOrgIdAndUserId(@Param(value = "orgId") String orgId,
+    List<CustomerDO> selectByOrgIdAndUserId(@Param(value = "tenantId") String tenantId,
                                             @Param(value = "userIdS") List<String> userIdS);
 
     /**
@@ -84,7 +84,7 @@ public interface CustomerDOMapper {
      * @param endTime 终止时间
      * @param index 页码
      * @param pageSize 页大小
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @param customerName 客户名称
      * @return 分页查询的客户信息
      */
@@ -94,7 +94,7 @@ public interface CustomerDOMapper {
                                    @Param(value = "endTime") String endTime,
                                    @Param(value = "index") Long index,
                                    @Param(value = "pageSize") Integer pageSize,
-                                   @Param(value = "orgId") String orgId,
+                                   @Param(value = "tenantId") String tenantId,
                                    @Param(value = "customerName") String customerName);
 
     /**
@@ -102,14 +102,14 @@ public interface CustomerDOMapper {
      * @param memberUserIdS 成员UserId列表
      * @param startTime 起始时间
      * @param endTime 终止时间
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @param customerName 客户名称
      * @return 分页查询的客户信息
      */
     Long selectCountByOrgIdAndMemberUserIdSAndTimeAndCustName(@Param(value = "memberUserIdS") List<String> memberUserIdS,
                                                   @Param(value = "startTime") String startTime,
                                                   @Param(value = "endTime") String endTime,
-                                                  @Param(value = "orgId") String orgId,
+                                                  @Param(value = "tenantId") String tenantId,
                                                   @Param(value = "customerName") String customerName);
 
 
