@@ -91,7 +91,7 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
         //插入记录
         memberService.insertBatchPartially(insertMemberDOS, CommonConstants.ONE_HUNDRED);
         //更新记录
-        memberService.insertBatchPartially(updateMemberDOS, CommonConstants.ONE_HUNDRED);
+        memberService.updateBatchByIdPartially(updateMemberDOS, CommonConstants.ONE_HUNDRED);
 
         //此次成员改变的记录数
         tenantDataSyncLogDO.setMemberCount(tenantDataSyncLogDO.getMemberCount() + insertMemberDOS.size() + updateMemberDOS.size());

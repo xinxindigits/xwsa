@@ -91,4 +91,11 @@
     order by seq_id
   </select>
 
+  <select id="selectByMemberUserId" resultMap="BaseResultMapExt">
+    select from_user_id,to_user_id,room_id
+    from msg_record
+    where (from_user_id = #{userId} or to_user_id like concat('%', #{userId}, '%')) and deleted = 0
+    group by from_user_id,to_user_id,room_id;
+  </select>
+
 </mapper>

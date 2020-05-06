@@ -16,7 +16,7 @@ public class MemberDetailVO extends ToString {
 
     private Long id;
 
-    private String orgId;
+    private String tenantId;
 
     private String userId;
 
@@ -70,12 +70,12 @@ public class MemberDetailVO extends ToString {
         this.id = id;
     }
 
-    public String getOrgId() {
-        return orgId;
+    public String getTenantId() {
+        return tenantId;
     }
 
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getUserId() {

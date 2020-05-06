@@ -18,7 +18,7 @@ public class MsgRecordVO extends ToString {
      */
     private Long id;
     /**
-     * 机构id
+     * 租户id
      */
     private String tenantId;
 
