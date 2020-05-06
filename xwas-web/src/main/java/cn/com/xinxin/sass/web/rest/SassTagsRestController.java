@@ -52,4 +52,16 @@ public class SassTagsRestController extends AclController {
     public SassTagsRestController(final TagsService tagsService) {
         this.tagsService = tagsService;
     }
+
+
+
+    @RequestMapping(value = "/create",method = RequestMethod.POST)
+    //@RequiresPermissions("/tags/create")
+    public Object createTags(@RequestBody TagForm tagForm, HttpServletRequest request){
+
+        
+
+        return null;
+
+    }
 }
