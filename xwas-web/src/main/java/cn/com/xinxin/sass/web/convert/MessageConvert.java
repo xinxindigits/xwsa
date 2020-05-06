@@ -29,7 +29,7 @@ public class MessageConvert {
             return msgRecordVO;
         }
         msgRecordVO.setId(msgRecordDO.getId());
-        msgRecordVO.setOrgId(msgRecordDO.getTenantId());
+        msgRecordVO.setTenantId(msgRecordDO.getTenantId());
         msgRecordVO.setSeqId(msgRecordDO.getSeqId());
         msgRecordVO.setMsgId(msgRecordDO.getMsgId());
         msgRecordVO.setAction(msgRecordDO.getAction());

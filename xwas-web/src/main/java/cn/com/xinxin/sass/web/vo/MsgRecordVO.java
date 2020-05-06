@@ -20,7 +20,7 @@ public class MsgRecordVO extends ToString {
     /**
      * 机构id
      */
-    private String orgId;
+    private String tenantId;
 
     /**
      * 消息序号
@@ -77,12 +77,12 @@ public class MsgRecordVO extends ToString {
         this.id = id;
     }
 
-    public String getOrgId() {
-        return orgId;
+    public String getTenantId() {
+        return tenantId;
     }
 
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     public Long getSeqId() {
@@ -168,7 +168,7 @@ public class MsgRecordVO extends ToString {
     @Override
     public String toString() {
         return "MsgRecordVO{" +
-                "orgId='" + orgId + '\'' +
+                "tenantId='" + tenantId + '\'' +
                 ", seqId=" + seqId +
                 ", msgId='" + msgId + '\'' +
                 ", action='" + action + '\'' +

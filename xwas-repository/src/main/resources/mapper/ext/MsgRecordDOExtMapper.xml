@@ -81,13 +81,13 @@
 
   <select id="selectMsgRecordBetweenPersons" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
-    from msg_record where org_id = #{orgId} and ((from_user_id = #{userIdOne} and to_user_id = concat('[',#{userIdTwo},']'))  or (from_user_id = #{userIdTwo} and to_user_id = concat('[',#{userIdOne},']') ))
+    from msg_record where tenant_id = #{tenantId} and ((from_user_id = #{userIdOne} and to_user_id = concat('[',#{userIdTwo},']'))  or (from_user_id = #{userIdTwo} and to_user_id = concat('[',#{userIdOne},']') ))
     order by seq_id
   </select>
 
   <select id="selectRoomMsgRecord" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
-    from msg_record where org_id = #{orgId} and room_id = #{roomId}
+    from msg_record where tenant_id = #{tenantId} and room_id = #{roomId}
     order by seq_id
   </select>
 
