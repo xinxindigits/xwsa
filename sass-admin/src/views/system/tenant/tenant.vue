@@ -3,10 +3,10 @@
     <Card>
       <Form :model="formItem" inline label-colon>
         <FormItem>
-          <Input v-model="formItem.code" placeholder="租户编码"></Input>
+          <Input v-model="formItem.tenantId" placeholder="租户编码"></Input>
         </FormItem>
         <FormItem>
-          <Input v-model="formItem.name" placeholder="租户名称"></Input>
+          <Input v-model="formItem.tenantName" placeholder="租户名称"></Input>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="hdlquery">查询</Button>
@@ -34,7 +34,7 @@
         ref="tables"
         :columns="columns"
         :data="tableData"
-        :loading="isLoanding"
+        :loading="isLoading"
         @on-selection-change="hdlSelectionChange"
       >
         <template slot-scope="{ row }" slot="state">
@@ -52,7 +52,7 @@
           >
             详情
           </Button>
-          <Button type="error" size="small" @click="hdlDelete([row.code])">
+          <Button type="error" size="small" @click="hdlDelete([row.tenantId])">
             删除
           </Button>
         </template>
@@ -88,10 +88,10 @@
 
 <script>
 import {
-  getOrganizationList,
-  delOrganization,
-  queryOrganization
-} from "@/api/data_organization";
+  getTenantList,
+  delTenant,
+  queryTenant,
+} from "@/api/data_tenant";
 import OrganizationUpdate from "./modify";
 export default {
   name: "organization",
@@ -100,7 +100,7 @@ export default {
   },
   computed: {
     deleteOrgCodes() {
-      return this.tbSelection.map(item => item.code);
+      return this.tbSelection.map(item => item.tenantId);
     }
   },
   data() {
@@ -113,9 +113,8 @@ export default {
       total: 0,
       page: 1,
       formItem: {
-        name: "",
-        code: "",
-        orgType: "",
+        tenantId: "",
+        tenantName: "",
         state: ""
       },
       columns: [
@@ -124,8 +123,8 @@ export default {
           width: 60,
           align: "center"
         },
-        { title: "租户编码", key: "code", align: "center" },
-        { title: "租户名称", key: "name", align: "center" },
+        { title: "租户编码", key: "tenantId", align: "center" },
+        { title: "租户名称", key: "tenantName", align: "center" },
         { title: "备注", key: "remark", align: "center" },
         { title: "状态", slot: "state", align: "center" },
         {
@@ -148,7 +147,7 @@ export default {
       this.isLoading = true;
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
-      getOrganizationList({ pageIndex, pageSize, ...this.formItem })
+      getTenantList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
           this.reset();
@@ -162,9 +161,8 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.name = "";
-      this.formItem.orgType = "";
-      this.formItem.code = "";
+      this.formItem.tenantName = "";
+      this.formItem.tenantId = "";
       this.formItem.state = "";
     },
     hdlDelete(codes) {
@@ -174,7 +172,7 @@ export default {
           title: "确认删除？",
           content: `确定删除选中记录?`,
           onOk() {
-            delOrganization({ codes }).then(() => {
+            delTenant({ codes }).then(() => {
               this.$Message.success("删除成功！");
               self.hdlquery();
             });
@@ -188,15 +186,7 @@ export default {
       this.showAddModal = true;
     },
     hdlSingleModified(data) {
-      queryOrganization({ code: data.code }).then(res => {
-        // let datail = res.data;
-        //   detail.remark = data.remark;
-
-        // this.formObj.privateKey = data.privateKey;
-        // this.formObj.corpId = data.corpId;
-        // this.formObj.addressListSecret = data.addressListSecret;
-        // this.formObj.customerContactSecret = data.customerContactSecret;
-        // this.formObj.chatRecordSecret = data.chatRecordSecret;
+      queryTenant({ code: data.tenantId }).then(res => {
         this.$refs.updateModal.setData({
           obj: res.data,
           remark: data.remark,

@@ -73,12 +73,12 @@ let routes_config = {
     },
     component: () => import("@/views/system/resource/resource.vue")
   },
-  ["/organization/list"]: {
-    name: "organization_list",
+  ["/tenant/list"]: {
+    name: "tenant_list",
     meta: {
-      title: "组织结构管理"
+      title: "租户管理"
     },
-    component: () => import("@/views/system/organization/organization.vue")
+    component: () => import("@/views/system/tenant/tenant.vue")
   }
 };
 export default routes_config;

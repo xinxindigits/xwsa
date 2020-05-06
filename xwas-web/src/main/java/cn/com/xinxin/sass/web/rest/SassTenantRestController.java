@@ -12,10 +12,9 @@ import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
 import cn.com.xinxin.sass.web.form.OrgQueryForm;
 import cn.com.xinxin.sass.web.form.OrganizationForm;
-import cn.com.xinxin.sass.web.vo.CustomerVO;
-import cn.com.xinxin.sass.web.vo.MemberVO;
-import cn.com.xinxin.sass.web.vo.OrganizationVO;
-import cn.com.xinxin.sass.web.vo.TenantInfoVO;
+import cn.com.xinxin.sass.web.form.TenantForm;
+import cn.com.xinxin.sass.web.vo.*;
+import com.alibaba.fastjson.JSONObject;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.idgen.SnowFakeIdGenerator;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -61,33 +60,142 @@ public class SassTenantRestController extends AclController {
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-//    @RequiresPermissions("/tenant/list")
-    public Object tenantList(HttpServletRequest request, @RequestBody OrgQueryForm orgForm){
+    @RequiresPermissions("/tenant/list")
+    public Object tenantList(HttpServletRequest request, @RequestBody TenantForm tenantForm){
 
-        if(null == orgForm){
+        if(null == tenantForm){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"租户查询参数不能为空","租户查询参数不能为空");
         }
 
-        loger.info("SassTenantRestController,tenantList, orgName = {}",orgForm.getName());
+        loger.info("SassTenantRestController,tenantList, tenantForm = {}",tenantForm.getName());
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
 
         PageResultVO page = new PageResultVO();
-        page.setPageSize(orgForm.getPageSize());
-        page.setPageNumber(orgForm.getPageIndex());
+        page.setPageSize(tenantForm.getPageSize());
+        page.setPageNumber(tenantForm.getPageIndex());
 
-        PageResultVO<TenantBaseInfoDO> result = tenantBaseInfoService.listAllTenants(page);
+        TenantBaseInfoDO condition = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
+        PageResultVO<TenantBaseInfoDO> result = tenantBaseInfoService.findByCondition(page, condition);
+        PageResultVO<TenantInfoVO> resultVO = BaseConvert.convert(result,PageResultVO.class);
+        resultVO.setItems(BaseConvert.convertList(result.getItems(),TenantInfoVO.class));
+        return resultVO;
+    }
 
-        PageResultVO<TenantInfoVO> results = BaseConvert.convert(result,PageResultVO.class);
+    @RequestMapping(value = "/query/{code}",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresPermissions("/tenant/query")
+    public Object queryTenantDetail(HttpServletRequest request, @PathVariable(value = "code")String code){
 
-        List<TenantInfoVO> tenantInfoVOS = results.getItems();
+        if(StringUtils.isEmpty(code)){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"组织机构查询参数不能为空","组织机构查询参数");
+        }
 
-        results.setItems(tenantInfoVOS);
+        loger.info("SassTenantRestController,queryTenantDetail, code = {}",code);
+
+        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByTenantId(code);
+        if(tenantBaseInfoDO == null){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST);
+        }
+        TenantDetailVO result = BaseConvert.convert(tenantBaseInfoDO, TenantDetailVO.class);
+        result.setTenantId(tenantBaseInfoDO.getTenantId());
+        result.setTenantName(tenantBaseInfoDO.getTenantName());
 
         return result;
 
     }
 
+    @RequestMapping(value = "/create",method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    @RequiresPermissions("/tenant/create")
+    public Object createTenant(HttpServletRequest request, @RequestBody TenantForm tenantForm){
+
+        if(null == tenantForm){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"创建租户参数不能为空","创建租户参数不能为空");
+        }
+
+        loger.info("SassTenantRestController,createTenant, tenantForm:{}",JSONObject.toJSONString(tenantForm));
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        // 参数转换设置
+        TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
+        StringBuilder code = new StringBuilder();
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOSIGN);
+        code.append(OG).append(sdf.format(now)).append(PADDING);
+        try {
+            code.append(SnowFakeIdGenerator.getInstance().generateLongId());
+        }catch (Exception e){
+            loger.error("雪花算法生成id失败");
+            throw new BusinessException(SassBizResultCodeEnum.GENERATE_ID_ERROR);
+        }
+        tenantBaseInfoDO.setTenantId(code.toString());
+        tenantBaseInfoDO.setTenantName(tenantForm.getName());
+        tenantBaseInfoDO.setGmtCreator(sassUserInfo.getAccount());
+        tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
+
+        boolean result = tenantBaseInfoService.createOrgBaseInfo(tenantBaseInfoDO);
+
+        if(result){
+            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        }else {
+            return SassBizResultCodeEnum.FAIL.getAlertMessage();
+        }
+
+    }
+
+
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    @RequiresPermissions("/tenant/update")
+    public Object updateTenant(HttpServletRequest request,
+                                     @RequestBody TenantForm tenantForm){
+
+        if(null == tenantForm){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"更新租户参数不能为空","更新租户参数不能为空");
+        }
+
+        loger.info("SassTenantRestController,updateTenant, orgName = {}",tenantForm.getName());
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
+        tenantBaseInfoDO.setTenantId(tenantForm.getCode());
+        tenantBaseInfoDO.setTenantName(tenantForm.getName());
+        tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
+        boolean result = this.tenantBaseInfoService.updateByOrgId(tenantBaseInfoDO);
+
+        if(result){
+            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        }else {
+            return SassBizResultCodeEnum.FAIL.getAlertMessage();
+        }
+
+    }
+
+    @RequestMapping(value = "/delete",method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    @RequiresPermissions("/tenant/delete")
+    public Object deleteTenant(@RequestBody DeleteOrgForm deleteOrgForm, HttpServletRequest request){
+
+        if(deleteOrgForm == null){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER);
+        }
+
+        if(CollectionUtils.isEmpty(deleteOrgForm.getCodes())){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"组织机构列表不能为空");
+        }
+
+        int result = this.tenantBaseInfoService.deleteByCodes(deleteOrgForm.getCodes());
+        if(result > 0){
+            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        }else {
+            return SassBizResultCodeEnum.FAIL.getAlertMessage();
+        }
+    }
 
 }

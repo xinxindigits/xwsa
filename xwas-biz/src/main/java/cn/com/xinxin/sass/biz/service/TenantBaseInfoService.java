@@ -15,10 +15,10 @@ public interface TenantBaseInfoService {
 
     /**
      * 通过机构id查询
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @return 机构基础信息
      */
-    TenantBaseInfoDO selectByOrgId(String orgId);
+    TenantBaseInfoDO selectByTenantId(String tenantId);
 
     boolean createOrgBaseInfo(TenantBaseInfoDO tenantBaseInfoDO);
 
@@ -30,6 +30,6 @@ public interface TenantBaseInfoService {
      *
      * @return
      */
-    PageResultVO<TenantBaseInfoDO> listAllTenants(PageResultVO page);
+    PageResultVO<TenantBaseInfoDO> findByCondition(PageResultVO page, TenantBaseInfoDO condition);
 
 }
