@@ -1,47 +1,16 @@
 <template>
   <div>
     <Card>
-      <Form :model="formItem" inline label-colon>
-        <FormItem>
-          <Input v-model="formItem.account" placeholder="账号"></Input>
-        </FormItem>
-        <FormItem>
-          <Input v-model="formItem.name" placeholder="姓名"></Input>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" @click="hdlquery">查询</Button>
-          <Button style="margin-left: 8px" @click="reset">重置</Button>
-        </FormItem>
-      </Form>
-      <Row type="flex" :gutter="20" class="row-operation">
-        <Col
-          ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
-            >新增</Button
-          >
-        </Col>
-        <Col
-          ><Button
-            icon="md-trash"
-            type="error"
-            @click="hdlDelete(selectedAccounts)"
-            >删除</Button
-          ></Col
-        >
-        <Col>
-          <Button
-            icon="md-person-add"
-            @click="hdlAccessUpdate(selectedAccounts)"
-          >
-            角色授权
-          </Button>
-          <grant-role
-            ref="showRoleGrantModal"
-            v-model="showRoleGrantModal"
-            @on-user-grant-role="hdlRoleGrant"
-            :roleList="roleList"
-          ></grant-role>
-        </Col>
-      </Row>
+      <user-query
+        ref="query"
+        v-model="formItem"
+        @on-user-query="changePage(1)"
+      ></user-query>
+      <user-operation
+        @on-user-create="hdlSingleCreate"
+        @on-user-delete="hdlDelete(selectedAccounts)"
+        @on-user-grant="hdlAccessUpdate(selectedAccounts)"
+      ></user-operation>
 
       <Table
         stripe
@@ -97,14 +66,20 @@
           transfer
         ></Page>
       </div>
-      <modify
+      <user-modify
         ref="modifyModal"
         v-model="showModal"
         :type="modifyType"
         @on-cancel="showModal = false"
         @user-modified="hdlquery"
       >
-      </modify>
+      </user-modify>
+      <user-grant
+        ref="showRoleGrantModal"
+        v-model="showRoleGrantModal"
+        @on-user-grant-role="hdlRoleGrant"
+        :roleList="roleList"
+      ></user-grant>
     </Card>
     <Modal v-model="showUserDetail" title="用户详情" footer-hide>
       <Row class="row-detail">
@@ -128,11 +103,10 @@
 <script>
 import { getUserList, deleteUser, getUserDetail } from "@/api";
 import { getRoleList } from "@/api/data";
-import modify from "./modify";
-import GrantRole from "./grant";
+import { UserGrant, UserModify, UserOperation, UserQuery } from "./components";
 export default {
   name: "user-list",
-  components: { modify, GrantRole },
+  components: { UserGrant, UserModify, UserOperation, UserQuery },
   computed: {
     selectedAccounts() {
       return this.tbSelection.map(item => item.account);
@@ -231,11 +205,6 @@ export default {
       }
     },
 
-    reset() {
-      this.formItem.name = "";
-      this.formItem.account = "";
-      this.formItem.code = "";
-    },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;
     },

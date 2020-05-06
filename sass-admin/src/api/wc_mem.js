@@ -14,3 +14,23 @@ export const getMemberDetail = ({ id }) => {
     method: "get"
   });
 };
+export const queryMember = ({
+  pageIndex,
+  pageSize,
+  deptId,
+  memberName,
+  mobile
+}) => {
+  let data = {
+    pageIndex,
+    pageSize,
+    deptId,
+    memberName,
+    mobile
+  };
+  return axios.request({
+    url: "wechat/member/query",
+    method: "post",
+    data
+  });
+};

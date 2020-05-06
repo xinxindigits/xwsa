@@ -7,7 +7,7 @@ import VuexPersistence from "vuex-persist";
 Vue.use(Vuex);
 const vuexLocal = new VuexPersistence({
   key: "sass",
-  storage: window.sessionStorage,
+  storage: window.localStorage,
   reducer: state => ({
     user: {
       account: state.user.account,
