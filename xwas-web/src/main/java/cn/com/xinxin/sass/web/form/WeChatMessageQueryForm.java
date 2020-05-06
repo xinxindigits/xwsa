@@ -14,7 +14,7 @@ public class WeChatMessageQueryForm extends ToString {
     /**
      * 机构id
      */
-    private String orgId;
+    private String tenantId;
 
     /**
      * 成员userid或客户userid
@@ -49,12 +49,12 @@ public class WeChatMessageQueryForm extends ToString {
      */
     private Integer pageSize;
 
-    public String getOrgId() {
-        return orgId;
+    public String getTenantId() {
+        return tenantId;
     }
 
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     public String getUserId() {
