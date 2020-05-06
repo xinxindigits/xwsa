@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.MemberReceivedDO">
         <id column="id" jdbcType="BIGINT" property="id" />
         <result column="task_id" jdbcType="VARCHAR" property="taskId" />
-        <result column="org_id" jdbcType="VARCHAR" property="tenantId" />
+        <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
         <result column="user_id" jdbcType="VARCHAR" property="userId" />
         <result column="member_name" jdbcType="VARCHAR" property="memberName" />
         <result column="mobile" jdbcType="VARCHAR" property="mobile" />
@@ -36,7 +36,7 @@
         <result column="deleted" jdbcType="TINYINT" property="deleted" />
     </resultMap>
     <sql id="Base_Column_List_Ext">
-        id, task_id, org_id, user_id, member_name, mobile, department_id_list, order_list,
+        id, task_id, tenant_id, user_id, member_name, mobile, department_id_list, order_list,
     member_position, gender, mail, is_leader_in_dept, avatar, thumb_avatar, telephone,
     alias, status, ext_attr, qr_code, external_profile, external_position, address, hide_mobile,
     english_name, open_userid, main_department, extension, gmt_created, gmt_creator,
@@ -44,7 +44,7 @@
     </sql>
 
     <insert id="insertBatch" parameterType="java.util.List">
-        insert into member_received (task_id, org_id,
+        insert into member_received (task_id, tenant_id,
         user_id, member_name, mobile,
         department_id_list, order_list, member_position,
         gender, mail, is_leader_in_dept,
@@ -73,7 +73,7 @@
     <select id="queryByTaskIdAndOrgIdAndDepartmentId" resultMap="BaseResultMapExt">
         select <include refid="Base_Column_List_Ext"/>
         from member_received
-        where task_Id = #{taskId} and org_id = #{tenantId} and department_id_list like concat('%', #{departmentId}, '%')
+        where task_Id = #{taskId} and tenant_id = #{tenantId} and department_id_list like concat('%', #{departmentId}, '%')
         and deleted = 0
     </select>
 
