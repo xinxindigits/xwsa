@@ -1,7 +1,12 @@
 package cn.com.xinxin.sass.web.convert;
 
+import cn.com.xinxin.sass.biz.vo.ChatUserVO;
+import cn.com.xinxin.sass.common.constants.CommonConstants;
+import cn.com.xinxin.sass.common.constants.WeChatWorkChatRecordsTypeConstants;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
 import cn.com.xinxin.sass.web.vo.MsgRecordVO;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +50,23 @@ public class MessageConvert {
     public static List<MsgRecordVO> convert2MsgRecordVOList(List<MsgRecordDO> msgRecordDOS) {
         List<MsgRecordVO> msgRecordVOS = new ArrayList<>();
         msgRecordDOS.forEach(m -> msgRecordVOS.add(convert2MsgRecordVO(m)));
+        return msgRecordVOS;
+    }
+
+    public static List<MsgRecordVO> convert2MsgRecordVOList(List<MsgRecordDO> msgRecordDOS, ChatUserVO chatUserOneVO, ChatUserVO chatUserTwoVO) {
+        List<MsgRecordVO> msgRecordVOS = new ArrayList<>();
+        msgRecordDOS.forEach(msgRecordDO -> {
+            MsgRecordVO msgRecordVO = convert2MsgRecordVO(msgRecordDO);
+            if(WeChatWorkChatRecordsTypeConstants.TEXT.equals(msgRecordDO.getMsgType())){
+                msgRecordVO.setContent((String)JSONObject.parseObject(msgRecordDO.getContent()).get(CommonConstants.CONTENT));
+            }
+            if(StringUtils.equals(msgRecordDO.getFromUserId(),chatUserOneVO.getChatUserId())){
+                msgRecordVO.setFromUserName(chatUserOneVO.getChatUserName());
+            }else{
+                msgRecordVO.setFromUserName(chatUserTwoVO.getChatUserName());
+            }
+             msgRecordVOS.add(msgRecordVO);
+        });
         return msgRecordVOS;
     }
 }
