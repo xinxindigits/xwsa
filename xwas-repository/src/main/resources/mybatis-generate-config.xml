@@ -92,5 +92,14 @@
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
         <!--<table tableName="msg_record" domainObjectName="MsgRecordDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
+
+
+        <!--&lt;!&ndash; !!!! Table Configurations !!!! &ndash;&gt;-->
+        <!--<table tableName="tags" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+        <!--enableUpdateByExample="false"/>-->
+
+        <!--<table tableName="tags_relations" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false"/>-->
+
     </context>
 </generatorConfiguration>
