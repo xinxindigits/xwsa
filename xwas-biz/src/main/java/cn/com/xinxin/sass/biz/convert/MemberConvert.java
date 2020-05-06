@@ -26,7 +26,7 @@ public class MemberConvert {
                                                             String taskId, String orgId) {
         MemberReceivedDO memberReceivedDO = new MemberReceivedDO();
         memberReceivedDO.setTaskId(taskId);
-        memberReceivedDO.setOrgId(orgId);
+        memberReceivedDO.setTenantId(orgId);
         memberReceivedDO.setUserId(weChatWorkUserBO.getUserId());
         memberReceivedDO.setMemberName(weChatWorkUserBO.getUserName());
         memberReceivedDO.setMobile(weChatWorkUserBO.getMobile());

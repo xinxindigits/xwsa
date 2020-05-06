@@ -26,7 +26,7 @@ public class DepartmentConvert {
                                                                     String taskId, String orgId) {
         DepartmentReceivedDO departmentReceivedDO = new DepartmentReceivedDO();
         departmentReceivedDO.setTaskId(taskId);
-        departmentReceivedDO.setOrgId(orgId);
+        departmentReceivedDO.setTenantId(orgId);
         departmentReceivedDO.setDepartmentId(weChatWorkDepartmentBO.getDepartmentId());
         departmentReceivedDO.setDepartmentName(weChatWorkDepartmentBO.getDepartmentName());
         departmentReceivedDO.setDepartmentOrder(weChatWorkDepartmentBO.getDepartmentOrder());

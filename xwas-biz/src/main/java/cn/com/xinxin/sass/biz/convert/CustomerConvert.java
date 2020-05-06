@@ -28,7 +28,7 @@ public class CustomerConvert {
         CustomerReceivedDO customerReceivedDO = new CustomerReceivedDO();
         customerReceivedDO.setMemberUserId(memberUserId);
         customerReceivedDO.setTaskId(taskId);
-        customerReceivedDO.setOrgId(orgId);
+        customerReceivedDO.setTenantId(orgId);
         customerReceivedDO.setUserId(weChatWorkCustomerBO.getExternalUserId());
         customerReceivedDO.setCustomerName(weChatWorkCustomerBO.getName());
         customerReceivedDO.setAvatar(weChatWorkCustomerBO.getAvatar());

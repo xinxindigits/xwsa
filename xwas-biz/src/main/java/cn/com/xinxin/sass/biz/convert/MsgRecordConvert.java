@@ -31,7 +31,7 @@ public class MsgRecordConvert {
     public static MsgRecordDO convert2MsgRecordDO(WeChatWorkChattingRecordsBO recordsBO,
                                                   String orgId, String taskId, Long seqId) {
         MsgRecordDO msgRecordDO = new MsgRecordDO();
-        msgRecordDO.setOrgId(orgId);
+        msgRecordDO.setTenantId(orgId);
         msgRecordDO.setSeqId(seqId);
         msgRecordDO.setMsgId(recordsBO.getMsgId());
         msgRecordDO.setAction(recordsBO.getAction());
