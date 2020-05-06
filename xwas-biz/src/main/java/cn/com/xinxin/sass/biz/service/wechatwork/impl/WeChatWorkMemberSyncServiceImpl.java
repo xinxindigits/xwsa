@@ -2,12 +2,14 @@ package cn.com.xinxin.sass.biz.service.wechatwork.impl;
 
 import cn.com.xinxin.sass.biz.service.MemberReceivedService;
 import cn.com.xinxin.sass.biz.service.MemberService;
+import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkCustomerSyncService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkMemberSyncService;
 import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.enums.AddressListEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.repository.model.MemberReceivedDO;
+import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -31,38 +33,40 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkMemberSyncServiceImpl.class);
 
     private final MemberReceivedService memberReceivedService;
-
     private final MemberService memberService;
+    private final WeChatWorkCustomerSyncService weChatWorkCustomerSyncService;
 
     public WeChatWorkMemberSyncServiceImpl(final MemberReceivedService memberReceivedService,
-                                           final MemberService memberService) {
+                                           final MemberService memberService,
+                                           final WeChatWorkCustomerSyncService weChatWorkCustomerSyncService) {
         this.memberReceivedService = memberReceivedService;
         this.memberService = memberService;
+        this.weChatWorkCustomerSyncService = weChatWorkCustomerSyncService;
     }
 
     /**
      * 同步部门成员
      *
-     * @param taskId 任务id
-     * @param orgId 机构编码
      * @param departmentId 部门id
+     * @param tenantDataSyncLogDO 租户同步日志
      */
     @Override
-    public void syncMember(String taskId, String orgId, String departmentId) {
+    public void syncMember(String departmentId, TenantDataSyncLogDO tenantDataSyncLogDO) {
         //参数检查
-        checkParam(taskId, orgId, departmentId);
+        checkParam(tenantDataSyncLogDO, departmentId);
 
         //成员信息暂存表
         List<MemberReceivedDO> memberReceivedDOS = memberReceivedService.queryByTaskIdAndOrgIdAndDepartmentId(
-                taskId, orgId, CommonConstants.SEPARATOR + departmentId + CommonConstants.SEPARATOR);
+                tenantDataSyncLogDO.getTaskId(), tenantDataSyncLogDO.getTenantId(),
+                CommonConstants.SEPARATOR + departmentId + CommonConstants.SEPARATOR);
 
         if (CollectionUtils.isEmpty(memberReceivedDOS)) {
-            LOGGER.warn("该部门不存在成员，机构[{}]，部门id[{}]", orgId, departmentId);
+            LOGGER.warn("该部门不存在成员，租户[{}]，部门id[{}]", tenantDataSyncLogDO.getTenantId(), departmentId);
             return;
         }
 
         //成员信息
-        List<MemberDO> memberDOS = memberService.queryByOrgIdAndUserId(orgId,
+        List<MemberDO> memberDOS = memberService.queryByOrgIdAndUserId(tenantDataSyncLogDO.getTenantId(),
                 memberReceivedDOS.stream().map(MemberReceivedDO::getUserId).collect(Collectors.toList()));
 
         //待插入的记录
@@ -88,24 +92,34 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
         memberService.insertBatchPartially(insertMemberDOS, CommonConstants.ONE_HUNDRED);
         //更新记录
         memberService.insertBatchPartially(updateMemberDOS, CommonConstants.ONE_HUNDRED);
+
+        //此次成员改变的记录数
+        tenantDataSyncLogDO.setMemberCount(tenantDataSyncLogDO.getMemberCount() + insertMemberDOS.size() + updateMemberDOS.size());
+
+        //同步客户信息
+        weChatWorkCustomerSyncService.syncCustomer(memberReceivedDOS.stream().map(MemberReceivedDO::getUserId)
+                .collect(Collectors.toList()), tenantDataSyncLogDO);
     }
 
     /**
      * 参数检查
      *
-     * @param taskId 任务id
-     * @param orgId 机构编码
+     * @param tenantDataSyncLogDO 租户同步日志
      * @param departmentId 部门id
      */
-    private void checkParam(String taskId, String orgId, String departmentId) {
-        if (StringUtils.isBlank(taskId)) {
+    private void checkParam(TenantDataSyncLogDO tenantDataSyncLogDO, String departmentId) {
+        if (null == tenantDataSyncLogDO) {
+            LOGGER.error("同步部门成员，tenantDataSyncLogDO不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门成员，tenantDataSyncLogDO不能为空");
+        }
+        if (StringUtils.isBlank(tenantDataSyncLogDO.getTaskId())) {
             LOGGER.error("同步部门成员，taskId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门成员，taskId不能为空");
         }
 
-        if (StringUtils.isBlank(orgId)) {
-            LOGGER.error("同步部门成员，orgId不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门成员，orgId不能为空");
+        if (StringUtils.isBlank(tenantDataSyncLogDO.getTenantId())) {
+            LOGGER.error("同步部门成员，TenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门成员，TenantId不能为空");
         }
 
         if (StringUtils.isBlank(departmentId)) {

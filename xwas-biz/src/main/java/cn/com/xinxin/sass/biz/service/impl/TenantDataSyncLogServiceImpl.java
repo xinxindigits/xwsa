@@ -34,6 +34,7 @@ public class TenantDataSyncLogServiceImpl implements TenantDataSyncLogService {
      * @return 更新记录成功的条数
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int updateById(TenantDataSyncLogDO tenantDataSyncLogDO) {
         if (null == tenantDataSyncLogDO) {
             LOGGER.error("根据id进行更新记录, orgDataSyncLogDO不能为空");
