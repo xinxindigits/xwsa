@@ -92,10 +92,10 @@ public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartment
         });
 
         //插入记录
-        departmentService.insertBatch(insertRecord);
+        departmentService.insertBatchPartially(insertRecord, CommonConstants.ONE_HUNDRED);
 
         //更新记录
-        departmentService.updateBatchById(updateRecord);
+        departmentService.updateBatchByIdPartially(updateRecord, CommonConstants.ONE_HUNDRED);
     }
 
     /**

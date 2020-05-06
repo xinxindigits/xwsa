@@ -26,4 +26,11 @@ public interface MemberReceivedService {
      * @return 部门暂存信息
      */
     List<MemberReceivedDO> queryByTaskIdAndOrgIdAndDepartmentId(String taskId, String orgId, String departmentId);
+
+    /**
+     * 分批批量插入记录
+     * @param memberReceivedDOS 记录
+     * @param size 每次插入的数量
+     */
+    void insertBatchPartially(List<MemberReceivedDO> memberReceivedDOS, int size);
 }

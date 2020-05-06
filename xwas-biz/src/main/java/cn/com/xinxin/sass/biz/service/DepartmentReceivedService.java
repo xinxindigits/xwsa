@@ -26,4 +26,11 @@ public interface DepartmentReceivedService {
      * @return 部门信息
      */
     List<DepartmentReceivedDO> selectByTaskIdAndOrgId(String taskId, String orgId);
+
+    /**
+     * 分批批量插入记录
+     * @param departmentReceivedDOS 部门待导入表
+     * @param size 每次插入的数量
+     */
+    void insertBatchPartially(List<DepartmentReceivedDO> departmentReceivedDOS, int size);
 }

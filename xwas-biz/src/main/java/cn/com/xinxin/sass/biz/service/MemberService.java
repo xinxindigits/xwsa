@@ -68,6 +68,18 @@ public interface MemberService {
                                                 String mobile,
                                                 PageResultVO page);
 
+    /**
+     * 分批批量插入
+     * @param memberDOS 成员列表
+     * @param size 大小
+     */
+    void insertBatchPartially(List<MemberDO> memberDOS, int size);
 
+    /**
+     * 分批批量更新
+     * @param memberDOS 成员列表
+     * @param size 大小
+     */
+    void updateBatchByIdPartially(List<MemberDO> memberDOS, int size);
 
 }
