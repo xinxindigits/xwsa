@@ -20,7 +20,7 @@ public class MsgRecordVO extends ToString {
     /**
      * 机构id
      */
-    private String orgId;
+    private String tenantId;
 
     /**
      * 消息序号
@@ -41,7 +41,10 @@ public class MsgRecordVO extends ToString {
      * 发送人
      */
     private String fromUserId;
-
+    /**
+     * 发送人姓名
+     */
+    private String fromUserName;
     /**
      * 群名
      */
@@ -61,7 +64,6 @@ public class MsgRecordVO extends ToString {
      * 接受人
      */
     private String toUserId;
-
     /**
      * 消息内容
      */
@@ -75,12 +77,12 @@ public class MsgRecordVO extends ToString {
         this.id = id;
     }
 
-    public String getOrgId() {
-        return orgId;
+    public String getTenantId() {
+        return tenantId;
     }
 
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     public Long getSeqId() {
@@ -155,14 +157,23 @@ public class MsgRecordVO extends ToString {
         this.content = content;
     }
 
+    public String getFromUserName() {
+        return fromUserName;
+    }
+
+    public void setFromUserName(String fromUserName) {
+        this.fromUserName = fromUserName;
+    }
+
     @Override
     public String toString() {
         return "MsgRecordVO{" +
-                "orgId='" + orgId + '\'' +
+                "tenantId='" + tenantId + '\'' +
                 ", seqId=" + seqId +
                 ", msgId='" + msgId + '\'' +
                 ", action='" + action + '\'' +
                 ", fromUserId='" + fromUserId + '\'' +
+                ", fromUserName='" + fromUserName+ '\'' +
                 ", roomId='" + roomId + '\'' +
                 ", msgTime='" + msgTime + '\'' +
                 ", msgType='" + msgType + '\'' +

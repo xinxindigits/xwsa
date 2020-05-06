@@ -90,4 +90,21 @@ public interface MsgRecordDOMapper {
                                                     @Param(value = "startTime") String startTime,
                                                     @Param(value = "endTime") String endTime,
                                                     @Param(value = "tenantId") String tenantId);
+
+    /**
+     * 查询两个用户之间的会话记录
+     * @param tenantId
+     * @param userIdOne
+     * @param userIdTwo
+     * @return
+     */
+    List<MsgRecordDO> selectMsgRecordBetweenPersons(@Param("tenantId") String tenantId, @Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo);
+
+    /**
+     * 查询群聊会话记录
+     * @param tenantId
+     * @param roomId
+     * @return
+     */
+    List<MsgRecordDO> selectRoomMsgRecord(@Param("tenantId") String tenantId,@Param("roomId") String roomId);
 }
