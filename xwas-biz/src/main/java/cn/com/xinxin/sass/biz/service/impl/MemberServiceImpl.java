@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.DepartmentService;
 import cn.com.xinxin.sass.biz.service.MemberService;
+import cn.com.xinxin.sass.common.CommonUtils;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.DepartmentDOMapper;
@@ -169,5 +170,27 @@ public class MemberServiceImpl implements MemberService {
         return result;
 
 
+    }
+
+    /**
+     * 分批批量插入
+     * @param memberDOS 成员列表
+     * @param size 大小
+     */
+    @Override
+    public void insertBatchPartially(List<MemberDO> memberDOS, int size) {
+        List<List<MemberDO>> memberDOSList = CommonUtils.split(memberDOS, size);
+        memberDOSList.forEach(this::insertBatch);
+    }
+
+    /**
+     * 分批批量更新
+     * @param memberDOS 成员列表
+     * @param size 大小
+     */
+    @Override
+    public void updateBatchByIdPartially(List<MemberDO> memberDOS, int size) {
+        List<List<MemberDO>> memberDOSList = CommonUtils.split(memberDOS, size);
+        memberDOSList.forEach(this::updateBatchById);
     }
 }

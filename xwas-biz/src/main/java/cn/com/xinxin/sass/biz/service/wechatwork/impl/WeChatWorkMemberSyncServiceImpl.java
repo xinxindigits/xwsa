@@ -85,9 +85,9 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
             }
         });
         //插入记录
-        memberService.insertBatch(insertMemberDOS);
+        memberService.insertBatchPartially(insertMemberDOS, CommonConstants.ONE_HUNDRED);
         //更新记录
-        memberService.updateBatchById(updateMemberDOS);
+        memberService.insertBatchPartially(updateMemberDOS, CommonConstants.ONE_HUNDRED);
     }
 
     /**

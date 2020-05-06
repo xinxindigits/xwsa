@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.DepartmentReceivedService;
+import cn.com.xinxin.sass.common.CommonUtils;
 import cn.com.xinxin.sass.repository.dao.DepartmentReceivedDOMapper;
 import cn.com.xinxin.sass.repository.model.DepartmentReceivedDO;
 import org.apache.commons.collections4.CollectionUtils;
@@ -58,5 +59,16 @@ public class DepartmentReceivedServiceImpl implements DepartmentReceivedService 
             LOGGER.error("通过任务id和机构id查询部门信息, orgId不能为空");
         }
         return departmentReceivedDOMapper.selectByTaskIdAndOrgId(taskId, orgId);
+    }
+
+    /**
+     * 分批批量插入记录
+     * @param departmentReceivedDOS 部门待导入表
+     * @param size 每次插入的数量
+     */
+    @Override
+    public void insertBatchPartially(List<DepartmentReceivedDO> departmentReceivedDOS, int size) {
+        List<List<DepartmentReceivedDO>> departmentReceivedDOSList =  CommonUtils.split(departmentReceivedDOS, size);
+        departmentReceivedDOSList.forEach(this::insertBatch);
     }
 }

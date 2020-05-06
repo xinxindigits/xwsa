@@ -7,6 +7,7 @@ import cn.com.xinxin.sass.biz.service.CustomerReceivedService;
 import cn.com.xinxin.sass.biz.service.DepartmentReceivedService;
 import cn.com.xinxin.sass.biz.service.MemberReceivedService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkAddressListService;
+import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.CustomerReceivedDO;
 import cn.com.xinxin.sass.repository.model.DepartmentReceivedDO;
@@ -89,16 +90,15 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
         List<WeChatWorkDepartmentBO> weChatWorkDepartmentBOS = weChatWorkDepartmentClient.queryDepartmentList(addressListToken);
         List<DepartmentReceivedDO> departmentReceivedDOS = DepartmentConvert.convert2DepartmentReceivedDOList(
                 weChatWorkDepartmentBOS, taskId, orgId);
-        departmentReceivedService.insertBatch(departmentReceivedDOS);
+        departmentReceivedService.insertBatchPartially(departmentReceivedDOS, CommonConstants.ONE_HUNDRED);
 
         //获取成员列表
         List<WeChatWorkUserBO> weChatWorkUserBOS = weChatWorkUserClient.queryUserList(addressListToken,
                 weChatWorkDepartmentBOS.stream().map(WeChatWorkDepartmentBO::getDepartmentId).collect(Collectors.toList()));
         List<MemberReceivedDO> memberReceivedDOS = MemberConvert.convert2MemberReceivedDOList(
                 weChatWorkUserBOS, taskId, orgId);
-        //fixME 分批插入
-        memberReceivedService.insertBatch(memberReceivedDOS.stream()
-                .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()));
+        memberReceivedService.insertBatchPartially(memberReceivedDOS.stream()
+                .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()), CommonConstants.ONE_HUNDRED);
 
         //获取外部联系人管理应用api所需要的token
         String customerContactToken =  weChatWorkInteractionClient.fetchToken(corporationId, customerContactSecret);
@@ -112,9 +112,8 @@ public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListSe
             customerReceivedDOS.addAll(CustomerConvert.convert2CustomerReceivedDOList(
                     weChatWorkCustomerBOS, taskId, orgId, u.getUserId()));
         });
-        //fixME 分批插入
-        customerReceivedService.insertBatch(customerReceivedDOS.stream()
-                .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()));
+        customerReceivedService.insertBatchPartially(customerReceivedDOS.stream()
+                .filter(distinctByKey(m -> (m.getUserId()))).collect(Collectors.toList()), CommonConstants.ONE_HUNDRED);
     }
 
     /**

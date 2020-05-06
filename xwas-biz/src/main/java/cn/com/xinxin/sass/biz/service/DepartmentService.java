@@ -59,4 +59,18 @@ public interface DepartmentService {
      * @return
      */
     DepartmentDO  queryDeptByDeptId(String deptId);
+
+    /**
+     * 分批批量插入记录
+     * @param departmentDOS 部门信息
+     * @param size 大小
+     */
+    void insertBatchPartially(List<DepartmentDO> departmentDOS, int size);
+
+    /**
+     * 分批批量更新记录
+     * @param departmentDOS 部门信息
+     * @param size 大小
+     */
+    void updateBatchByIdPartially(List<DepartmentDO> departmentDOS, int size);
 }

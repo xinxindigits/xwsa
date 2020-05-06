@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.MemberReceivedService;
+import cn.com.xinxin.sass.common.CommonUtils;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.dao.MemberReceivedDOMapper;
 import cn.com.xinxin.sass.repository.model.MemberReceivedDO;
@@ -70,5 +71,16 @@ public class MemberReceivedServiceImpl implements MemberReceivedService {
                     "通过takId和orgId和部门id查询记录， departmentId不能为空");
         }
         return memberReceivedDOMapper.queryByTaskIdAndOrgIdAndDepartmentId(taskId, orgId, departmentId);
+    }
+
+    /**
+     * 分批批量插入记录
+     * @param memberReceivedDOS 记录
+     * @param size 每次插入的数量
+     */
+    @Override
+    public void insertBatchPartially(List<MemberReceivedDO> memberReceivedDOS, int size) {
+        List<List<MemberReceivedDO>> memberReceivedDOSList = CommonUtils.split(memberReceivedDOS, size);
+        memberReceivedDOSList.forEach(this::insertBatch);
     }
 }
