@@ -1,5 +1,7 @@
 package cn.com.xinxin.sass.biz.service.wechatwork;
 
+import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
+
 import java.util.List;
 
 /**
@@ -12,9 +14,9 @@ public interface WeChatWorkCustomerSyncService {
 
     /**
      * 同步客户信息
-     * @param orgId 机构id
-     * @param taskId 任务Id
+     *
      * @param memberUserIdS 成员userId列表
+     * @param tenantDataSyncLogDO 租户同步日志
      */
-    void syncCustomer(String orgId, String taskId, List<String> memberUserIdS);
+    void syncCustomer(List<String> memberUserIdS, TenantDataSyncLogDO tenantDataSyncLogDO);
 }
