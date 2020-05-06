@@ -95,6 +95,8 @@ public class SassRoleRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
         roleDO.setGmtCreator(sassUserInfo.getAccount());
         roleDO.setGmtUpdater(sassUserInfo.getAccount());
+        // FIXME: 先默认设置为xinxin租户
+        roleDO.setTenantId("xinxin");
         roleService.createRole(roleDO, createRoleForm.getResourceList());
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();

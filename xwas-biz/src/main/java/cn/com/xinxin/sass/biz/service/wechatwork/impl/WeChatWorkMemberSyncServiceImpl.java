@@ -121,7 +121,7 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
      */
     private void fetchInsertMember(MemberReceivedDO memberReceivedDO, List<MemberDO> insertMemberDOS) {
         MemberDO memberDO = new MemberDO();
-        memberDO.setOrgId(memberReceivedDO.getOrgId());
+        memberDO.setTenantId(memberReceivedDO.getTenantId());
         memberDO.setUserId(memberReceivedDO.getUserId());
         memberDO.setMemberName(memberReceivedDO.getMemberName());
         memberDO.setMobile(memberReceivedDO.getMobile());

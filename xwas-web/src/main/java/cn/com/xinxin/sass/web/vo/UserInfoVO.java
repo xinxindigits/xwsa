@@ -27,6 +27,10 @@ public class UserInfoVO extends ToString{
 
     private Date gmtCreated;
 
+    private String tenantId;
+
+    private String tenantName;
+
     /**
      * 用户对应的角色
      */
@@ -38,6 +42,21 @@ public class UserInfoVO extends ToString{
     private List<ResourceVO> resources;
 
 
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public String getTenantName() {
+        return tenantName;
+    }
+
+    public void setTenantName(String tenantName) {
+        this.tenantName = tenantName;
+    }
 
     public Long getId() {
         return id;

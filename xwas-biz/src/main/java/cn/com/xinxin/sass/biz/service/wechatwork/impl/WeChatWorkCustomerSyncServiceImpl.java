@@ -124,7 +124,7 @@ public class WeChatWorkCustomerSyncServiceImpl implements WeChatWorkCustomerSync
      */
     private void fetchInsertCustomer(CustomerReceivedDO customerReceivedDO, List<CustomerDO> insertCustomerDOS) {
         CustomerDO customerDO = new CustomerDO();
-        customerDO.setOrgId(customerReceivedDO.getOrgId());
+        customerDO.setTenantId(customerReceivedDO.getTenantId());
         customerDO.setMemberUserId(customerReceivedDO.getMemberUserId());
         customerDO.setUserId(customerReceivedDO.getUserId());
         customerDO.setCustomerName(customerReceivedDO.getCustomerName());

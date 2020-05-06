@@ -2,11 +2,11 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
-import cn.com.xinxin.sass.biz.service.OrgBaseInfoService;
+import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
-import cn.com.xinxin.sass.repository.model.OrgBaseInfoDO;
+import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
@@ -15,7 +15,6 @@ import cn.com.xinxin.sass.web.form.OrganizationForm;
 import cn.com.xinxin.sass.web.vo.OrganizationVO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.idgen.SnowFakeIdGenerator;
-import com.xinxinfinance.commons.result.BizResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -26,7 +25,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.xml.crypto.Data;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +43,7 @@ public class SassOrganizationRestController extends AclController {
 
     private final OrganizationService organizationService;
 
-    private final OrgBaseInfoService orgBaseInfoService;
+    private final TenantBaseInfoService tenantBaseInfoService;
 
     private static final String OG = "OG";
 
@@ -53,9 +51,9 @@ public class SassOrganizationRestController extends AclController {
 
     private static final String PADDING = "000";
 
-    public SassOrganizationRestController(OrganizationService organizationService, OrgBaseInfoService orgBaseInfoService) {
+    public SassOrganizationRestController(OrganizationService organizationService, TenantBaseInfoService tenantBaseInfoService) {
         this.organizationService = organizationService;
-        this.orgBaseInfoService = orgBaseInfoService;
+        this.tenantBaseInfoService = tenantBaseInfoService;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -96,13 +94,13 @@ public class SassOrganizationRestController extends AclController {
         loger.info("SassOrganizationRestController,createOrganization, code = {}",code);
 
         //OrganizationDO organizationDO = organizationService.findByCode(code);
-        OrgBaseInfoDO orgBaseInfoDO = orgBaseInfoService.selectByOrgId(code);
-        if(orgBaseInfoDO == null){
+        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByOrgId(code);
+        if(tenantBaseInfoDO == null){
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST);
         }
-        OrganizationVO result = BaseConvert.convert(orgBaseInfoDO, OrganizationVO.class);
-        result.setCode(orgBaseInfoDO.getOrgId());
-        result.setName(orgBaseInfoDO.getOrgName());
+        OrganizationVO result = BaseConvert.convert(tenantBaseInfoDO, OrganizationVO.class);
+        result.setCode(tenantBaseInfoDO.getTenantId());
+        result.setName(tenantBaseInfoDO.getTenantName());
 
         return result;
 
@@ -168,13 +166,13 @@ public class SassOrganizationRestController extends AclController {
         // 创建对象
         int result = this.organizationService.createOrganization(organizationDO);
 
-        OrgBaseInfoDO orgBaseInfoDO = BaseConvert.convert(orgForm, OrgBaseInfoDO.class);
-        orgBaseInfoDO.setOrgId(code.toString());
-        orgBaseInfoDO.setOrgName(orgForm.getName());
-        orgBaseInfoDO.setGmtCreator(sassUserInfo.getAccount());
-        orgBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
+        TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(orgForm, TenantBaseInfoDO.class);
+        tenantBaseInfoDO.setTenantId(code.toString());
+        tenantBaseInfoDO.setTenantName(orgForm.getName());
+        tenantBaseInfoDO.setGmtCreator(sassUserInfo.getAccount());
+        tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
 
-        orgBaseInfoService.createOrgBaseInfo(orgBaseInfoDO);
+        tenantBaseInfoService.createOrgBaseInfo(tenantBaseInfoDO);
 
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
@@ -207,11 +205,11 @@ public class SassOrganizationRestController extends AclController {
         // 创建对象
         int result = this.organizationService.updateOrganization(organizationDO);
 
-        OrgBaseInfoDO orgBaseInfoDO = BaseConvert.convert(orgForm, OrgBaseInfoDO.class);
-        orgBaseInfoDO.setOrgId(orgForm.getCode());
-        orgBaseInfoDO.setOrgName(orgForm.getName());
-        orgBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
-        this.orgBaseInfoService.updateByOrgId(orgBaseInfoDO);
+        TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(orgForm, TenantBaseInfoDO.class);
+        tenantBaseInfoDO.setTenantId(orgForm.getCode());
+        tenantBaseInfoDO.setTenantName(orgForm.getName());
+        tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
+        this.tenantBaseInfoService.updateByOrgId(tenantBaseInfoDO);
 
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
@@ -236,7 +234,7 @@ public class SassOrganizationRestController extends AclController {
         }
 
         int result = this.organizationService.deleteByCodes(deleteOrgForm.getCodes());
-        this.orgBaseInfoService.deleteByCodes(deleteOrgForm.getCodes());
+        this.tenantBaseInfoService.deleteByCodes(deleteOrgForm.getCodes());
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else {

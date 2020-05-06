@@ -96,6 +96,9 @@ public class SassAuthRestController {
             sassUserInfo.setDevice(HttpRequestUtil.getRequestDevice(request));
             sassUserInfo.setIp(HttpRequestUtil.getIpAddress(request));
 
+            //设置用户的租户ID
+            sassUserInfo.setTenantId(userDO.getTenantId());
+
             List<RoleDO> roleDOList = userService.findRolesByAccount(userAccount);
 
             if (!CollectionUtils.isEmpty(roleDOList)){
