@@ -65,11 +65,11 @@ public interface MemberReceivedDOMapper {
     /**
      * 通过takId和orgId和部门id查询记录
      * @param taskId 任务id
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @param departmentId 部门id
      * @return 部门暂存信息
      */
     List<MemberReceivedDO> queryByTaskIdAndOrgIdAndDepartmentId(@Param(value = "taskId") String taskId,
-                                                                @Param(value = "orgId") String orgId,
+                                                                @Param(value = "tenantId") String tenantId,
                                                                 @Param(value = "departmentId") String departmentId);
 }

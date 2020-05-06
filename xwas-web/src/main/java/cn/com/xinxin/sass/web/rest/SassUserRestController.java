@@ -174,6 +174,9 @@ public class SassUserRestController extends AclController {
 
         userCreateDO.setGender(Byte.valueOf(String.valueOf(userForm.getGender())));
 
+        // FIXME: 先默认设置为xinxin租户
+        userCreateDO.setTenantId("xinxin");
+
         int result = this.userService.createUser(userCreateDO);
 
 
@@ -194,7 +197,13 @@ public class SassUserRestController extends AclController {
             }
 
             this.userRoleService.createUserRoles(userRoleDOS);
+        }
 
+        String userOrgCode = userForm.getOrgCode();
+
+        if(StringUtils.isNotEmpty(userOrgCode)){
+            // 如果组织机构编码不为空，则需要创建组装与用户的关系
+            
         }
 
         return result;

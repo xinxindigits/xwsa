@@ -1,7 +1,7 @@
 package cn.com.xinxin.sass.biz.service;
 
 
-import cn.com.xinxin.sass.repository.model.OrgDataSyncLogDO;
+import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
 
 /**
  * @author: liuhangzhou
@@ -9,19 +9,19 @@ import cn.com.xinxin.sass.repository.model.OrgDataSyncLogDO;
  * @updater:
  * @description: 机构同步任务日志数据库服务
  */
-public interface OrgDataSyncLogService {
+public interface TenantDataSyncLogService {
 
     /**
      * 根据id进行更新
-     * @param orgDataSyncLogDO 记录
+     * @param tenantDataSyncLogDO 记录
      * @return 更新记录成功的条数
      */
-    int updateById(OrgDataSyncLogDO orgDataSyncLogDO);
+    int updateById(TenantDataSyncLogDO tenantDataSyncLogDO);
 
     /**
      * 插入记录并将生成的id保存到orgDataSyncLogDO的id字段
-     * @param orgDataSyncLogDO 机构同步任务日志
+     * @param tenantDataSyncLogDO 机构同步任务日志
      * @return 插入记录成功的条数
      */
-    int insertReturnId(OrgDataSyncLogDO orgDataSyncLogDO);
+    int insertReturnId(TenantDataSyncLogDO tenantDataSyncLogDO);
 }

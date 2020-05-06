@@ -64,9 +64,9 @@ public interface DepartmentReceivedDOMapper {
     /**
      * 通过任务id和机构id查询部门信息
      * @param taskId 任务id
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @return 部门信息
      */
     List<DepartmentReceivedDO> selectByTaskIdAndOrgId(@Param(value = "taskId") String taskId,
-                                                      @Param(value = "orgId") String orgId);
+                                                      @Param(value = "tenantId") String tenantId);
 }

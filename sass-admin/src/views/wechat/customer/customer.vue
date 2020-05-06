@@ -88,7 +88,7 @@ export default {
       curDetail: {},
 
       formItem: {
-        orgId: "xinxin",
+        tenantId: "xinxin",
         startTime: "",
         endTime: "",
         memberUserIds: [],

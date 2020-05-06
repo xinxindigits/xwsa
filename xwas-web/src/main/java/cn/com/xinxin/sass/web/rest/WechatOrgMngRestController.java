@@ -51,7 +51,7 @@ public class WechatOrgMngRestController extends AclController {
 
                     DeptTreeVO deptTreeVO = new DeptTreeVO();
                     deptTreeVO.setId(String.valueOf(departmentDO.getId()));
-                    deptTreeVO.setOrgId(departmentDO.getOrgId());
+                    deptTreeVO.setOrgId(departmentDO.getTenantId());
                     deptTreeVO.setDepartmentId(String.valueOf(departmentDO.getDepartmentId()));
                     deptTreeVO.setDepartmentName(departmentDO.getDepartmentName());
                     deptTreeVO.setEnglishName(departmentDO.getEnglishName());
@@ -101,7 +101,7 @@ public class WechatOrgMngRestController extends AclController {
                     // 组装必要的参数
                     DeptTreeVO deptTreeVO = new DeptTreeVO();
                     deptTreeVO.setId(String.valueOf(departmentDO.getId()));
-                    deptTreeVO.setOrgId(departmentDO.getOrgId());
+                    deptTreeVO.setOrgId(departmentDO.getTenantId());
                     deptTreeVO.setDepartmentId(String.valueOf(departmentDO.getDepartmentId()));
                     deptTreeVO.setDepartmentName(departmentDO.getDepartmentName());
                     deptTreeVO.setEnglishName(departmentDO.getEnglishName());

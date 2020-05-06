@@ -56,11 +56,12 @@ public interface MemberDOMapper {
 
     /**
      * 通过机构id和用户id查询记录
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @param userIdS 用户id
      * @return 成员列表
      */
-    List<MemberDO> queryByOrgIdAndUserId(@Param(value = "orgId") String orgId, @Param(value = "userIdS") List<String> userIdS);
+    List<MemberDO> queryByOrgIdAndUserId(@Param(value = "tenantId") String tenantId,
+                                         @Param(value = "userIdS") List<String> userIdS);
 
     /**
      * 批量插入

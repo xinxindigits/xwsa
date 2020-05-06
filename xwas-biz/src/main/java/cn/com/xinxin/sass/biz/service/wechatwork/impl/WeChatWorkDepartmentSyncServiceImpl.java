@@ -92,10 +92,10 @@ public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartment
         });
 
         //插入记录
-        departmentService.insertBatch(insertRecord);
+        departmentService.insertBatchPartially(insertRecord, CommonConstants.ONE_HUNDRED);
 
         //更新记录
-        departmentService.updateBatchById(updateRecord);
+        departmentService.updateBatchByIdPartially(updateRecord, CommonConstants.ONE_HUNDRED);
     }
 
     /**
@@ -132,7 +132,7 @@ public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartment
     private void fetchInsertDepartment(DepartmentReceivedDO departmentReceivedDO, String taskId,
                                        List<DepartmentDO> insertRecord) {
         DepartmentDO insertDepartmentDO = new DepartmentDO();
-        insertDepartmentDO.setOrgId(departmentReceivedDO.getOrgId());
+        insertDepartmentDO.setTenantId(departmentReceivedDO.getTenantId());
         insertDepartmentDO.setDepartmentId(departmentReceivedDO.getDepartmentId());
         insertDepartmentDO.setDepartmentName(departmentReceivedDO.getDepartmentName());
         insertDepartmentDO.setEnglishName(departmentReceivedDO.getEnglishName());

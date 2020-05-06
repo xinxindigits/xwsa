@@ -85,9 +85,9 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
             }
         });
         //插入记录
-        memberService.insertBatch(insertMemberDOS);
+        memberService.insertBatchPartially(insertMemberDOS, CommonConstants.ONE_HUNDRED);
         //更新记录
-        memberService.updateBatchById(updateMemberDOS);
+        memberService.insertBatchPartially(updateMemberDOS, CommonConstants.ONE_HUNDRED);
     }
 
     /**
@@ -121,7 +121,7 @@ public class WeChatWorkMemberSyncServiceImpl implements WeChatWorkMemberSyncServ
      */
     private void fetchInsertMember(MemberReceivedDO memberReceivedDO, List<MemberDO> insertMemberDOS) {
         MemberDO memberDO = new MemberDO();
-        memberDO.setOrgId(memberReceivedDO.getOrgId());
+        memberDO.setTenantId(memberReceivedDO.getTenantId());
         memberDO.setUserId(memberReceivedDO.getUserId());
         memberDO.setMemberName(memberReceivedDO.getMemberName());
         memberDO.setMobile(memberReceivedDO.getMobile());

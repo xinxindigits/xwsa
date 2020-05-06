@@ -70,13 +70,13 @@
                enableUpdateByExample="false">
             <generatedKey column="ID" sqlStatement="MySQL" identity="true"/>
         </table>-->
-        <!--<table tableName="org_base_info" domainObjectName="OrgBaseInfoDO" enableCountByExample="false"
+        <!--<table tableName="org_base_info" domainObjectNaTenantBaseInfoDOfoDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
-        <table tableName="org_data_sync_config" domainObjectName="OrgDataSyncConfigDO" enableCountByExample="false"
+        <table tableName="org_data_sync_config" domainObjectNaTenantDataSyncConfigDOigDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
-        <table tableName="org_data_sync_log" domainObjectName="OrgDataSyncLogDO" enableCountByExample="false"
+        <table tableName="org_data_sync_log" domainObjectNaTenantDataSyncLogDOogDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
-        <table tableName="org_data_sync_excp" domainObjectName="OrgDataSyncExcpDO" enableCountByExample="false"
+        <table tableName="org_data_sync_excp" domainObjectNaTenantDataSyncExcpDOcpDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
         <table tableName="department_received" domainObjectName="DepartmentReceivedDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>
@@ -92,5 +92,14 @@
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
         <!--<table tableName="msg_record" domainObjectName="MsgRecordDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
+
+
+        <!--&lt;!&ndash; !!!! Table Configurations !!!! &ndash;&gt;-->
+        <!--<table tableName="tags" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+        <!--enableUpdateByExample="false"/>-->
+
+        <!--<table tableName="tags_relations" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+               <!--enableUpdateByExample="false"/>-->
+
     </context>
 </generatorConfiguration>

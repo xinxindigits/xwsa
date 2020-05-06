@@ -56,10 +56,10 @@ public interface DepartmentDOMapper {
 
     /**
      * 通过机构id查询部门列表
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @return 部门列表
      */
-    List<DepartmentDO> selectByOrgId(@Param(value = "orgId") String orgId);
+    List<DepartmentDO> selectByOrgId(@Param(value = "tenantId") String tenantId);
 
     /**
      * 批量插入记录

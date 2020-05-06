@@ -42,8 +42,15 @@ public class UserForm extends ToString {
      */
     private String extension;
 
+    /**
+     * 角色列表
+     */
     private List<String> roles;
 
+    /**
+     * 用户对应的组织机构
+     */
+    private String orgCode;
 
     /**
      *
@@ -162,4 +169,11 @@ public class UserForm extends ToString {
         this.roles = roles;
     }
 
+    public String getOrgCode() {
+        return orgCode;
+    }
+
+    public void setOrgCode(String orgCode) {
+        this.orgCode = orgCode;
+    }
 }

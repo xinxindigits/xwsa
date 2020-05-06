@@ -59,5 +59,17 @@ public interface CustomerService {
      */
     CustomerDO queryById(Long id);
 
+    /**
+     * 分批批量插入记录
+     * @param customerDOS 客户信息
+     * @param size 大小
+     */
+    void insertBatchPartially(List<CustomerDO> customerDOS, int size);
 
+    /**
+     * 分批批量更新记录
+     * @param customerDOS 客户信息
+     * @param size 大小
+     */
+    void updateBatchPartially(List<CustomerDO> customerDOS, int size);
 }

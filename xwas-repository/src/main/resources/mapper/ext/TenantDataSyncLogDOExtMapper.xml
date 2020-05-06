@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.com.xinxin.sass.repository.dao.OrgDataSyncLogDOMapper">
-  <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.OrgDataSyncLogDO">
+<mapper namespace="cn.com.xinxin.sass.repository.dao.TenantDataSyncLogDOMapper">
+  <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="task_id" jdbcType="VARCHAR" property="taskId" />
-    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
     <result column="task_type" jdbcType="VARCHAR" property="taskType" />
     <result column="task_date" jdbcType="VARCHAR" property="taskDate" />
     <result column="task_time" jdbcType="VARCHAR" property="taskTime" />
@@ -23,23 +23,23 @@
     <result column="deleted" jdbcType="TINYINT" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List_Ext">
-    id, task_id, org_id, task_type, task_date, task_time, message_count, department_count, 
+    id, task_id, tenant_id, task_type, task_date, task_time, message_count, department_count, 
     member_count, customer_count, task_status, error_code, error_desc, extension, gmt_created, 
     gmt_creator, gmt_updated, gmt_updater, deleted
   </sql>
 
-  <insert id="insertReturnId" parameterType="cn.com.xinxin.sass.repository.model.OrgDataSyncLogDO"
+  <insert id="insertReturnId" parameterType="cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO"
           useGeneratedKeys="true" keyProperty="id">
     <selectKey resultType="long" order="AFTER" keyProperty="id">
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into org_data_sync_log (id, task_id, org_id,
+    insert into tenant_sync_log (id, task_id, tenant_id,
     task_type, task_date, task_time,
     message_count, department_count, member_count,
     customer_count, task_status, error_code,
     error_desc, extension, gmt_created,
     gmt_creator, gmt_updated, gmt_updater)
-    values (#{id,jdbcType=BIGINT}, #{taskId,jdbcType=VARCHAR}, #{orgId,jdbcType=VARCHAR},
+    values (#{id,jdbcType=BIGINT}, #{taskId,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR},
     #{taskType,jdbcType=VARCHAR}, #{taskDate,jdbcType=VARCHAR}, #{taskTime,jdbcType=VARCHAR},
     #{messageCount,jdbcType=INTEGER}, #{departmentCount,jdbcType=INTEGER}, #{memberCount,jdbcType=INTEGER},
     #{customerCount,jdbcType=INTEGER}, #{taskStatus,jdbcType=VARCHAR}, #{errorCode,jdbcType=VARCHAR},

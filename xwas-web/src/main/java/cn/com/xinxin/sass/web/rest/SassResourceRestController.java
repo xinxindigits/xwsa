@@ -240,6 +240,10 @@ public class SassResourceRestController extends AclController {
         resourceDO.setGmtCreator(userAccount);
         resourceDO.setGmtUpdater(userAccount);
 
+        // FIXME: 先默认设置为xinxin租户
+        resourceDO.setTenantId("xinxin");
+
+
         int result = resourceService.createResource(resourceDO);
 
         if(result==0){

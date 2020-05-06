@@ -28,4 +28,11 @@ public interface CustomerReceivedService {
      */
     List<CustomerReceivedDO> selectByTaskIdMemberUserIdS(String taskId, List<String> memberUserIdS, Long startId,
                                                          Long pageSize);
+
+    /**
+     * 分批批量插入记录
+     * @param customerReceivedDOS 记录
+     * @param size 每次插入的数量
+     */
+    void insertBatchPartially(List<CustomerReceivedDO> customerReceivedDOS, int size);
 }

@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.biz.service;
 
+import cn.com.xinxin.sass.biz.vo.ChatUserVO;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
 
@@ -38,4 +39,10 @@ public interface MsgRecordService {
      * @return 消息纪录
      */
     MsgRecordDO queryById(Long id);
+
+    PageResultVO<MsgRecordDO> selectMsgRecordBetweenPersons(PageResultVO page,String orgId, String userIdOne, String userIdTwo);
+
+    PageResultVO<MsgRecordDO> selectRoomMsgRecord(PageResultVO page,String orgId, String roomId);
+
+    ChatUserVO getChatUser(String orgId, String chatUserId);
 }

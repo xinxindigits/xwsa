@@ -142,7 +142,7 @@ export default {
           title,
           expand,
           funcs,
-          ...self._.pick(item, "orgId", "departmentId", "parentId", "id")
+          ...self._.pick(item, "tenantId", "departmentId", "parentId", "id")
         };
         if (item.children && item.children.length > 0) {
           obj.children = this.formatData(item.children);

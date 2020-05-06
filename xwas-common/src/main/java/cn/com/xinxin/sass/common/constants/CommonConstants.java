@@ -31,4 +31,8 @@ public class CommonConstants {
      * 字符编码utf8
      */
     public static final String ENCODEING_UTF8 = "UTF-8";
+
+    public static final int ONE_HUNDRED = 100;
+
+    public static final String CONTENT = "content";
 }
