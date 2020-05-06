@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.CustomerReceivedService;
+import cn.com.xinxin.sass.common.CommonUtils;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.dao.CustomerReceivedDOMapper;
 import cn.com.xinxin.sass.repository.model.CustomerReceivedDO;
@@ -72,5 +73,16 @@ public class CustomerReceivedServiceImpl implements CustomerReceivedService {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "分页查询记录, pageSize不能为空");
         }
         return customerReceivedDOMapper.selectByTaskIdMemberUserIdS(taskId, memberUserIdS, startId, pageSize);
+    }
+
+    /**
+     * 分批批量插入记录
+     * @param customerReceivedDOS 记录
+     * @param size 每次插入的数量
+     */
+    @Override
+    public void insertBatchPartially(List<CustomerReceivedDO> customerReceivedDOS, int size) {
+        List<List<CustomerReceivedDO>> customerReceivedDOSList = CommonUtils.split(customerReceivedDOS, size);
+        customerReceivedDOSList.forEach(this::insertBatch);
     }
 }

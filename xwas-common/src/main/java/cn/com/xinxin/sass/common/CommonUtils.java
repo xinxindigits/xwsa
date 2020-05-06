@@ -1,6 +1,10 @@
 package cn.com.xinxin.sass.common;
 
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.NotImplementedException;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 静态工具类。
@@ -33,5 +37,31 @@ public final class CommonUtils
     public static String foo()
     {
         throw new NotImplementedException("TODO");
+    }
+
+    /**
+     * 将一个list分成多个指定大小的list
+     * @param list 列表
+     * @param size 大小
+     * @param <T>
+     * @return
+     */
+    public static <T> List<List<T>> split(Collection<T> list, int size) {
+        List<List<T>> splitList = Lists.newArrayList();
+        if (null == list || list.isEmpty()) {
+            return splitList;
+        }
+        int iCount =0;
+        List<T> eachList = Lists.newArrayList();
+        for (T data : list) {
+            eachList.add(data);
+            ++ iCount;
+            if (eachList.size() >= size
+                    || iCount == list.size()) {
+                splitList.add(eachList);
+                eachList = Lists.newArrayList();
+            }
+        }
+        return splitList;
     }
 }

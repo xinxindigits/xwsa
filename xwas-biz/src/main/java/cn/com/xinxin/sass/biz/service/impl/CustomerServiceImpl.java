@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.CustomerService;
+import cn.com.xinxin.sass.common.CommonUtils;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.CustomerDOMapper;
@@ -168,5 +169,27 @@ public class CustomerServiceImpl implements CustomerService {
                     "通过id查询客户,id不能为空");
         }
         return customerDOMapper.selectByPrimaryKey(id);
+    }
+
+    /**
+     * 分批批量插入记录
+     * @param customerDOS 客户信息
+     * @param size 大小
+     */
+    @Override
+    public void insertBatchPartially(List<CustomerDO> customerDOS, int size) {
+        List<List<CustomerDO>> customerDOSList = CommonUtils.split(customerDOS, size);
+        customerDOSList.forEach(this::insertBatch);
+    }
+
+    /**
+     * 分批批量更新记录
+     * @param customerDOS 客户信息
+     * @param size 大小
+     */
+    @Override
+    public void updateBatchPartially(List<CustomerDO> customerDOS, int size) {
+        List<List<CustomerDO>> customerDOSList = CommonUtils.split(customerDOS, size);
+        customerDOSList.forEach(this::updateBatch);
     }
 }
