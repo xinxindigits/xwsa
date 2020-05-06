@@ -59,7 +59,7 @@ public class WeChatMessageRestController extends AclController {
             LOGGER.error("查询企业微信会话记录，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
-        if (StringUtils.isBlank(queryForm.getOrgId())) {
+        if (StringUtils.isBlank(queryForm.getTenantId())) {
             LOGGER.error("查询企业微信会话记录，机构id不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，机构id不能为空");
         }
@@ -70,7 +70,7 @@ public class WeChatMessageRestController extends AclController {
 
         //查询客户信息
         PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.queryByOrgIdAndMemberUserIdAndTime(
-                queryForm.getUserId(), queryForm.getStartTime(), queryForm.getEndTime(), page, queryForm.getOrgId());
+                queryForm.getUserId(), queryForm.getStartTime(), queryForm.getEndTime(), page, queryForm.getTenantId());
 
         //将DO装换为VO
         PageResultVO<MsgRecordVO> pageResultVO = new PageResultVO<>();
@@ -111,7 +111,7 @@ public class WeChatMessageRestController extends AclController {
             LOGGER.error("查询企业微信会话记录，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
-        if (StringUtils.isBlank(queryForm.getOrgId())) {
+        if (StringUtils.isBlank(queryForm.getTenantId())) {
             LOGGER.error("查询企业微信会话记录，机构id不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，机构id不能为空");
         }
@@ -125,10 +125,10 @@ public class WeChatMessageRestController extends AclController {
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
         //查询客户信息
-        PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.selectMsgRecordBetweenPersons(page,queryForm.getOrgId(),
+        PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.selectMsgRecordBetweenPersons(page,queryForm.getTenantId(),
                 queryForm.getUserId(),queryForm.getUserIdTwo());
-        ChatUserVO chatUserOneVO = msgRecordService.getChatUser(queryForm.getOrgId(),queryForm.getUserId());
-        ChatUserVO chatUserTwoVO = msgRecordService.getChatUser(queryForm.getOrgId(),queryForm.getUserIdTwo());
+        ChatUserVO chatUserOneVO = msgRecordService.getChatUser(queryForm.getTenantId(),queryForm.getUserId());
+        ChatUserVO chatUserTwoVO = msgRecordService.getChatUser(queryForm.getTenantId(),queryForm.getUserIdTwo());
         //将DO装换为VO
         PageResultVO<MsgRecordVO> pageResultVO = new PageResultVO<>();
         pageResultVO.setPageNumber(pageResultDO.getPageNumber());
@@ -148,7 +148,7 @@ public class WeChatMessageRestController extends AclController {
             LOGGER.error("查询企业微信会话记录，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
-        if (StringUtils.isBlank(queryForm.getOrgId())) {
+        if (StringUtils.isBlank(queryForm.getTenantId())) {
             LOGGER.error("查询企业微信会话记录，机构id不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，机构id不能为空");
         }
@@ -162,7 +162,7 @@ public class WeChatMessageRestController extends AclController {
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
         //查询客户信息
-        PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.selectRoomMsgRecord(page,queryForm.getOrgId(),
+        PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.selectRoomMsgRecord(page,queryForm.getTenantId(),
                 queryForm.getRoomId());
 
         //将DO装换为VO
@@ -176,7 +176,7 @@ public class WeChatMessageRestController extends AclController {
             Map<String,String> chatUserMap = new HashMap<>();
             pageResultDO.getItems().stream().forEach(msgRecordDO -> {
                 if(!chatUserMap.containsKey(msgRecordDO.getFromUserId())){
-                    ChatUserVO chatUserVO = msgRecordService.getChatUser(msgRecordDO.getOrgId(),msgRecordDO.getFromUserId());
+                    ChatUserVO chatUserVO = msgRecordService.getChatUser(msgRecordDO.getTenantId(),msgRecordDO.getFromUserId());
                     chatUserMap.put(chatUserVO.getChatUserId(),chatUserVO.getChatUserName());
                 }
                 MsgRecordVO msgRecordVO = BaseConvert.convert(msgRecordDO, MsgRecordVO.class);
