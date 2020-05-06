@@ -4,7 +4,6 @@ import store from "@/store";
 import ViewUI from "view-design";
 import { setTitle } from "@/libs/util";
 import routes from "./routers";
-// import { loadMenu } from "./routers";
 import config from "@/config";
 Vue.use(VueRouter);
 
@@ -86,7 +85,6 @@ router.beforeEach((to, from, next) => {
           next();
         })
         .catch(() => {
-          console.log(4);
           store.commit("setToken", "");
           next({
             name: "login"

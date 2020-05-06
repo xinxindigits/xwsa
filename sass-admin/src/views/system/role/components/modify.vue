@@ -16,7 +16,7 @@
         <Input
           v-model="formObj.code"
           style="width: 250px"
-          :disabled="code_editable"
+          :disabled="this.type == 'update'"
         ></Input>
       </FormItem>
       <FormItem label="角色名称" prop="name">
@@ -56,12 +56,10 @@ import { addRole, updateRole } from "@/api/data";
 const _config = {
   create: {
     title: "新增角色",
-    success_evt: "on-add-role",
     submit: addRole
   },
   update: {
     title: "更新角色",
-    success_evt: "on-update-role",
     submit: updateRole
   }
 };
@@ -121,7 +119,7 @@ export default {
         if (valid) {
           _config[this.type].submit(this.formObj).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.formObj);
+            this.$emit("role-modified", this.type);
           });
         }
       });
