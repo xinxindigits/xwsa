@@ -54,10 +54,10 @@ public interface TenantDataSyncConfigDOMapper {
 
     /**
      * 通过机构id和任务类型查询记录
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @param taskType 任务类型
      * @return 机构同步配置信息
      */
-    TenantDataSyncConfigDO selectByOrgIdAndTaskType(@Param(value = "orgId") String orgId,
+    TenantDataSyncConfigDO selectByOrgIdAndTaskType(@Param(value = "tenantId") String tenantId,
                                                     @Param(value = "taskType")String taskType);
 }

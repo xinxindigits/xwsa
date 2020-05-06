@@ -56,10 +56,10 @@ public interface TenantBaseInfoDOMapper {
 
     /**
      * 通过机构id查询
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @return 机构基础信息
      */
-    TenantBaseInfoDO selectByOrgId(@Param(value = "orgId") String orgId);
+    TenantBaseInfoDO selectByOrgId(@Param(value = "tenantId") String tenantId);
 
     int updateByOrgIdSelective(TenantBaseInfoDO tenantBaseInfoDO);
 
