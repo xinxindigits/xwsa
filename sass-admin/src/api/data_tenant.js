@@ -31,7 +31,7 @@ export const addTenant = ({
   addressListSecret,
   customerContactSecret,
   chatRecordSecret,
-  remark,
+  remark
 }) => {
   let data = {
     name,
@@ -41,7 +41,7 @@ export const addTenant = ({
     addressListSecret,
     customerContactSecret,
     chatRecordSecret,
-    remark,
+    remark
   };
   return axios.request({
     url: "tenant/create",
@@ -58,7 +58,7 @@ export const updateTenant = ({
   addressListSecret,
   customerContactSecret,
   chatRecordSecret,
-  remark,
+  remark
 }) => {
   let data = {
     code,
@@ -69,7 +69,7 @@ export const updateTenant = ({
     addressListSecret,
     customerContactSecret,
     chatRecordSecret,
-    remark,
+    remark
   };
   return axios.request({
     url: "tenant/update",

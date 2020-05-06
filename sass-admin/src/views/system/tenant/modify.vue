@@ -118,7 +118,7 @@ export default {
         customerContactSecret: "",
         chatRecordSecret: "",
         state: "Y",
-        remark: "",
+        remark: ""
       },
       rules: {
         code: [{ validator: validateCode, trigger: "blur" }],
