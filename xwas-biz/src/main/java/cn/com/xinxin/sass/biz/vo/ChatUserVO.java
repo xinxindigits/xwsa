@@ -16,6 +16,8 @@ public class ChatUserVO extends ToString {
 
     private String chatUserType;
 
+    private String avatar;
+
     public String getChatUserId() {
         return chatUserId;
     }
@@ -38,5 +40,13 @@ public class ChatUserVO extends ToString {
 
     public void setChatUserType(String chatUserType) {
         this.chatUserType = chatUserType;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

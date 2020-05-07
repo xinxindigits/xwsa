@@ -27,6 +27,10 @@ public class ChatPartyBO {
      * 用户名
      */
     private String userName;
+    /**
+     * 头像
+     */
+    private String avatar;
 
     public Integer getType() {
         return type;
@@ -66,5 +70,13 @@ public class ChatPartyBO {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
