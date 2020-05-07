@@ -1,6 +1,9 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.TagsDO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TagsDOMapper {
     /**
@@ -50,4 +53,12 @@ public interface TagsDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(TagsDO record);
+
+    /**
+     * 查询接口
+     * @param tagName
+     * @return
+     */
+    List<TagsDO> selectByTagName( @Param("tagName") String tagName);
+
 }
