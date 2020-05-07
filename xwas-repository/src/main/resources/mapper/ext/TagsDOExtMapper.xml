@@ -28,5 +28,15 @@
     gmt_updated, extension, deleted
   </sql>
 
+  <select id="selectByTagName" resultMap="BaseResultMapExt" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from tags
+    where deleted = 0
+    <if test="tagName != null and tagName != ''">
+    and name like concat('%',#{tagName,jdbcType=VARCHAR},'%')
+    </if>
+  </select>
+
 
 </mapper>

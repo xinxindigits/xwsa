@@ -9,9 +9,7 @@ import cn.com.xinxin.sass.repository.model.*;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
-import cn.com.xinxin.sass.web.vo.MenuTreeVO;
-import cn.com.xinxin.sass.web.vo.ResourceVO;
-import cn.com.xinxin.sass.web.vo.RoleVO;
+import cn.com.xinxin.sass.web.vo.*;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -54,6 +52,97 @@ public class SassTagsRestController extends AclController {
     }
 
 
+    @RequestMapping(value = "/query",method = RequestMethod.POST)
+    //@RequiresPermissions("/tags/query")
+    public Object queryTags(@RequestBody TagForm tagForm, HttpServletRequest request){
+
+        logger.info("SassTagsRestController,query,tagForm ={}",tagForm);
+
+        if(null == tagForm){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"标签参数不能为空");
+        }
+
+        PageResultVO page = new PageResultVO();
+        page.setPageNumber((tagForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : tagForm.getPageIndex());
+        page.setPageSize((tagForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : tagForm.getPageSize());
+
+        String tagName = tagForm.getName();
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        // 默认不带任何参数查询
+        PageResultVO<TagsDO> tagsByPages = this.tagsService.queryTagsByPages(page,tagName);
+        PageResultVO<TagsVO> resultVO = BaseConvert.convert(tagsByPages, PageResultVO.class);
+
+        List<TagsVO> tagsVOS = BaseConvert.convertList(tagsByPages.getItems(),TagsVO.class);
+        resultVO.setItems(tagsVOS);
+
+        return resultVO;
+
+    }
+
+
+    @RequestMapping(value = "/list",method = RequestMethod.POST)
+    //@RequiresPermissions("/tags/list")
+    public Object listTags(@RequestBody TagForm tagForm, HttpServletRequest request){
+
+        logger.info("SassTagsRestController,list,tagForm ={}",tagForm);
+
+        PageResultVO page = new PageResultVO();
+        page.setPageNumber((tagForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : tagForm.getPageIndex());
+        page.setPageSize((tagForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : tagForm.getPageSize());
+
+        if(null == tagForm){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"标签参数不能为空");
+        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        // 默认不带任何参数查询
+        PageResultVO<TagsDO> tagsByPages = this.tagsService.queryTagsByPages(page,"");
+
+        PageResultVO<TagsVO> resultVO = BaseConvert.convert(tagsByPages, PageResultVO.class);
+
+        List<TagsVO> tagsVOS = BaseConvert.convertList(tagsByPages.getItems(),TagsVO.class);
+        resultVO.setItems(tagsVOS);
+
+        return resultVO;
+
+    }
+
+
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    //@RequiresPermissions("/tags/update")
+    public Object updateTags(@RequestBody TagForm tagForm, HttpServletRequest request){
+
+        logger.info("SassTagsRestController,update,tagForm ={}",tagForm);
+
+        if(null == tagForm){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"标签参数不能为空");
+        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        TagsDO tagsDO = BaseConvert.convert(tagForm,TagsDO.class);
+
+        tagsDO.setTenantId(sassUserInfo.getTenantId());
+        tagsDO.setGmtUpdater(sassUserInfo.getAccount());
+
+        return this.tagsService.updateTags(tagsDO);
+
+    }
+
+
+    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
+    //@RequiresPermissions("/tags/delete")
+    public Object deleteTags(@RequestParam Long tagId,HttpServletRequest request){
+
+        logger.info("SassTagsRestController,deleteTags,tagId ={}",tagId);
+
+        if(null == tagId){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"标签参数不能为空");
+        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        return this.tagsService.deleteTagsByIds(tagId);
+
+    }
+
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     //@RequiresPermissions("/tags/create")
@@ -70,7 +159,7 @@ public class SassTagsRestController extends AclController {
             createTags.setCode("TG"+System.currentTimeMillis());
         }
         if(StringUtils.isEmpty(createTags.getTagType())){
-            createTags.setCode("COMMON");
+            createTags.setTagType("COMMON");
         }
         createTags.setTenantId(sassUserInfo.getTenantId());
         createTags.setGmtCreator(sassUserInfo.getAccount());
