@@ -149,20 +149,20 @@
     </root>
 
     <!-- biz -->
-    <logger name="cn.com.xinxin.portal.biz" additivity="false">
+    <logger name="cn.com.xinxin.sass.biz" additivity="false">
         <level value="info"/>
         <appender-ref ref="biz-appender"/>
         <appender-ref ref="error-appender"/>
     </logger>
 
-    <logger name="cn.com.xinxin.portal.web" additivity="false">
+    <logger name="cn.com.xinxin.sass.web" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="web-appender"/>
         <appender-ref ref="error-appender"/>
     </logger>
 
     <!-- sal -->
-    <logger name="cn.com.xinxin.portal.sal" additivity="false">
+    <logger name="cn.com.xinxin.sass.sal" additivity="false">
         <level value="${log.level}"/>
         <appender-ref ref="sal-appender"/>
         <appender-ref ref="error-appender"/>

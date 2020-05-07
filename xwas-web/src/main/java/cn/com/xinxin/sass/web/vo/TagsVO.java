@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.web.form;
+package cn.com.xinxin.sass.web.vo;
 
 import cn.com.xinxin.sass.api.base.ToString;
 
@@ -10,7 +10,7 @@ import java.util.Date;
  * @updater:
  * @description:
  */
-public class TagForm extends ToString {
+public class TagsVO extends ToString {
 
     private static final long serialVersionUID = -6737547660318839566L;
 
@@ -30,14 +30,6 @@ public class TagForm extends ToString {
 
     private String extension;
 
-    /**
-     * 每页大小
-     */
-    private Integer pageSize;
-    /**
-     * 页码
-     */
-    private Integer pageIndex;
 
     public Long getId() {
         return id;
@@ -103,19 +95,4 @@ public class TagForm extends ToString {
         this.extension = extension;
     }
 
-    public Integer getPageSize() {
-        return pageSize;
-    }
-
-    public void setPageSize(Integer pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    public Integer getPageIndex() {
-        return pageIndex;
-    }
-
-    public void setPageIndex(Integer pageIndex) {
-        this.pageIndex = pageIndex;
-    }
 }
