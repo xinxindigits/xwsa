@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.biz.jobconfig;
+package cn.com.xinxin.sass.job.jobconfig;
 
 import com.xxl.job.core.executor.XxlJobExecutor;
 import org.slf4j.Logger;
