@@ -12,14 +12,14 @@
       :label-width="150"
       :rules="rules"
     >
-      <FormItem label="机构编号" prop="code" v-if="type == 'update'">
+      <FormItem label="租户编号" prop="code" v-if="type == 'update'">
         <Input
           v-model="formObj.code"
           style="width: 280px"
           :disabled="type == 'update'"
         ></Input>
       </FormItem>
-      <FormItem label="机构名称" prop="name">
+      <FormItem label="租户名称" prop="name">
         <Input v-model="formObj.name" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="企业微信corpId" prop="corpId">
@@ -46,7 +46,7 @@
           <Radio label="N">禁用</Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem label="机构描述" prop="remark">
+      <FormItem label="租户描述" prop="remark">
         <Input
           v-model="formObj.remark"
           type="textarea"
@@ -73,12 +73,12 @@
 import { addOrganization, updateOrganization } from "@/api/data_organization";
 const _config = {
   create: {
-    title: "新增组织机构",
+    title: "新增租户",
     success_evt: "on-add-organization",
     submit: addOrganization
   },
   update: {
-    title: "更新组织机构",
+    title: "更新租户",
     success_evt: "on-update-organization",
     submit: updateOrganization
   }
@@ -101,7 +101,7 @@ export default {
   data() {
     const validateCode = (rule, value, callback) => {
       if (value === "" && !this.addFlowFlag) {
-        callback(new Error("角色编号不能为空"));
+        callback(new Error("租户编号不能为空"));
       } else {
         callback();
       }
@@ -125,7 +125,7 @@ export default {
       rules: {
         code: [{ validator: validateCode, trigger: "blur" }],
         name: [
-          { required: true, message: "角色名称不能为空", trigger: "blur" }
+          { required: true, message: "租户名称不能为空", trigger: "blur" }
         ],
         corpId: [
           { required: true, message: "企业微信corpId不能为空", trigger: "blur" }
@@ -136,8 +136,8 @@ export default {
   },
   methods: {
     setData({ obj, remark, state }) {
-      this.formObj.code = obj.code;
-      this.formObj.name = obj.name;
+      this.formObj.code = obj.tenantId;
+      this.formObj.name = obj.tenantName;
       this.formObj.remark = remark;
       this.formObj.state = state;
       this.formObj.privateKey = obj.privateKey;

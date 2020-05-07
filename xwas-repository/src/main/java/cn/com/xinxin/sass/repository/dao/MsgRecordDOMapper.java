@@ -107,4 +107,13 @@ public interface MsgRecordDOMapper {
      * @return
      */
     List<MsgRecordDO> selectRoomMsgRecord(@Param("tenantId") String tenantId,@Param("roomId") String roomId);
+
+    /**
+     * 通过租户id和成员userid查询会话记录
+     * @param tenantId 租户id
+     * @param userId 成员userid
+     * @return 会话记录
+     */
+    List<MsgRecordDO> selectByMemberUserId(@Param("tenantId") String tenantId,
+                                             @Param(value = "userId") String userId);
 }

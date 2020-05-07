@@ -3,11 +3,13 @@ package cn.com.xinxin.sass.biz.service.wechatwork.impl;
 import cn.com.xinxin.sass.biz.service.DepartmentService;
 import cn.com.xinxin.sass.biz.service.DepartmentReceivedService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkDepartmentSyncService;
+import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkMemberSyncService;
 import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.enums.AddressListEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.DepartmentDO;
 import cn.com.xinxin.sass.repository.model.DepartmentReceivedDO;
+import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,41 +33,48 @@ public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartment
 
     private final DepartmentReceivedService departmentReceivedService;
     private final DepartmentService departmentService;
+    private final WeChatWorkMemberSyncService weChatWorkMemberSyncService;
 
     public WeChatWorkDepartmentSyncServiceImpl(final DepartmentReceivedService departmentReceivedService,
-                                                final DepartmentService departmentService) {
+                                               final DepartmentService departmentService,
+                                               final WeChatWorkMemberSyncService weChatWorkMemberSyncService) {
         this.departmentReceivedService = departmentReceivedService;
         this.departmentService = departmentService;
+        this.weChatWorkMemberSyncService = weChatWorkMemberSyncService;
     }
 
     /**
      * 同步部门信息
      *
-     * @param taskId 任务id
-     * @param orgId 机构编码
+     * @param tenantDataSyncLogDO 租户同步日志
      */
     @Override
-    public void syncDepartment(String taskId, String orgId) {
+    public void syncDepartment(TenantDataSyncLogDO tenantDataSyncLogDO) {
+        if (null == tenantDataSyncLogDO) {
+            LOGGER.error("同步部门信息，tenantDataSyncLogDO不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门信息，tenantDataSyncLogDO不能为空");
+        }
 
-        if (StringUtils.isBlank(taskId)) {
+        if (StringUtils.isBlank(tenantDataSyncLogDO.getTaskId())) {
             LOGGER.error("同步部门信息，taskId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门信息，taskId不能为空");
         }
 
-        if (StringUtils.isBlank(orgId)) {
-            LOGGER.error("同步部门信息，orgId不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门信息，orgId不能为空");
+        if (StringUtils.isBlank(tenantDataSyncLogDO.getTenantId())) {
+            LOGGER.error("同步部门信息，TenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步部门信息，TenantId不能为空");
         }
 
         //根据taskID查询部门信息暂存表的记录
-        List<DepartmentReceivedDO> departmentReceivedDOS = departmentReceivedService.selectByTaskIdAndOrgId(taskId, orgId);
+        List<DepartmentReceivedDO> departmentReceivedDOS = departmentReceivedService.selectByTaskIdAndOrgId(
+                tenantDataSyncLogDO.getTaskId(), tenantDataSyncLogDO.getTenantId());
 
         //部门暂存信息的部门id列表
         List<Long> departmentReceivedIdS = departmentReceivedDOS.stream()
                 .map(DepartmentReceivedDO::getDepartmentId).collect(Collectors.toList());
 
         //根据机构编码查询部门信息
-        List<DepartmentDO> departmentDOS = departmentService.selectByOrgId(orgId);
+        List<DepartmentDO> departmentDOS = departmentService.selectByOrgId(tenantDataSyncLogDO.getTenantId());
 
         //此次同步待插入的记录
         List<DepartmentDO> insertRecord = new ArrayList<>();
@@ -74,7 +83,7 @@ public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartment
         List<DepartmentDO> updateRecord = new ArrayList<>();
 
         //获取此次同步需要将部门置为不活跃的记录
-        fetchInvalidDepartment(departmentReceivedIdS, departmentDOS, updateRecord, taskId);
+        fetchInvalidDepartment(departmentReceivedIdS, departmentDOS, updateRecord, tenantDataSyncLogDO.getTaskId());
 
         departmentReceivedDOS.forEach(d -> {
             //获取部门id相同的部门记录
@@ -84,10 +93,10 @@ public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartment
 
             if (null == departmentDO) {
                 //将此次同步待插入的部门记录保存到insertRecord
-                fetchInsertDepartment(d, taskId, insertRecord);
+                fetchInsertDepartment(d, tenantDataSyncLogDO.getTaskId(), insertRecord);
             } else {
                 //将此次需要更新的部门记录保存到updateRecord
-                fetchUpdateDepartment(d, departmentDO, updateRecord, taskId);
+                fetchUpdateDepartment(d, departmentDO, updateRecord, tenantDataSyncLogDO.getTaskId());
             }
         });
 
@@ -96,6 +105,13 @@ public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartment
 
         //更新记录
         departmentService.updateBatchByIdPartially(updateRecord, CommonConstants.ONE_HUNDRED);
+
+        //此次成员改变的记录数
+        tenantDataSyncLogDO.setDepartmentCount(insertRecord.size() + updateRecord.size());
+
+        //同步成员信息
+        departmentReceivedIdS.forEach(d -> weChatWorkMemberSyncService.syncMember(d.toString(),
+                tenantDataSyncLogDO));
     }
 
     /**

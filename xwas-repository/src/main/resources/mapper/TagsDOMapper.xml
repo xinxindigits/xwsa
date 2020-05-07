@@ -35,7 +35,7 @@
     select 
     <include refid="Base_Column_List" />
     from tags
-    where id = #{id,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT} and deleted = 0
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     <!--

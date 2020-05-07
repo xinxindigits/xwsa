@@ -3,10 +3,10 @@
     <Card>
       <Form :model="formItem" inline label-colon>
         <FormItem>
-          <Input v-model="formItem.code" placeholder="机构编码"></Input>
+          <Input v-model="formItem.code" placeholder="租户编码"></Input>
         </FormItem>
         <FormItem>
-          <Input v-model="formItem.name" placeholder="机构名称"></Input>
+          <Input v-model="formItem.name" placeholder="租户名称"></Input>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="hdlquery">查询</Button>
@@ -124,8 +124,8 @@ export default {
           width: 60,
           align: "center"
         },
-        { title: "机构编码", key: "code", align: "center" },
-        { title: "机构名称", key: "name", align: "center" },
+        { title: "租户编码", key: "code", align: "center" },
+        { title: "租户名称", key: "name", align: "center" },
         { title: "备注", key: "remark", align: "center" },
         { title: "状态", slot: "state", align: "center" },
         {

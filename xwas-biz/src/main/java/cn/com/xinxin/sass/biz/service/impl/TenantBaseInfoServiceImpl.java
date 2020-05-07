@@ -34,21 +34,21 @@ public class TenantBaseInfoServiceImpl implements TenantBaseInfoService {
 
     /**
      * 通过机构id查询
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @return 机构基础信息
      */
     @Override
-    public TenantBaseInfoDO selectByOrgId(String orgId) {
-        if (StringUtils.isBlank(orgId)) {
+    public TenantBaseInfoDO selectByTenantId(String tenantId) {
+        if (StringUtils.isBlank(tenantId)) {
             LOGGER.error("通过机构id查询机构基础信息，orgId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
                     "通过机构id查询机构基础信息，orgId不能为空");
         }
 
-        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoDOMapper.selectByOrgId(orgId);
+        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoDOMapper.selectByTenantId(tenantId);
 
         if (null == tenantBaseInfoDO) {
-            LOGGER.error("无法通过机构id[{}]找到机构信息", orgId);
+            LOGGER.error("无法通过机构id[{}]找到机构信息", tenantId);
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构信息");
         }
 
@@ -72,10 +72,10 @@ public class TenantBaseInfoServiceImpl implements TenantBaseInfoService {
 
 
     @Override
-    public PageResultVO<TenantBaseInfoDO> listAllTenants(PageResultVO page) {
+    public PageResultVO<TenantBaseInfoDO> findByCondition(PageResultVO page, TenantBaseInfoDO tenantBaseInfoDO) {
 
         com.github.pagehelper.Page helper = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        List<TenantBaseInfoDO> tenantBaseInfoDOList = tenantBaseInfoDOMapper.listAlltenants();
+        List<TenantBaseInfoDO> tenantBaseInfoDOList = tenantBaseInfoDOMapper.findByCondition(tenantBaseInfoDO);
 
         PageResultVO<TenantBaseInfoDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());

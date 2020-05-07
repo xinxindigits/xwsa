@@ -1,6 +1,9 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.TagsRelationsDO;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TagsRelationsDOMapper {
     /**
@@ -50,4 +53,20 @@ public interface TagsRelationsDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(TagsRelationsDO record);
+
+    /**
+     * 删除tagid对应的映射关系
+     * @param tagId
+     * @return
+     */
+    int deleteTagsRelationsByTagId(@Param("tagId") Long tagId);
+
+
+    /**
+     * @param relationsList
+     * @return
+     */
+    int batchCreateRelations(@Param("relationsList")List<TagsRelationsDO> relationsList);
+
+
 }

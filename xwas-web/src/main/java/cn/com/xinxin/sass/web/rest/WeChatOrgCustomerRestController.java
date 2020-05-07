@@ -90,7 +90,7 @@ public class WeChatOrgCustomerRestController extends AclController {
             LOGGER.error("查询企业微信客户信息，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，参数不能为空");
         }
-        if (StringUtils.isBlank(queryForm.getOrgId())) {
+        if (StringUtils.isBlank(queryForm.getTenantId())) {
             LOGGER.error("查询企业微信客户信息，机构id不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，机构id不能为空");
         }
@@ -107,7 +107,7 @@ public class WeChatOrgCustomerRestController extends AclController {
 
         //查询客户信息
         PageResultVO<CustomerDO> pageResultDO = customerService.queryByOrgIdAndMemberUserIdSAndTime(
-                queryForm.getMemberUserIds(), startTime, endTime, page, queryForm.getOrgId(), queryForm.getCustomerName());
+                queryForm.getMemberUserIds(), startTime, endTime, page, queryForm.getTenantId(), queryForm.getCustomerName());
 
         //将DO装换为VO
         PageResultVO<CustomerVO> pageResultVO = new PageResultVO<>();

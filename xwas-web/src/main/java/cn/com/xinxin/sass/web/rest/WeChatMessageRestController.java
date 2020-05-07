@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.model.bo.ChatPartyBO;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.vo.ChatUserVO;
 import cn.com.xinxin.sass.common.constants.CommonConstants;
@@ -8,6 +9,7 @@ import cn.com.xinxin.sass.common.constants.WeChatWorkChatRecordsTypeConstants;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
+import cn.com.xinxin.sass.web.convert.ChatPartyConvert;
 import cn.com.xinxin.sass.web.convert.MessageConvert;
 import cn.com.xinxin.sass.web.form.WeChatMessageQueryForm;
 import cn.com.xinxin.sass.web.vo.MsgRecordVO;
@@ -60,8 +62,8 @@ public class WeChatMessageRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
         if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("查询企业微信会话记录，机构id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，机构id不能为空");
+            LOGGER.error("查询企业微信会话记录，租户id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，租户id不能为空");
         }
 
         PageResultVO page = new PageResultVO();
@@ -112,11 +114,11 @@ public class WeChatMessageRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
         if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("查询企业微信会话记录，机构id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，机构id不能为空");
+            LOGGER.error("查询企业微信会话记录，租户id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，租户id不能为空");
         }
         if (StringUtils.isBlank(queryForm.getUserId())||StringUtils.isBlank(queryForm.getUserIdTwo())) {
-            LOGGER.error("查询企业微信会话记录，机构id不能为空");
+            LOGGER.error("查询企业微信会话记录，用户id不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，用户id不能为空");
         }
 
@@ -149,8 +151,8 @@ public class WeChatMessageRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
         if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("查询企业微信会话记录，机构id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，机构id不能为空");
+            LOGGER.error("查询企业微信会话记录，租户id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，租户id不能为空");
         }
         if (StringUtils.isBlank(queryForm.getRoomId())) {
             LOGGER.error("查询企业微信会话记录，群聊id不能为空");
@@ -192,5 +194,40 @@ public class WeChatMessageRestController extends AclController {
         return pageResultVO;
     }
 
+    /**
+     * 根据成员userid查询与之聊天的人或者群
+     * @param request http请求
+     * @param queryForm 查询表单
+     * @return 聊天的人或者群
+     */
+    @RequestMapping(value = "/query/userList",method = RequestMethod.POST)
+    @ResponseBody
+    public Object queryChatPartyList(HttpServletRequest request, @RequestBody WeChatMessageQueryForm queryForm) {
+        if (null == queryForm) {
+            LOGGER.error("根据成员userid查询与之聊天的人或者群, queryForm不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "根据成员userid查询与之聊天的人或者群, queryForm不能为空");
+        }
+        if (StringUtils.isBlank(queryForm.getTenantId())) {
+            LOGGER.error("根据成员userid查询与之聊天的人或者群，租户id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "根据成员userid查询与之聊天的人或者群，租户id不能为空");
+        }
+        if (StringUtils.isBlank(queryForm.getUserId())) {
+            LOGGER.error("根据成员userid查询与之聊天的人或者群, UserId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "根据成员userid查询与之聊天的人或者群, UserId不能为空");
+        }
+
+        List<ChatPartyBO> chatPartyBOS = msgRecordService.selectByMemberUserId(queryForm.getTenantId(), queryForm.getUserId());
+
+        chatPartyBOS.stream().filter(c -> 0 == c.getType()).forEach(c -> {
+            ChatUserVO chatUserVO = msgRecordService.getChatUser(queryForm.getTenantId(), c.getUserId());
+            c.setUserName(chatUserVO.getChatUserName());
+            c.setAvatar(chatUserVO.getAvatar());
+        });
+
+        return ChatPartyConvert.convert2ChatPartyList(chatPartyBOS);
+    }
 
 }

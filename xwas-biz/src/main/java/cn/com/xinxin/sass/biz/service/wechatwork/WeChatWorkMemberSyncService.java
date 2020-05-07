@@ -1,5 +1,7 @@
 package cn.com.xinxin.sass.biz.service.wechatwork;
 
+import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
+
 /**
  * @author: liuhangzhou
  * @created: 2020/4/22.
@@ -10,9 +12,8 @@ public interface WeChatWorkMemberSyncService {
     /**
      * 同步部门成员
      *
-     * @param taskId 任务id
-     * @param orgId 机构编码
      * @param departmentId 部门id
+     * @param tenantDataSyncLogDO 租户同步日志
      */
-    void syncMember(String taskId, String orgId, String departmentId);
+    void syncMember(String departmentId, TenantDataSyncLogDO tenantDataSyncLogDO);
 }

@@ -44,7 +44,7 @@
     #{messageCount,jdbcType=INTEGER}, #{departmentCount,jdbcType=INTEGER}, #{memberCount,jdbcType=INTEGER},
     #{customerCount,jdbcType=INTEGER}, #{taskStatus,jdbcType=VARCHAR}, #{errorCode,jdbcType=VARCHAR},
     #{errorDesc,jdbcType=VARCHAR}, #{extension,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP},
-    #{gmtCreator,jdbcType=VARCHAR}, #{gmtUpdated,jdbcType=TIMESTAMP}, #{gmtUpdater,jdbcType=VARCHAR}
+    #{gmtCreator,jdbcType=VARCHAR}, #{gmtUpdated,jdbcType=TIMESTAMP}, #{gmtUpdater,jdbcType=VARCHAR})
   </insert>
 
 </mapper>
