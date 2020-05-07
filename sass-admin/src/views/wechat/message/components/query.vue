@@ -7,6 +7,7 @@
         remote
         :remote-method="remoteMethod1"
         :loading="loading"
+        placeholder="成员名"
       >
         <Option
           v-for="(option, index) in options"
