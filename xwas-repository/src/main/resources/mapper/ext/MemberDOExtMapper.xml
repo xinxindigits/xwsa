@@ -85,7 +85,7 @@
   </insert>
 
   <update id="updateBatchById" parameterType="java.util.List">
-    <foreach collection="memberDOS" item="item" index="index" separator=",">
+    <foreach collection="memberDOS" item="item" index="index" separator=";">
     update member
     <set>
       <if test="item.tenantId != null">

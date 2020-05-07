@@ -6,6 +6,7 @@ import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncLogService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkChattingRecordsService;
+import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.enums.TaskErrorEnum;
 import cn.com.xinxin.sass.common.enums.TaskStatusEnum;
@@ -82,7 +83,7 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
 
         try {
             //机构基础信息
-            TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByOrgId(tenantDataSyncLogDO.getTenantId());
+            TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByTenantId(tenantDataSyncLogDO.getTenantId());
 
             //机构任务配置信息
             TenantDataSyncConfigDO tenantDataSyncConfigDO = tenantDataSyncConfigService.selectByOrgIdAndTaskType(
@@ -186,6 +187,7 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
         tenantDataSyncLogDO.setTaskDate(DateUtils.getToday(DateUtils.DATE_FORMAT_NOSIGN));
         tenantDataSyncLogDO.setTaskTime(DateUtils.getToday(DateUtils.DATE_FORMAT_TIME));
         tenantDataSyncLogDO.setTaskStatus(TaskStatusEnum.INIT.getStatus());
+        tenantDataSyncLogDO.setGmtCreator(CommonConstants.GMT_CREATOR_SYSTEM);
         tenantDataSyncLogService.insertReturnId(tenantDataSyncLogDO);
         return tenantDataSyncLogDO;
     }

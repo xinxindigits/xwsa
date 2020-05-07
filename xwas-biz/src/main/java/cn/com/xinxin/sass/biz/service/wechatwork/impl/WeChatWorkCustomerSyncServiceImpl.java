@@ -8,6 +8,7 @@ import cn.com.xinxin.sass.common.enums.AddressListEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.CustomerDO;
 import cn.com.xinxin.sass.repository.model.CustomerReceivedDO;
+import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,13 +42,17 @@ public class WeChatWorkCustomerSyncServiceImpl implements WeChatWorkCustomerSync
 
     /**
      * 同步客户信息
-     * @param orgId 机构id
-     * @param taskId 任务Id
      * @param memberUserIdS 成员userId列表
+     * @param tenantDataSyncLogDO 租户同步日志
      */
     @Override
-    public void syncCustomer(String orgId, String taskId, List<String> memberUserIdS) {
-        if (StringUtils.isBlank(taskId)) {
+    public void syncCustomer(List<String> memberUserIdS, TenantDataSyncLogDO tenantDataSyncLogDO) {
+        if (null == tenantDataSyncLogDO) {
+            LOGGER.error("同步客户信息，tenantDataSyncLogDO不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步客户信息，tenantDataSyncLogDO不能为空");
+        }
+
+        if (StringUtils.isBlank(tenantDataSyncLogDO.getTaskId())) {
             LOGGER.error("同步客户信息，taskId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "同步客户信息，taskId不能为空");
         }
@@ -62,7 +67,7 @@ public class WeChatWorkCustomerSyncServiceImpl implements WeChatWorkCustomerSync
         while (true) {
             //客户暂存信息
             List<CustomerReceivedDO> customerReceivedDOS = customerReceivedService.selectByTaskIdMemberUserIdS(
-                    taskId, memberUserIdS, startId, CommonConstants.PAGE_SIZE);
+                    tenantDataSyncLogDO.getTaskId(), memberUserIdS, startId, CommonConstants.PAGE_SIZE);
 
             if (CollectionUtils.isEmpty(customerReceivedDOS)) {
                 LOGGER.info("查询客户信息为0，当前已处理[{}]条记录", count);
@@ -70,7 +75,7 @@ public class WeChatWorkCustomerSyncServiceImpl implements WeChatWorkCustomerSync
             }
 
             //客户信息
-            List<CustomerDO> customerDOS = customerService.selectByOrgIdAndUserId(orgId,
+            List<CustomerDO> customerDOS = customerService.selectByOrgIdAndUserId(tenantDataSyncLogDO.getTenantId(),
                     customerReceivedDOS.stream().map(CustomerReceivedDO::getUserId).collect(Collectors.toList()));
 
             //处理记录
@@ -83,6 +88,8 @@ public class WeChatWorkCustomerSyncServiceImpl implements WeChatWorkCustomerSync
 
             startId = customerReceivedDOS.get(customerReceivedDOS.size() - 1).getId();
         }
+
+        tenantDataSyncLogDO.setCustomerCount(count);
     }
 
     /**
