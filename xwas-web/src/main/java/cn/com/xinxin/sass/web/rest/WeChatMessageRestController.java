@@ -224,6 +224,7 @@ public class WeChatMessageRestController extends AclController {
         chatPartyBOS.stream().filter(c -> 0 == c.getType()).forEach(c -> {
             ChatUserVO chatUserVO = msgRecordService.getChatUser(queryForm.getTenantId(), c.getUserId());
             c.setUserName(chatUserVO.getChatUserName());
+            c.setAvatar(chatUserVO.getAvatar());
         });
 
         return ChatPartyConvert.convert2ChatPartyList(chatPartyBOS);
