@@ -23,7 +23,7 @@ public class ChatPartyVO extends ToString {
     /**
      * 群名
      */
-    private String rommName;
+    private String roomName;
     /**
      * 用户id
      */
@@ -49,12 +49,12 @@ public class ChatPartyVO extends ToString {
         this.roomId = roomId;
     }
 
-    public String getRommName() {
-        return rommName;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public void setRommName(String rommName) {
-        this.rommName = rommName;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
     public String getUserId() {

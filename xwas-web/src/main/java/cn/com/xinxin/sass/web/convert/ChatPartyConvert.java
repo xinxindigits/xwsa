@@ -22,7 +22,7 @@ public class ChatPartyConvert {
         ChatPartyVO chatPartyVO = new ChatPartyVO();
         chatPartyVO.setType(chatPartyBO.getType());
         chatPartyVO.setRoomId(chatPartyBO.getRoomId());
-        chatPartyVO.setRommName(chatPartyBO.getRommName());
+        chatPartyVO.setRoomName(chatPartyBO.getRoomName());
         chatPartyVO.setUserId(chatPartyBO.getUserId());
         chatPartyVO.setUserName(chatPartyBO.getUserName());
         return chatPartyVO;
