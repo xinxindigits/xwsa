@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
             <groupId>com.xinxinfinance.xwas</groupId>
+            <artifactId>xwas-job</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.xinxinfinance.xwas</groupId>
             <artifactId>xwas-repository</artifactId>
         </dependency>
         <dependency>
