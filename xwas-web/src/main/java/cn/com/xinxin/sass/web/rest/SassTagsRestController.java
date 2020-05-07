@@ -169,4 +169,43 @@ public class SassTagsRestController extends AclController {
         return result;
 
     }
+
+
+    @RequestMapping(value = "/fixdata",method = RequestMethod.POST)
+    //@RequiresPermissions("/tags/fixdata")
+    public Object fixdataTags(@RequestBody TagRelationForm tagForm, HttpServletRequest request){
+
+        logger.info("SassTagsRestController,fixdata,tagForm ={}",tagForm);
+
+        if(null == tagForm){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"标签参数不能为空");
+        }
+
+        String keyId = tagForm.getKeyId();
+        String keyName = tagForm.getKeyName();
+        List<String> tagIds = tagForm.getTagIds();
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        List<TagsRelationsDO> tagsRelationsDOS = Lists.newArrayList();
+
+        for(String id: tagIds){
+
+            TagsRelationsDO tagsRelationsDO = new TagsRelationsDO();
+            tagsRelationsDO.setKeyId(keyId);
+            tagsRelationsDO.setKeyName(keyName);
+            tagsRelationsDO.setTagId(id);
+            tagsRelationsDO.setDescription(tagForm.getDescription());
+            tagsRelationsDO.setGmtCreator(sassUserInfo.getAccount());
+            tagsRelationsDO.setGmtUpdater(sassUserInfo.getAccount());
+            tagsRelationsDO.setTenantId(sassUserInfo.getTenantId());
+            tagsRelationsDOS.add(tagsRelationsDO);
+
+        }
+
+        int result = this.tagsService.createTagsRelations(tagsRelationsDOS);
+
+        return result;
+
+    }
+
 }

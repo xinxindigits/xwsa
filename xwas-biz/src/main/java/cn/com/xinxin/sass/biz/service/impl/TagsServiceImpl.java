@@ -4,9 +4,8 @@ import cn.com.xinxin.sass.biz.service.TagsService;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.TagsDOMapper;
 import cn.com.xinxin.sass.repository.dao.TagsRelationsDOMapper;
-import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.TagsDO;
-import com.alibaba.fastjson.JSONObject;
+import cn.com.xinxin.sass.repository.model.TagsRelationsDO;
 import com.github.pagehelper.PageHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,22 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public int deleteTagsByIds(Long tagsId) {
 
-       return tagsDOMapper.deleteByPrimaryKey(tagsId);
 
+        // 首先删除tags然后删除映射关系
+        int result = this.tagsDOMapper.deleteByPrimaryKey(tagsId);
+
+        this.tagsRelationsDOMapper.deleteTagsRelationsByTagId(tagsId);
+
+        return result;
+
+
+    }
+
+    @Override
+    public int createTagsRelations(List<TagsRelationsDO> tagsRelationsDOS) {
+
+        this.tagsRelationsDOMapper.batchCreateRelations(tagsRelationsDOS);
+
+        return 1;
     }
 }
