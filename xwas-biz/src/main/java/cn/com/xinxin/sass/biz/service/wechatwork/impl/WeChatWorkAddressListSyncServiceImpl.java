@@ -66,7 +66,7 @@ public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkAddressLi
         TenantDataSyncLogDO tenantDataSyncLogDO = initAndInsertLog(tenantId);
 
         //机构基础信息
-        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByOrgId(tenantDataSyncLogDO.getTenantId());
+        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByTenantId(tenantDataSyncLogDO.getTenantId());
 
         //向企业微信提取数据
         fetchData(tenantDataSyncLogDO, tenantBaseInfoDO);
