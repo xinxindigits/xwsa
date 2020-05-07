@@ -8,12 +8,10 @@ import cn.com.xinxin.sass.biz.vo.ChatUserVO;
 import cn.com.xinxin.sass.common.enums.ChatUserEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
-import cn.com.xinxin.sass.repository.dao.MemberDOMapper;
 import cn.com.xinxin.sass.repository.dao.MsgRecordDOMapper;
 import cn.com.xinxin.sass.repository.model.CustomerDO;
 import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
-import cn.com.xinxin.sass.repository.model.ResourceDO;
 import com.github.pagehelper.PageHelper;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
@@ -25,7 +23,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author: liuhangzhou
@@ -238,7 +235,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
                     chatPartyBO.setType(1);
                     chatPartyBO.setRoomId(r.getRoomId());
                     //Fixme 暂时写死
-                    chatPartyBO.setRommName("群聊" + chatPartyRoomBOMap.size());
+                    chatPartyBO.setRoomName("群聊" + chatPartyRoomBOMap.size());
                     chatPartyRoomBOMap.put(r.getRoomId(), chatPartyBO);
                 }
             }
