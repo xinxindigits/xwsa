@@ -15,9 +15,9 @@ public class WeChatCustomerQueryForm extends ToString {
 
     private static final long serialVersionUID = 8064363806982333584L;
     /**
-     * 机构id
+     * 租户id
      */
-    private String orgId;
+    private String tenantId;
 
     /**
      * 成员userId
@@ -50,12 +50,12 @@ public class WeChatCustomerQueryForm extends ToString {
     private String customerName;
 
 
-    public String getOrgId() {
-        return orgId;
+    public String getTenantId() {
+        return tenantId;
     }
 
-    public void setOrgId(String orgId) {
-        this.orgId = orgId;
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 
     public List<String> getMemberUserIds() {
@@ -109,7 +109,7 @@ public class WeChatCustomerQueryForm extends ToString {
     @Override
     public String toString() {
         return "WeChatCustomerQueryForm{" +
-                "orgId='" + orgId + '\'' +
+                "tenantId='" + tenantId + '\'' +
                 ", memberUserIds=" + memberUserIds +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +

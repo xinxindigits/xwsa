@@ -175,11 +175,13 @@ public class MsgRecordServiceImpl implements MsgRecordService {
         if(!CollectionUtils.isEmpty(member)){
             result.setChatUserName(member.get(0).getMemberName());
             result.setChatUserType(ChatUserEnum.MEMBER.getCode());
+            result.setAvatar(member.get(0).getAvatar());
         }else{
             List<CustomerDO> customer = customerService.selectByOrgIdAndUserId(orgId,Arrays.asList(chatUserId));
             if(!CollectionUtils.isEmpty(customer)){
                 result.setChatUserName(customer.get(0).getCustomerName());
                 result.setChatUserType(ChatUserEnum.CUSTOMER.getCode());
+                result.setAvatar(customer.get(0).getAvatar());
             }else{
                 result.setChatUserName(chatUserId);
                 result.setChatUserType(ChatUserEnum.OTHER.getCode());

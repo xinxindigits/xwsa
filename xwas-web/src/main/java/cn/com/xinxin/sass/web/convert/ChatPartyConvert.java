@@ -25,6 +25,7 @@ public class ChatPartyConvert {
         chatPartyVO.setRoomName(chatPartyBO.getRoomName());
         chatPartyVO.setUserId(chatPartyBO.getUserId());
         chatPartyVO.setUserName(chatPartyBO.getUserName());
+        chatPartyVO.setAvatar(chatPartyBO.getAvatar());
         return chatPartyVO;
     }
 
