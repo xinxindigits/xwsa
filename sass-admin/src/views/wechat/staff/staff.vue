@@ -3,12 +3,15 @@
     <Row :gutter="10" v-show="showList">
       <Col span="24">
         <Card>
-          <Form :model="formItem" inline label-colon v-show="false">
+          <Form :model="formItem" inline label-colon>
             <FormItem>
               <Input v-model="formItem.memberName" placeholder="姓名"></Input>
             </FormItem>
             <FormItem>
-              <Button type="primary">查询</Button>
+              <Input v-model="formItem.mobile" placeholder="手机号"></Input>
+            </FormItem>
+            <FormItem>
+              <Button type="primary" @click="hdlquery">查询</Button>
               <Button style="margin-left: 8px" @click="reset">重置</Button>
             </FormItem>
           </Form>
@@ -60,7 +63,7 @@
 </template>
 
 <script>
-import { getMemberList, getMemberDetail } from "@/api";
+import { getMemberList, getMemberDetail, queryMember } from "@/api";
 import MemberDetail from "../common/member-detail/member-detail";
 export default {
   name: "staff-list",
@@ -73,7 +76,8 @@ export default {
       memberDetail: {},
 
       formItem: {
-        memberName: ""
+        memberName: "",
+        mobile: ""
       },
 
       columns: [
@@ -112,7 +116,15 @@ export default {
       });
     },
     hdlquery() {
-      this.changePage(1);
+      this.isLoading = true;
+      let pageSize = this.pageSize;
+      queryMember({ pageIndex: 1, pageSize, ...this.formItem })
+        .then(res => {
+          let { data } = res;
+          this.tableData = data.items;
+          this.total = Number(data.total);
+        })
+        .finally(() => (this.isLoading = false));
     },
     changePage(pageIndex) {
       this.isLoading = true;
@@ -131,7 +143,7 @@ export default {
     },
     reset() {
       this.formItem.memberName = "";
-      this.hdlquery();
+      this.formItem.mobile = "";
     }
   },
   mounted() {
