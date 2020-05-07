@@ -37,10 +37,12 @@ public class WeChatWorkAddressListJobHandler extends IJobHandler {
         }
 
         LOGGER.info("租户[{}]同步通讯录任务开始", s);
+        XxlJobLogger.log("租户同步通讯录任务开始");
 
-        //weChatWorkAddressListSyncService.syncWeChatWorkAddressList(s);
+        weChatWorkAddressListSyncService.syncWeChatWorkAddressList(s);
 
         LOGGER.info("租户[{}]同步通讯录任务结束", s);
+        XxlJobLogger.log("租户同步通讯录任务结束");
 
         return ReturnT.SUCCESS;
     }
