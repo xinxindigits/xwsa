@@ -28,4 +28,25 @@
     gmt_updated, extension, deleted
   </sql>
 
+  <delete id="deleteTagsRelationsByTagId"  parameterType="java.lang.Long">
+
+    delete from tags_relations
+    where tag_id = #{tagId,jdbcType=BIGINT}
+  </delete>
+
+
+  <insert id="batchCreateRelations" parameterType="java.util.List">
+
+    insert into tags_relations (tenant_id, tag_id,key_id, key_name,
+    description,gmt_creator, gmt_updater, extension)
+    values
+    <foreach collection="relationsList" item="item" index="index" separator=",">
+      (#{item.tenantId,jdbcType=VARCHAR}, #{item.tagId,jdbcType=VARCHAR},
+      #{item.keyId,jdbcType=VARCHAR}, #{item.keyName,jdbcType=VARCHAR}, #{item.description,jdbcType=VARCHAR},
+      #{item.gmtCreator,jdbcType=VARCHAR},#{item.gmtUpdater,jdbcType=VARCHAR},
+      #{item.extension,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+
 </mapper>

@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.biz.service;
 
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.TagsDO;
+import cn.com.xinxin.sass.repository.model.TagsRelationsDO;
 
 
 import java.util.List;
@@ -46,6 +47,14 @@ public interface TagsService {
      * @return
      */
     int deleteTagsByIds(Long tagsIds);
+
+
+    /**
+     * 创建tag对应的映射关系
+     * @param tagsRelationsDOS
+     * @return
+     */
+    int createTagsRelations(List<TagsRelationsDO> tagsRelationsDOS);
 
 
 
