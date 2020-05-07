@@ -17,6 +17,12 @@ public class UserForm extends ToString {
     private static final long serialVersionUID = 1238156342334706373L;
 
     private Long id;
+
+    /**
+     * 租户名称
+     */
+    private String tenantId;
+
     /**
      * 用户号
      */
@@ -175,5 +181,13 @@ public class UserForm extends ToString {
 
     public void setOrgCode(String orgCode) {
         this.orgCode = orgCode;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }
