@@ -4,4 +4,4 @@
  * @updater:
  * @description: Job执行器实现类
  */
-package cn.com.xinxin.sass.biz.executor;
+package cn.com.xinxin.sass.job.executor;

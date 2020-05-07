@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.biz.job;
+package cn.com.xinxin.sass.job.executor;
 
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkAddressListSyncService;
 import com.xxl.job.core.biz.model.ReturnT;
