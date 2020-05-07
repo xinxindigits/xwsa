@@ -4,4 +4,4 @@
  * @updater:
  * @description:
  */
-package cn.com.xinxin.sass.biz;
+package cn.com.xinxin.sass.job;
