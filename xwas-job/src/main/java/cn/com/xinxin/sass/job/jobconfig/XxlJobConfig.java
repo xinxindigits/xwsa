@@ -17,25 +17,25 @@ import org.springframework.stereotype.Component;
 @Component
 @Configuration
 public class XxlJobConfig {
-    @Value("${xxl.job.admin.addresses}")
+    @Value("${xxl.META-INFO.admin.addresses}")
     private String adminAddresses;
 
-    @Value("${xxl.job.executor.appname}")
+    @Value("${xxl.META-INFO.executor.appname}")
     private String appName;
 
-    @Value("${xxl.job.executor.ip}")
+    @Value("${xxl.META-INFO.executor.ip}")
     private String ip;
 
-    @Value("${xxl.job.executor.port}")
+    @Value("${xxl.META-INFO.executor.port}")
     private int port;
 
-    @Value("${xxl.job.accessToken}")
+    @Value("${xxl.META-INFO.accessToken}")
     private String accessToken;
 
-    @Value("${xxl.job.executor.logpath}")
+    @Value("${xxl.META-INFO.executor.logpath}")
     private String logPath;
 
-    @Value("${xxl.job.executor.logretentiondays}")
+    @Value("${xxl.META-INFO.executor.logretentiondays}")
     private int logRetentionDays;
 
     private static final Logger log = LoggerFactory.getLogger(XxlJobConfig.class);
