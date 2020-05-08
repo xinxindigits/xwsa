@@ -52,12 +52,9 @@ export const updateTag = ({ id, name, tagType, description }) => {
   });
 };
 export const deleteTag = ({ tagId }) => {
-  let data = {
-    tagId
-  };
   return axios.request({
-    url: `tags/delete`,
+    url: "tags/delete",
     method: "delete",
-    data
+    params: { tagId }
   });
 };
