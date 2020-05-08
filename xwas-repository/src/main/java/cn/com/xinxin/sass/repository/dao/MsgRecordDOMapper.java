@@ -112,8 +112,14 @@ public interface MsgRecordDOMapper {
      * 通过租户id和成员userid查询会话记录
      * @param tenantId 租户id
      * @param userId 成员userid
+     * @param keyWord 关键字
+     * @param startTime 消息发送时间范围之起始时间
+     * @param endTime 消息发送时间范围之终止时间
      * @return 会话记录
      */
-    List<MsgRecordDO> selectByMemberUserId(@Param("tenantId") String tenantId,
-                                             @Param(value = "userId") String userId);
+    List<MsgRecordDO> selectByMemberUserIdAndKeyWordAndTime(@Param("tenantId") String tenantId,
+                                             @Param(value = "userId") String userId,
+                                           @Param(value = "keyWord") String keyWord,
+                                           @Param(value = "startTime") String startTime,
+                                           @Param(value = "endTime") String endTime);
 }
