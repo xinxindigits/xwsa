@@ -194,21 +194,24 @@ public class MsgRecordServiceImpl implements MsgRecordService {
      * 通过租户id和成员userid查询聊天方
      * @param tenantId 租户id
      * @param userId 成员userid
-     * @return 聊天方
+     * @param keyWord 关键字
+     * @param startTime 消息发送时间范围之起始时间
+     * @param endTime 消息发送时间范围之终止时间
+     * @return 会话记录
      */
     @Override
-    public List<ChatPartyBO> selectByMemberUserId(String tenantId, String userId) {
+    public List<ChatPartyBO> selectByMemberUserIdAndKeyWordAndTime(String tenantId,
+                                                                   String userId,
+                                                                   String keyWord,
+                                                                   String startTime,
+                                                                   String endTime) {
         if (StringUtils.isBlank(tenantId)) {
             LOGGER.error("通过租户id和成员userid查询会话记录, tenantId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
                     "通过租户id和成员userid查询会话记录, tenantId不能为空");
         }
-        if (StringUtils.isBlank(userId)) {
-            LOGGER.error("通过租户id和成员userid查询会话记录, userId不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
-                    "通过租户id和成员userid查询会话记录, userId不能为空");
-        }
-        List<MsgRecordDO> msgRecordDOS = msgRecordDOMapper.selectByMemberUserId(tenantId, userId);
+        List<MsgRecordDO> msgRecordDOS = msgRecordDOMapper.selectByMemberUserIdAndKeyWordAndTime(tenantId, userId,
+                keyWord, startTime, endTime);
 
         Map<String, ChatPartyBO> chatPartyPersonBOMap = new HashMap<>();
         Map<String, ChatPartyBO> chatPartyRoomBOMap = new HashMap<>();

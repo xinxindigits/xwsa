@@ -222,7 +222,9 @@ public class WeChatMessageRestController extends AclController {
                     "根据成员userid查询与之聊天的人或者群, UserId不能为空");
         }
 
-        List<ChatPartyBO> chatPartyBOS = msgRecordService.selectByMemberUserId(sassUserInfo.getTenantId(), queryForm.getUserId());
+        List<ChatPartyBO> chatPartyBOS = msgRecordService.selectByMemberUserIdAndKeyWordAndTime(
+                sassUserInfo.getTenantId(), queryForm.getUserId(), queryForm.getKeyWord(), queryForm.getStartTime(),
+                queryForm.getEndTime());
 
         chatPartyBOS.stream().filter(c -> 0 == c.getType()).forEach(c -> {
             ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), c.getUserId());
