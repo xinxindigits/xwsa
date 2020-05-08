@@ -63,7 +63,7 @@ public interface OrganizationMapper {
      */
     int updateByPrimaryKey(OrganizationDO record);
 
-    List<OrganizationDO> findByCondition(@Param("condition") OrganizationDO condition, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    List<OrganizationDO> findByCondition(@Param("condition") OrganizationDO condition);
 
 
     List<OrganizationDO> selectAllOrgs();
@@ -73,5 +73,7 @@ public interface OrganizationMapper {
     int updateByCodeSelective(OrganizationDO record);
 
     int deleteByCodes(@Param("codes") List<String> codes);
+
+    List<OrganizationDO> findChildren(@Param("parentIds") List<Long> parentIds);
 
 }

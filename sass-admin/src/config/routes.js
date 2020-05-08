@@ -79,6 +79,13 @@ let routes_config = {
       title: "租户管理"
     },
     component: () => import("@/views/system/tenant/tenant.vue")
+  },
+  ["/organization/list"]: {
+    name: "organization",
+    meta: {
+      title: "租户管理"
+    },
+    component: () => import("@/views/system/organization/organization.vue")
   }
 };
 export default routes_config;

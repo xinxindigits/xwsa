@@ -18,10 +18,11 @@ public class OrgQueryForm extends ToString {
 
     private Integer pageSize;
     private Integer pageIndex;
-    private String code;
-    private String state;
+    private String orgId;
+    private String tenantId;
     private String orgType;
-    private String name;
+    private String orgName;
+
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date startTime;
@@ -31,12 +32,28 @@ public class OrgQueryForm extends ToString {
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endTime;
 
-    public String getState() {
-        return state;
+    public String getOrgId() {
+        return orgId;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setOrgId(String orgId) {
+        this.orgId = orgId;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public String getOrgName() {
+        return orgName;
+    }
+
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 
     public Integer getPageSize() {
@@ -55,28 +72,12 @@ public class OrgQueryForm extends ToString {
         this.pageIndex = pageIndex;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getOrgType() {
         return orgType;
     }
 
     public void setOrgType(String orgType) {
         this.orgType = orgType;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Date getStartTime() {

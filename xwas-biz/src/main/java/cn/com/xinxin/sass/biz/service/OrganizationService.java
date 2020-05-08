@@ -18,7 +18,7 @@ public interface OrganizationService {
 
     OrganizationDO findById(Long id);
 
-    PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition, Date startTime, Date endTime);
+    PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition);
 
     Boolean deleteById(Long id);
 
@@ -27,5 +27,7 @@ public interface OrganizationService {
     List<OrganizationDO> queryOrgList();
 
     OrganizationDO findByCode(String code);
+
+    List<OrganizationDO> findChildren(List<Long> parentIds);
 
 }
