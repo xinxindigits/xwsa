@@ -30,4 +30,5 @@ public interface OrganizationService {
 
     List<OrganizationDO> findChildren(List<Long> parentIds);
 
+
 }
