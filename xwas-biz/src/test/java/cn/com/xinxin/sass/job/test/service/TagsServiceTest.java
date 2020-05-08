@@ -35,7 +35,7 @@ public class TagsServiceTest extends SpringBaseTest {
 
         System.out.println(tagsDOLists.size());
 
-        Map<String,List<TagsDO>> tagMaps = this.tagsService.selectTagsMapsByKeyIdLists(Lists.newArrayList("1000"));
+        Map<String,List<TagsDO>> tagMaps = this.tagsService.selectTagsMapsByKeyIdLists(Lists.newArrayList("1000","woD5WOCgAA9Ser587NLqXW_msZLZj8pQ"));
 
         System.out.println(tagMaps.size());
 
