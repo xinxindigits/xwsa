@@ -13,17 +13,17 @@
       :rules="rules"
     >
       <FormItem label="机构编号" prop="code">
-        <Input
-          v-model="formObj.code"
-          style="width: 280px"
-        ></Input>
+        <Input v-model="formObj.code" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="机构名称" prop="name">
         <Input v-model="formObj.name" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="上级机构" prop="parentName">
-        <Input v-model="formObj.parentName" style="width: 280px"
-               :disabled="createChild"></Input>
+        <Input
+          v-model="formObj.parentName"
+          style="width: 280px"
+          :disabled="createChild"
+        ></Input>
       </FormItem>
       <FormItem label="机构类型" prop="orgType">
         <Select v-model="formObj.orgType" style="width:280px">
@@ -88,17 +88,17 @@ export default {
     }
   },
   data() {
-
     return {
       curValue: false,
       createChild: false,
       formObj: {
         name: "",
-        parentId:"",
+        parentId: "",
         parentName: "",
         code: "",
         state: "Y",
-        remark: ""
+        remark: "",
+        orgType: ""
       },
       orgTypeList: [
         {
@@ -115,9 +115,15 @@ export default {
         }
       ],
       rules: {
-        code: [{ required: true, message: "机构编号不能为空", trigger: "blur" }],
-        name: [{ required: true, message: "机构名称不能为空", trigger: "blur" }],
-        orgType: [{ required: true, message: "机构类型不能为空", trigger: "blur" }],
+        code: [
+          { required: true, message: "机构编号不能为空", trigger: "blur" }
+        ],
+        name: [
+          { required: true, message: "机构名称不能为空", trigger: "blur" }
+        ],
+        orgType: [
+          { required: true, message: "机构类型不能为空", trigger: "blur" }
+        ]
       }
     };
   },
