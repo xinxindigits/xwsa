@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Row :gutter="10" v-show="showList">
+    <Row :gutter="10">
       <Col span="24">
         <Card>
           <Form :model="formItem" inline label-colon>
@@ -51,29 +51,40 @@
         </Card>
       </Col>
     </Row>
-    <Row v-show="!showList">
-      <Col span="24">
-        <member-detail
-          :items="memberDetail"
-          @on-cancel="showList = true"
-        ></member-detail>
-      </Col>
-    </Row>
+    <Drawer
+      v-model="showDetail"
+      :closable="false"
+      width="80"
+      scrollable
+      transfer
+    >
+      <member-detail
+        :items="memberDetail"
+        @show-record="showRecord = true"
+      ></member-detail>
+    </Drawer>
+    <Drawer title="会话管理" v-model="showRecord" width="100">
+      <msg-record :user-id="cur_userId"></msg-record>
+    </Drawer>
   </div>
 </template>
 
 <script>
 import { getMemberList, getMemberDetail, queryMember } from "@/api";
 import MemberDetail from "../common/member-detail/member-detail";
+import MsgRecord from "@/components/msg-record/msg-record";
 export default {
   name: "staff-list",
   components: {
-    MemberDetail
+    MemberDetail,
+    MsgRecord
   },
   data() {
     return {
-      showList: true,
+      showDetail: false,
       memberDetail: {},
+      showRecord: false,
+      cur_userId: "",
 
       formItem: {
         memberName: "",
@@ -112,7 +123,8 @@ export default {
     hdlSingleModified(row) {
       getMemberDetail({ id: row.id }).then(res => {
         this.memberDetail = res.data;
-        this.showList = false;
+        this.showDetail = true;
+        this.cur_userId = row.userId;
       });
     },
     hdlquery() {

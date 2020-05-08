@@ -115,6 +115,7 @@ export default {
   },
   data() {
     return {
+      isLoanding: false,
       showAddModal: false,
       showGrantModal: false,
       showUpdateModal: false,

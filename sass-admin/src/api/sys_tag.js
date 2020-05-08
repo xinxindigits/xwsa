@@ -58,3 +58,12 @@ export const deleteTag = ({ tagId }) => {
     params: { tagId }
   });
 };
+
+export const setTagByKeyId = ({ keyId, keyName, description, tagIds }) => {
+  let data = { keyId, keyName, description, tagIds };
+  return axios.request({
+    url: "tags/fixdata",
+    method: "delete",
+    data
+  });
+};
