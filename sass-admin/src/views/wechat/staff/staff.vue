@@ -1,14 +1,17 @@
 <template>
   <div>
-    <Row :gutter="10" v-show="showList">
+    <Row :gutter="10">
       <Col span="24">
         <Card>
-          <Form :model="formItem" inline label-colon v-show="false">
+          <Form :model="formItem" inline label-colon>
             <FormItem>
               <Input v-model="formItem.memberName" placeholder="姓名"></Input>
             </FormItem>
             <FormItem>
-              <Button type="primary">查询</Button>
+              <Input v-model="formItem.mobile" placeholder="手机号"></Input>
+            </FormItem>
+            <FormItem>
+              <Button type="primary" @click="hdlquery">查询</Button>
               <Button style="margin-left: 8px" @click="reset">重置</Button>
             </FormItem>
           </Form>
@@ -48,32 +51,44 @@
         </Card>
       </Col>
     </Row>
-    <Row v-show="!showList">
-      <Col span="24">
-        <member-detail
-          :items="memberDetail"
-          @on-cancel="showList = true"
-        ></member-detail>
-      </Col>
-    </Row>
+    <Drawer
+      v-model="showDetail"
+      :closable="false"
+      width="80"
+      scrollable
+      transfer
+    >
+      <member-detail
+        :items="memberDetail"
+        @show-record="showRecord = true"
+      ></member-detail>
+    </Drawer>
+    <Drawer title="会话管理" v-model="showRecord" width="100">
+      <msg-record :user-id="cur_userId"></msg-record>
+    </Drawer>
   </div>
 </template>
 
 <script>
-import { getMemberList, getMemberDetail } from "@/api";
+import { getMemberList, getMemberDetail, queryMember } from "@/api";
 import MemberDetail from "../common/member-detail/member-detail";
+import MsgRecord from "@/components/msg-record/msg-record";
 export default {
   name: "staff-list",
   components: {
-    MemberDetail
+    MemberDetail,
+    MsgRecord
   },
   data() {
     return {
-      showList: true,
+      showDetail: false,
       memberDetail: {},
+      showRecord: false,
+      cur_userId: "",
 
       formItem: {
-        memberName: ""
+        memberName: "",
+        mobile: ""
       },
 
       columns: [
@@ -108,11 +123,20 @@ export default {
     hdlSingleModified(row) {
       getMemberDetail({ id: row.id }).then(res => {
         this.memberDetail = res.data;
-        this.showList = false;
+        this.showDetail = true;
+        this.cur_userId = row.userId;
       });
     },
     hdlquery() {
-      this.changePage(1);
+      this.isLoading = true;
+      let pageSize = this.pageSize;
+      queryMember({ pageIndex: 1, pageSize, ...this.formItem })
+        .then(res => {
+          let { data } = res;
+          this.tableData = data.items;
+          this.total = Number(data.total);
+        })
+        .finally(() => (this.isLoading = false));
     },
     changePage(pageIndex) {
       this.isLoading = true;
@@ -131,7 +155,7 @@ export default {
     },
     reset() {
       this.formItem.memberName = "";
-      this.hdlquery();
+      this.formItem.mobile = "";
     }
   },
   mounted() {

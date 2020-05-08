@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Row :gutter="5" v-show="showList">
+    <Row :gutter="5">
       <Col :xs="8" :sm="8" :md="8" :lg="6">
         <Card style="height:100%">
           <Form inline>
@@ -64,14 +64,21 @@
           </div> </Card
       ></Col>
     </Row>
-    <Row v-show="!showList">
-      <Col span="24">
-        <member-detail
-          :items="memberDetail"
-          @on-cancel="showList = true"
-        ></member-detail>
-      </Col>
-    </Row>
+    <Drawer
+      :closable="false"
+      width="80"
+      v-model="showDetail"
+      scrollable
+      transfer
+    >
+      <member-detail
+        :items="memberDetail"
+        @show-record="showRecord = true"
+      ></member-detail>
+    </Drawer>
+    <Drawer title="会话管理" v-model="showRecord" width="100">
+      <msg-record :user-id="cur_userId"></msg-record>
+    </Drawer>
   </div>
 </template>
 
@@ -83,14 +90,19 @@ import {
   getMemberDetail
 } from "@/api";
 import MemberDetail from "../common/member-detail/member-detail";
+import MsgRecord from "@/components/msg-record/msg-record";
 export default {
   name: "org-list",
   components: {
-    MemberDetail
+    MemberDetail,
+    MsgRecord
   },
   data() {
     return {
-      showList: true,
+      showDetail: false,
+      cur_userId: "",
+      showRecord: false,
+
       pageSize: 10,
       total: 0,
       page: 1,
@@ -155,9 +167,9 @@ export default {
     hdlSingleModified(row) {
       console.log(row);
       getMemberDetail({ id: row.id }).then(res => {
-        console.log(res.data);
         this.memberDetail = res.data;
-        this.showList = false;
+        this.cur_userId = row.userId;
+        this.showDetail = true;
       });
     },
 

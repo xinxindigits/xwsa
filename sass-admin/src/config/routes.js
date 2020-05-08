@@ -86,6 +86,13 @@ let routes_config = {
       title: "租户管理"
     },
     component: () => import("@/views/system/organization/organization.vue")
+  },
+  ["/tags/list"]: {
+    name: "tag_list",
+    meta: {
+      title: "标签管理"
+    },
+    component: () => import("@/views/system/tag/tag.vue")
   }
 };
 export default routes_config;

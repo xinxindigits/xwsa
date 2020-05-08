@@ -160,7 +160,7 @@ export default {
       this.isUpdate = false;
     },
     hdlDelete() {
-      if (this.isUpdate) {
+      if (!this.isUpdate) {
         return;
       }
       let arr = this.$refs.tree.getCheckedNodes();
@@ -172,7 +172,7 @@ export default {
           title: "确认删除？",
           content: `确定删除选中记录?`,
           onOk() {
-            deleteResource({ id: this.form1.id }).then(() => {
+            deleteResource({ id: self.form1.id }).then(() => {
               this.$Message.success("删除成功！");
               self.init().then(() => {
                 self.reset();

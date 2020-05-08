@@ -1,6 +1,5 @@
 <template>
-  <Card>
-    <Button @click="hdlCancel">返回</Button>
+  <div>
     <List>
       <ListItem>
         <ListItemMeta :title="detail.customerName" :description="description">
@@ -18,8 +17,13 @@
         <span>性别：{{ detail.gender }}</span>
       </Cell>
       <Cell>
-        <span>客户类型：{{ detail.customerType }}</span>
+        <span>客户类型：{{ $mapd("customerType", detail.customerType) }}</span>
       </Cell>
+      <!-- <Cell>
+        <Select filterable multiple>
+          <Option></Option>
+        </Select>
+      </Cell> -->
       <Divider dashed></Divider>
       <Cell>
         <span>公司名称：{{ detail.corpFullName }}</span>
@@ -31,16 +35,18 @@
       <Cell>
         <span>添加人：{{ detail.memberUserId }}</span>
       </Cell>
+      <Cell>
+        <span>跟进人：{{ detail.followUser }}</span>
+      </Cell>
 
       <Divider orientation="left" dashed> 其他</Divider>
       <Cell>
-        <span>externalProfile：{{ detail.externalProfile }}</span>
+        <span>扩展信息：{{ detail.externalProfile }}</span>
       </Cell>
-      <Cell>
-        <span>unionId:{{ detail.unionId }}</span>
-      </Cell>
+      <Divider dashed></Divider>
+      <Button type="primary" @click="hdlClick">会话信息</Button>
     </CellGroup>
-  </Card>
+  </div>
 </template>
 
 <script>
@@ -75,6 +81,9 @@ export default {
   methods: {
     hdlCancel() {
       this.$emit("on-cancel");
+    },
+    hdlClick() {
+      this.$emit("show-record", this.detail.userId);
     }
   },
   watch: {

@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.CustomerService;
 import cn.com.xinxin.sass.biz.service.TagsService;
@@ -118,9 +119,14 @@ public class WeChatOrgCustomerRestController extends AclController {
             LOGGER.error("查询企业微信客户信息，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，参数不能为空");
         }
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        String tenantId = queryForm.getTenantId();
+
         if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("查询企业微信客户信息，机构id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，机构id不能为空");
+
+            tenantId = sassUserInfo.getTenantId();
         }
 
         PageResultVO page = new PageResultVO();
@@ -135,10 +141,8 @@ public class WeChatOrgCustomerRestController extends AclController {
 
         //查询客户信息
         PageResultVO<CustomerDO> pageResultDO = customerService.queryByOrgIdAndMemberUserIdSAndTime(
-                queryForm.getMemberUserIds(), startTime, endTime, page, queryForm.getTenantId(), queryForm.getCustomerName());
-
-
-
+                queryForm.getMemberUserIds(), startTime, endTime, page, tenantId, queryForm.getCustomerName());
+        
         List<String> customerIds = pageResultDO.getItems().stream()
                 .map(x->x.getUserId())
                 .distinct()
