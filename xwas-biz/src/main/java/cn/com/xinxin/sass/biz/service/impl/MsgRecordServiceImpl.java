@@ -218,15 +218,14 @@ public class MsgRecordServiceImpl implements MsgRecordService {
 
         //组装聊天方信息
         msgRecordDOS.forEach(r -> {
-            if (!StringUtils.equals(r.getFromUserId(), userId) && !chatPartyPersonBOMap.containsKey(r.getFromUserId())) {
-                ChatPartyBO chatPartyBO = new ChatPartyBO();
-                chatPartyBO.setType(0);
-                chatPartyBO.setUserId(r.getFromUserId());
-                chatPartyPersonBOMap.put(r.getFromUserId(), chatPartyBO);
-            }
-
-
             if (StringUtils.isBlank(r.getRoomId())) {
+                if (!StringUtils.equals(r.getFromUserId(), userId) && !chatPartyPersonBOMap.containsKey(r.getFromUserId())) {
+                    ChatPartyBO chatPartyBO = new ChatPartyBO();
+                    chatPartyBO.setType(0);
+                    chatPartyBO.setUserId(r.getFromUserId());
+                    chatPartyPersonBOMap.put(r.getFromUserId(), chatPartyBO);
+                }
+
                 String toUserId = r.getToUserId().replace("[", "").replace("]", "");
                 if (!chatPartyPersonBOMap.containsKey(toUserId) && !StringUtils.equals(toUserId, userId)) {
                     ChatPartyBO chatPartyBO = new ChatPartyBO();
