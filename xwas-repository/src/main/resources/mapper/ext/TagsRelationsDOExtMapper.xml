@@ -83,13 +83,13 @@
     where tg.id=tgr.tag_id
     and tgr.key_id
     in
-    <foreach collection="keyIds" index="index" item="item" open="(" separator="," close=")">
+    <foreach collection="keyIdList" index="index" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
   </select>
 
 
-  <select id="selectTagsMapsByKeyIds" resultMap="BaseResultMapExt" parameterType="java.lang.String" >
+  <select id="selectTagsMapsByKeyIds" resultMap="TagMapDOBaseResultMapExt" parameterType="java.lang.String" >
     select
     tg.id,tg.code,tg.name,tg.description, tgr.key_id, tgr.key_name, tg.gmt_creator, tg.gmt_created,
     tg.gmt_updater,tg.gmt_updated, tg.extension, tg.deleted
@@ -97,7 +97,7 @@
     where tg.id=tgr.tag_id
     and tgr.key_id
     in
-    <foreach collection="keyIds" index="index" item="item" open="(" separator="," close=")">
+    <foreach collection="keyIdList" index="index" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
   </select>

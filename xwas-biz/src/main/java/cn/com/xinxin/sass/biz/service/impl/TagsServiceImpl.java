@@ -134,7 +134,7 @@ public class TagsServiceImpl implements TagsService {
         List<TagsMapDO> tagsMapDOList = this.tagsRelationsDOMapper.selectTagsMapsByKeyIds(keyIds);
 
         Map<String, List<TagsDO>> resultMaps = Maps.newHashMap();
-        
+
         for(String keyId: keyIds){
 
             List<TagsMapDO> mapDOList = tagsMapDOList.stream()

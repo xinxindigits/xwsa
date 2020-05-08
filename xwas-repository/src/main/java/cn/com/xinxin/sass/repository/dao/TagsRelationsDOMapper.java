@@ -90,7 +90,7 @@ public interface TagsRelationsDOMapper {
      * @param keyIds
      * @return
      */
-    List<TagsMapDO> selectTagsMapsByKeyIds(@Param("keyIds") List<String> keyIds);
+    List<TagsMapDO> selectTagsMapsByKeyIds(@Param("keyIdList") List<String> keyIds);
 
 
 }
