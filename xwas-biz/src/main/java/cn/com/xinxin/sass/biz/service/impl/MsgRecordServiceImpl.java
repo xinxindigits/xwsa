@@ -5,6 +5,7 @@ import cn.com.xinxin.sass.biz.service.CustomerService;
 import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.vo.ChatUserVO;
+import cn.com.xinxin.sass.biz.vo.QueryMsgConditionVO;
 import cn.com.xinxin.sass.common.enums.ChatUserEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
@@ -126,7 +127,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
     }
 
     @Override
-    public PageResultVO<MsgRecordDO> selectMsgRecordBetweenPersons(PageResultVO page,String orgId, String userIdOne, String userIdTwo) {
+    public PageResultVO<MsgRecordDO> selectMsgRecordBetweenPersons(PageResultVO page, String orgId, String userIdOne, String userIdTwo, QueryMsgConditionVO conditionVO) {
         if (StringUtils.isBlank(orgId)) {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "机构编码不能为空");
         }
@@ -134,7 +135,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "用户id不能为空");
         }
         com.github.pagehelper.Page pageHelper = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        List<MsgRecordDO> resourceDOS = msgRecordDOMapper.selectMsgRecordBetweenPersons(orgId,userIdOne,userIdTwo);
+        List<MsgRecordDO> resourceDOS = msgRecordDOMapper.selectMsgRecordBetweenPersons(orgId,userIdOne,userIdTwo,conditionVO.getStartTime(),conditionVO.getEndTime(),conditionVO.getKeyWord());
         PageResultVO<MsgRecordDO> result = new PageResultVO<>();
         result.setTotal(pageHelper.getTotal());
         result.setItems(resourceDOS);
@@ -144,7 +145,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
     }
 
     @Override
-    public PageResultVO<MsgRecordDO> selectRoomMsgRecord(PageResultVO page, String orgId, String roomId) {
+    public PageResultVO<MsgRecordDO> selectRoomMsgRecord(PageResultVO page, String orgId, String roomId, QueryMsgConditionVO conditionVO) {
         if (StringUtils.isBlank(orgId)) {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "机构编码不能为空");
         }
@@ -152,7 +153,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "群聊id不能为空");
         }
         com.github.pagehelper.Page pageHelper = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        List<MsgRecordDO> resourceDOS = msgRecordDOMapper.selectRoomMsgRecord(orgId,roomId);
+        List<MsgRecordDO> resourceDOS = msgRecordDOMapper.selectRoomMsgRecord(orgId,roomId,conditionVO.getStartTime(),conditionVO.getEndTime(),conditionVO.getKeyWord());
         PageResultVO<MsgRecordDO> result = new PageResultVO<>();
         result.setTotal(pageHelper.getTotal());
         result.setItems(resourceDOS);

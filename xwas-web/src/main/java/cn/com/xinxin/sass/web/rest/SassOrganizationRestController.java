@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.idgen.SnowFakeIdGenerator;
+import com.xinxinfinance.commons.result.BizResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -189,7 +190,9 @@ public class SassOrganizationRestController extends AclController {
         OrganizationDO organizationDO = SassFormConvert.convertOrgForm2OrganizationDO(orgForm);
         organizationDO.setGmtCreator(sassUserInfo.getAccount());
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
-
+        if(StringUtils.isEmpty(orgForm.getTenantId())){
+            organizationDO.setTenantId(sassUserInfo.getTenantId());
+        }
         // 创建对象
         int result = this.organizationService.createOrganization(organizationDO);
 
@@ -224,12 +227,6 @@ public class SassOrganizationRestController extends AclController {
         // 创建对象
         int result = this.organizationService.updateOrganization(organizationDO);
 
-        TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(orgForm, TenantBaseInfoDO.class);
-        tenantBaseInfoDO.setTenantId(orgForm.getCode());
-        tenantBaseInfoDO.setTenantName(orgForm.getName());
-        tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
-        this.tenantBaseInfoService.updateByOrgId(tenantBaseInfoDO);
-
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else {
@@ -252,8 +249,11 @@ public class SassOrganizationRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"组织机构列表不能为空");
         }
 
-        int result = this.organizationService.deleteByCodes(deleteOrgForm.getCodes());
-        this.tenantBaseInfoService.deleteByCodes(deleteOrgForm.getCodes());
+        List<OrganizationDO> organizationDOS = this.organizationService.findChildren(deleteOrgForm.getIds());
+        if(!CollectionUtils.isEmpty(organizationDOS)){
+            throw new BusinessException(SassBizResultCodeEnum.NOT_PERMIT_DELETE);
+        }
+        int result = this.organizationService.deleteByIds(deleteOrgForm.getIds());
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else {

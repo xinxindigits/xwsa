@@ -5,6 +5,7 @@ import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.model.bo.ChatPartyBO;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.vo.ChatUserVO;
+import cn.com.xinxin.sass.biz.vo.QueryMsgConditionVO;
 import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.constants.WeChatWorkChatRecordsTypeConstants;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
@@ -136,11 +137,12 @@ public class WeChatMessageRestController extends AclController {
         page.setPageNumber((queryForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageIndex());
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
+        QueryMsgConditionVO conditionVO  = BaseConvert.convert(queryForm, QueryMsgConditionVO.class);
         //查询客户信息
-        PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.selectMsgRecordBetweenPersons(page,sassUserInfo.getTenantId(),
-                queryForm.getUserId(),queryForm.getUserIdTwo());
-        ChatUserVO chatUserOneVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(),queryForm.getUserId());
-        ChatUserVO chatUserTwoVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(),queryForm.getUserIdTwo());
+        PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.selectMsgRecordBetweenPersons(page,queryForm.getTenantId(),
+                queryForm.getUserId(),queryForm.getUserIdTwo(),conditionVO);
+        ChatUserVO chatUserOneVO = msgRecordService.getChatUser(queryForm.getTenantId(),queryForm.getUserId());
+        ChatUserVO chatUserTwoVO = msgRecordService.getChatUser(queryForm.getTenantId(),queryForm.getUserIdTwo());
         //将DO装换为VO
         PageResultVO<MsgRecordVO> pageResultVO = new PageResultVO<>();
         pageResultVO.setPageNumber(pageResultDO.getPageNumber());
@@ -170,9 +172,11 @@ public class WeChatMessageRestController extends AclController {
         page.setPageNumber((queryForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageIndex());
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
 
+        QueryMsgConditionVO conditionVO  = BaseConvert.convert(queryForm, QueryMsgConditionVO.class);
+
         //查询客户信息
-        PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.selectRoomMsgRecord(page,sassUserInfo.getTenantId(),
-                queryForm.getRoomId());
+        PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.selectRoomMsgRecord(page,queryForm.getTenantId(),
+                queryForm.getRoomId(),conditionVO);
 
         //将DO装换为VO
         PageResultVO<MsgRecordVO> pageResultVO = new PageResultVO<>();

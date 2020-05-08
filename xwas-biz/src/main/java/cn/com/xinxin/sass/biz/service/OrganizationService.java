@@ -24,10 +24,13 @@ public interface OrganizationService {
 
     int deleteByCodes(List<String> codes);
 
+    int deleteByIds(List<Long> ids);
+
     List<OrganizationDO> queryOrgList();
 
     OrganizationDO findByCode(String code);
 
     List<OrganizationDO> findChildren(List<Long> parentIds);
+
 
 }
