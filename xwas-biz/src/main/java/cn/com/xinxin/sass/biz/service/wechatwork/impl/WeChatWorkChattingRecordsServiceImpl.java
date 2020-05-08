@@ -157,7 +157,7 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
                     //转换实体并放到msgRecordDOS中
                     msgRecordDOS.add(MsgRecordConvert.convert2MsgRecordDO(recordsBO, orgId, taskId, w.getSequenceNo()));
                 } catch (Exception e) {
-                    LOGGER.error("解密会话信息异常");
+                    LOGGER.error("解密会话信息异常", e);
                     throw new BusinessException(SassBizResultCodeEnum.FAIL, "解密会话信息异常");
                 }
             });
