@@ -1,21 +1,31 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.CustomerService;
+import cn.com.xinxin.sass.biz.service.TagsService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.common.utils.DateUtils;
 import cn.com.xinxin.sass.repository.model.CustomerDO;
+import cn.com.xinxin.sass.repository.model.ResourceDO;
+import cn.com.xinxin.sass.repository.model.TagsDO;
 import cn.com.xinxin.sass.web.convert.CustomerConvert;
 import cn.com.xinxin.sass.web.form.WeChatCustomerQueryForm;
 import cn.com.xinxin.sass.web.vo.CustomerVO;
+import cn.com.xinxin.sass.web.vo.TagsVO;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
 
 
 /**
@@ -32,8 +42,12 @@ public class WeChatOrgCustomerRestController extends AclController {
 
     private final CustomerService customerService;
 
-    public WeChatOrgCustomerRestController(final CustomerService customerService) {
+    private final TagsService tagsService;
+
+    public WeChatOrgCustomerRestController(final CustomerService customerService,
+                                           final TagsService tagsService) {
         this.customerService = customerService;
+        this.tagsService = tagsService;
     }
 
 
@@ -62,13 +76,28 @@ public class WeChatOrgCustomerRestController extends AclController {
         //查询客户信息
         PageResultVO<CustomerDO> pageResultDO = customerService.queryCustomerByPages(page);
 
+        List<String> customerIds = pageResultDO.getItems().stream()
+                .map(x->x.getUserId())
+                .distinct()
+                .collect(toList());
+
+        Map<String,List<TagsDO>> tagsDOSMaps = this.tagsService.selectTagsMapsByKeyIdLists(customerIds);
+
+
+        List<CustomerVO> customerVOS = CustomerConvert.convert2CustomerVOList(pageResultDO.getItems());
+
+        for(CustomerVO customerVO: customerVOS){
+            List<TagsDO> customerTagDOList = tagsDOSMaps.get(customerVO.getUserId());
+            List<TagsVO> tagsVOList = BaseConvert.convertList(customerTagDOList,TagsVO.class);
+            customerVO.setTags(tagsVOList);
+        }
+
         //将DO装换为VO
         PageResultVO<CustomerVO> pageResultVO = new PageResultVO<>();
         pageResultVO.setPageNumber(pageResultDO.getPageNumber());
         pageResultVO.setPageSize(pageResultDO.getPageSize());
         pageResultVO.setTotal(pageResultDO.getTotal());
-        pageResultVO.setItems(CustomerConvert.convert2CustomerVOList(pageResultDO.getItems()));
-
+        pageResultVO.setItems(customerVOS);
         return pageResultVO;
     }
 
@@ -90,9 +119,14 @@ public class WeChatOrgCustomerRestController extends AclController {
             LOGGER.error("查询企业微信客户信息，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，参数不能为空");
         }
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        String tenantId = queryForm.getTenantId();
+
         if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("查询企业微信客户信息，机构id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，机构id不能为空");
+
+            tenantId = sassUserInfo.getTenantId();
         }
 
         PageResultVO page = new PageResultVO();
@@ -107,14 +141,30 @@ public class WeChatOrgCustomerRestController extends AclController {
 
         //查询客户信息
         PageResultVO<CustomerDO> pageResultDO = customerService.queryByOrgIdAndMemberUserIdSAndTime(
-                queryForm.getMemberUserIds(), startTime, endTime, page, queryForm.getTenantId(), queryForm.getCustomerName());
+                queryForm.getMemberUserIds(), startTime, endTime, page, tenantId, queryForm.getCustomerName());
+        
+        List<String> customerIds = pageResultDO.getItems().stream()
+                .map(x->x.getUserId())
+                .distinct()
+                .collect(toList());
+
+        Map<String,List<TagsDO>> tagsDOSMaps = this.tagsService.selectTagsMapsByKeyIdLists(customerIds);
+
+
+        List<CustomerVO> customerVOS = CustomerConvert.convert2CustomerVOList(pageResultDO.getItems());
+
+        for(CustomerVO customerVO: customerVOS){
+            List<TagsDO> customerTagDOList = tagsDOSMaps.get(customerVO.getUserId());
+            List<TagsVO> tagsVOList = BaseConvert.convertList(customerTagDOList,TagsVO.class);
+            customerVO.setTags(tagsVOList);
+        }
 
         //将DO装换为VO
         PageResultVO<CustomerVO> pageResultVO = new PageResultVO<>();
         pageResultVO.setPageNumber(pageResultDO.getPageNumber());
         pageResultVO.setPageSize(pageResultDO.getPageSize());
         pageResultVO.setTotal(pageResultDO.getTotal());
-        pageResultVO.setItems(CustomerConvert.convert2CustomerVOList(pageResultDO.getItems()));
+        pageResultVO.setItems(customerVOS);
 
         return pageResultVO;
     }
@@ -136,7 +186,16 @@ public class WeChatOrgCustomerRestController extends AclController {
 
         CustomerDO customerDO =  customerService.queryById(id);
 
-        return CustomerConvert.convert2CustomerVO(customerDO);
+        CustomerVO customerVO = CustomerConvert.convert2CustomerVO(customerDO);
+
+        // 查询客户的标签
+        List<TagsDO> tagsDOList = this.tagsService.selectTagsByKeyId(customerDO.getUserId());
+
+        List<TagsVO> tagsVOList = BaseConvert.convertList(tagsDOList,TagsVO.class);
+
+        customerVO.setTags(tagsVOList);
+
+        return customerVO;
     }
 
 
