@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
  * @description: 企业微信通讯录相关服务
  */
 @Service
+@Deprecated
 public class WeChatWorkAddressListServiceImpl implements WeChatWorkAddressListService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkAddressListServiceImpl.class);

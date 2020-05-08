@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
  * @description: 企业微信同步部门服务
  */
 @Service
+@Deprecated
 public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartmentSyncService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkDepartmentSyncServiceImpl.class);

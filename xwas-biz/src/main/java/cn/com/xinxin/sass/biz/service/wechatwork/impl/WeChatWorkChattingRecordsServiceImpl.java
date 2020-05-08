@@ -41,6 +41,7 @@ import java.util.List;
  * @description: 企业微信聊天记录服务
  */
 @Service
+@Deprecated
 public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingRecordsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkChattingRecordsServiceImpl.class);

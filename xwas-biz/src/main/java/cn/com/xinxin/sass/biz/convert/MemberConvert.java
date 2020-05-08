@@ -27,30 +27,32 @@ public class MemberConvert {
         MemberReceivedDO memberReceivedDO = new MemberReceivedDO();
         memberReceivedDO.setTaskId(taskId);
         memberReceivedDO.setTenantId(orgId);
-        memberReceivedDO.setUserId(weChatWorkUserBO.getUserId());
-        memberReceivedDO.setMemberName(weChatWorkUserBO.getUserName());
-        memberReceivedDO.setMobile(weChatWorkUserBO.getMobile());
-        memberReceivedDO.setDepartmentIdList(convertList(weChatWorkUserBO.getDepartmentIds()));
-        memberReceivedDO.setOrderList(convertList(weChatWorkUserBO.getDepartmentOrders()));
-        memberReceivedDO.setMemberPosition(weChatWorkUserBO.getPosition());
-        memberReceivedDO.setGender(weChatWorkUserBO.getGender());
-        memberReceivedDO.setMail(weChatWorkUserBO.getEmail());
-        memberReceivedDO.setIsLeaderInDept(weChatWorkUserBO.getLeadingDepartments().toString());
-        memberReceivedDO.setAvatar(weChatWorkUserBO.getAvatar());
-        memberReceivedDO.setThumbAvatar(weChatWorkUserBO.getThumbAvatar());
-        memberReceivedDO.setTelephone(weChatWorkUserBO.getTelephone());
-        memberReceivedDO.setAlias(weChatWorkUserBO.getAlias());
-        memberReceivedDO.setStatus(weChatWorkUserBO.getStatus());
-        memberReceivedDO.setExtAttr(weChatWorkUserBO.getExternalAttributes());
-        memberReceivedDO.setQrCode(weChatWorkUserBO.getQRCode());
-        memberReceivedDO.setExternalProfile(weChatWorkUserBO.getExternalProfile());
-        memberReceivedDO.setExternalPosition(weChatWorkUserBO.getExternalPosition());
-        memberReceivedDO.setAddress(weChatWorkUserBO.getAddress());
-        memberReceivedDO.setHideMobile(weChatWorkUserBO.getHideMobile());
-        memberReceivedDO.setEnglishName(weChatWorkUserBO.getEnglishName());
-        memberReceivedDO.setOpenUserid(weChatWorkUserBO.getOpenUserId());
-        memberReceivedDO.setMainDepartment(weChatWorkUserBO.getMainDepartment());
         memberReceivedDO.setGmtCreator(CommonConstants.GMT_CREATOR_SYSTEM);
+        if (null != weChatWorkUserBO) {
+            memberReceivedDO.setUserId(weChatWorkUserBO.getUserId());
+            memberReceivedDO.setMemberName(weChatWorkUserBO.getUserName());
+            memberReceivedDO.setMobile(weChatWorkUserBO.getMobile());
+            memberReceivedDO.setDepartmentIdList(convertList(weChatWorkUserBO.getDepartmentIds()));
+            memberReceivedDO.setOrderList(convertList(weChatWorkUserBO.getDepartmentOrders()));
+            memberReceivedDO.setMemberPosition(weChatWorkUserBO.getPosition());
+            memberReceivedDO.setGender(weChatWorkUserBO.getGender());
+            memberReceivedDO.setMail(weChatWorkUserBO.getEmail());
+            memberReceivedDO.setIsLeaderInDept(weChatWorkUserBO.getLeadingDepartments().toString());
+            memberReceivedDO.setAvatar(weChatWorkUserBO.getAvatar());
+            memberReceivedDO.setThumbAvatar(weChatWorkUserBO.getThumbAvatar());
+            memberReceivedDO.setTelephone(weChatWorkUserBO.getTelephone());
+            memberReceivedDO.setAlias(weChatWorkUserBO.getAlias());
+            memberReceivedDO.setStatus(weChatWorkUserBO.getStatus());
+            memberReceivedDO.setExtAttr(weChatWorkUserBO.getExternalAttributes());
+            memberReceivedDO.setQrCode(weChatWorkUserBO.getQRCode());
+            memberReceivedDO.setExternalProfile(weChatWorkUserBO.getExternalProfile());
+            memberReceivedDO.setExternalPosition(weChatWorkUserBO.getExternalPosition());
+            memberReceivedDO.setAddress(weChatWorkUserBO.getAddress());
+            memberReceivedDO.setHideMobile(weChatWorkUserBO.getHideMobile());
+            memberReceivedDO.setEnglishName(weChatWorkUserBO.getEnglishName());
+            memberReceivedDO.setOpenUserid(weChatWorkUserBO.getOpenUserId());
+            memberReceivedDO.setMainDepartment(weChatWorkUserBO.getMainDepartment());
+        }
         return memberReceivedDO;
     }
 
