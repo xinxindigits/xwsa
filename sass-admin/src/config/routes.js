@@ -80,6 +80,13 @@ let routes_config = {
     },
     component: () => import("@/views/system/tenant/tenant.vue")
   },
+  ["/organization/list"]: {
+    name: "organization",
+    meta: {
+      title: "租户管理"
+    },
+    component: () => import("@/views/system/organization/organization.vue")
+  },
   ["/tags/list"]: {
     name: "tag_list",
     meta: {

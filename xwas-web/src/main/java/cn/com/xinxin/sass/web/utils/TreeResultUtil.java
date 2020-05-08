@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.web.utils;
 
 import cn.com.xinxin.sass.web.vo.DeptTreeVO;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
+import cn.com.xinxin.sass.web.vo.OrgTreeVO;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -185,6 +186,54 @@ public class TreeResultUtil {
         for (DeptTreeVO parent : parents){
             List<DeptTreeVO> children = parent.getChildren();
             buildDeptTreeChildren(children,nodes);
+        }
+    }
+
+    public static List<OrgTreeVO> buildOrgTrees(List<OrgTreeVO> nodes){
+        if (nodes == null){
+            return null;
+        }
+
+        List<OrgTreeVO> root = new ArrayList<>();
+
+        Iterator<OrgTreeVO> iterator = nodes.iterator();
+
+        while (iterator.hasNext()){
+            OrgTreeVO node = iterator.next();
+            if (Objects.equals("0",node.getParentId()) || Objects.equals(node.getParentId(),node.getOrgId())){
+                node.setExpanded(true);
+                root.add(node);
+                iterator.remove();
+            }
+        }
+
+        buildOrgTreeChildren(root,nodes);
+
+        // 如果不需要构建树形结构，直接返回
+        if(CollectionUtils.isEmpty(root)){
+            return nodes;
+        }
+
+        return root;
+    }
+
+
+    private static void buildOrgTreeChildren(List<OrgTreeVO> parents, List<OrgTreeVO> nodes){
+
+        for (OrgTreeVO parent : parents){
+            String pid = parent.getOrgId();
+
+            for (OrgTreeVO node : nodes){
+                if (Objects.equals(pid,node.getParentId())){
+                    node.setExpanded(false);
+                    parent.getChildren().add(node);
+                }
+            }
+        }
+
+        for (OrgTreeVO parent : parents){
+            List<OrgTreeVO> children = parent.getChildren();
+            buildOrgTreeChildren(children,nodes);
         }
     }
 

@@ -4,6 +4,7 @@ import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
+import cn.com.xinxin.sass.common.enums.OrgTypeEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
@@ -12,7 +13,12 @@ import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
 import cn.com.xinxin.sass.web.form.OrgQueryForm;
 import cn.com.xinxin.sass.web.form.OrganizationForm;
+import cn.com.xinxin.sass.web.utils.TreeResultUtil;
+import cn.com.xinxin.sass.web.vo.DeptTreeVO;
+import cn.com.xinxin.sass.web.vo.OrgTreeVO;
 import cn.com.xinxin.sass.web.vo.OrganizationVO;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.idgen.SnowFakeIdGenerator;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -28,6 +34,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: zhouyang
@@ -65,7 +72,7 @@ public class SassOrganizationRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"组织机构查询参数不能为空","组织机构查询参数");
         }
 
-        loger.info("SassOrganizationRestController,createOrganization, orgName = {}",orgForm.getName());
+        loger.info("SassOrganizationRestController,createOrganization,request:{}",JSONObject.toJSONString(orgForm));
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
@@ -75,10 +82,41 @@ public class SassOrganizationRestController extends AclController {
         page.setPageNumber(orgForm.getPageIndex());
 
         OrganizationDO condition = BaseConvert.convert(orgForm,OrganizationDO.class);
-        PageResultVO result = organizationService.findByCondition(page, condition,orgForm.getStartTime(), orgForm.getEndTime());
+        if(StringUtils.isEmpty(orgForm.getTenantId())){
+            condition.setTenantId(sassUserInfo.getTenantId());
+        }else{
+            condition.setTenantId(orgForm.getTenantId());
+        }
+        condition.setName(orgForm.getOrgName());
+        condition.setParentId(0L);
+        PageResultVO<OrganizationDO> result = organizationService.findByCondition(page, condition);
+        PageResultVO resultVO =  BaseConvert.convert(result,PageResultVO.class);
+        if(!CollectionUtils.isEmpty(result.getItems())){
+            List<Long> parentIds = result.getItems().stream().map(OrganizationDO::getParentId).collect(Collectors.toList());
+            List<OrganizationDO> childrenOrganization = organizationService.findChildren(parentIds);
+            result.getItems().addAll(childrenOrganization);
+            List<OrgTreeVO> orgTreeVOS = Lists.newArrayList();
+            result.getItems().stream().forEach(organizationDO -> {
+                OrgTreeVO orgTreeVO = new OrgTreeVO();
+                orgTreeVO.setCode(organizationDO.getCode());
+                orgTreeVO.setTenantId(organizationDO.getTenantId());
+                orgTreeVO.setOrgId(String.valueOf(organizationDO.getId()));
+                orgTreeVO.setOrgName(organizationDO.getName());
+                orgTreeVO.setParentId(String.valueOf(organizationDO.getParentId()));
+                orgTreeVO.setOrgType(organizationDO.getOrgType());
+                orgTreeVO.setOrgTypeName(OrgTypeEnum.getEnumByCode(organizationDO.getOrgType()).getDesc());
+                orgTreeVO.setStatus(organizationDO.getState());
+                orgTreeVO.setExtension(organizationDO.getExtension());
+                orgTreeVO.setGmtCreated(organizationDO.getGmtCreated());
+                orgTreeVO.setGmtUpdated(organizationDO.getGmtUpdated());
 
+                orgTreeVOS.add(orgTreeVO);
+            });
+            List<OrgTreeVO> resultTrees = TreeResultUtil.buildOrgTrees(orgTreeVOS);
+            resultVO.setItems(resultTrees);
+        }
 
-        return result;
+        return resultVO;
 
     }
 
@@ -144,35 +182,16 @@ public class SassOrganizationRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"创建组织参数不能为空","创建组织参数不能为空");
         }
 
-        loger.info("SassOrganizationRestController,createOrganization, orgName = {}",orgForm.getName());
+        loger.info("SassOrganizationRestController,createOrganization,request:{}",JSONObject.toJSONString(orgForm));
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
         OrganizationDO organizationDO = SassFormConvert.convertOrgForm2OrganizationDO(orgForm);
-        StringBuilder code = new StringBuilder();
-        Date now = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOSIGN);
-        code.append(OG).append(sdf.format(now)).append(PADDING);
-        try {
-            code.append(SnowFakeIdGenerator.getInstance().generateLongId());
-        }catch (Exception e){
-            loger.error("雪花算法生成id失败");
-            throw new BusinessException(SassBizResultCodeEnum.GENERATE_ID_ERROR);
-        }
-        organizationDO.setCode(code.toString());
         organizationDO.setGmtCreator(sassUserInfo.getAccount());
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
 
         // 创建对象
         int result = this.organizationService.createOrganization(organizationDO);
-
-        TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(orgForm, TenantBaseInfoDO.class);
-        tenantBaseInfoDO.setTenantId(code.toString());
-        tenantBaseInfoDO.setTenantName(orgForm.getName());
-        tenantBaseInfoDO.setGmtCreator(sassUserInfo.getAccount());
-        tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
-
-        tenantBaseInfoService.createOrgBaseInfo(tenantBaseInfoDO);
 
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();

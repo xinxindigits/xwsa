@@ -3,10 +3,10 @@
     <Card>
       <Form :model="formItem" inline label-colon>
         <FormItem>
-          <Input v-model="formItem.code" placeholder="租户编码"></Input>
+          <Input v-model="formItem.tenantId" placeholder="租户编码"></Input>
         </FormItem>
         <FormItem>
-          <Input v-model="formItem.name" placeholder="租户名称"></Input>
+          <Input v-model="formItem.orgName" placeholder="机构名称"></Input>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="hdlquery">查询</Button>
@@ -29,16 +29,17 @@
         >
       </Row>
       <Table
+        row-key="orgId"
         stripe
         border
         ref="tables"
         :columns="columns"
         :data="tableData"
-        :loading="isLoanding"
+        :loading="isLoading"
         @on-selection-change="hdlSelectionChange"
       >
-        <template slot-scope="{ row }" slot="state">
-          <span>{{ $mapd("organizationState", row.state) }}</span>
+        <template slot-scope="{ row }" slot="status">
+          <span>{{ $mapd("organizationState", row.status) }}</span>
         </template>
         <template slot-scope="{ row }" slot="create_time">
           <span>{{ row.gmtCreated | timeFilter }}</span>
@@ -52,8 +53,20 @@
           >
             详情
           </Button>
-          <Button type="error" size="small" @click="hdlDelete([row.code])">
+          <Button
+            type="error"
+            size="small"
+            style="margin-right: 5px"
+            @click="hdlDelete([row.orgId])"
+          >
             删除
+          </Button>
+          <Button
+            type="success"
+            size="small"
+            @click="hdlSingleCreateChild(row)"
+          >
+            新增下级
           </Button>
         </template>
       </Table>
@@ -72,6 +85,7 @@
       </div>
       <organization-update
         type="create"
+        ref="createModal"
         v-model="showAddModal"
         @on-cancel="showAddModal = false"
         @on-add-organization="hdlquery"
@@ -87,11 +101,7 @@
 </template>
 
 <script>
-import {
-  getOrganizationList,
-  delOrganization,
-  queryOrganization
-} from "@/api/data_organization";
+import { getOrganizationList, delOrganization } from "@/api/data_organization";
 import OrganizationUpdate from "./modify";
 export default {
   name: "organization",
@@ -100,7 +110,7 @@ export default {
   },
   computed: {
     deleteOrgCodes() {
-      return this.tbSelection.map(item => item.code);
+      return this.tbSelection.map(item => item.orgId);
     }
   },
   data() {
@@ -114,8 +124,8 @@ export default {
       total: 0,
       page: 1,
       formItem: {
-        name: "",
-        code: "",
+        orgName: "",
+        tenantId: "",
         orgType: "",
         state: ""
       },
@@ -125,17 +135,16 @@ export default {
           width: 60,
           align: "center"
         },
-        { title: "租户编码", key: "code", align: "center" },
-        { title: "租户名称", key: "name", align: "center" },
-        { title: "备注", key: "remark", align: "center" },
-        { title: "状态", slot: "state", align: "center" },
+        { title: "租户编码", key: "tenantId", align: "center", tree: true },
+        { title: "机构名称", key: "orgName", align: "center" },
+        { title: "机构类型", key: "orgTypeName", align: "center" },
         {
           title: "创建时间",
           key: "gmtCreated",
           align: "center",
           slot: "create_time"
         },
-        { title: "操作", slot: "action", align: "center", width: 150 }
+        { title: "操作", slot: "action", align: "center", width: 225 }
       ],
       tableData: [],
       tbSelection: []
@@ -163,10 +172,10 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.name = "";
+      this.formItem.orgName = "";
       this.formItem.orgType = "";
-      this.formItem.code = "";
-      this.formItem.state = "";
+      this.formItem.tenantId = "";
+      this.formItem.status = "";
     },
     hdlDelete(codes) {
       let self = this;
@@ -188,23 +197,13 @@ export default {
     hdlSingleCreate() {
       this.showAddModal = true;
     },
+    hdlSingleCreateChild(data) {
+      this.$refs.createModal.setData(data);
+      this.showAddModal = true;
+    },
     hdlSingleModified(data) {
-      queryOrganization({ code: data.code }).then(res => {
-        // let datail = res.data;
-        //   detail.remark = data.remark;
-
-        // this.formObj.privateKey = data.privateKey;
-        // this.formObj.corpId = data.corpId;
-        // this.formObj.addressListSecret = data.addressListSecret;
-        // this.formObj.customerContactSecret = data.customerContactSecret;
-        // this.formObj.chatRecordSecret = data.chatRecordSecret;
-        this.$refs.updateModal.setData({
-          obj: res.data,
-          remark: data.remark,
-          state: data.state
-        });
-        this.showUpdateModal = true;
-      });
+      this.$refs.updateModal.setData(data);
+      this.showUpdateModal = true;
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;
