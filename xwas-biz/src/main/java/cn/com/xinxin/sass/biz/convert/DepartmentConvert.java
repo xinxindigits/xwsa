@@ -27,12 +27,14 @@ public class DepartmentConvert {
         DepartmentReceivedDO departmentReceivedDO = new DepartmentReceivedDO();
         departmentReceivedDO.setTaskId(taskId);
         departmentReceivedDO.setTenantId(orgId);
-        departmentReceivedDO.setDepartmentId(weChatWorkDepartmentBO.getDepartmentId());
-        departmentReceivedDO.setDepartmentName(weChatWorkDepartmentBO.getDepartmentName());
-        departmentReceivedDO.setDepartmentOrder(weChatWorkDepartmentBO.getDepartmentOrder());
-        departmentReceivedDO.setEnglishName(weChatWorkDepartmentBO.getDepartmentEnglishName());
-        departmentReceivedDO.setParentId(weChatWorkDepartmentBO.getDepartmentParentId());
         departmentReceivedDO.setGmtCreator(CommonConstants.GMT_CREATOR_SYSTEM);
+        if (null != weChatWorkDepartmentBO) {
+            departmentReceivedDO.setDepartmentId(weChatWorkDepartmentBO.getDepartmentId());
+            departmentReceivedDO.setDepartmentName(weChatWorkDepartmentBO.getDepartmentName());
+            departmentReceivedDO.setDepartmentOrder(weChatWorkDepartmentBO.getDepartmentOrder());
+            departmentReceivedDO.setEnglishName(weChatWorkDepartmentBO.getDepartmentEnglishName());
+            departmentReceivedDO.setParentId(weChatWorkDepartmentBO.getDepartmentParentId());
+        }
         return departmentReceivedDO;
     }
 

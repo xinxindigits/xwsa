@@ -40,11 +40,6 @@ public class WeChatMessageQueryForm extends ToString {
     private String endTime;
 
     /**
-     * 关键字
-     */
-    private String keyWord;
-
-    /**
      * 页码
      */
     private Integer pageIndex;
@@ -54,13 +49,10 @@ public class WeChatMessageQueryForm extends ToString {
      */
     private Integer pageSize;
 
-    public String getKeyWord() {
-        return keyWord;
-    }
-
-    public void setKeyWord(String keyWord) {
-        this.keyWord = keyWord;
-    }
+    /**
+     * 关键字
+     */
+    private String keyWord;
 
     public String getTenantId() {
         return tenantId;
@@ -124,5 +116,13 @@ public class WeChatMessageQueryForm extends ToString {
 
     public void setRoomId(String roomId) {
         this.roomId = roomId;
+    }
+
+    public String getKeyWord() {
+        return keyWord;
+    }
+
+    public void setKeyWord(String keyWord) {
+        this.keyWord = keyWord;
     }
 }

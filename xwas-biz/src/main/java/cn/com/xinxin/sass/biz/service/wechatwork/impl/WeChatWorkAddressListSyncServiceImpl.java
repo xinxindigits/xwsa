@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
  * @description: 企业微信通讯录同步服务
  */
 @Service
+@Deprecated
 public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkAddressListSyncService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkAddressListSyncServiceImpl.class);

@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.model.bo.ChatPartyBO;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
@@ -62,10 +63,7 @@ public class WeChatMessageRestController extends AclController {
             LOGGER.error("查询企业微信会话记录，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
-        if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("查询企业微信会话记录，租户id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，租户id不能为空");
-        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
         PageResultVO page = new PageResultVO();
         page.setPageNumber((queryForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageIndex());
@@ -73,14 +71,19 @@ public class WeChatMessageRestController extends AclController {
 
         //查询客户信息
         PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.queryByOrgIdAndMemberUserIdAndTime(
-                queryForm.getUserId(), queryForm.getStartTime(), queryForm.getEndTime(), page, queryForm.getTenantId());
+                queryForm.getUserId(), queryForm.getStartTime(), queryForm.getEndTime(), page, sassUserInfo.getTenantId());
 
         //将DO装换为VO
         PageResultVO<MsgRecordVO> pageResultVO = new PageResultVO<>();
         pageResultVO.setPageNumber(pageResultDO.getPageNumber());
         pageResultVO.setPageSize(pageResultDO.getPageSize());
         pageResultVO.setTotal(pageResultDO.getTotal());
-        pageResultVO.setItems(MessageConvert.convert2MsgRecordVOList(pageResultDO.getItems()));
+        List<MsgRecordVO> msgRecordVOS = new ArrayList<>();
+        pageResultDO.getItems().forEach(m -> {
+            ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), m.getFromUserId());
+            msgRecordVOS.add(MessageConvert.convert2MsgRecordVO(m, chatUserVO.getChatUserName()));
+        });
+        pageResultVO.setItems(msgRecordVOS);
 
         return pageResultVO;
     }
@@ -95,6 +98,9 @@ public class WeChatMessageRestController extends AclController {
     @ResponseBody
     public Object queryWeChatMsgRecordDetail(HttpServletRequest request,
                                             @PathVariable Long id) {
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
         if (null == id) {
             LOGGER.error("查询企业微信客户信息，id不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信客户信息，id不能为空");
@@ -102,7 +108,14 @@ public class WeChatMessageRestController extends AclController {
 
         MsgRecordDO msgRecordDO = msgRecordService.queryById(id);
 
-        return MessageConvert.convert2MsgRecordVO(msgRecordDO);
+        if (null == msgRecordDO || !sassUserInfo.getTenantId().equals(msgRecordDO.getTenantId())) {
+            LOGGER.error("查询企业微信客户信息, 数据不存在");
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "查询数据不存在");
+        }
+
+        ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), msgRecordDO.getFromUserId());
+
+        return MessageConvert.convert2MsgRecordVO(msgRecordDO, chatUserVO.getChatUserName());
     }
 
     @RequestMapping(value = "/query/user",method = RequestMethod.POST)
@@ -114,10 +127,7 @@ public class WeChatMessageRestController extends AclController {
             LOGGER.error("查询企业微信会话记录，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
-        if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("查询企业微信会话记录，租户id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，租户id不能为空");
-        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         if (StringUtils.isBlank(queryForm.getUserId())||StringUtils.isBlank(queryForm.getUserIdTwo())) {
             LOGGER.error("查询企业微信会话记录，用户id不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，用户id不能为空");
@@ -152,10 +162,7 @@ public class WeChatMessageRestController extends AclController {
             LOGGER.error("查询企业微信会话记录，参数不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，参数不能为空");
         }
-        if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("查询企业微信会话记录，租户id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，租户id不能为空");
-        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         if (StringUtils.isBlank(queryForm.getRoomId())) {
             LOGGER.error("查询企业微信会话记录，群聊id不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询企业微信会话记录，群聊id不能为空");
@@ -213,21 +220,19 @@ public class WeChatMessageRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
                     "根据成员userid查询与之聊天的人或者群, queryForm不能为空");
         }
-        if (StringUtils.isBlank(queryForm.getTenantId())) {
-            LOGGER.error("根据成员userid查询与之聊天的人或者群，租户id不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
-                    "根据成员userid查询与之聊天的人或者群，租户id不能为空");
-        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         if (StringUtils.isBlank(queryForm.getUserId())) {
             LOGGER.error("根据成员userid查询与之聊天的人或者群, UserId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
                     "根据成员userid查询与之聊天的人或者群, UserId不能为空");
         }
 
-        List<ChatPartyBO> chatPartyBOS = msgRecordService.selectByMemberUserId(queryForm.getTenantId(), queryForm.getUserId());
+        List<ChatPartyBO> chatPartyBOS = msgRecordService.selectByMemberUserIdAndKeyWordAndTime(
+                sassUserInfo.getTenantId(), queryForm.getUserId(), queryForm.getKeyWord(), queryForm.getStartTime(),
+                queryForm.getEndTime());
 
         chatPartyBOS.stream().filter(c -> 0 == c.getType()).forEach(c -> {
-            ChatUserVO chatUserVO = msgRecordService.getChatUser(queryForm.getTenantId(), c.getUserId());
+            ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), c.getUserId());
             c.setUserName(chatUserVO.getChatUserName());
             c.setAvatar(chatUserVO.getAvatar());
         });
