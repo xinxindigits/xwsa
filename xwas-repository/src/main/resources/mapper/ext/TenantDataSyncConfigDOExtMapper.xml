@@ -26,4 +26,15 @@
     where tenant_id = #{tenantId} and task_type = #{taskType} and deleted = 0 limit 1;
   </select>
 
+  <update id="updateLockByTenantIdAndTaskType" parameterType="java.lang.String">
+    update tenant_sync_config
+    set lock_flag = 1
+    where tenant_id = #{tenantId} and task_type = #{taskType} and lock_flag = 0 and deleted = 0
+  </update>
+
+  <update id="updateUnLockByTenantIdAndTaskType" parameterType="java.lang.String">
+    update tenant_sync_config
+    set lock_flag= 0
+    where tenant_id = #{tenantId} and task_type = #{taskType} and deleted = 0
+  </update>
 </mapper>
