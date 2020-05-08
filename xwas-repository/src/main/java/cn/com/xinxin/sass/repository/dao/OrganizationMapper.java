@@ -76,6 +76,6 @@ public interface OrganizationMapper {
 
     List<OrganizationDO> findChildren(@Param("parentIds") List<Long> parentIds);
 
-    int countChildrenByCodes();
+    int deleteByIds(List<Long> ids);
 
 }

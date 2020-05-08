@@ -57,7 +57,7 @@
             type="error"
             size="small"
             style="margin-right: 5px"
-            @click="hdlDelete([row.orgId])"
+            @click="hdlDelete([row.code])"
           >
             删除
           </Button>
@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     deleteOrgCodes() {
-      return this.tbSelection.map(item => item.orgId);
+      return this.tbSelection.map(item => item.code);
     }
   },
   data() {
@@ -135,9 +135,10 @@ export default {
           width: 60,
           align: "center"
         },
-        { title: "租户编码", key: "tenantId", align: "center", tree: true },
+        { title: "机构编码", key: "code", align: "left", tree: true },
         { title: "机构名称", key: "orgName", align: "center" },
         { title: "机构类型", key: "orgTypeName", align: "center" },
+        { title: "租户编码", key: "tenantId", align: "center"},
         {
           title: "创建时间",
           key: "gmtCreated",
@@ -195,10 +196,18 @@ export default {
       }
     },
     hdlSingleCreate() {
+        this.$refs.createModal.setData({
+            data: { createChild:false,},
+        });
       this.showAddModal = true;
     },
     hdlSingleCreateChild(data) {
-      this.$refs.createModal.setData(data);
+      let d = {
+          orgName:data.orgName,
+          orgId:data.orgId,
+          createChild:true,
+      }
+      this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
     hdlSingleModified(data) {

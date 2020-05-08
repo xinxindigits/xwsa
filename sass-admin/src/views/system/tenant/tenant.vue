@@ -72,6 +72,7 @@
       </div>
       <organization-update
         type="create"
+        ref="createModal"
         v-model="showAddModal"
         @on-cancel="showAddModal = false"
         @on-add-organization="hdlquery"
@@ -179,6 +180,11 @@ export default {
       }
     },
     hdlSingleCreate() {
+      this.$refs.createModal.setData({
+          obj: {},
+          remark: "",
+          state: ""
+      });
       this.showAddModal = true;
     },
     hdlSingleModified(data) {

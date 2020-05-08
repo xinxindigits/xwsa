@@ -123,6 +123,14 @@
     </foreach>
   </delete>
 
+  <delete id="deleteByIds"  parameterType="java.util.List">
+    delete from organization
+    where id in
+    <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </delete>
+
   <select id="findChildren" resultMap="BaseResultMapExt">
     select   <include refid="Base_Column_List_Ext" />
     from organization where code in

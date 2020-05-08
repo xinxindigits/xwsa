@@ -73,6 +73,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public int deleteByIds(List<Long> ids) {
+        return organizationMapper.deleteByIds(ids);
+    }
+
+    @Override
     public List<OrganizationDO> findChildren(List<Long> parentIds) {
         return organizationMapper.findChildren(parentIds);
     }
