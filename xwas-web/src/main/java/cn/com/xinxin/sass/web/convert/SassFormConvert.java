@@ -49,7 +49,6 @@ public class SassFormConvert {
      */
     public static UserDO convertUserForm2UserDO(final UserForm userForm){
         UserDO userDO = BaseConvert.convert(userForm, UserDO.class);
-        userDO.setGender((byte)1);
         return userDO;
     }
 
