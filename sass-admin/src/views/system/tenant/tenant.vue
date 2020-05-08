@@ -181,9 +181,9 @@ export default {
     },
     hdlSingleCreate() {
       this.$refs.createModal.setData({
-          obj: {},
-          remark: "",
-          state: ""
+        obj: {},
+        remark: "",
+        state: ""
       });
       this.showAddModal = true;
     },

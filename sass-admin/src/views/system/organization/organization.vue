@@ -138,7 +138,7 @@ export default {
         { title: "机构编码", key: "code", align: "left", tree: true },
         { title: "机构名称", key: "orgName", align: "center" },
         { title: "机构类型", key: "orgTypeName", align: "center" },
-        { title: "租户编码", key: "tenantId", align: "center"},
+        { title: "租户编码", key: "tenantId", align: "center" },
         {
           title: "创建时间",
           key: "gmtCreated",
@@ -196,17 +196,17 @@ export default {
       }
     },
     hdlSingleCreate() {
-        this.$refs.createModal.setData({
-            data: { createChild:false,},
-        });
+      this.$refs.createModal.setData({
+        data: { createChild: false }
+      });
       this.showAddModal = true;
     },
     hdlSingleCreateChild(data) {
       let d = {
-          orgName:data.orgName,
-          orgId:data.orgId,
-          createChild:true,
-      }
+        orgName: data.orgName,
+        orgId: data.orgId,
+        createChild: true
+      };
       this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
