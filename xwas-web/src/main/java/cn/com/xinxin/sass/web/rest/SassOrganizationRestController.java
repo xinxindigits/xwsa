@@ -189,7 +189,9 @@ public class SassOrganizationRestController extends AclController {
         OrganizationDO organizationDO = SassFormConvert.convertOrgForm2OrganizationDO(orgForm);
         organizationDO.setGmtCreator(sassUserInfo.getAccount());
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
-
+        if(StringUtils.isEmpty(orgForm.getTenantId())){
+            organizationDO.setTenantId(sassUserInfo.getTenantId());
+        }
         // 创建对象
         int result = this.organizationService.createOrganization(organizationDO);
 
@@ -224,12 +226,6 @@ public class SassOrganizationRestController extends AclController {
         // 创建对象
         int result = this.organizationService.updateOrganization(organizationDO);
 
-        TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(orgForm, TenantBaseInfoDO.class);
-        tenantBaseInfoDO.setTenantId(orgForm.getCode());
-        tenantBaseInfoDO.setTenantName(orgForm.getName());
-        tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
-        this.tenantBaseInfoService.updateByOrgId(tenantBaseInfoDO);
-
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else {
@@ -253,7 +249,6 @@ public class SassOrganizationRestController extends AclController {
         }
 
         int result = this.organizationService.deleteByCodes(deleteOrgForm.getCodes());
-        this.tenantBaseInfoService.deleteByCodes(deleteOrgForm.getCodes());
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else {

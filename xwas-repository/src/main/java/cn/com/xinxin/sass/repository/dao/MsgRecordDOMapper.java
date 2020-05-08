@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.repository.dao;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface MsgRecordDOMapper {
@@ -98,7 +99,8 @@ public interface MsgRecordDOMapper {
      * @param userIdTwo
      * @return
      */
-    List<MsgRecordDO> selectMsgRecordBetweenPersons(@Param("tenantId") String tenantId, @Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo);
+    List<MsgRecordDO> selectMsgRecordBetweenPersons(@Param("tenantId") String tenantId, @Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo,
+                                                    @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("keyWord") String keyWord);
 
     /**
      * 查询群聊会话记录
@@ -106,7 +108,8 @@ public interface MsgRecordDOMapper {
      * @param roomId
      * @return
      */
-    List<MsgRecordDO> selectRoomMsgRecord(@Param("tenantId") String tenantId,@Param("roomId") String roomId);
+    List<MsgRecordDO> selectRoomMsgRecord(@Param("tenantId") String tenantId,@Param("roomId") String roomId,
+                                          @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("keyWord") String keyWord);
 
     /**
      * 通过租户id和成员userid查询会话记录
@@ -114,6 +117,5 @@ public interface MsgRecordDOMapper {
      * @param userId 成员userid
      * @return 会话记录
      */
-    List<MsgRecordDO> selectByMemberUserId(@Param("tenantId") String tenantId,
-                                             @Param(value = "userId") String userId);
+    List<MsgRecordDO> selectByMemberUserId(@Param("tenantId") String tenantId, @Param(value = "userId") String userId);
 }
