@@ -1,5 +1,7 @@
 package cn.com.xinxin.sass.repository.dao;
 
+import cn.com.xinxin.sass.repository.model.TagsDO;
+import cn.com.xinxin.sass.repository.model.TagsMapDO;
 import cn.com.xinxin.sass.repository.model.TagsRelationsDO;
 import org.apache.ibatis.annotations.Param;
 
@@ -67,6 +69,28 @@ public interface TagsRelationsDOMapper {
      * @return
      */
     int batchCreateRelations(@Param("relationsList")List<TagsRelationsDO> relationsList);
+
+
+    /**
+     * 查询某个key的tag映射关系
+     * @param keyId
+     * @return
+     */
+    List<TagsDO> selectTagsByKeyId(@Param("keyId")String keyId);
+
+    /**
+     * key ids
+     * @param keyIds
+     * @return
+     */
+    List<TagsDO> selectTagsByKeyIdLists(@Param("keyIdList")List<String> keyIds);
+
+    /**
+     * key ids
+     * @param keyIds
+     * @return
+     */
+    List<TagsMapDO> selectTagsMapsByKeyIds(@Param("keyIds") List<String> keyIds);
 
 
 }

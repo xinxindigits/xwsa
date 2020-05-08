@@ -6,6 +6,7 @@ import cn.com.xinxin.sass.repository.model.TagsRelationsDO;
 
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author: zhouyang
@@ -57,5 +58,27 @@ public interface TagsService {
     int createTagsRelations(List<TagsRelationsDO> tagsRelationsDOS);
 
 
+    /**
+     * 查询某个key对应的tagList
+     * @param keyId
+     * @return
+     */
+    List<TagsDO> selectTagsByKeyId(String keyId);
+
+
+    /**
+     * 查询某些keyID对应的礼拜
+     * @param keyIds
+     * @return
+     */
+    List<TagsDO> selectTagsByKeyIdLists(List<String> keyIds);
+
+
+    /**
+     *
+     * @param keyIds
+     * @return
+     */
+    Map<String,List<TagsDO>> selectTagsMapsByKeyIdLists(List<String> keyIds);
 
 }
