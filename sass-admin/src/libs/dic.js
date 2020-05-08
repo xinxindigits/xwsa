@@ -3,6 +3,10 @@ const gender = {
   [1]: "男",
   [2]: "女"
 };
+const tagType = {
+  ["COMMON"]: "普通标签",
+  ["OTHER"]: "其他标签"
+};
 const msgType = {
   agree: "同意会话聊天内容",
   card: "名片",
@@ -30,6 +34,10 @@ const msgType = {
   vote: "投票",
   weapp: "小程序"
 };
+const customerType = {
+  1: "微信用户",
+  2: "企业微信用户"
+};
 const msgAction = {
   send: "发送",
   recall: "撤回",
@@ -48,11 +56,13 @@ const dic = {
   userStatus,
   organizationState,
   msgType,
-  msgAction
+  msgAction,
+  tagType,
+  customerType
 };
 const mapDic = function(key, val) {
   if (dic[key]) {
     return dic[key][val] || val;
   } else return "";
 };
-export { mapDic, gender };
+export { mapDic, gender, tagType, customerType };
