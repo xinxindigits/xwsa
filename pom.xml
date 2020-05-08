@@ -95,11 +95,6 @@
             <!--</dependency>-->
 
             <dependency>
-                <groupId>com.xinxinfinance.xcif</groupId>
-                <artifactId>xcif-api</artifactId>
-                <version>${xcif.api.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.xinxinfinance.oplog</groupId>
                 <artifactId>oplog-client</artifactId>
                 <version>${oplog.client.version}</version>
