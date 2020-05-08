@@ -136,7 +136,7 @@
   </update>
 
   <select id="selectPageByOrgIdAndMemberUserIdSAndTimeAndCustName" resultMap="BaseResultMapExt">
-    select id, customer_name, corp_name, corp_full_name
+    select id, customer_name, corp_name, corp_full_name,tenant_id, member_user_id, user_id,customer_position
     from customer
     <where>
       deleted = 0 and tenant_id = #{tenantId}
