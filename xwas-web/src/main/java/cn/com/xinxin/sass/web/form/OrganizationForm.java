@@ -14,6 +14,8 @@ public class OrganizationForm extends ToString {
 
     private Long id;
 
+    private String tenantId;
+
     private String code;
 
     private String name;
@@ -29,16 +31,6 @@ public class OrganizationForm extends ToString {
     private String remark;
 
     private String extension;
-
-    private String corpId;
-
-    private String privateKey;
-
-    private String addressListSecret;
-
-    private String chatRecordSecret;
-
-    private String customerContactSecret;
 
     public Long getId() {
         return id;
@@ -112,38 +104,6 @@ public class OrganizationForm extends ToString {
         this.extension = extension;
     }
 
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
-
-    public String getAddressListSecret() {
-        return addressListSecret;
-    }
-
-    public void setAddressListSecret(String addressListSecret) {
-        this.addressListSecret = addressListSecret;
-    }
-
-    public String getCustomerContactSecret() {
-        return customerContactSecret;
-    }
-
-    public void setCustomerContactSecret(String customerContactSecret) {
-        this.customerContactSecret = customerContactSecret;
-    }
-
-    public String getCorpId() {
-        return corpId;
-    }
-
-    public void setCorpId(String corpId) {
-        this.corpId = corpId;
-    }
-
     public boolean isLeaf() {
         return isLeaf;
     }
@@ -152,11 +112,11 @@ public class OrganizationForm extends ToString {
         isLeaf = leaf;
     }
 
-    public String getChatRecordSecret() {
-        return chatRecordSecret;
+    public String getTenantId() {
+        return tenantId;
     }
 
-    public void setChatRecordSecret(String chatRecordSecret) {
-        this.chatRecordSecret = chatRecordSecret;
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

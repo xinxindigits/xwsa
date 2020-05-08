@@ -175,17 +175,18 @@ public class WeChatMessageRestController extends AclController {
 
         if(!CollectionUtils.isEmpty(pageResultDO.getItems())){
             List<MsgRecordVO> msgRecordVOS = new ArrayList<>(pageResultDO.getItems().size());
-            Map<String,String> chatUserMap = new HashMap<>();
+            Map<String,ChatUserVO> chatUserMap = new HashMap<>();
             pageResultDO.getItems().stream().forEach(msgRecordDO -> {
                 if(!chatUserMap.containsKey(msgRecordDO.getFromUserId())){
                     ChatUserVO chatUserVO = msgRecordService.getChatUser(msgRecordDO.getTenantId(),msgRecordDO.getFromUserId());
-                    chatUserMap.put(chatUserVO.getChatUserId(),chatUserVO.getChatUserName());
+                    chatUserMap.put(chatUserVO.getChatUserId(),chatUserVO);
                 }
                 MsgRecordVO msgRecordVO = BaseConvert.convert(msgRecordDO, MsgRecordVO.class);
                 if(WeChatWorkChatRecordsTypeConstants.TEXT.equals(msgRecordDO.getMsgType())){
                     msgRecordVO.setContent((String)JSONObject.parseObject(msgRecordDO.getContent()).get(CommonConstants.CONTENT));
                 }
-                msgRecordVO.setFromUserName(chatUserMap.get(msgRecordDO.getFromUserId()));
+                msgRecordVO.setFromUserName(chatUserMap.get(msgRecordDO.getFromUserId()).getChatUserName());
+                msgRecordVO.setAvatar(chatUserMap.get(msgRecordDO.getFromUserId()).getAvatar());
                 msgRecordVOS.add(msgRecordVO);
             });
             pageResultVO.setItems(msgRecordVOS);

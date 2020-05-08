@@ -68,6 +68,18 @@ public class MsgRecordVO extends ToString {
      * 消息内容
      */
     private String content;
+    /**
+     * 发送方头像
+     */
+    private String avatar;
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public Long getId() {
         return id;
