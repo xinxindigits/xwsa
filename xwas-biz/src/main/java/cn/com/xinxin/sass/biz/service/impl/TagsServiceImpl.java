@@ -1,18 +1,27 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.TagsService;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.TagsDOMapper;
 import cn.com.xinxin.sass.repository.dao.TagsRelationsDOMapper;
 import cn.com.xinxin.sass.repository.model.TagsDO;
+import cn.com.xinxin.sass.repository.model.TagsMapDO;
 import cn.com.xinxin.sass.repository.model.TagsRelationsDO;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Maps;
+import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.util.BaseConvert;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -89,5 +98,55 @@ public class TagsServiceImpl implements TagsService {
         this.tagsRelationsDOMapper.batchCreateRelations(tagsRelationsDOS);
 
         return 1;
+    }
+
+    @Override
+    public List<TagsDO> selectTagsByKeyId(String keyId) {
+
+        if(StringUtils.isEmpty(keyId)) {
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL, "查询参数不能为空");
+        }
+
+        List<TagsDO> tagsDOList = this.tagsRelationsDOMapper.selectTagsByKeyId(keyId);
+
+        return tagsDOList;
+    }
+
+    @Override
+    public List<TagsDO> selectTagsByKeyIdLists(List<String> keyIds) {
+
+        if(CollectionUtils.isEmpty(keyIds)) {
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL, "查询参数不能为空");
+        }
+
+        List<TagsDO> tagsDOList = this.tagsRelationsDOMapper.selectTagsByKeyIdLists(keyIds);
+
+        return tagsDOList;
+    }
+
+    @Override
+    public Map<String, List<TagsDO>> selectTagsMapsByKeyIdLists(List<String> keyIds) {
+
+        if(CollectionUtils.isEmpty(keyIds)){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"查询参数不能为空");
+        }
+
+        List<TagsMapDO> tagsMapDOList = this.tagsRelationsDOMapper.selectTagsMapsByKeyIds(keyIds);
+
+        Map<String, List<TagsDO>> resultMaps = Maps.newHashMap();
+
+        for(String keyId: keyIds){
+
+            List<TagsMapDO> mapDOList = tagsMapDOList.stream()
+                    .filter(x->StringUtils.equals(keyId,x.getKeyId()))
+                    .collect(Collectors.toList());
+
+            List<TagsDO> tagsDOList = BaseConvert.convertList(mapDOList,TagsDO.class);
+
+            resultMaps.put(keyId,tagsDOList);
+
+        }
+
+        return resultMaps;
     }
 }

@@ -2,6 +2,8 @@ package cn.com.xinxin.sass.web.vo;
 
 import cn.com.xinxin.sass.api.base.ToString;
 
+import java.util.List;
+
 /**
  * @author: liuhangzhou
  * @created: 2020/4/28.
@@ -81,6 +83,17 @@ public class CustomerVO extends ToString {
      * 头像地址
      */
     private String avatar;
+
+    private List<TagsVO> tags;
+
+
+    public List<TagsVO> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagsVO> tags) {
+        this.tags = tags;
+    }
 
     public Long getId() {
         return id;
