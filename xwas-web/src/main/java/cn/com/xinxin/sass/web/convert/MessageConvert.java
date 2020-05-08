@@ -38,7 +38,7 @@ public class MessageConvert {
         msgRecordVO.setMsgTime(msgRecordDO.getMsgTime());
         msgRecordVO.setMsgType(msgRecordDO.getMsgType());
         msgRecordVO.setToUserId(msgRecordDO.getToUserId());
-        msgRecordVO.setContent(msgRecordDO.getContent());
+        msgRecordVO.setContent((String)JSONObject.parseObject(msgRecordDO.getContent()).get(CommonConstants.CONTENT));
         return msgRecordVO;
     }
 
@@ -68,5 +68,17 @@ public class MessageConvert {
              msgRecordVOS.add(msgRecordVO);
         });
         return msgRecordVOS;
+    }
+
+    /**
+     * 将MsgRecordDO转化为MsgRecordVO
+     * @param msgRecordDO 消息记录DO
+     * @param fromUserName 发送方
+     * @return 消息记录VO
+     */
+    public static MsgRecordVO convert2MsgRecordVO(MsgRecordDO msgRecordDO, String fromUserName) {
+        MsgRecordVO msgRecordVO = convert2MsgRecordVO(msgRecordDO);
+        msgRecordVO.setFromUserName(fromUserName);
+        return msgRecordVO;
     }
 }

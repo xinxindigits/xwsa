@@ -20,6 +20,9 @@ public class ChatPartyConvert {
      */
     public static ChatPartyVO convert2ChatParty(ChatPartyBO chatPartyBO) {
         ChatPartyVO chatPartyVO = new ChatPartyVO();
+        if (null == chatPartyBO) {
+            return chatPartyVO;
+        }
         chatPartyVO.setType(chatPartyBO.getType());
         chatPartyVO.setRoomId(chatPartyBO.getRoomId());
         chatPartyVO.setRoomName(chatPartyBO.getRoomName());
