@@ -13,7 +13,6 @@ export const getCustomerList = ({ pageIndex, pageSize }) => {
 };
 export const queryCustomerList = ({
   customerName,
-  orgId,
   startTime,
   endTime,
   memberUserIds,
@@ -22,7 +21,7 @@ export const queryCustomerList = ({
 }) => {
   let data = {
     customerName,
-    orgId,
+    tenantId: "xinxin",
     startTime,
     endTime,
     memberUserIds,

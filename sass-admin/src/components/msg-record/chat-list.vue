@@ -1,6 +1,10 @@
 <template>
   <div class="chat-list">
+    <div v-if="currentValue.length == 0" style="text-align:center">
+      -无会话记录-
+    </div>
     <div
+      v-else
       class="chat-list-item"
       v-for="(item, index) in currentValue"
       :key="index"
@@ -13,8 +17,11 @@
           <span>{{ item.name }}</span>
           <span class="chat-list-item-time">{{ item.time | timeFilter }}</span>
         </div>
-        <div class="chat-list-item-message">
+        <div class="chat-list-item-message" v-if="item.msgType == 'text'">
           {{ item.content }}
+        </div>
+        <div class="chat-list-item-message" v-else>
+          [不支持的消息类型：{{ $mapd("msgType", item.msgType) }}]
         </div>
       </div>
     </div>
@@ -70,14 +77,14 @@ export default {
       flex: 1;
     }
     &-title {
-      font-size: 14px;
+      font-size: 12px;
       color: rgba(0, 0, 0, 0.45);
     }
     &-time {
       margin-left: 12px;
     }
     &-message {
-      font-size: 16px;
+      font-size: 14px;
       line-height: 22px;
     }
   }

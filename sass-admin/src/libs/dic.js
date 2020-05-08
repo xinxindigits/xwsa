@@ -34,6 +34,10 @@ const msgType = {
   vote: "投票",
   weapp: "小程序"
 };
+const customerType = {
+  1: "微信用户",
+  2: "企业微信用户"
+};
 const msgAction = {
   send: "发送",
   recall: "撤回",
@@ -52,11 +56,13 @@ const dic = {
   userStatus,
   organizationState,
   msgType,
-  msgAction
+  msgAction,
+  tagType,
+  customerType
 };
 const mapDic = function(key, val) {
   if (dic[key]) {
     return dic[key][val] || val;
   } else return "";
 };
-export { mapDic, gender, tagType };
+export { mapDic, gender, tagType, customerType };

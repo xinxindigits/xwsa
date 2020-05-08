@@ -3,7 +3,8 @@ import {
   queryTagList,
   createTag,
   updateTag,
-  deleteTag
+  deleteTag,
+  setTagByKeyId
 } from "./sys_tag";
 import {
   getUserList,
@@ -15,7 +16,13 @@ import {
 } from "./data_user";
 import { getOrgList, queryOrgList, queryMemberByDeptId } from "./wc_org";
 import { getMemberDetail, getMemberList, queryMember } from "./wc_mem";
-import { queryMsgList, getMsgByMsgId } from "./wc_msg";
+import {
+  queryMsgList,
+  getMsgByMsgId,
+  getUserInMsgList,
+  getMsgDetailByUserId,
+  getMsgDetailByRoomId
+} from "./wc_msg";
 import {
   getCustomerList,
   queryCustomerList,
@@ -27,6 +34,7 @@ export {
   createTag,
   updateTag,
   deleteTag,
+  setTagByKeyId,
   getUserList,
   getUserDetail,
   addUser,
@@ -41,6 +49,9 @@ export {
   queryMember,
   queryMsgList,
   getMsgByMsgId,
+  getUserInMsgList,
+  getMsgDetailByUserId,
+  getMsgDetailByRoomId,
   getCustomerList,
   queryCustomerList,
   getCustomerDetail
