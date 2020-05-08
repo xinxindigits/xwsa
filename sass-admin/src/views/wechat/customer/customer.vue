@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Row :gutter="10" v-show="!showDetail">
+    <Row :gutter="10">
       <Col span="24">
         <Card>
           <Form :model="formItem" inline label-colon>
@@ -32,6 +32,9 @@
             :columns="columns"
             :loading="isLoading"
           >
+            <template slot-scope="{ row }" slot="tags">
+              <span>{{ row.tags | tags }}</span>
+            </template>
             <template slot-scope="{ row }" slot="action">
               <Button
                 type="primary"
@@ -60,35 +63,63 @@
         </Card>
       </Col>
     </Row>
-    <Row v-show="showDetail">
-      <Col span="24">
-        <customer-detail
-          :items="curDetail"
-          @on-cancel="
-            showDetail = false;
-            curDetail = {};
-          "
-        ></customer-detail>
-      </Col>
-    </Row>
+    <Drawer
+      :closable="false"
+      width="80"
+      v-model="showDetail"
+      scrollable
+      transfer
+    >
+      <customer-detail
+        :items="curDetail"
+        @show-record="showRecord = true"
+        @on-cancel="
+          showDetail = false;
+          curDetail = {};
+        "
+      ></customer-detail>
+    </Drawer>
+    <Drawer title="会话管理" v-model="showRecord" width="100">
+      <!-- <div slot="header">
+        <div class="drawer-title">
+          会话管理
+          <span style="margin-left：10px">
+            <Icon type="md-refresh" size="18"
+          /></span>
+        </div>
+      </div> -->
+      <msg-record :user-id="cur_userId"></msg-record>
+    </Drawer>
   </div>
 </template>
 
 <script>
 import { getCustomerList, queryCustomerList, getCustomerDetail } from "@/api";
 import CustomerDetail from "../common/customer-detail/customer-detail";
+import MsgRecord from "@/components/msg-record/msg-record";
 export default {
   name: "staff-list",
   components: {
-    CustomerDetail
+    CustomerDetail,
+    MsgRecord
+  },
+  filters: {
+    tags(arr) {
+      return arr
+        .map(n => {
+          return n.name;
+        })
+        .join("、");
+    }
   },
   data() {
     return {
       showDetail: false,
       curDetail: {},
+      cur_userId: "",
+      showRecord: false,
 
       formItem: {
-        tenantId: "xinxin",
         startTime: "",
         endTime: "",
         memberUserIds: [],
@@ -106,6 +137,7 @@ export default {
         { title: "客户名称", key: "customerName" },
         { title: "企业名称", key: "corpName", ellipsis: true },
         { title: "添加时间", key: "mobile" },
+        { title: "标签", key: "tags", align: "center", slot: "tags" },
         {
           title: "操作",
           slot: "action",
@@ -129,6 +161,7 @@ export default {
       console.log(row);
       getCustomerDetail({ id: row.id }).then(({ data }) => {
         this.curDetail = data;
+        this.cur_userId = row.userId;
         this.showDetail = true;
       });
     },
@@ -188,5 +221,15 @@ export default {
 <style lang="less" scoped>
 .row-operation {
   padding: 10px 0;
+}
+.drawer-title {
+  display: inline-block;
+  line-height: 20px;
+  font-size: 16px;
+  color: #17233d;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

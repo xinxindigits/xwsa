@@ -36,10 +36,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition,Date startTime,Date endTime) {
+    public PageResultVO<OrganizationDO> findByCondition(PageResultVO page, OrganizationDO condition) {
         com.github.pagehelper.Page page1 = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
-        List<OrganizationDO> organizationDOS = organizationMapper.findByCondition(condition,startTime,endTime);
-
+        List<OrganizationDO> organizationDOS = organizationMapper.findByCondition(condition);
         PageResultVO<OrganizationDO> result = new PageResultVO<>();
         result.setTotal(page1.getTotal());
         result.setItems(organizationDOS);
@@ -72,4 +71,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     public int deleteByCodes(List<String> codes) {
         return organizationMapper.deleteByCodes(codes);
     }
+
+    @Override
+    public List<OrganizationDO> findChildren(List<Long> parentIds) {
+        return organizationMapper.findChildren(parentIds);
+    }
+
+
 }

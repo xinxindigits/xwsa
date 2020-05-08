@@ -62,8 +62,10 @@ public class MessageConvert {
             }
             if(StringUtils.equals(msgRecordDO.getFromUserId(),chatUserOneVO.getChatUserId())){
                 msgRecordVO.setFromUserName(chatUserOneVO.getChatUserName());
+                msgRecordVO.setAvatar(chatUserOneVO.getAvatar());
             }else{
                 msgRecordVO.setFromUserName(chatUserTwoVO.getChatUserName());
+                msgRecordVO.setAvatar(chatUserTwoVO.getAvatar());
             }
              msgRecordVOS.add(msgRecordVO);
         });

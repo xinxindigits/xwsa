@@ -1,6 +1,5 @@
 <template>
-  <Card>
-    <Button @click="hdlCancel">返回</Button>
+  <div>
     <List>
       <ListItem>
         <ListItemMeta :title="detail.memberName" :description="description">
@@ -42,8 +41,9 @@
         <span>状态：{{ detail.memberStatus }}</span>
       </Cell>
       <Divider dashed></Divider>
+      <Button type="primary" @click="hdlClick">会话信息</Button>
     </CellGroup>
-  </Card>
+  </div>
 </template>
 
 <script>
@@ -59,6 +59,7 @@ export default {
   },
   data() {
     return {
+      showRecord: false,
       detail: {
         avatar: "",
         memberName: "",
@@ -78,6 +79,9 @@ export default {
   methods: {
     hdlCancel() {
       this.$emit("on-cancel");
+    },
+    hdlClick() {
+      this.$emit("show-record", this.detail.userId);
     }
   },
   watch: {

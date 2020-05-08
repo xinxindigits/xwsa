@@ -50,6 +50,15 @@
             transfer
           ></Page>
         </div>
+        <Drawer
+          :closable="false"
+          width="80"
+          v-model="showDetail"
+          scrollable
+          transfer
+        >
+          <msg-detail :items="curDetail"></msg-detail>
+        </Drawer>
       </Card>
     </Col>
   </Row>
@@ -58,10 +67,12 @@
 <script>
 import { queryMsgList, getMsgByMsgId } from "@/api";
 import { MsgQuery } from "./components";
+import MsgDetail from "../common/msg-detail/msg-detail";
 export default {
   name: "message-list",
   components: {
-    MsgQuery
+    MsgQuery,
+    MsgDetail
   },
   data() {
     return {
@@ -70,7 +81,6 @@ export default {
       total: 0,
       page: 1,
       formItem: {
-        tenantId: "xinxin",
         userId: "",
         startTime: "",
         endTime: ""
@@ -94,7 +104,10 @@ export default {
           align: "center"
         }
       ],
-      tbSelection: []
+      tbSelection: [],
+
+      showDetail: false,
+      curDetail: {}
     };
   },
   methods: {
@@ -117,8 +130,11 @@ export default {
       this.tbSelection = selection;
     },
 
-    hdlQueryInfo({ msgId }) {
-      getMsgByMsgId({ msgId });
+    hdlQueryInfo({ id }) {
+      getMsgByMsgId({ id }).then(({ data }) => {
+        this.curDetail = data;
+        this.showDetail = true;
+      });
     }
   },
   mounted() {

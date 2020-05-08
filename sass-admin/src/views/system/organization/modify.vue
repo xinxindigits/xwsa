@@ -12,41 +12,30 @@
       :label-width="150"
       :rules="rules"
     >
-      <FormItem label="租户编号" prop="code" v-if="type == 'update'">
+      <FormItem label="机构编号" prop="code">
         <Input
           v-model="formObj.code"
           style="width: 280px"
           :disabled="type == 'update'"
         ></Input>
       </FormItem>
-      <FormItem label="租户名称" prop="name">
+      <FormItem label="机构名称" prop="name">
         <Input v-model="formObj.name" style="width: 280px"></Input>
       </FormItem>
-      <FormItem label="企业微信corpId" prop="corpId">
-        <Input v-model="formObj.corpId" style="width: 280px"></Input>
+      <FormItem label="上级机构" prop="parentName">
+        <Input v-model="formObj.parentName" style="width: 280px"></Input>
       </FormItem>
-      <FormItem label="私钥" prop="privateKey">
-        <Input v-model="formObj.privateKey" style="width: 280px"></Input>
+      <FormItem label="机构类型" prop="orgType">
+        <Select v-model="formObj.orgType" style="width:280px">
+          <Option
+            v-for="item in orgTypeList"
+            :value="item.value"
+            :key="item.value"
+            >{{ item.label }}</Option
+          >
+        </Select>
       </FormItem>
-      <FormItem label="通讯录应用secret" prop="addressListSecret">
-        <Input v-model="formObj.addressListSecret" style="width: 280px"></Input>
-      </FormItem>
-      <FormItem label="联系人应用secret" prop="customerContactSecret">
-        <Input
-          v-model="formObj.customerContactSecret"
-          style="width: 280px"
-        ></Input>
-      </FormItem>
-      <FormItem label="会话应用secret" prop="chatRecordSecret">
-        <Input v-model="formObj.chatRecordSecret" style="width: 280px"></Input>
-      </FormItem>
-      <FormItem label="状态" prop="state">
-        <RadioGroup v-model="formObj.state">
-          <Radio label="Y">启用</Radio>
-          <Radio label="N">禁用</Radio>
-        </RadioGroup>
-      </FormItem>
-      <FormItem label="租户描述" prop="remark">
+      <FormItem label="机构备注" prop="remark">
         <Input
           v-model="formObj.remark"
           type="textarea"
@@ -73,12 +62,12 @@
 import { addOrganization, updateOrganization } from "@/api/data_organization";
 const _config = {
   create: {
-    title: "新增租户",
+    title: "新增机构",
     success_evt: "on-add-organization",
     submit: addOrganization
   },
   update: {
-    title: "更新租户",
+    title: "更新机构",
     success_evt: "on-update-organization",
     submit: updateOrganization
   }
@@ -111,40 +100,37 @@ export default {
       curValue: false,
       formObj: {
         name: "",
+        parentName: "",
         code: "",
-        privateKey: "",
-        corpId: "",
-        addressListSecret: "",
-        customerContactSecret: "",
-        chatRecordSecret: "",
         state: "Y",
-        remark: "",
-        parentId: 0,
-        orgType: "COMP"
+        remark: ""
       },
+      orgTypeList: [
+        {
+          value: "COMP",
+          label: "公司"
+        },
+        {
+          value: "DEPART",
+          label: "部门"
+        },
+        {
+          value: "GROUP",
+          label: "小组"
+        }
+      ],
       rules: {
         code: [{ validator: validateCode, trigger: "blur" }],
-        name: [
-          { required: true, message: "租户名称不能为空", trigger: "blur" }
-        ],
-        corpId: [
-          { required: true, message: "企业微信corpId不能为空", trigger: "blur" }
-        ],
-        state: [{ required: true, message: "状态不能为空", trigger: "change" }]
+        name: [{ required: true, message: "租户名称不能为空", trigger: "blur" }]
       }
     };
   },
   methods: {
-    setData({ obj, remark, state }) {
+    setData(obj) {
       this.formObj.code = obj.tenantId;
-      this.formObj.name = obj.tenantName;
-      this.formObj.remark = remark;
-      this.formObj.state = state;
-      this.formObj.privateKey = obj.privateKey;
-      this.formObj.corpId = obj.corpId;
-      this.formObj.addressListSecret = obj.addressListSecret;
-      this.formObj.customerContactSecret = obj.customerContactSecret;
-      this.formObj.chatRecordSecret = obj.chatRecordSecret;
+      this.formObj.parentName = obj.tenantName;
+      this.formObj.remark = obj.remark;
+      this.formObj.state = obj.state;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
