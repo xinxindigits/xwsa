@@ -2,6 +2,9 @@ package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.OplogDO;
 import cn.com.xinxin.sass.repository.model.OplogDOWithBLOBs;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface OplogDOMapper {
     /**
@@ -59,4 +62,13 @@ public interface OplogDOMapper {
      * @mbg.generated
      */
     int updateByPrimaryKey(OplogDO record);
+
+    /**
+     * 查询某个账户的操作
+     * @param account
+     * @return
+     */
+    List<OplogDOWithBLOBs> selectOplogsByAccount(@Param("account") String account);
+
+
 }
