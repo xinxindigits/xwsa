@@ -122,7 +122,7 @@ public class SysLogAspect {
             oplog.setUa(CommonHttpRequestUtil.getRequestDevice(request));
             oplog.setUri(CommonHttpRequestUtil.getPath(request.getRequestURI()));
             oplog.setHttpMethod(request.getMethod());
-            oplog.setUa(StringUtils.substring(request.getHeader("user-agent"), 0, 500));
+            oplog.setUa(StringUtils.substring(request.getHeader("user-agent"), 0, 256));
             oplog.setTenantId(SassBaseContextHolder.getTenantId());
 
         }
