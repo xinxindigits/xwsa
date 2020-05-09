@@ -110,7 +110,7 @@ export default {
   },
   computed: {
     deleteOrgCodes() {
-      return this.tbSelection.map(item => item.code);
+      return this.tbSelection.map(item => item.orgId);
     }
   },
   data() {
