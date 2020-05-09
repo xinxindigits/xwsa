@@ -22,7 +22,7 @@
         <Input
           v-model="formObj.parentName"
           style="width: 280px"
-          :disabled="createChild"
+          :disabled="no_edit_parentName"
         ></Input>
       </FormItem>
       <FormItem label="机构类型" prop="orgType">
@@ -90,7 +90,7 @@ export default {
   data() {
     return {
       curValue: false,
-      createChild: false,
+      no_edit_parentName: false,
       formObj: {
         name: "",
         parentId: "",
@@ -132,10 +132,10 @@ export default {
       this.formObj.orgType = obj.orgType;
       this.formObj.code = obj.code;
       this.formObj.name = obj.name;
-      this.formObj.parentName = obj.orgName;
-      this.formObj.parentId = obj.orgId;
-      this.createChild = obj.createChild;
-      this.remark = obj.remark;
+      this.formObj.parentName = obj.parentName;
+      this.formObj.parentId = obj.parentId;
+      this.no_edit_parentName = obj.no_edit_parentName;
+      this.formObj.remark = obj.remark;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {

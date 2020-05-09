@@ -93,8 +93,8 @@ public class SassOrganizationRestController extends AclController {
         PageResultVO<OrganizationDO> result = organizationService.findByCondition(page, condition);
         PageResultVO resultVO =  BaseConvert.convert(result,PageResultVO.class);
         if(!CollectionUtils.isEmpty(result.getItems())){
-            List<Long> parentIds = result.getItems().stream().map(OrganizationDO::getParentId).collect(Collectors.toList());
-            List<OrganizationDO> childrenOrganization = organizationService.findChildren(parentIds);
+            List<OrganizationDO> childrenOrganization = organizationService.findNotRoot(condition.getTenantId());
+            loger.info(JSONObject.toJSONString(childrenOrganization));
             result.getItems().addAll(childrenOrganization);
             List<OrgTreeVO> orgTreeVOS = Lists.newArrayList();
             result.getItems().stream().forEach(organizationDO -> {
@@ -110,7 +110,7 @@ public class SassOrganizationRestController extends AclController {
                 orgTreeVO.setExtension(organizationDO.getExtension());
                 orgTreeVO.setGmtCreated(organizationDO.getGmtCreated());
                 orgTreeVO.setGmtUpdated(organizationDO.getGmtUpdated());
-
+                orgTreeVO.setRemark(organizationDO.getRemark());
                 orgTreeVOS.add(orgTreeVO);
             });
             List<OrgTreeVO> resultTrees = TreeResultUtil.buildOrgTrees(orgTreeVOS);
@@ -245,14 +245,15 @@ public class SassOrganizationRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER);
         }
 
-        if(CollectionUtils.isEmpty(deleteOrgForm.getCodes())){
+        if(CollectionUtils.isEmpty(deleteOrgForm.getIds())){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"组织机构列表不能为空");
         }
-
         List<OrganizationDO> organizationDOS = this.organizationService.findChildren(deleteOrgForm.getIds());
         if(!CollectionUtils.isEmpty(organizationDOS)){
             throw new BusinessException(SassBizResultCodeEnum.NOT_PERMIT_DELETE);
         }
+
+
         int result = this.organizationService.deleteByIds(deleteOrgForm.getIds());
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
