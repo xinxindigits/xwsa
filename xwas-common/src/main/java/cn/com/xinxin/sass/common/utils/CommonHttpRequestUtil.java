@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.common.utils;
 
-import com.sun.xml.internal.ws.util.UtilException;
+import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +78,7 @@ public class CommonHttpRequestUtil {
         try {
             uri = new URI(uriStr);
         } catch (URISyntaxException e) {
-            throw new UtilException(e);
+            throw new RuntimeException(e);
         }
         return uri.getPath();
     }
