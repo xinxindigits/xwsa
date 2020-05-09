@@ -43,8 +43,6 @@ public class SassTenantRestController extends AclController {
 
     private static final Logger loger = LoggerFactory.getLogger(SassTenantRestController.class);
 
-    private final OrganizationService organizationService;
-
     private final TenantBaseInfoService tenantBaseInfoService;
 
     private static final String OG = "OG";
@@ -54,7 +52,6 @@ public class SassTenantRestController extends AclController {
     private static final String PADDING = "000";
 
     public SassTenantRestController(OrganizationService organizationService, TenantBaseInfoService tenantBaseInfoService) {
-        this.organizationService = organizationService;
         this.tenantBaseInfoService = tenantBaseInfoService;
     }
 

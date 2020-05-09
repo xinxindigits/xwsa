@@ -68,8 +68,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public int deleteByCodes(List<String> codes) {
-        return organizationMapper.deleteByCodes(codes);
+    public int deleteByCodes(List<String> codes ,String tenantId) {
+        return organizationMapper.deleteByCodes(codes,tenantId);
     }
 
     @Override
@@ -82,5 +82,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationMapper.findChildren(parentIds);
     }
 
-
+    @Override
+    public List<OrganizationDO> findNotRoot(String tenantId) {
+        return organizationMapper.findNotRoot(tenantId);
+    }
 }
