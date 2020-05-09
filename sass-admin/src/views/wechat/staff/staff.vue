@@ -60,12 +60,14 @@
     >
       <member-detail
         :items="memberDetail"
-        @show-record="showRecord = true"
+        @show-record="hdlShowRecord"
       ></member-detail>
     </Drawer>
-    <Drawer title="会话管理" v-model="showRecord" width="100">
-      <msg-record :user-id="cur_userId"></msg-record>
-    </Drawer>
+    <msg-record
+      v-model="showRecord"
+      :user-id="cur_userId"
+      ref="record"
+    ></msg-record>
   </div>
 </template>
 
@@ -120,6 +122,11 @@ export default {
     };
   },
   methods: {
+    hdlShowRecord(userId) {
+      this.$refs.record.getMsgList(userId);
+      this.showRecord = true;
+    },
+
     hdlSingleModified(row) {
       getMemberDetail({ id: row.id }).then(res => {
         this.memberDetail = res.data;

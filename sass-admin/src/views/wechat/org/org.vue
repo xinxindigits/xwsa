@@ -73,12 +73,14 @@
     >
       <member-detail
         :items="memberDetail"
-        @show-record="showRecord = true"
+        @show-record="hdlShowRecord"
       ></member-detail>
     </Drawer>
-    <Drawer title="会话管理" v-model="showRecord" width="100">
-      <msg-record :user-id="cur_userId"></msg-record>
-    </Drawer>
+    <msg-record
+      v-model="showRecord"
+      :user-id="cur_userId"
+      ref="record"
+    ></msg-record>
   </div>
 </template>
 
@@ -131,6 +133,10 @@ export default {
     };
   },
   methods: {
+    hdlShowRecord(userId) {
+      this.$refs.record.getMsgList(userId);
+      this.showRecord = true;
+    },
     hdlFilterOrg() {
       queryOrgList(this.queryForm).then(res => {
         this.treeData = this.formatData(res.data);
@@ -165,7 +171,6 @@ export default {
     },
 
     hdlSingleModified(row) {
-      console.log(row);
       getMemberDetail({ id: row.id }).then(res => {
         this.memberDetail = res.data;
         this.cur_userId = row.userId;
@@ -197,11 +202,7 @@ export default {
   mounted() {
     let self = this;
     getOrgList().then(res => {
-      console.log(this.formatData(res.data));
       self.treeData = this.formatData(res.data);
-    });
-    getMemberDetail({ id: 1 }).then(res => {
-      console.log(res.data);
     });
   }
 };

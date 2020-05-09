@@ -52,8 +52,8 @@
       </div>
       <update
         :type="modify"
-        v-model="showAddModal"
-        @on-cancel="showAddModal = false"
+        v-model="showModifyModal"
+        @on-cancel="showModifyModal = false"
         @tag-modified="hdlqueryAfterReset"
         ref="modifyModal"
       ></update>
@@ -79,8 +79,8 @@ export default {
   data() {
     return {
       modify: "create",
-      showAddModal: false,
-      showUpdateModal: false,
+      showModifyModal: false,
+
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -169,7 +169,7 @@ export default {
         description: ""
       };
       this.$refs.modifyModal.setData(d);
-      this.showAddModal = true;
+      this.showModifyModal = true;
     }
   },
   mounted() {

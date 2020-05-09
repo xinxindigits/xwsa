@@ -1,24 +1,38 @@
 <template>
-  <div class="wrapper">
-    <div class="list-box">
-      <Card class="list-box-content">
-        <CellGroup>
-          <Cell
-            :title="n | name"
-            v-for="(n, index) in list"
-            :key="index"
-            @click.native="getDetail(n)"
-          />
-          <p v-if="list.length == 0" style="text-align:center">-无会话-</p>
-        </CellGroup>
-      </Card>
+  <Drawer title="会话管理" v-model="showRecord" width="100">
+    <div class="wrapper">
+      <div class="list-box">
+        <Card class="list-box-content">
+          <CellGroup>
+            <Cell
+              :title="n | name"
+              v-for="(n, index) in list"
+              :key="index"
+              @click.native="selectChat(n)"
+            />
+            <p v-if="list.length == 0" style="text-align:center">-无会话-</p>
+          </CellGroup>
+        </Card>
+      </div>
+      <div class="content">
+        <div class="msg-wrapper">
+          <chat-list :list="msg_list"></chat-list>
+        </div>
+        <div style="padding-top:10px;">
+          <Page
+            :disabled="!msg_list.length > 0"
+            :total="total"
+            :current="page"
+            :page-size="pageSize"
+            show-elevator
+            transfer
+            style="float:right"
+            @on-change="changePage"
+          ></Page>
+        </div>
+      </div>
     </div>
-
-    <Card style="flex:1" class="msg-wrapper">
-      <div style="ov"></div>
-      <chat-list :list="msg_list"></chat-list>
-    </Card>
-  </div>
+  </Drawer>
 </template>
 
 <script>
@@ -37,72 +51,93 @@ const getVal = function(n, keyArray) {
   }
 };
 export default {
-  name: "user-msg",
+  name: "msg-record",
   components: {
     ChatList
   },
   props: {
     value: Boolean,
-    userId: {
-      type: String,
-      default: "dio"
-    }
+    userId: String
   },
   filters: {
     name: function(n) {
       return getVal(n, ["userName", "roomName"]);
-    },
-    id: function(n) {
-      return getVal(n, ["userId", "roomId"]);
     }
   },
   data() {
     return {
+      showRecord: false,
+      total: 0,
+      page: 1,
+      pageSize: 50,
       list: [],
-      msg_list: []
+      msg_list: [],
+      current_chat: {}
     };
   },
   methods: {
-    getDetail(n) {
-      if (n.type === 0) {
-        let { userId } = n;
-        getMsgDetailByUserId({ userId: this.userId, userIdTwo: userId }).then(
-          ({ data }) => {
-            this.msg_list = data.items.map(n => {
-              return {
-                name: n.fromUserName,
-                content: n.content,
-                time: n.msgTime,
-                msgType: n.msgType
-              };
-            });
-          }
-        );
-      } else if (n.type === 1) {
-        let { roomId } = n;
-        getMsgDetailByRoomId({ roomId }).then(({ data }) => {
-          this.msg_list = data.items.map(n => {
-            return {
-              name: n.fromUserName,
-              content: n.content,
-              time: n.msgTime,
-              msgType: n.msgType
-            };
-          });
-        });
-      } else {
-        this.$Message.error("无会话ID！");
+    selectChat(n) {
+      this.resetPageComp();
+      this.current_chat = n;
+      this.getDetail();
+    },
+    resetPageComp() {
+      this.page = 1;
+      this.total = 0;
+    },
+    getDetail() {
+      let n = this.current_chat;
+      if (!(n.type === 0 || n.type === 1)) {
+        this.$Message.error("未知会话类型！");
+        return;
       }
-    }
-  },
-  mounted() {},
-  watch: {
-    userId(newValue) {
+      let id, api, params;
+      if (n.type === 0) {
+        id = n.userId;
+        api = getMsgDetailByUserId;
+        params = {
+          userId: this.userId,
+          userIdTwo: id,
+          pageSize: this.pageSize,
+          pageIndex: this.page
+        };
+      } else if (n.type === 1) {
+        id = n.roomId;
+        api = getMsgDetailByRoomId;
+        params = { roomId: id, pageSize: this.pageSize, pageIndex: this.page };
+      }
+      api(params).then(({ data }) => {
+        this.msg_list = data.items.map(n => {
+          return {
+            name: n.fromUserName,
+            content: n.content,
+            time: n.msgTime,
+            msgType: n.msgType,
+            avatar: n.avatar
+          };
+        });
+        this.total = data.total;
+      });
+    },
+    getMsgList(userId) {
       this.list = [];
       this.msg_list = [];
-      getUserInMsgList({ userId: newValue }).then(({ data }) => {
+      this.resetPageComp();
+      getUserInMsgList({ userId }).then(({ data }) => {
         this.list = data;
       });
+    },
+    changePage(page) {
+      this.page = page;
+      this.getDetail();
+    }
+  },
+  watch: {
+    value(newValue) {
+      this.showRecord = newValue;
+    },
+    showRecord(newValue) {
+      this.$emit("input", newValue);
     }
   }
 };
@@ -112,12 +147,18 @@ export default {
 .wrapper {
   display: flex;
   height: 100%;
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 }
 .list-box {
   display: flex;
   flex-direction: column;
   width: 300px;
   height: 100%;
+  margin-right: 10px;
   &-content {
     height: 100%;
     overflow-y: scroll;
@@ -125,6 +166,15 @@ export default {
 }
 .msg-wrapper {
   overflow: hidden;
+  position: relative;
   height: 100%;
+  flex: 1;
+  border: 1px solid #dcdee2;
+  border-color: #e8eaec;
+  padding: 10px 10px 15px;
+  background: #fff;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: all 0.2s ease-in-out;
 }
 </style>

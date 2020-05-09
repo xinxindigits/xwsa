@@ -1,12 +1,12 @@
 <template>
-  <Form :model="formItem" inline label-colon>
-    <FormItem>
+  <Form ref="form" :model="formItem" inline label-colon>
+    <FormItem prop="code">
       <Input v-model="formItem.code" placeholder="角色编号"></Input>
     </FormItem>
-    <FormItem>
+    <FormItem prop="name">
       <Input v-model="formItem.name" placeholder="角色名称"></Input>
     </FormItem>
-    <FormItem>
+    <FormItem prop="roleType">
       <Select
         v-model="formItem.roleType"
         placeholder="角色类型"
@@ -53,9 +53,7 @@ export default {
       this.$emit("on-role-query", this.formItem);
     },
     reset() {
-      this.formItem.name = "";
-      this.formItem.roleType = "";
-      this.formItem.code = "";
+      this.$refs.form.resetFields();
     }
   },
   watch: {
