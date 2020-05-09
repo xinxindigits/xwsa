@@ -190,7 +190,7 @@ public class SassOrganizationRestController extends AclController {
         OrganizationDO organizationDO = SassFormConvert.convertOrgForm2OrganizationDO(orgForm);
         organizationDO.setGmtCreator(sassUserInfo.getAccount());
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
-        if(StringUtils.isEmpty(orgForm.getTenantId())){
+        if(StringUtils.isBlank(orgForm.getTenantId())){
             organizationDO.setTenantId(sassUserInfo.getTenantId());
         }
         // 创建对象
