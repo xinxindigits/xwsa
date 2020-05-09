@@ -93,6 +93,13 @@ let routes_config = {
       title: "标签管理"
     },
     component: () => import("@/views/system/tag/tag.vue")
+  },
+  ["/ops/log/list"]: {
+    name: "oplog_list",
+    meta: {
+      title: "操作日志管理"
+    },
+    component: () => import("@/views/system/log/log.vue")
   }
 };
 export default routes_config;
