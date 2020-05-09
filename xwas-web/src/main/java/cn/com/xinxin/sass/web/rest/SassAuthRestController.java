@@ -4,6 +4,8 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
@@ -16,7 +18,6 @@ import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.web.vo.UserTokenVO;
 import com.xinxinfinance.commons.exception.BusinessException;
-import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -64,6 +65,7 @@ public class SassAuthRestController {
 
     }
 
+    @SysLog("用户登陆操作")
     @RequestMapping(value = "/auth",method = RequestMethod.POST)
     public Object login(HttpServletRequest request,
                         HttpServletResponse response,
@@ -121,6 +123,12 @@ public class SassAuthRestController {
             response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
             response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
             response.setHeader("access-control-expose-headers", "XToken");
+
+            // 设置基本的content
+            SassBaseContextHolder.setAccount(sassUserInfo.getAccount());
+            SassBaseContextHolder.setTenantId(sassUserInfo.getTenantId());
+            SassBaseContextHolder.setUserId(sassUserInfo.getId());
+
             return userTokenVO;
 
         }else{
