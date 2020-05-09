@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.auth.shiro.filter;
 
+import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
 import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
@@ -57,6 +58,7 @@ public class JwtLogoutFilter extends LogoutFilter {
         }
         subject.logout();
         sendResultToRequest(response);
+        SassBaseContextHolder.remove();
         return false;
     }
 
