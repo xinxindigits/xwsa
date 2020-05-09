@@ -3,25 +3,28 @@
     <div v-if="currentValue.length == 0" style="text-align:center">
       -无会话记录-
     </div>
-    <div
-      v-else
-      class="chat-list-item"
-      v-for="(item, index) in currentValue"
-      :key="index"
-    >
-      <div shape="square" class="chat-list-item-avatar">
-        <Avatar shape="square" icon="ios-person" :src="item.avatar" />
-      </div>
-      <div class="chat-list-item-content">
-        <div class="chat-list-item-title">
-          <span>{{ item.name }}</span>
-          <span class="chat-list-item-time">{{ item.time | timeFilter }}</span>
+    <div class="chat-list-items" v-else>
+      <div
+        class="chat-list-item"
+        v-for="(item, index) in currentValue"
+        :key="index"
+      >
+        <div shape="square" class="chat-list-item-avatar">
+          <Avatar shape="square" icon="ios-person" :src="item.avatar" />
         </div>
-        <div class="chat-list-item-message" v-if="item.msgType == 'text'">
-          {{ item.content }}
-        </div>
-        <div class="chat-list-item-message" v-else>
-          [不支持的消息类型：{{ $mapd("msgType", item.msgType) }}]
+        <div class="chat-list-item-content">
+          <div class="chat-list-item-title">
+            <span>{{ item.name }}</span>
+            <span class="chat-list-item-time">{{
+              item.time | timeFilter
+            }}</span>
+          </div>
+          <div class="chat-list-item-message" v-if="item.msgType == 'text'">
+            {{ item.content }}
+          </div>
+          <div class="chat-list-item-message" v-else>
+            [不支持的消息类型：{{ $mapd("msgType", item.msgType) }}]
+          </div>
         </div>
       </div>
     </div>
@@ -64,7 +67,26 @@ export default {
 .chat-list {
   width: 100%;
   height: 100%;
-  padding: 10px;
+  overflow: hidden;
+  &-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow-y: scroll;
+    &-page {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+    }
+  }
+  .chat-list-items {
+    flex: 1;
+    height: 100%;
+    overflow-y: scroll;
+  }
   &-item {
     display: flex;
     padding: 12px 0;

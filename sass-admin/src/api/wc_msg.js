@@ -37,8 +37,13 @@ export const getUserInMsgList = ({ userId }) => {
   });
 };
 //获取两用户间会话记录
-export const getMsgDetailByUserId = ({ userId, userIdTwo }) => {
-  let data = { tenantId: "xinxin", userId, userIdTwo };
+export const getMsgDetailByUserId = ({
+  userId,
+  userIdTwo,
+  pageIndex,
+  pageSize
+}) => {
+  let data = { tenantId: "xinxin", userId, userIdTwo, pageIndex, pageSize };
   return axios.request({
     url: "wechat/message/query/user",
     method: "post",
@@ -46,8 +51,8 @@ export const getMsgDetailByUserId = ({ userId, userIdTwo }) => {
   });
 };
 //查询群聊会话记录
-export const getMsgDetailByRoomId = ({ roomId }) => {
-  let data = { tenantId: "xinxin", roomId };
+export const getMsgDetailByRoomId = ({ roomId, pageIndex, pageSize }) => {
+  let data = { tenantId: "xinxin", roomId, pageIndex, pageSize };
   return axios.request({
     url: "wechat/message/query/room",
     method: "post",

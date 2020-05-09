@@ -44,7 +44,6 @@ export default {
   },
   data() {
     return {
-      showRecord: false,
       detail: {
         fromUserName: "",
         fromUserId: "",
@@ -56,14 +55,6 @@ export default {
         userId: ""
       }
     };
-  },
-  methods: {
-    hdlCancel() {
-      this.$emit("on-cancel");
-    },
-    hdlClick() {
-      this.$emit("show-record", this.detail.userId);
-    }
   },
   watch: {
     items: {
