@@ -15,8 +15,8 @@ export const queryOrganization = ({ code }) => {
   });
 };
 
-export const delOrganization = ({ codes }) => {
-  let data = { codes };
+export const delOrganization = ({ ids }) => {
+  let data = { ids };
   return axios.request({
     url: "organization/delete",
     data,

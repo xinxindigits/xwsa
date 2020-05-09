@@ -121,6 +121,7 @@
     <foreach collection="codes" index="index" item="item" separator="," open="(" close=")">
        #{item}
     </foreach>
+    and tenant_id = #{tenantId}
   </delete>
 
   <delete id="deleteByIds"  parameterType="java.util.List">
@@ -133,10 +134,18 @@
 
   <select id="findChildren" resultMap="BaseResultMapExt">
     select   <include refid="Base_Column_List_Ext" />
-    from organization where code in
+    from organization where parent_id in
     <foreach collection="parentIds" index="index" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
     and parent_id != 0 and deleted = 0;
   </select>
+
+  <select id="findNotRoot" resultMap="BaseResultMapExt">
+    select   <include refid="Base_Column_List_Ext" />
+    from organization where tenant_id = #{tenantId}
+    and parent_id != 0 and deleted = 0;
+  </select>
+
+
 </mapper>
