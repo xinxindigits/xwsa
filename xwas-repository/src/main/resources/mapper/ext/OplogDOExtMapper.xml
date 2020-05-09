@@ -50,4 +50,15 @@
     gmt_created, gmt_updater, gmt_updated, extension, deleted, params, result
   </sql>
 
+
+  <select id="selectOplogsByAccount" parameterType="java.lang.String" resultMap="ResultMapWithBLOBsExt">
+    select
+    <include refid="Blob_Column_List_Ext" />
+    from oplog
+    where deleted = 0
+    <if test="account != null and account != ''">
+      and account = #{account,jdbcType=VARCHAR}
+    </if>
+  </select>
+
 </mapper>
