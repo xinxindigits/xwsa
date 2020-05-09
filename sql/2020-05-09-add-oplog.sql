@@ -1,0 +1,20 @@
+CREATE TABLE `oplog` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `tenant_id` varchar(32) NOT NULL,
+  `ip` varchar(64) DEFAULT '' COMMENT '操作对应的IP地址',
+  `operation` varchar(1024) DEFAULT '' COMMENT '操作对应的类型：CREATE/DELETE/QUERY/UPDATE',
+  `account` varchar(64) DEFAULT '' COMMENT '操作账号',
+  `method` varchar(64) DEFAULT '' COMMENT '操作对应的接口方法',
+  `uri` varchar(64) DEFAULT '' COMMENT '操作路径',
+  `http_method` varchar(64) DEFAULT '' COMMENT 'http请求方法',
+  `ua` varchar(64) DEFAULT '' COMMENT '使用的系统',
+  `params` text COMMENT '请求参数',
+  `result` text COMMENT '执行结果',
+  `gmt_creator` varchar(64) DEFAULT '' COMMENT '创建人',
+  `gmt_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_updater` varchar(64) DEFAULT '' COMMENT '更新人',
+  `gmt_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `extension` varchar(4000) DEFAULT NULL COMMENT '扩展字段',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '软删除标志,0表示不删除,1表示删除',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作日志记录';

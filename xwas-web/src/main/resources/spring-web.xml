@@ -14,6 +14,8 @@
     <!-- - The configuration file of web-servlet's WebApplicationContext which
         is child of the ROOT context. -->
 
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
     <context:component-scan base-package="cn.com.xinxin.sass.web"/>
     <context:component-scan base-package="cn.com.xinxin.sass.**.web.*"/>
     <mvc:annotation-driven/>
