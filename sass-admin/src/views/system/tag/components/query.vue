@@ -1,5 +1,5 @@
 <template>
-  <Form :model="formItem" inline label-colon>
+  <Form :model="formItem" inline label-colon @submit.native.prevent>
     <FormItem>
       <Input v-model="formItem.name" placeholder="标签名"></Input>
     </FormItem>
