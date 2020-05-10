@@ -100,6 +100,8 @@
 
         <!--<table tableName="tags_relations" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
                <!--enableUpdateByExample="false"/>-->
+        <table tableName="oplog" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"
+        enableUpdateByExample="false"/>
 
     </context>
 </generatorConfiguration>

@@ -6,6 +6,7 @@ import {
   deleteTag,
   setTagByKeyId
 } from "./sys_tag";
+import { getLogList, queryLogList, getLogDetail } from "./sys_log";
 import {
   getUserList,
   getUserDetail,
@@ -35,6 +36,9 @@ export {
   updateTag,
   deleteTag,
   setTagByKeyId,
+  getLogList,
+  queryLogList,
+  getLogDetail,
   getUserList,
   getUserDetail,
   addUser,

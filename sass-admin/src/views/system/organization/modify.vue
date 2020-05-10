@@ -13,25 +13,25 @@
       :rules="rules"
     >
       <FormItem label="机构编号" prop="code">
-        <Input
-          v-model="formObj.code"
-          style="width: 280px"
-          :disabled="type == 'update'"
-        ></Input>
+        <Input v-model="formObj.code" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="机构名称" prop="name">
         <Input v-model="formObj.name" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="上级机构" prop="parentName">
-        <Input v-model="formObj.parentName" style="width: 280px"></Input>
+        <Input
+          v-model="formObj.parentName"
+          style="width: 280px"
+          :disabled="no_edit_parentName"
+        ></Input>
       </FormItem>
       <FormItem label="机构类型" prop="orgType">
         <Select v-model="formObj.orgType" style="width:280px">
           <Option
             v-for="item in orgTypeList"
-            :value="item.value"
-            :key="item.value"
-            >{{ item.label }}</Option
+            :value="item.orgType"
+            :key="item.orgType"
+            >{{ item.desc }}</Option
           >
         </Select>
       </FormItem>
@@ -88,49 +88,54 @@ export default {
     }
   },
   data() {
-    const validateCode = (rule, value, callback) => {
-      if (value === "" && !this.addFlowFlag) {
-        callback(new Error("租户编号不能为空"));
-      } else {
-        callback();
-      }
-    };
-
     return {
       curValue: false,
+      no_edit_parentName: false,
       formObj: {
         name: "",
+        parentId: "",
         parentName: "",
         code: "",
         state: "Y",
-        remark: ""
+        remark: "",
+        orgType: ""
       },
       orgTypeList: [
         {
-          value: "COMP",
-          label: "公司"
+          orgType: "COMP",
+          desc: "公司"
         },
         {
-          value: "DEPART",
-          label: "部门"
+          orgType: "DEPART",
+          desc: "部门"
         },
         {
-          value: "GROUP",
-          label: "小组"
+          orgType: "GROUP",
+          desc: "小组"
         }
       ],
       rules: {
-        code: [{ validator: validateCode, trigger: "blur" }],
-        name: [{ required: true, message: "租户名称不能为空", trigger: "blur" }]
+        code: [
+          { required: true, message: "机构编号不能为空", trigger: "blur" }
+        ],
+        name: [
+          { required: true, message: "机构名称不能为空", trigger: "blur" }
+        ],
+        orgType: [
+          { required: true, message: "机构类型不能为空", trigger: "blur" }
+        ]
       }
     };
   },
   methods: {
     setData(obj) {
-      this.formObj.code = obj.tenantId;
-      this.formObj.parentName = obj.tenantName;
+      this.formObj.orgType = obj.orgType;
+      this.formObj.code = obj.code;
+      this.formObj.name = obj.name;
+      this.formObj.parentName = obj.parentName;
+      this.formObj.parentId = obj.parentId;
+      this.no_edit_parentName = obj.no_edit_parentName;
       this.formObj.remark = obj.remark;
-      this.formObj.state = obj.state;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {

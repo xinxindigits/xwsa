@@ -98,7 +98,8 @@ public interface MsgRecordDOMapper {
      * @param userIdTwo
      * @return
      */
-    List<MsgRecordDO> selectMsgRecordBetweenPersons(@Param("tenantId") String tenantId, @Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo);
+    List<MsgRecordDO> selectMsgRecordBetweenPersons(@Param("tenantId") String tenantId, @Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo,
+                                                    @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("keyWord") String keyWord);
 
     /**
      * 查询群聊会话记录
@@ -106,7 +107,8 @@ public interface MsgRecordDOMapper {
      * @param roomId
      * @return
      */
-    List<MsgRecordDO> selectRoomMsgRecord(@Param("tenantId") String tenantId,@Param("roomId") String roomId);
+    List<MsgRecordDO> selectRoomMsgRecord(@Param("tenantId") String tenantId,@Param("roomId") String roomId,
+                                          @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("keyWord") String keyWord);
 
     /**
      * 通过租户id和成员userid查询会话记录

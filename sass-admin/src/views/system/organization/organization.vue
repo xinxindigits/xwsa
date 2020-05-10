@@ -115,7 +115,6 @@ export default {
   },
   data() {
     return {
-      isLoanding: false,
       showAddModal: false,
       showGrantModal: false,
       showUpdateModal: false,
@@ -135,9 +134,10 @@ export default {
           width: 60,
           align: "center"
         },
-        { title: "租户编码", key: "tenantId", align: "center", tree: true },
+        { title: "机构编码", key: "code", align: "left", tree: true },
         { title: "机构名称", key: "orgName", align: "center" },
         { title: "机构类型", key: "orgTypeName", align: "center" },
+        { title: "租户编码", key: "tenantId", align: "center" },
         {
           title: "创建时间",
           key: "gmtCreated",
@@ -177,14 +177,14 @@ export default {
       this.formItem.tenantId = "";
       this.formItem.status = "";
     },
-    hdlDelete(codes) {
+    hdlDelete(ids) {
       let self = this;
-      if (codes.length > 0) {
+      if (ids.length > 0) {
         this.$Modal.confirm({
           title: "确认删除？",
           content: `确定删除选中记录?`,
           onOk() {
-            delOrganization({ codes }).then(() => {
+            delOrganization({ ids }).then(() => {
               this.$Message.success("删除成功！");
               self.hdlquery();
             });
@@ -195,14 +195,33 @@ export default {
       }
     },
     hdlSingleCreate() {
+      let d = {
+        no_edit_parentName: true,
+        parentName: "0",
+        parentId: "0"
+      };
+      this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
     hdlSingleCreateChild(data) {
-      this.$refs.createModal.setData(data);
+      let d = {
+        parentName: data.orgName,
+        parentId: data.orgId,
+        no_edit_parentName: true
+      };
+      this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
     hdlSingleModified(data) {
-      this.$refs.updateModal.setData(data);
+      let d = {
+        orgType: data.orgType,
+        code: data.code,
+        parentName: data.parentName,
+        remark: data.remark,
+        name: data.orgName,
+        no_edit_parentName: true
+      };
+      this.$refs.updateModal.setData(d);
       this.showUpdateModal = true;
     },
     hdlSelectionChange(selection) {

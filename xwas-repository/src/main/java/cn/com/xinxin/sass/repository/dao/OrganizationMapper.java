@@ -72,8 +72,11 @@ public interface OrganizationMapper {
 
     int updateByCodeSelective(OrganizationDO record);
 
-    int deleteByCodes(@Param("codes") List<String> codes);
+    int deleteByCodes(@Param("codes") List<String> codes, @Param("tenantId") String tenantId);
 
     List<OrganizationDO> findChildren(@Param("parentIds") List<Long> parentIds);
 
+    int deleteByIds(List<Long> ids);
+
+    List<OrganizationDO> findNotRoot(@Param("tenantId") String tenantId);
 }
