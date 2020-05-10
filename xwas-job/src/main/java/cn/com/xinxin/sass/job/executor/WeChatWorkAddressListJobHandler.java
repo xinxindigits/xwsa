@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.job.executor;
 
-import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkAddressListSyncService;
+import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
@@ -22,10 +22,10 @@ public class WeChatWorkAddressListJobHandler extends IJobHandler {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkAddressListJobHandler.class);
 
-    private final WeChatWorkAddressListSyncService weChatWorkAddressListSyncService;
+    private final WeChatWorkSyncService weChatWorkAddressListSyncServiceImpl;
 
-    public WeChatWorkAddressListJobHandler(final WeChatWorkAddressListSyncService weChatWorkAddressListSyncService) {
-        this.weChatWorkAddressListSyncService = weChatWorkAddressListSyncService;
+    public WeChatWorkAddressListJobHandler(final WeChatWorkSyncService weChatWorkAddressListSyncServiceImpl) {
+        this.weChatWorkAddressListSyncServiceImpl = weChatWorkAddressListSyncServiceImpl;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class WeChatWorkAddressListJobHandler extends IJobHandler {
         LOGGER.info("租户[{}]同步通讯录任务开始", s);
         XxlJobLogger.log("租户同步通讯录任务开始");
 
-        weChatWorkAddressListSyncService.syncWeChatWorkAddressList(s);
+        weChatWorkAddressListSyncServiceImpl.sync(s);
 
         LOGGER.info("租户[{}]同步通讯录任务结束", s);
         XxlJobLogger.log("租户同步通讯录任务结束");
