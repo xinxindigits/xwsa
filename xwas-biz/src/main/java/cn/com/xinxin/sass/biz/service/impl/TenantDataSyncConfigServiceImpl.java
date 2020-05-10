@@ -32,26 +32,26 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
 
     /**
      * 通过机构id和任务类型查询记录
-     * @param orgId 机构id
+     * @param tenantId 机构id
      * @param taskType 任务类型
      * @return 机构同步配置信息
      */
     @Override
-    public TenantDataSyncConfigDO selectByOrgIdAndTaskType(String orgId, String taskType) {
-        if (StringUtils.isBlank(orgId)) {
-            LOGGER.error("通过机构id和任务类型查询记录, orgId不能为空");
+    public TenantDataSyncConfigDO selectByOrgIdAndTaskType(String tenantId, String taskType) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("通过机构id和任务类型查询记录, tenantId不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
-                    "通过机构id和任务类型查询记录, orgId不能为空");
+                    "通过机构id和任务类型查询记录, tenantId不能为空");
         }
         if (StringUtils.isBlank(taskType)) {
             LOGGER.error("通过机构id和任务类型查询记录, taskType不能为空");
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
                     "通过机构id和任务类型查询记录, taskType不能为空");
         }
-        TenantDataSyncConfigDO tenantDataSyncConfigDO = tenantDataSyncConfigDOMapper.selectByOrgIdAndTaskType(orgId, taskType);
+        TenantDataSyncConfigDO tenantDataSyncConfigDO = tenantDataSyncConfigDOMapper.selectByOrgIdAndTaskType(tenantId, taskType);
 
         if (null == tenantDataSyncConfigDO) {
-            LOGGER.error("无法通过机构id[{}]找到机构同步[{}]任务配置信息", orgId, taskType);
+            LOGGER.error("无法通过机构id[{}]找到机构同步[{}]任务配置信息", tenantId, taskType);
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构同步任务配置信息");
         }
 
@@ -77,5 +77,65 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
                     "根据id更新记录记录, id不能为空");
         }
         return tenantDataSyncConfigDOMapper.updateByPrimaryKeySelective(tenantDataSyncConfigDO);
+    }
+
+    /**
+     * 任务上锁
+     * @param tenantId 租户id
+     * @param taskType 任务类型
+     * @return 成功更新记录条数
+     */
+    @Override
+    public int updateLockByTenantIdAndTaskType(String tenantId, String taskType) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("通过机构id和任务类型对任务上锁, tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过机构id和任务类型对任务上锁, tenantId不能为空");
+        }
+        if (StringUtils.isBlank(taskType)) {
+            LOGGER.error("通过机构id和任务类型对任务上锁, taskType不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过机构id和任务类型对任务上锁, taskType不能为空");
+        }
+
+        int result = tenantDataSyncConfigDOMapper.updateLockByTenantIdAndTaskType(tenantId, taskType);
+
+        if (result < 1) {
+            LOGGER.error("当前有任务在执行，无法再次执行，请确认，机构id[{}], 项目编码[{}]", tenantId, taskType);
+            throw new BusinessException(SassBizResultCodeEnum.FAIL,
+                    "当前有任务在执行，无法再次执行，请确认");
+        }
+
+        return result;
+    }
+
+    /**
+     * 任务解锁
+     * @param tenantId 租户id
+     * @param taskType 任务类型
+     * @return 成功更新记录条数
+     */
+    @Override
+    public int updateUnLockByTenantIdAndTaskType(String tenantId, String taskType) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("通过机构id和任务类型对任务解锁, tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过机构id和任务类型对任务解锁, tenantId不能为空");
+        }
+        if (StringUtils.isBlank(taskType)) {
+            LOGGER.error("通过机构id和任务类型对任务解锁, taskType不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过机构id和任务类型对任务解锁, taskType不能为空");
+        }
+
+        int result = tenantDataSyncConfigDOMapper.updateUnLockByTenantIdAndTaskType(tenantId, taskType);
+
+        if (result < 1) {
+            LOGGER.error("任务解锁失败，机构id[{}], 项目编码[{}]", tenantId, taskType);
+            throw new BusinessException(SassBizResultCodeEnum.FAIL,
+                    "任务解锁失败，请检查");
+        }
+
+        return result;
     }
 }

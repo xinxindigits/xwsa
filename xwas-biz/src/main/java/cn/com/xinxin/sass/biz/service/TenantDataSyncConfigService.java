@@ -24,4 +24,20 @@ public interface TenantDataSyncConfigService {
      * @return 更新成功的条数
      */
     int updateById(TenantDataSyncConfigDO tenantDataSyncConfigDO);
+
+    /**
+     * 上锁
+     * @param tenantId 租户id
+     * @param taskType 任务类型
+     * @return 成功更新记录条数
+     */
+    int updateLockByTenantIdAndTaskType(String tenantId, String taskType);
+
+    /**
+     * 解锁
+     * @param tenantId 租户id
+     * @param taskType 任务类型
+     * @return 成功更新记录条数
+     */
+    int updateUnLockByTenantIdAndTaskType(String tenantId, String taskType);
 }

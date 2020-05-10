@@ -5,7 +5,7 @@ import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncLogService;
-import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkChattingRecordsService;
+import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.enums.TaskErrorEnum;
@@ -40,11 +40,10 @@ import java.util.List;
  * @updater:
  * @description: 企业微信聊天记录服务
  */
-@Service
-@Deprecated
-public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingRecordsService {
+@Service(value = "weChatWorkChatRecordSyncServiceImpl")
+public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkChattingRecordsServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkChatRecordSyncServiceImpl.class);
 
     private final WeChatWorkInteractionClient weChatWorkInteractionClient;
     private final MsgRecordService msgRecordService;
@@ -52,11 +51,11 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
     private final TenantDataSyncConfigService tenantDataSyncConfigService;
     private final TenantDataSyncLogService tenantDataSyncLogService;
 
-    public WeChatWorkChattingRecordsServiceImpl(final WeChatWorkInteractionClient weChatWorkInteractionClient,
-                                                final MsgRecordService msgRecordService,
-                                                final TenantBaseInfoService tenantBaseInfoService,
-                                                final TenantDataSyncConfigService tenantDataSyncConfigService,
-                                                final TenantDataSyncLogService tenantDataSyncLogService) {
+    public WeChatWorkChatRecordSyncServiceImpl(final WeChatWorkInteractionClient weChatWorkInteractionClient,
+                                            final MsgRecordService msgRecordService,
+                                            final TenantBaseInfoService tenantBaseInfoService,
+                                            final TenantDataSyncConfigService tenantDataSyncConfigService,
+                                            final TenantDataSyncLogService tenantDataSyncLogService) {
         this.weChatWorkInteractionClient = weChatWorkInteractionClient;
         this.msgRecordService = msgRecordService;
         this.tenantBaseInfoService = tenantBaseInfoService;
@@ -66,18 +65,21 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
 
     /**
      * 获取聊天记录
-     * @param orgId 机构id
+     * @param tenantId 机构id
      */
     @Override
-    public void syncChattingRecords(String orgId) {
+    public void sync(String tenantId) {
         //参数检查
-        if (StringUtils.isBlank(orgId)) {
-            LOGGER.error("获取聊天记录，orgId不能为空");
-            throw new BusinessException(SassBizResultCodeEnum.FAIL, "获取聊天记录，orgId不能为空");
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("获取聊天记录，tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "获取聊天记录，tenantId不能为空");
         }
 
         //初始化任务日志,并保存到日志表中
-        TenantDataSyncLogDO tenantDataSyncLogDO = initLog(orgId);
+        TenantDataSyncLogDO tenantDataSyncLogDO = initLog(tenantId);
+
+        //任务上锁
+        tenantDataSyncConfigService.updateLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.MESSAGE_SYNC.getType());
 
         //此次更新的数量
         Integer count = 0;
@@ -119,6 +121,9 @@ public class WeChatWorkChattingRecordsServiceImpl implements WeChatWorkChattingR
                     tenantDataSyncLogDO.getTaskId());
             //更新失败日志
             updateFailRecord(tenantDataSyncLogDO, count, e.getMessage());
+        } finally {
+            //任务解锁
+            tenantDataSyncConfigService.updateUnLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.MESSAGE_SYNC.getType());
         }
     }
 
