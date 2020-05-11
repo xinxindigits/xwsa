@@ -37,6 +37,18 @@
     and name like concat('%',#{tagName,jdbcType=VARCHAR},'%')
     </if>
   </select>
+  
+  <select id="queryAllTagsByNameAndTenantId" resultMap="BaseResultMapExt" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from tags
+    where deleted = 0
+    and tenant_id = #{tenantId,jdbcType=VARCHAR}
+    <if test="tagName != null and tagName != ''">
+    and name like concat('%',#{tagName,jdbcType=VARCHAR},'%')
+    </if>
+
+  </select>
 
 
 </mapper>

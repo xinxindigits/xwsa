@@ -56,10 +56,12 @@
     order by gmt_created desc
   </select>
 
-  <select id="selectAllOrgs" resultMap="BaseResultMapExt">
+  <select id="selectAllOrgsByTenantId" resultMap="BaseResultMapExt">
     select
     <include refid="Base_Column_List_Ext" />
-    from organization  where deleted = 0 and tenant_id = #{tenantId};
+    from organization
+    where deleted = 0
+    and tenant_id = #{tenantId,jdbcType=VARCHAR}
   </select>
 
   <select id="findByCode" resultMap="BaseResultMapExt">
