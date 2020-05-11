@@ -5,7 +5,10 @@
         <Card>
           <Form :model="formItem" inline label-colon>
             <FormItem>
-              <Input v-model="formItem.customerName" placeholder="姓名"></Input>
+              <Input
+                v-model.trim="formItem.customerName"
+                placeholder="姓名"
+              ></Input>
             </FormItem>
             <FormItem>
               <DatePicker
@@ -64,7 +67,7 @@
       </Col>
     </Row>
     <Drawer
-      :closable="false"
+      title="客户详情"
       width="80"
       v-model="showDetail"
       scrollable
@@ -79,22 +82,17 @@
         "
       ></customer-detail>
     </Drawer>
-    <Drawer title="会话管理" v-model="showRecord" width="100">
-      <!-- <div slot="header">
-        <div class="drawer-title">
-          会话管理
-          <span style="margin-left：10px">
-            <Icon type="md-refresh" size="18"
-          /></span>
-        </div>
-      </div> -->
-      <msg-record :user-id="cur_userId"></msg-record>
-    </Drawer>
+    <msg-record v-model="showRecord" :user-id="cur_userId"></msg-record>
   </div>
 </template>
 
 <script>
-import { getCustomerList, queryCustomerList, getCustomerDetail } from "@/api";
+import {
+  getCustomerList,
+  queryCustomerList,
+  getCustomerDetail,
+  queryTagList
+} from "@/api";
 import CustomerDetail from "../common/customer-detail/customer-detail";
 import MsgRecord from "@/components/msg-record/msg-record";
 export default {
@@ -195,6 +193,9 @@ export default {
           this.total = Number(data.total);
         })
         .finally(() => (this.isLoading = false));
+    },
+    getAllTags() {
+      queryTagList();
     }
   },
   mounted() {
@@ -221,15 +222,5 @@ export default {
 <style lang="less" scoped>
 .row-operation {
   padding: 10px 0;
-}
-.drawer-title {
-  display: inline-block;
-  line-height: 20px;
-  font-size: 16px;
-  color: #17233d;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 </style>
