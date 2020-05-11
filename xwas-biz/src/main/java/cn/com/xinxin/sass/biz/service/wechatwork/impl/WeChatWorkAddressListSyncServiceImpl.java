@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 /**
  * @author: liuhangzhou
  * @created: 2020/5/10.
@@ -103,6 +105,7 @@ public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkSyncServi
 
             //数据导入BO
             WeChatWorkImportDataBO weChatWorkImportDataBO = new WeChatWorkImportDataBO();
+            weChatWorkImportDataBO.setMemberReceivedUserIdS(new ArrayList<>());
             weChatWorkImportDataBO.setTenantDataSyncLogDO(tenantDataSyncLogDO);
 
             try {

@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { addOrganization, updateOrganization } from "@/api/data_organization";
+import { addOrganization, updateOrganization } from "@/api";
 const _config = {
   create: {
     title: "新增机构",
