@@ -4,7 +4,7 @@ import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import com.xxl.job.core.biz.model.ReturnT;
 import com.xxl.job.core.handler.IJobHandler;
 import com.xxl.job.core.handler.annotation.JobHandler;
-import com.xxl.job.core.log.XxlJobLogger;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,17 +34,14 @@ public class WeChatWorkChattingRecordJobHandler extends IJobHandler {
     public ReturnT<String> execute(String s) throws Exception {
         if (StringUtils.isBlank(s)) {
             LOGGER.error("企业微信会话记录同步job,参数不能为空");
-            XxlJobLogger.log("企业微信会话记录同步job,参数不能为空");
             return ReturnT.FAIL;
         }
 
         LOGGER.info("租户[{}]同步会话记录任务开始", s);
-        XxlJobLogger.log("租户同步会话记录开始");
 
         weChatWorkChatRecordSyncServiceImpl.sync(s);
 
         LOGGER.info("租户[{}]同步会话记录任务结束", s);
-        XxlJobLogger.log("租户同步会话记录任务结束");
 
         return ReturnT.SUCCESS;
     }
