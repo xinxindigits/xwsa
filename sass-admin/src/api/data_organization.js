@@ -87,3 +87,9 @@ export const updateOrganization = ({
     method: "post"
   });
 };
+export const getAllOrganizationTree = () => {
+  return axios.request({
+    url: "organization/routes",
+    method: "get"
+  });
+};

@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     hdlShowRecord(userId) {
-      this.$refs.record.getMsgList(userId);
+      this.$refs.record.init(userId);
       this.showRecord = true;
     },
 

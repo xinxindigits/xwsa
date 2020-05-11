@@ -27,6 +27,9 @@
         <template slot-scope="{ row }" slot="status">
           <span>{{ $mapd("userStatus", row.status) }}</span>
         </template>
+        <template slot-scope="{ row }" slot="org">
+          <span>{{ row | orgName }}</span>
+        </template>
         <template slot-scope="{ row }" slot="create_time">
           <span>{{ row.gmtCreated | timeFilter }}</span>
         </template>
@@ -91,6 +94,9 @@
         <Col span="12">角色：{{ userDetail.roleName }}</Col>
       </Row>
       <Row class="row-detail">
+        <Col span="24">所属机构：{{ userDetail | orgName }}</Col>
+      </Row>
+      <Row class="row-detail">
         <Col span="24">创建时间：{{ userDetail.gmtCreated | timeFilter }}</Col>
       </Row>
       <Row class="row-detail">
@@ -101,8 +107,8 @@
 </template>
 
 <script>
-import { getUserList, deleteUser, getUserDetail } from "@/api";
-import { getRoleList } from "@/api/data";
+import { getUserList, deleteUser, getUserDetail, getAllRoles } from "@/api";
+import { getAllOrganizationTree } from "@/api/data_organization";
 import { UserGrant, UserModify, UserOperation, UserQuery } from "./components";
 export default {
   name: "user-list",
@@ -110,6 +116,11 @@ export default {
   computed: {
     selectedAccounts() {
       return this.tbSelection.map(item => item.account);
+    }
+  },
+  filters: {
+    orgName: function(data) {
+      return data.orgs && data.orgs.length > 0 ? data.orgs[0].name : "";
     }
   },
   data() {
@@ -140,6 +151,7 @@ export default {
         },
         { title: "账号", key: "account", align: "center" },
         { title: "名称", key: "name", align: "center" },
+        { title: "所属机构", key: "orgName", align: "center", slot: "org" },
         { title: "性别", key: "gender", align: "center", slot: "gender" },
         { title: "状态", key: "status", align: "center", slot: "status" },
         {
@@ -163,7 +175,8 @@ export default {
         gmtCreated: "",
         id: "",
         name: "",
-        roleName: ""
+        roleName: "",
+        orgs: []
       },
       roleList: []
     };
@@ -255,9 +268,12 @@ export default {
     }
   },
   mounted() {
-    getRoleList({ pageIndex: 1, pageSize: 1000 }).then(({ data }) => {
-      this.roleList = data.items;
-      this.$refs.modifyModal.setRoleList(data.items);
+    getAllOrganizationTree().then(({ data }) => {
+      this.$refs.modifyModal.setOrgList(data);
+    });
+    getAllRoles().then(({ data }) => {
+      this.roleList = data;
+      this.$refs.modifyModal.setRoleList(data);
     });
     this.changePage(1);
   }

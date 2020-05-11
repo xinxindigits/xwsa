@@ -72,7 +72,7 @@ const _config = {
   }
 };
 export default {
-  name: "resource-update",
+  name: "resource-modify",
   props: {
     value: Boolean,
     type: {

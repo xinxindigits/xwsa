@@ -33,7 +33,6 @@ export default {
   },
   filters: {
     content: function(data) {
-      console.log(data);
       return data.msgType == "text" ? data.content : `不支持展示的消息类型`;
     }
   },
