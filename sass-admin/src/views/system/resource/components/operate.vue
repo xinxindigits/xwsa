@@ -51,7 +51,7 @@
 import { deleteResource } from "@/api/data";
 import ResourceFuncModify from "./modify";
 export default {
-  name: "resource-list-functions",
+  name: "resource-operation",
   components: {
     ResourceFuncModify
   },
@@ -107,7 +107,6 @@ export default {
       this.showModal = true;
     },
     hdlDelete(data) {
-      console.log(data);
       let self = this;
       if (data.list.length > 0) {
         this.$Modal.confirm({

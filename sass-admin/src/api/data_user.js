@@ -13,17 +13,25 @@ export const addUser = ({
   name,
   gender,
   password,
-  roles
+  roles,
+  orgCode
 }) => {
-  let data = { account, extension, name, gender, password, roles };
+  let data = { account, extension, name, gender, password, roles, orgCode };
   return axios.request({
     url: "user/create",
     data,
     method: "post"
   });
 };
-export const updateUser = ({ account, name, gender, extension, roles }) => {
-  let data = { account, name, gender, extension, roles };
+export const updateUser = ({
+  account,
+  name,
+  gender,
+  extension,
+  roles,
+  orgCode
+}) => {
+  let data = { account, name, gender, extension, roles, orgCode };
   return axios.request({
     url: "user/update",
     data,

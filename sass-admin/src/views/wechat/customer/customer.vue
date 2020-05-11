@@ -3,27 +3,12 @@
     <Row :gutter="10">
       <Col span="24">
         <Card>
-          <Form :model="formItem" inline label-colon>
-            <FormItem>
-              <Input v-model="formItem.customerName" placeholder="姓名"></Input>
-            </FormItem>
-            <FormItem>
-              <DatePicker
-                v-model="daterange"
-                type="daterange"
-                placement="bottom-start"
-                split-panels
-                confirm
-                :options="rangeOption"
-                placeholder="选择日期"
-                style="width: 200px"
-              ></DatePicker>
-            </FormItem>
-            <FormItem>
-              <Button type="primary" @click="hdlquery">查询</Button>
-              <Button style="margin-left: 8px" @click="reset">重置</Button>
-            </FormItem>
-          </Form>
+          <Query
+            ref="query"
+            v-model="formItem"
+            @on-customer-query="hdlquery"
+            @on-customer-reset="reset"
+          ></Query>
           <Table
             stripe
             border
@@ -64,7 +49,7 @@
       </Col>
     </Row>
     <Drawer
-      :closable="false"
+      title="客户详情"
       width="80"
       v-model="showDetail"
       scrollable
@@ -72,34 +57,35 @@
     >
       <customer-detail
         :items="curDetail"
-        @show-record="showRecord = true"
+        @show-record="hdlShowRecord"
         @on-cancel="
           showDetail = false;
           curDetail = {};
         "
       ></customer-detail>
     </Drawer>
-    <Drawer title="会话管理" v-model="showRecord" width="100">
-      <!-- <div slot="header">
-        <div class="drawer-title">
-          会话管理
-          <span style="margin-left：10px">
-            <Icon type="md-refresh" size="18"
-          /></span>
-        </div>
-      </div> -->
-      <msg-record :user-id="cur_userId"></msg-record>
-    </Drawer>
+    <msg-record
+      ref="record"
+      v-model="showRecord"
+      :user-id="cur_userId"
+    ></msg-record>
   </div>
 </template>
 
 <script>
-import { getCustomerList, queryCustomerList, getCustomerDetail } from "@/api";
+import {
+  getCustomerList,
+  queryCustomerList,
+  getCustomerDetail,
+  queryTagList
+} from "@/api";
 import CustomerDetail from "../common/customer-detail/customer-detail";
 import MsgRecord from "@/components/msg-record/msg-record";
+import Query from "./components/query";
 export default {
   name: "staff-list",
   components: {
+    Query,
     CustomerDetail,
     MsgRecord
   },
@@ -124,12 +110,6 @@ export default {
         endTime: "",
         memberUserIds: [],
         customerName: ""
-      },
-      daterange: [],
-      rangeOption: {
-        disabledDate(date) {
-          return date && date.valueOf() > Date.now();
-        }
       },
 
       columns: [
@@ -158,7 +138,6 @@ export default {
       this.changePage(1);
     },
     hdlDetailQuery(row) {
-      console.log(row);
       getCustomerDetail({ id: row.id }).then(({ data }) => {
         this.curDetail = data;
         this.cur_userId = row.userId;
@@ -181,8 +160,6 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.customerName = "";
-      this.daterange = [];
       this.hdlquery();
     },
     init() {
@@ -195,25 +172,17 @@ export default {
           this.total = Number(data.total);
         })
         .finally(() => (this.isLoading = false));
+    },
+    getAllTags() {
+      queryTagList();
+    },
+    hdlShowRecord(userId) {
+      this.$refs.record.init(userId);
+      this.showRecord = true;
     }
   },
   mounted() {
     this.init();
-  },
-  watch: {
-    daterange(newValue) {
-      if (
-        newValue.length === 2 &&
-        newValue[0] instanceof Date &&
-        newValue[0] instanceof Date
-      ) {
-        this.formItem.startTime = newValue[0].getTime() + "";
-        this.formItem.endTime = newValue[1].getTime() + "";
-      } else {
-        this.formItem.startTime = "";
-        this.formItem.endTime = "";
-      }
-    }
   }
 };
 </script>
@@ -221,15 +190,5 @@ export default {
 <style lang="less" scoped>
 .row-operation {
   padding: 10px 0;
-}
-.drawer-title {
-  display: inline-block;
-  line-height: 20px;
-  font-size: 16px;
-  color: #17233d;
-  font-weight: 500;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 </style>

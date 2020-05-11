@@ -4,12 +4,6 @@
       <Col :xs="8" :sm="8" :md="8" :lg="6">
         <Card style="height:100%">
           <Form inline>
-            <!-- <FormItem props="departmentId">
-              <Input
-                placeholder="部门编号"
-                v-model="queryForm.departmentId"
-              ></Input>
-            </FormItem> -->
             <FormItem props="departmentName">
               <Input
                 placeholder="部门名称"
@@ -64,13 +58,7 @@
           </div> </Card
       ></Col>
     </Row>
-    <Drawer
-      :closable="false"
-      width="80"
-      v-model="showDetail"
-      scrollable
-      transfer
-    >
+    <Drawer title="详情" width="80" v-model="showDetail" scrollable transfer>
       <member-detail
         :items="memberDetail"
         @show-record="hdlShowRecord"
@@ -134,7 +122,7 @@ export default {
   },
   methods: {
     hdlShowRecord(userId) {
-      this.$refs.record.getMsgList(userId);
+      this.$refs.record.init(userId);
       this.showRecord = true;
     },
     hdlFilterOrg() {
@@ -147,8 +135,7 @@ export default {
       this.queryForm.departmentName = "";
       this.hdlFilterOrg();
     },
-    hdlTreeSelected(data) {
-      console.log(data);
+    hdlTreeSelected() {
       this.changePage(1);
     },
     formatData(data) {
