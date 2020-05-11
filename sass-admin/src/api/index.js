@@ -6,6 +6,20 @@ import {
   deleteTag,
   setTagByKeyId
 } from "./sys_tag";
+import {
+  getOrganizationList,
+  queryOrganization,
+  delOrganization,
+  addOrganization,
+  updateOrganization
+} from "./sys_organization";
+import {
+  getTenantList,
+  queryTenant,
+  delTenant,
+  addTenant,
+  updateTenant
+} from "./sys_tenant";
 import { getLogList, queryLogList, getLogDetail } from "./sys_log";
 import {
   getUserList,
@@ -58,5 +72,15 @@ export {
   getMsgDetailByRoomId,
   getCustomerList,
   queryCustomerList,
-  getCustomerDetail
+  getCustomerDetail,
+  getOrganizationList,
+  queryOrganization,
+  delOrganization,
+  addOrganization,
+  updateOrganization,
+  getTenantList,
+  queryTenant,
+  delTenant,
+  addTenant,
+  updateTenant
 };
