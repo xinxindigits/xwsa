@@ -54,16 +54,25 @@
   </insert>
   
   
-  <select id="removeUserOrgRelationByAccount" parameterType="java.lang.String">
+  <delete id="removeUserOrgRelationByAccount" parameterType="java.lang.String">
     delete from user_org
-    where account = #{account,jdbcType=VARCHAR}
-  </select>
+    where user_account = #{account,jdbcType=VARCHAR}
+  </delete>
 
 
-  <select id="removeUserOrgRelationByOrgCode" parameterType="java.lang.String">
+  <delete id="removeUserOrgRelationByOrgCode" parameterType="java.lang.String">
     delete from user_org
     where org_code = #{orgCode,jdbcType=VARCHAR}
-  </select>
+  </delete>
+
+
+  <delete id="removeUserOrgRelationByAccountList" parameterType="java.util.List">
+    delete from user_org
+    where user_account in
+    <foreach collection="accounts" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </delete>
 
 
 </mapper>

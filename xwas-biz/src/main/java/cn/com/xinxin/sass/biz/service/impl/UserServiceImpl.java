@@ -344,4 +344,9 @@ public class UserServiceImpl implements UserService {
     public int createUserOrgRelationsByList(List<UserOrgDO> userOrgDOList) {
         return this.userOrgDOMapper.insertByBatch(userOrgDOList);
     }
+
+    @Override
+    public int removeUserOrgRelationByAccountList(List<String> accounts) {
+        return this.userOrgDOMapper.removeUserOrgRelationByAccountList(accounts);
+    }
 }
