@@ -8,6 +8,7 @@ import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.repository.model.UserOrgDO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by dengyunhui on 2018/4/23
@@ -120,4 +121,13 @@ public interface UserService {
      * @return
      */
     int removeUserOrgRelationByAccountList(List<String> accounts);
+
+
+    /**
+     * 查询
+     * @param accounts
+     * @return
+     */
+    Map<String,  List<UserOrgDO>> queryUserOrgsMapsByAccounts(List<String> accounts);
+
 }

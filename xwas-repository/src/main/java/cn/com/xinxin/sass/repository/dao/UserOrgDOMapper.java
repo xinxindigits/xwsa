@@ -89,4 +89,12 @@ public interface UserOrgDOMapper {
      * @return
      */
     int removeUserOrgRelationByAccountList(@Param("accounts") List<String> accounts);
+
+
+    /**
+     * 查询
+     * @param accounts
+     * @return
+     */
+    List<UserOrgDO> queryUserOrgsByAccountList(@Param("accounts") List<String> accounts);
 }

@@ -18,9 +18,11 @@ import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.sun.prism.impl.BaseContext;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.apache.shiro.crypto.hash.Hash;
 import org.eclipse.jetty.server.Authentication;
@@ -330,6 +332,9 @@ public class UserServiceImpl implements UserService {
         return userOrgDOList;
     }
 
+
+
+
     @Override
     public int removeUserOrgRelationByAccount(String account) {
         return this.userOrgDOMapper.removeUserOrgRelationByAccount(account);
@@ -348,5 +353,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public int removeUserOrgRelationByAccountList(List<String> accounts) {
         return this.userOrgDOMapper.removeUserOrgRelationByAccountList(accounts);
+    }
+
+
+    @Override
+    public Map<String, List<UserOrgDO>> queryUserOrgsMapsByAccounts(List<String> accounts) {
+
+        if(org.apache.commons.collections4.CollectionUtils.isEmpty(accounts)){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"查询参数不能为空");
+        }
+
+        List<UserOrgDO> userOrgDOList = this.userOrgDOMapper.queryUserOrgsByAccountList(accounts);
+
+        Map<String, List<UserOrgDO>> resultMaps = Maps.newHashMap();
+
+        for(String account: accounts){
+            List<UserOrgDO> mapDOList = userOrgDOList.stream()
+                    .filter(x-> StringUtils.equals(account,x.getUserAccount()))
+                    .collect(Collectors.toList());
+            resultMaps.put(account,mapDOList);
+        }
+
+        return resultMaps;
     }
 }

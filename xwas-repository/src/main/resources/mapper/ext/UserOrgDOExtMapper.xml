@@ -75,4 +75,16 @@
   </delete>
 
 
+  <select id="queryUserOrgsByAccountList" resultMap="BaseResultMapExt" parameterType="java.util.List">
+    select
+    <include refid="Base_Column_List" />
+    from user_org
+    where deleted = 0
+    and user_account in
+    <foreach collection="accounts" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </select>
+
 </mapper>
