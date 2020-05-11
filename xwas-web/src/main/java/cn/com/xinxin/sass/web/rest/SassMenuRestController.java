@@ -1,6 +1,5 @@
 package cn.com.xinxin.sass.web.rest;
 
-import cn.com.xinxin.sass.api.enums.SassResultCodeEnum;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.UserService;
@@ -8,15 +7,12 @@ import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
-import cn.com.xinxin.sass.web.form.OrganizationForm;
-import cn.com.xinxin.sass.web.form.ResourceForm;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.collect;
 
 /**
  * @author: zhouyang

@@ -2,16 +2,13 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
-import cn.com.xinxin.sass.repository.model.OrganizationDO;
 import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
-import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
-import cn.com.xinxin.sass.web.form.OrgQueryForm;
-import cn.com.xinxin.sass.web.form.OrganizationForm;
 import cn.com.xinxin.sass.web.form.TenantForm;
 import cn.com.xinxin.sass.web.vo.*;
 import com.alibaba.fastjson.JSONObject;
@@ -29,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
+
 
 /**
  * @author: zhouyang
@@ -107,6 +104,7 @@ public class SassTenantRestController extends AclController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/tenant/create")
+    @SysLog("创建租户操作")
     public Object createTenant(HttpServletRequest request, @RequestBody TenantForm tenantForm){
 
         if(null == tenantForm){
@@ -148,6 +146,7 @@ public class SassTenantRestController extends AclController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/tenant/update")
+    @SysLog("更新租户操作")
     public Object updateTenant(HttpServletRequest request,
                                      @RequestBody TenantForm tenantForm){
 
@@ -177,6 +176,7 @@ public class SassTenantRestController extends AclController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/tenant/delete")
+    @SysLog("删除租户操作")
     public Object deleteTenant(@RequestBody DeleteOrgForm deleteOrgForm, HttpServletRequest request){
 
         if(deleteOrgForm == null){
