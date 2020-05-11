@@ -3,23 +3,19 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
-import cn.com.xinxin.sass.repository.model.ResourceDO;
-import cn.com.xinxin.sass.repository.model.RoleDO;
-import cn.com.xinxin.sass.repository.model.UserDO;
+import cn.com.xinxin.sass.repository.model.*;
 import cn.com.xinxin.sass.auth.web.AclController;
-import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.web.form.*;
+import cn.com.xinxin.sass.web.vo.*;
 import com.tencent.wework.Finance;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
-import cn.com.xinxin.sass.web.vo.ResourceVO;
-import cn.com.xinxin.sass.web.vo.RoleVO;
-import cn.com.xinxin.sass.web.vo.UserInfoVO;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
@@ -35,6 +31,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author: zhouyang
@@ -62,13 +60,16 @@ public class SassUserRestController extends AclController {
     @Autowired
     private RoleService roleService;
 
+    @Autowired
+    private OrganizationService organizationService;
+
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/list")
     public Object pageQueryUser(@RequestBody UserForm userForm, HttpServletRequest request){
         if(userForm == null){
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"更新角色参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "参数不能为空");
         }
         log.info("--------SassUserRestController.pageQueryUser.Request:{}--------",JSONObject.toJSONString(userForm));
 
@@ -76,14 +77,28 @@ public class SassUserRestController extends AclController {
         page.setPageNumber((userForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : userForm.getPageIndex());
         page.setPageSize((userForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : userForm.getPageSize());
         QueryUserConditionVO queryUserConditionVO = BaseConvert.convert(userForm, QueryUserConditionVO.class);
+
         PageResultVO<UserDO> pageUser = userService.findByConditionPage(page, queryUserConditionVO);
+
+        List<String> accounts = pageUser.getItems().stream()
+                .map(x->x.getAccount()).collect(toList());
+
+        Map<String,  List<UserOrgDO>> userOrgsMaps = this.userService.queryUserOrgsMapsByAccounts(accounts);
+
         PageResultVO<UserInfoVO> resultVO = BaseConvert.convert(pageUser, PageResultVO.class);
-        List<UserInfoVO> userInfoVOS = new ArrayList<>();
+
+        List<UserInfoVO> userInfoVOS = Lists.newArrayList();
+
         if(!CollectionUtils.isEmpty(pageUser.getItems())){
             userInfoVOS = pageUser.getItems().stream().map(userDO -> {
                 UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
                 userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
                 userInfoVO.setStatus(userDO.getStatus() == null ? null : userDO.getStatus().intValue());
+                // 设置用户组织关系
+                List<UserOrgDO> userOrgDOList = userOrgsMaps.get(userDO.getAccount());
+                List<OrgSimpleVO> userOrgVOList = SassFormConvert.convertOrgDO2VOList(userOrgDOList);
+                userInfoVO.setOrgs(userOrgVOList);
+
                 return userInfoVO;
             }).collect(Collectors.toList());
         }
@@ -120,6 +135,11 @@ public class SassUserRestController extends AclController {
         log.info("queryUserByAccount, userRolesLists = {}",userRolesLists);
 
         userInfoVO.setResources(userResourceVOList);
+
+        // 查询对应的组织关系
+        List<UserOrgDO> userOrgDOList = this.userService.queryUserOrgsByAccount(account);
+        List<OrgSimpleVO> userOrgVOList = SassFormConvert.convertOrgDO2VOList(userOrgDOList);
+        userInfoVO.setOrgs(userOrgVOList);
 
         return userInfoVO;
 
@@ -205,9 +225,18 @@ public class SassUserRestController extends AclController {
 
         if(StringUtils.isNotEmpty(userOrgCode)){
             // 如果组织机构编码不为空，则需要创建组装与用户的关系
-            
-        }
+            OrganizationDO organizationDO = this.organizationService.findByCode(userOrgCode);
+            UserOrgDO userOrgDO = new UserOrgDO();
+            userOrgDO.setTenantId(sassUserInfo.getTenantId());
+            userOrgDO.setUserAccount(userCreateDO.getAccount());
+            userOrgDO.setUserName(userCreateDO.getName());
+            userOrgDO.setOrgCode(organizationDO.getCode());
+            userOrgDO.setOrgName(organizationDO.getName());
+            userOrgDO.setGmtCreator(sassUserInfo.getAccount());
+            userOrgDO.setGmtUpdater(sassUserInfo.getAccount());
+            this.userService.createUserOrgRelations(userOrgDO);
 
+        }
         return result;
     }
 
@@ -265,6 +294,25 @@ public class SassUserRestController extends AclController {
 
         }
 
+
+        String userOrgCode = userForm.getOrgCode();
+
+        if(StringUtils.isNotEmpty(userOrgCode)){
+            // 如果组织机构编码不为空，则需要创建组装与用户的关系
+            int deleted = this.userService.removeUserOrgRelationByAccount(userDO.getAccount());
+            OrganizationDO organizationDO = this.organizationService.findByCode(userOrgCode);
+            UserOrgDO userOrgDO = new UserOrgDO();
+            userOrgDO.setTenantId(sassUserInfo.getTenantId());
+            userOrgDO.setUserAccount(userDO.getAccount());
+            userOrgDO.setUserName(userDO.getName());
+            userOrgDO.setOrgCode(organizationDO.getCode());
+            userOrgDO.setOrgName(organizationDO.getName());
+            userOrgDO.setGmtCreator(sassUserInfo.getAccount());
+            userOrgDO.setGmtUpdater(sassUserInfo.getAccount());
+            this.userService.createUserOrgRelations(userOrgDO);
+
+        }
+
         return result;
     }
 
@@ -289,6 +337,12 @@ public class SassUserRestController extends AclController {
             userAclTokenRepository.cleanSassUserTokenCache(account);
             userAclTokenRepository.cleanSassUserInfoCache(account);
         });
+
+        // 删除用户角色关系
+        this.userRoleService.deleteByAccounts(deleteUserForm.getAccounts());
+        // 删除用户组织关系
+        this.userService.removeUserOrgRelationByAccountList(deleteUserForm.getAccounts());
+
         return SassBizResultCodeEnum.SUCCESS;
 
     }

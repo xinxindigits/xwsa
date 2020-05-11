@@ -108,6 +108,27 @@ public class SassTagsRestController extends AclController {
     }
 
 
+    @RequestMapping(value = "/rotes",method = RequestMethod.POST)
+    //@RequiresPermissions("/tags/rotes")
+    public Object rotesTags(@RequestBody TagForm tagForm, HttpServletRequest request){
+
+        logger.info("SassTagsRestController,rotesTags,tagForm ={}",tagForm);
+
+        String tagName = tagForm.getName();
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        // 默认不带任何参数查询
+        List<TagsDO> tagsDOList =
+                this.tagsService.queryAllTagsByNameAndTenantId(tagName,sassUserInfo.getTenantId());
+
+        List<TagsVO> resultVO = BaseConvert.convertList(tagsDOList, TagsVO.class);
+
+
+        return resultVO;
+
+    }
+
+
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     //@RequiresPermissions("/tags/update")
     public Object updateTags(@RequestBody TagForm tagForm, HttpServletRequest request){

@@ -61,4 +61,8 @@ public interface TagsDOMapper {
      */
     List<TagsDO> selectByTagName( @Param("tagName") String tagName);
 
+
+    List<TagsDO>  queryAllTagsByNameAndTenantId(@Param("tagName")String tagName,
+                                                @Param("tenantId")String tenantId);
+
 }

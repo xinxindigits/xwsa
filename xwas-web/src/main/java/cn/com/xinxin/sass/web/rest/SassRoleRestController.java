@@ -196,6 +196,29 @@ public class SassRoleRestController extends AclController {
     }
 
 
+
+    /**
+     * 分页查询角色列表接口
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/routes",method = RequestMethod.GET)
+    //@RequiresPermissions("/role/routes")
+    public Object routesAllRole(HttpServletRequest request){
+
+        logger.info("--------SassRoleRestController.routesAllRole.Request:{}--------");
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        List<RoleDO> roleDOList = roleService.queryAllRolesByTenantId(sassUserInfo.getTenantId());
+
+        List<RoleVO> roleVOS = BaseConvert.convertList(roleDOList, RoleVO.class);
+
+        return roleVOS;
+
+    }
+
+
     /**
      * 查询某个角色下面的权限值
      * @param request

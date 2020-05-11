@@ -8,7 +8,6 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,9 +54,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public List<OrganizationDO> queryOrgList() {
+    public List<OrganizationDO> queryOrgListByTenantId(String tenantId) {
 
-        List<OrganizationDO> organizationDOS = this.organizationMapper.selectAllOrgs();
+        List<OrganizationDO> organizationDOS = this.organizationMapper.selectAllOrgsByTenantId(tenantId);
 
         return organizationDOS;
     }

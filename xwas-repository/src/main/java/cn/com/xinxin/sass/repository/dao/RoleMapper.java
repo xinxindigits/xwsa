@@ -71,4 +71,11 @@ public interface RoleMapper {
      */
     List<RoleDO> findRolesByCodes(@Param("roleCodes") List<String> roleCodes);
 
+
+    /**
+     * @param tenantId
+     * @return
+     */
+    List<RoleDO> queryAllRolesByTenantId(@Param("tenantId") String tenantId);
+
 }
