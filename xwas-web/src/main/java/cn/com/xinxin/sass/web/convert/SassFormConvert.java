@@ -2,10 +2,11 @@ package cn.com.xinxin.sass.web.convert;
 
 import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.repository.model.*;
-import cn.com.xinxin.sass.web.vo.ResourceVO;
-import cn.com.xinxin.sass.web.vo.RoleVO;
+import cn.com.xinxin.sass.web.vo.*;
+import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.util.BaseConvert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -108,6 +109,29 @@ public class SassFormConvert {
     public static RoleDO convertRoleForm2RoleDO(RoleForm roleForm){
         RoleDO roleDO = BaseConvert.convert(roleForm, RoleDO.class);
         return roleDO;
+    }
+
+    public static OrganizationVO convertOrgDO2VO(OrganizationDO organizationDO){
+
+        OrganizationVO organizationVO = BaseConvert.convert(organizationDO, OrganizationVO.class);
+
+        return organizationVO;
+    }
+
+    public static OrgSimpleVO convertOrgDO2VO(UserOrgDO userOrgDO){
+
+        OrgSimpleVO organizationVO = new OrgSimpleVO();
+        organizationVO.setCode(userOrgDO.getOrgCode());
+        organizationVO.setName(userOrgDO.getOrgName());
+
+        return organizationVO;
+    }
+
+    public static List<OrgSimpleVO> convertOrgDO2VOList(List<UserOrgDO> userOrgDOList){
+
+        List<OrgSimpleVO> organizationVOS = Lists.newArrayList();
+        userOrgDOList.forEach(c -> organizationVOS.add(convertOrgDO2VO(c)));
+        return organizationVOS;
     }
 
 }

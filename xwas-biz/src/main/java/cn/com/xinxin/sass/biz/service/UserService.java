@@ -5,6 +5,7 @@ import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.repository.model.UserDO;
+import cn.com.xinxin.sass.repository.model.UserOrgDO;
 
 import java.util.List;
 
@@ -72,4 +73,51 @@ public interface UserService {
     Boolean hasPermission(String sessionId,String url);
 
     void refreshSassUserInfo(String account);
+
+    /**
+     * 创建用户组织关系
+     * @param userOrgDO
+     * @return
+     */
+    int createUserOrgRelations(UserOrgDO userOrgDO);
+
+
+    /**
+     * 创建用户组织关系
+     * @param userOrgDOList
+     * @return
+     */
+    int createUserOrgRelationsByList(List<UserOrgDO> userOrgDOList);
+
+
+
+    /**
+     * 查询用户的组织关系
+     * @param account
+     * @return
+     */
+    List<UserOrgDO> queryUserOrgsByAccount(String account);
+
+
+    /**
+     * 删除用户与组织关系
+     * @param account
+     * @return
+     */
+    int removeUserOrgRelationByAccount(String account);
+
+    /**
+     * 删除用户与组织关系
+     * @param orgCode
+     * @return
+     */
+    int removeUserOrgRelationByOrgCode(String orgCode);
+
+
+    /**
+     * 删除
+     * @param accounts
+     * @return
+     */
+    int removeUserOrgRelationByAccountList(List<String> accounts);
 }
