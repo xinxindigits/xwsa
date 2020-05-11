@@ -202,6 +202,7 @@ public class TreeResultUtil {
             OrgTreeVO node = iterator.next();
             if (Objects.equals("0",node.getParentId()) || Objects.equals(node.getParentId(),node.getOrgId())){
                 node.setExpanded(true);
+                node.setParentName("0");
                 root.add(node);
                 iterator.remove();
             }
@@ -226,6 +227,7 @@ public class TreeResultUtil {
             for (OrgTreeVO node : nodes){
                 if (Objects.equals(pid,node.getParentId())){
                     node.setExpanded(false);
+                    node.setParentName(parent.getOrgName());
                     parent.getChildren().add(node);
                 }
             }

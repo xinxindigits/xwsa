@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
@@ -78,6 +79,7 @@ public class SassRoleRestController extends AclController {
      */
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @RequiresPermissions("/role/create")
+    @SysLog("创建角色操作")
     public Object createRole(@RequestBody CreateRoleForm createRoleForm, HttpServletRequest request){
 
         if(createRoleForm == null){
@@ -110,6 +112,7 @@ public class SassRoleRestController extends AclController {
      */
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @RequiresPermissions("/role/delete")
+    @SysLog("删除角色操作")
     public Object deleteRole(@RequestBody DeleteRoleForm deleteRoleForm, HttpServletRequest request){
 
         if(deleteRoleForm == null || CollectionUtils.isEmpty(deleteRoleForm.getRoleCodes())){
@@ -131,6 +134,7 @@ public class SassRoleRestController extends AclController {
      */
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @RequiresPermissions("/role/update")
+    @SysLog("更新角色操作")
     public Object updateRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
 
         if(roleForm == null){
@@ -192,6 +196,29 @@ public class SassRoleRestController extends AclController {
     }
 
 
+
+    /**
+     * 分页查询角色列表接口
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/routes",method = RequestMethod.GET)
+    //@RequiresPermissions("/role/routes")
+    public Object routesAllRole(HttpServletRequest request){
+
+        logger.info("--------SassRoleRestController.routesAllRole.Request:{}--------");
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        List<RoleDO> roleDOList = roleService.queryAllRolesByTenantId(sassUserInfo.getTenantId());
+
+        List<RoleVO> roleVOS = BaseConvert.convertList(roleDOList, RoleVO.class);
+
+        return roleVOS;
+
+    }
+
+
     /**
      * 查询某个角色下面的权限值
      * @param request
@@ -245,6 +272,7 @@ public class SassRoleRestController extends AclController {
     @RequestMapping(value = "/user/grant",method = RequestMethod.POST)
     @RequiresPermissions("/role/user/grant")
     @Transactional(rollbackFor = Exception.class)
+    @SysLog("角色授予操作")
     public Object userGrant(@RequestBody RoleAuthorityForm roleAuthorityForm, HttpServletRequest request){
 
         if(roleAuthorityForm == null){
@@ -305,6 +333,7 @@ public class SassRoleRestController extends AclController {
     @RequestMapping(value = "/resource/grant",method = RequestMethod.POST)
     @RequiresPermissions("/role/resource/grant")
     @Transactional(rollbackFor = Exception.class)
+    @SysLog("资源授予操作")
     public Object resourceGrant(@RequestBody RoleResourceGrantForm grantForm, HttpServletRequest request){
 
         if(grantForm == null){

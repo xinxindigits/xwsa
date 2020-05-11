@@ -22,15 +22,17 @@ public interface OrganizationService {
 
     Boolean deleteById(Long id);
 
-    int deleteByCodes(List<String> codes);
+    int deleteByCodes(List<String> codes, String tenantId);
 
     int deleteByIds(List<Long> ids);
 
-    List<OrganizationDO> queryOrgList();
+    List<OrganizationDO> queryOrgListByTenantId(String tenantId);
 
     OrganizationDO findByCode(String code);
 
     List<OrganizationDO> findChildren(List<Long> parentIds);
+
+    List<OrganizationDO> findNotRoot(String tenantId);
 
 
 }

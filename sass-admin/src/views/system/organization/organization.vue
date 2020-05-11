@@ -57,7 +57,7 @@
             type="error"
             size="small"
             style="margin-right: 5px"
-            @click="hdlDelete([row.code])"
+            @click="hdlDelete([row.orgId])"
           >
             删除
           </Button>
@@ -110,12 +110,11 @@ export default {
   },
   computed: {
     deleteOrgCodes() {
-      return this.tbSelection.map(item => item.code);
+      return this.tbSelection.map(item => item.orgId);
     }
   },
   data() {
     return {
-      isLoanding: false,
       showAddModal: false,
       showGrantModal: false,
       showUpdateModal: false,
@@ -178,14 +177,14 @@ export default {
       this.formItem.tenantId = "";
       this.formItem.status = "";
     },
-    hdlDelete(codes) {
+    hdlDelete(ids) {
       let self = this;
-      if (codes.length > 0) {
+      if (ids.length > 0) {
         this.$Modal.confirm({
           title: "确认删除？",
           content: `确定删除选中记录?`,
           onOk() {
-            delOrganization({ codes }).then(() => {
+            delOrganization({ ids }).then(() => {
               this.$Message.success("删除成功！");
               self.hdlquery();
             });
@@ -196,22 +195,33 @@ export default {
       }
     },
     hdlSingleCreate() {
-      this.$refs.createModal.setData({
-        data: { createChild: false }
-      });
+      let d = {
+        no_edit_parentName: true,
+        parentName: "0",
+        parentId: "0"
+      };
+      this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
     hdlSingleCreateChild(data) {
       let d = {
-        orgName: data.orgName,
-        orgId: data.orgId,
-        createChild: true
+        parentName: data.orgName,
+        parentId: data.orgId,
+        no_edit_parentName: true
       };
       this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
     hdlSingleModified(data) {
-      this.$refs.updateModal.setData(data);
+      let d = {
+        orgType: data.orgType,
+        code: data.code,
+        parentName: data.parentName,
+        remark: data.remark,
+        name: data.orgName,
+        no_edit_parentName: true
+      };
+      this.$refs.updateModal.setData(d);
       this.showUpdateModal = true;
     },
     hdlSelectionChange(selection) {

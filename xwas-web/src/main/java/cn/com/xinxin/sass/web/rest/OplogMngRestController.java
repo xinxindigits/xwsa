@@ -66,10 +66,6 @@ public class OplogMngRestController extends AclController {
 
         String account = oplogForm.getAccount();
 
-        if(StringUtils.isBlank(account)){
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"参数不能为空");
-        }
-
         PageResultVO page = new PageResultVO();
         page.setPageNumber((oplogForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : oplogForm.getPageIndex());
         page.setPageSize((oplogForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : oplogForm.getPageSize());

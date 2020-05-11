@@ -37,7 +37,9 @@ public class OrgTreeVO extends ToString {
 
     private Date gmtUpdated;
 
+    private String parentName;
 
+    private String remark;
     /**
      * 是否默认展开
      */
@@ -151,5 +153,21 @@ public class OrgTreeVO extends ToString {
 
     public void setChildren(List<OrgTreeVO> children) {
         this.children = children;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

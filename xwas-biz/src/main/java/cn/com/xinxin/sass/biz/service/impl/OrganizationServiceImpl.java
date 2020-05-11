@@ -8,7 +8,6 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,9 +54,9 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public List<OrganizationDO> queryOrgList() {
+    public List<OrganizationDO> queryOrgListByTenantId(String tenantId) {
 
-        List<OrganizationDO> organizationDOS = this.organizationMapper.selectAllOrgs();
+        List<OrganizationDO> organizationDOS = this.organizationMapper.selectAllOrgsByTenantId(tenantId);
 
         return organizationDOS;
     }
@@ -68,8 +67,8 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
-    public int deleteByCodes(List<String> codes) {
-        return organizationMapper.deleteByCodes(codes);
+    public int deleteByCodes(List<String> codes ,String tenantId) {
+        return organizationMapper.deleteByCodes(codes,tenantId);
     }
 
     @Override
@@ -82,5 +81,8 @@ public class OrganizationServiceImpl implements OrganizationService {
         return organizationMapper.findChildren(parentIds);
     }
 
-
+    @Override
+    public List<OrganizationDO> findNotRoot(String tenantId) {
+        return organizationMapper.findNotRoot(tenantId);
+    }
 }
