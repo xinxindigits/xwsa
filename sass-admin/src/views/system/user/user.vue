@@ -107,8 +107,13 @@
 </template>
 
 <script>
-import { getUserList, deleteUser, getUserDetail, getAllRoles } from "@/api";
-import { getAllOrganizationTree } from "@/api/data_organization";
+import {
+  getUserList,
+  deleteUser,
+  getUserDetail,
+  getAllRoles,
+  getAllOrganizationTree
+} from "@/api";
 import { UserGrant, UserModify, UserOperation, UserQuery } from "./components";
 export default {
   name: "user-list",
@@ -245,13 +250,17 @@ export default {
     hdlSingleModified({ account }) {
       getUserDetail({ account }).then(res => {
         this.modifyType = "update";
-        this.showModal = true;
         let { data } = res;
         let codeArr = data.roles.map(n => {
           return n.code;
         });
+        let orgCode = data.orgs.map(n => {
+          return n.code;
+        })[0];
         data.roles = codeArr;
+        data.orgCode = orgCode;
         this.$refs.modifyModal.setData(data);
+        this.showModal = true;
       });
     },
     hdlQueryInfo({ account }) {

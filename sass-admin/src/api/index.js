@@ -19,7 +19,8 @@ import {
   queryOrganization,
   delOrganization,
   addOrganization,
-  updateOrganization
+  updateOrganization,
+  getAllOrganizationTree
 } from "./sys_organization";
 import {
   getTenantList,
@@ -94,6 +95,7 @@ export {
   delOrganization,
   addOrganization,
   updateOrganization,
+  getAllOrganizationTree,
   getTenantList,
   queryTenant,
   delTenant,
