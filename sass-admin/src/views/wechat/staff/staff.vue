@@ -53,7 +53,7 @@
     </Row>
     <Drawer
       v-model="showDetail"
-      :closable="false"
+      title="员工详情"
       width="80"
       scrollable
       transfer

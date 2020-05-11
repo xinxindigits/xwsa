@@ -64,13 +64,7 @@
           </div> </Card
       ></Col>
     </Row>
-    <Drawer
-      :closable="false"
-      width="80"
-      v-model="showDetail"
-      scrollable
-      transfer
-    >
+    <Drawer title="详情" width="80" v-model="showDetail" scrollable transfer>
       <member-detail
         :items="memberDetail"
         @show-record="hdlShowRecord"

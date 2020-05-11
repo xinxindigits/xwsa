@@ -51,7 +51,7 @@
           ></Page>
         </div>
         <Drawer
-          :closable="false"
+          title="数据详情"
           width="80"
           v-model="showDetail"
           scrollable

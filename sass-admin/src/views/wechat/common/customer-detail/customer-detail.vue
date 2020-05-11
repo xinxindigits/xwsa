@@ -19,11 +19,6 @@
       <Cell>
         <span>客户类型：{{ $mapd("customerType", detail.customerType) }}</span>
       </Cell>
-      <!-- <Cell>
-        <Select filterable multiple>
-          <Option></Option>
-        </Select>
-      </Cell> -->
       <Divider dashed></Divider>
       <Cell>
         <span>公司名称：{{ detail.corpFullName }}</span>
