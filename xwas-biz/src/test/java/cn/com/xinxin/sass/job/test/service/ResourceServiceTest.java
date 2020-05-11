@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.job.test.service;
 
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
+import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.job.test.base.SpringBaseTest;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
@@ -11,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -107,6 +109,15 @@ public class ResourceServiceTest extends SpringBaseTest {
         if (!CollectionUtils.isEmpty(roleResources)) {
             roleResourceService.createRoleResources(roleResources);
         }
+    }
+
+    @Autowired
+    @Qualifier(value = "weChatWorkAddressListSyncServiceImpl")
+    WeChatWorkSyncService weChatWorkSyncService;
+
+    @Test
+    public void test1() {
+        weChatWorkSyncService.sync("xinxin");
     }
 
 }

@@ -14,6 +14,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +78,7 @@ public class CustomerServiceImpl implements CustomerService {
      * @return 成功更新条数
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int updateBatch(List<CustomerDO> customerDOS) {
         if (CollectionUtils.isEmpty(customerDOS)) {
             LOGGER.warn("批量更新数据, customerDOS为空");
