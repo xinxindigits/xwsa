@@ -69,17 +69,6 @@
         </encoder>
     </appender>
 
-    <appender name="job-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.home}/job.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${log.home}/job.log.%d{yyyy-MM-dd}</fileNamePattern>
-            <maxHistory>10000</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%traceId] %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-
     <appender name="sal-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.home}/sal.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -166,12 +155,6 @@
         <appender-ref ref="error-appender"/>
     </logger>
 
-    <logger name="cn.com.xinxin.sass.job" additivity="false">
-        <level value="INFO"/>
-        <appender-ref ref="job-appender"/>
-        <appender-ref ref="error-appender"/>
-    </logger>
-
     <logger name="cn.com.xinxin.sass.web" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="web-appender"/>
@@ -235,10 +218,5 @@
     <logger name="biz-log" additivity="false">
         <level value="info"/>
         <appender-ref ref="biz-appender"/>
-    </logger>
-
-    <logger name="job-log" additivity="false">
-        <level value="INFO"/>
-        <appender-ref ref="job-appender"/>
     </logger>
 </configuration>

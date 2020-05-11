@@ -111,13 +111,4 @@ public class ResourceServiceTest extends SpringBaseTest {
         }
     }
 
-    @Autowired
-    @Qualifier(value = "weChatWorkAddressListSyncServiceImpl")
-    WeChatWorkSyncService weChatWorkSyncService;
-
-    @Test
-    public void test1() {
-        weChatWorkSyncService.sync("xinxin");
-    }
-
 }
