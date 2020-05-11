@@ -12,8 +12,13 @@ import java.util.List;
  */
 public class RoleAuthorityForm extends ToString {
 
+    /**
+     * 角色编码
+     */
     private String roleCode;
-
+    /**
+     * 用户account列表
+     */
     private List<String> userList;
 
     public String getRoleCode() {
