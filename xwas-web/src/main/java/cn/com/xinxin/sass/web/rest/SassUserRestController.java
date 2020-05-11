@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * @author: zhouyang
  * @created: 14/04/2020.
@@ -67,7 +69,7 @@ public class SassUserRestController extends AclController {
     @RequiresPermissions("/user/list")
     public Object pageQueryUser(@RequestBody UserForm userForm, HttpServletRequest request){
         if(userForm == null){
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"更新角色参数不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "参数不能为空");
         }
         log.info("--------SassUserRestController.pageQueryUser.Request:{}--------",JSONObject.toJSONString(userForm));
 
@@ -75,14 +77,28 @@ public class SassUserRestController extends AclController {
         page.setPageNumber((userForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : userForm.getPageIndex());
         page.setPageSize((userForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : userForm.getPageSize());
         QueryUserConditionVO queryUserConditionVO = BaseConvert.convert(userForm, QueryUserConditionVO.class);
+
         PageResultVO<UserDO> pageUser = userService.findByConditionPage(page, queryUserConditionVO);
+
+        List<String> accounts = pageUser.getItems().stream()
+                .map(x->x.getAccount()).collect(toList());
+
+        Map<String,  List<UserOrgDO>> userOrgsMaps = this.userService.queryUserOrgsMapsByAccounts(accounts);
+
         PageResultVO<UserInfoVO> resultVO = BaseConvert.convert(pageUser, PageResultVO.class);
-        List<UserInfoVO> userInfoVOS = new ArrayList<>();
+
+        List<UserInfoVO> userInfoVOS = Lists.newArrayList();
+
         if(!CollectionUtils.isEmpty(pageUser.getItems())){
             userInfoVOS = pageUser.getItems().stream().map(userDO -> {
                 UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
                 userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
                 userInfoVO.setStatus(userDO.getStatus() == null ? null : userDO.getStatus().intValue());
+                // 设置用户组织关系
+                List<UserOrgDO> userOrgDOList = userOrgsMaps.get(userDO.getAccount());
+                List<OrgSimpleVO> userOrgVOList = SassFormConvert.convertOrgDO2VOList(userOrgDOList);
+                userInfoVO.setOrgs(userOrgVOList);
+
                 return userInfoVO;
             }).collect(Collectors.toList());
         }
