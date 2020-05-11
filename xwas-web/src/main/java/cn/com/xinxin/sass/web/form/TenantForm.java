@@ -10,16 +10,29 @@ import cn.com.xinxin.sass.api.base.ToString;
  */
 public class TenantForm extends ToString {
 
+    /**
+     * 页面大小
+     */
     private Integer pageSize;
-
+    /**
+     * 页码
+     */
     private Integer pageIndex;
-
+    /**
+     * 租户编码
+     */
     private String code;
-
+    /**
+     * 状态
+     */
     private String state;
-
+    /**
+     * 备注
+     */
     private String remark;
-
+    /**
+     * 租户名
+     */
     private String name;
 
     private String corpId;
