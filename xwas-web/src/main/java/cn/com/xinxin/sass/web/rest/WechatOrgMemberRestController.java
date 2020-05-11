@@ -7,11 +7,9 @@ import cn.com.xinxin.sass.common.enums.GenderTypeEnums;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.DepartmentDO;
 import cn.com.xinxin.sass.repository.model.MemberDO;
-import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.WechatmemberQueryForm;
 import cn.com.xinxin.sass.web.vo.MemberDetailVO;
 import cn.com.xinxin.sass.web.vo.MemberVO;
-import cn.com.xinxin.sass.web.vo.UserInfoVO;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
@@ -21,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
