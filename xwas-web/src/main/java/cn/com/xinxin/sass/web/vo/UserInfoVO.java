@@ -42,6 +42,16 @@ public class UserInfoVO extends ToString{
     private List<ResourceVO> resources;
 
 
+    private List<OrgSimpleVO> orgs;
+
+    public List<OrgSimpleVO> getOrgs() {
+        return orgs;
+    }
+
+    public void setOrgs(List<OrgSimpleVO> orgs) {
+        this.orgs = orgs;
+    }
+
     public String getTenantId() {
         return tenantId;
     }
