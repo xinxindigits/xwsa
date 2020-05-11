@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { getOrganizationList, delOrganization } from "@/api/data_organization";
+import { getOrganizationList, delOrganization } from "@/api";
 import OrganizationUpdate from "./modify";
 export default {
   name: "organization",

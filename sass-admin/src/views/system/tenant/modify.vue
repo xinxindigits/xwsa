@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { addTenant, updateTenant } from "@/api/data_tenant";
+import { addTenant, updateTenant } from "@/api";
 const _config = {
   create: {
     title: "新增租户",
