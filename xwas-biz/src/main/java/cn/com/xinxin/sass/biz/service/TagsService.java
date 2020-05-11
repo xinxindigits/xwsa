@@ -81,4 +81,13 @@ public interface TagsService {
      */
     Map<String,List<TagsDO>> selectTagsMapsByKeyIdLists(List<String> keyIds);
 
+
+    /**
+     * all tags
+     * @param tagName
+     * @param tenantId
+     * @return
+     */
+    List<TagsDO> queryAllTagsByNameAndTenantId(String tagName,String tenantId);
+
 }

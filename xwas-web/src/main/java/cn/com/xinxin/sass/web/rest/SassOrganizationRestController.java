@@ -150,26 +150,34 @@ public class SassOrganizationRestController extends AclController {
      * @param request
      * @return
      */
-    @RequestMapping(value = "/routes",method = RequestMethod.POST)
+    @RequestMapping(value = "/routes",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/organization/routes")
+    //@RequiresPermissions("/organization/routes")
     public Object OrganizationRoutes(HttpServletRequest request){
 
-
-        loger.info("SassOrganizationRestController,createOrganization, orgName = {}");
-
+        loger.info("SassOrganizationRestController,OrganizationRoutes");
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
+        List<OrganizationDO> organizationDOList =
+                this.organizationService.queryOrgListByTenantId(sassUserInfo.getTenantId());
 
-
-        List<OrganizationDO> organizationDOList = this.organizationService.queryOrgList();
-
-
-
-        return null;
-
+        List<OrgTreeVO> orgTreeVOS = Lists.newArrayList();
+        organizationDOList.stream().forEach(organizationDO -> {
+            OrgTreeVO orgTreeVO = new OrgTreeVO();
+            orgTreeVO.setCode(organizationDO.getCode());
+            orgTreeVO.setTenantId(organizationDO.getTenantId());
+            orgTreeVO.setOrgId(String.valueOf(organizationDO.getId()));
+            orgTreeVO.setOrgName(organizationDO.getName());
+            orgTreeVO.setParentId(String.valueOf(organizationDO.getParentId()));
+            orgTreeVO.setOrgType(organizationDO.getOrgType());
+            orgTreeVO.setOrgTypeName(OrgTypeEnum.getEnumByCode(organizationDO.getOrgType()).getDesc());
+            orgTreeVO.setStatus(organizationDO.getState());
+            orgTreeVO.setRemark(organizationDO.getRemark());
+            orgTreeVOS.add(orgTreeVO);
+        });
+        List<OrgTreeVO> resultTrees = TreeResultUtil.buildOrgTrees(orgTreeVOS);
+        return resultTrees;
     }
-
 
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)

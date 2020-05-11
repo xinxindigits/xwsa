@@ -122,4 +122,13 @@
   </select>
 
 
+  <select id="queryAllRolesByTenantId" resultMap="BaseResultMapExt" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List_Ext"/>
+    from role
+    where deleted =0
+    and tenant_id = #{tenantId,jdbcType=VARCHAR}
+  </select>
+
+
 </mapper>
