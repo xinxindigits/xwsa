@@ -33,6 +33,13 @@ public interface RoleService {
      */
     List<RoleDO> queryByRoleCodes(List<String> roleCodes);
 
+
     RoleDO findByRoleCode(String code);
+
+    /**
+     * @param tenantId
+     * @return
+     */
+    List<RoleDO> queryAllRolesByTenantId(String tenantId);
 
 }

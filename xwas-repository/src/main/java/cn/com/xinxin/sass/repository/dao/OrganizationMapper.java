@@ -66,7 +66,7 @@ public interface OrganizationMapper {
     List<OrganizationDO> findByCondition(@Param("condition") OrganizationDO condition);
 
 
-    List<OrganizationDO> selectAllOrgs();
+    List<OrganizationDO> selectAllOrgsByTenantId(@Param("tenantId")String tenantId);
 
     OrganizationDO findByCode(@Param("code") String code);
 

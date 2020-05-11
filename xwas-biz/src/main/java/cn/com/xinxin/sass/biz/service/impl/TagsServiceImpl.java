@@ -149,4 +149,12 @@ public class TagsServiceImpl implements TagsService {
 
         return resultMaps;
     }
+
+    @Override
+    public List<TagsDO> queryAllTagsByNameAndTenantId(String tagName, String tenantId) {
+
+       List<TagsDO> tagsDOList =  this.tagsDOMapper.queryAllTagsByNameAndTenantId(tagName,tenantId);
+
+        return tagsDOList;
+    }
 }
