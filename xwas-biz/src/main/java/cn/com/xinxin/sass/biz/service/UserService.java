@@ -112,4 +112,12 @@ public interface UserService {
      * @return
      */
     int removeUserOrgRelationByOrgCode(String orgCode);
+
+
+    /**
+     * 删除
+     * @param accounts
+     * @return
+     */
+    int removeUserOrgRelationByAccountList(List<String> accounts);
 }

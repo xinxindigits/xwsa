@@ -82,4 +82,11 @@ public interface UserOrgDOMapper {
      * @return
      */
     int insertByBatch(@Param("lists") List<UserOrgDO> lists);
+
+    /**
+     * 删除
+     * @param accounts
+     * @return
+     */
+    int removeUserOrgRelationByAccountList(@Param("accounts") List<String> accounts);
 }
