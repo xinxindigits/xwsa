@@ -19,6 +19,18 @@
           :disabled="type == 'update'"
         ></Input>
       </FormItem>
+      <FormItem label="所属机构" prop="orgCode">
+        <treeselect
+          style="width:250px"
+          v-model="formObj.orgCode"
+          :multiple="false"
+          :options="options"
+          :defaultExpandLevel="Infinity"
+          placeholder="所属机构"
+          noResultsText="无匹配数据"
+          searchable
+        />
+      </FormItem>
       <FormItem label="角色" prop="roles">
         <Select multiple v-model="formObj.roles" style="width: 250px">
           <Option v-for="item in roles" :value="item.code" :key="item.code">
@@ -68,6 +80,8 @@
 </template>
 
 <script>
+import Treeselect from "@riophae/vue-treeselect";
+import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 import { addUser, updateUser } from "@/api/data_user";
 const _config = {
   create: {
@@ -89,9 +103,15 @@ export default {
       }
     }
   },
+  components: {
+    Treeselect
+  },
   computed: {
     title() {
       return _config[this.type].title;
+    },
+    options() {
+      return this.formatData(this.orgCode);
     }
   },
   data() {
@@ -102,17 +122,22 @@ export default {
         { gender: 2, extension: "女" }
       ],
       roles: [],
+      orgCode: [],
       formObj: {
         account: "",
         name: "",
         password: "",
         gender: "",
         extension: "",
-        roles: []
+        roles: [],
+        orgCode: ""
       },
       rules: {
         account: [{ required: true, message: "账号不能为空", trigger: "blur" }],
         name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+        orgCode: [
+          { required: true, message: "所属机构不能为空", trigger: "blur" }
+        ],
         gender: [
           {
             required: true,
@@ -125,15 +150,34 @@ export default {
     };
   },
   methods: {
+    formatData(data) {
+      let arr = [];
+      data.forEach(item => {
+        let { code: id, orgName: label } = item;
+        let obj = {
+          id,
+          label
+        };
+        if (item.children && item.children.length > 0) {
+          obj.children = this.formatData(item.children);
+        }
+        arr.push(obj);
+      });
+      return arr;
+    },
     setData(obj) {
       this.formObj.account = obj.account;
       this.formObj.name = obj.name;
       this.formObj.gender = obj.gender;
       this.formObj.extension = obj.extension;
       this.formObj.roles = obj.roles;
+      this.formObj.orgCode = obj.orgCode;
     },
     setRoleList(data) {
       this.roles = data;
+    },
+    setOrgList(data) {
+      this.orgCode = data;
     },
     reset() {
       this.formObj = {
@@ -142,11 +186,11 @@ export default {
         password: "",
         gender: "",
         extension: "",
-        roles: []
+        roles: [],
+        orgCode: ""
       };
     },
     hdlSubmit(name) {
-      console.log(this.formObj);
       this.$refs[name].validate(valid => {
         if (valid) {
           _config[this.type].submit(this.formObj).then(() => {

@@ -3,30 +3,12 @@
     <Row :gutter="10">
       <Col span="24">
         <Card>
-          <Form :model="formItem" inline label-colon>
-            <FormItem>
-              <Input
-                v-model.trim="formItem.customerName"
-                placeholder="姓名"
-              ></Input>
-            </FormItem>
-            <FormItem>
-              <DatePicker
-                v-model="daterange"
-                type="daterange"
-                placement="bottom-start"
-                split-panels
-                confirm
-                :options="rangeOption"
-                placeholder="选择日期"
-                style="width: 200px"
-              ></DatePicker>
-            </FormItem>
-            <FormItem>
-              <Button type="primary" @click="hdlquery">查询</Button>
-              <Button style="margin-left: 8px" @click="reset">重置</Button>
-            </FormItem>
-          </Form>
+          <Query
+            ref="query"
+            v-model="formItem"
+            @on-customer-query="hdlquery"
+            @on-customer-reset="reset"
+          ></Query>
           <Table
             stripe
             border
@@ -75,14 +57,18 @@
     >
       <customer-detail
         :items="curDetail"
-        @show-record="showRecord = true"
+        @show-record="hdlShowRecord"
         @on-cancel="
           showDetail = false;
           curDetail = {};
         "
       ></customer-detail>
     </Drawer>
-    <msg-record v-model="showRecord" :user-id="cur_userId"></msg-record>
+    <msg-record
+      ref="record"
+      v-model="showRecord"
+      :user-id="cur_userId"
+    ></msg-record>
   </div>
 </template>
 
@@ -95,9 +81,11 @@ import {
 } from "@/api";
 import CustomerDetail from "../common/customer-detail/customer-detail";
 import MsgRecord from "@/components/msg-record/msg-record";
+import Query from "./components/query";
 export default {
   name: "staff-list",
   components: {
+    Query,
     CustomerDetail,
     MsgRecord
   },
@@ -122,12 +110,6 @@ export default {
         endTime: "",
         memberUserIds: [],
         customerName: ""
-      },
-      daterange: [],
-      rangeOption: {
-        disabledDate(date) {
-          return date && date.valueOf() > Date.now();
-        }
       },
 
       columns: [
@@ -156,7 +138,6 @@ export default {
       this.changePage(1);
     },
     hdlDetailQuery(row) {
-      console.log(row);
       getCustomerDetail({ id: row.id }).then(({ data }) => {
         this.curDetail = data;
         this.cur_userId = row.userId;
@@ -179,8 +160,6 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.customerName = "";
-      this.daterange = [];
       this.hdlquery();
     },
     init() {
@@ -196,25 +175,14 @@ export default {
     },
     getAllTags() {
       queryTagList();
+    },
+    hdlShowRecord(userId) {
+      this.$refs.record.init(userId);
+      this.showRecord = true;
     }
   },
   mounted() {
     this.init();
-  },
-  watch: {
-    daterange(newValue) {
-      if (
-        newValue.length === 2 &&
-        newValue[0] instanceof Date &&
-        newValue[0] instanceof Date
-      ) {
-        this.formItem.startTime = newValue[0].getTime() + "";
-        this.formItem.endTime = newValue[1].getTime() + "";
-      } else {
-        this.formItem.startTime = "";
-        this.formItem.endTime = "";
-      }
-    }
   }
 };
 </script>

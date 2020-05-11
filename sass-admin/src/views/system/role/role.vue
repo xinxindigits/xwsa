@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import { getRoleList, delRole } from "@/api/data";
+import { getRoleList, delRole } from "@/api";
 import { RoleGrant, RoleUpdate, RoleQuery, RoleOperation } from "./components";
 export default {
   name: "role-list",

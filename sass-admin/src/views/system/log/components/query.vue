@@ -1,20 +1,8 @@
 <template>
   <Form :model="formItem" inline label-colon>
-    <FormItem>
-      <Input v-model="formItem.account"></Input>
+    <FormItem prop="account">
+      <Input v-model="formItem.account" placeholder="操作账号"></Input>
     </FormItem>
-    <!-- <FormItem>
-      <DatePicker
-        v-model="daterange"
-        type="daterange"
-        placement="bottom-start"
-        split-panels
-        confirm
-        :options="rangeOption"
-        placeholder="选择日期"
-        style="width: 200px"
-      ></DatePicker>
-    </FormItem> -->
     <FormItem>
       <Button type="primary" @click="hdlquery">查询</Button>
       <Button style="margin-left: 8px" @click="reset">重置</Button>
@@ -37,16 +25,8 @@ export default {
   },
   data() {
     return {
-      // daterange: [],
-      // rangeOption: {
-      //   disabledDate(date) {
-      //     return date && date.valueOf() > Date.now();
-      //   }
-      // },
       formItem: {
         account: ""
-        // startTime: "",
-        // endTime: ""
       }
     };
   },
@@ -55,12 +35,8 @@ export default {
       this.$emit("on-log-query", this.formItem);
     },
     reset() {
-      //TODO
-      // this.daterange = [];
       this.formItem = {
         account: ""
-        // startTime: "",
-        // endTime: ""
       };
       this.$emit("on-log-query-reset", this.formItem);
     }
@@ -80,19 +56,6 @@ export default {
         this.$emit("input", newValue);
       }
     }
-    // daterange(newValue) {
-    //   if (
-    //     newValue.length === 2 &&
-    //     newValue[0] instanceof Date &&
-    //     newValue[0] instanceof Date
-    //   ) {
-    //     this.formItem.startTime = newValue[0].getTime() + "";
-    //     this.formItem.endTime = newValue[1].getTime() + "";
-    //   } else {
-    //     this.formItem.startTime = "";
-    //     this.formItem.endTime = "";
-    //   }
-    // }
   }
 };
 </script>

@@ -117,7 +117,6 @@ export default {
       } else {
         if (outerWidth < bodyWidth) {
           if (this.tagBodyLeft < -(bodyWidth - outerWidth)) {
-            console.log("tagBodyLeft", this.tagBodyLeft);
             // this.tagBodyLeft = this.tagBodyLeft;
           } else {
             this.tagBodyLeft = Math.max(

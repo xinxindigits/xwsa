@@ -39,10 +39,9 @@ const initRouters = store => {
       store.state.app.routers &&
       store.state.app.routers.length > 0
     ) {
-      console.log("已经加载过了路由");
+      // console.log("已经加载过了路由");
     } else {
-      //加载路由
-      console.log("开始加载路由权限...");
+      // console.log("开始加载路由权限...");
       store
         .dispatch("getMenuInfo")
         .then(routers => {
