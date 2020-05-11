@@ -15,19 +15,37 @@ public class OrgQueryForm extends ToString {
 
     private static final long serialVersionUID = -3821494142512774077L;
 
-
+    /**
+     *  页面大小
+     */
     private Integer pageSize;
+    /**
+     *  页码
+     */
     private Integer pageIndex;
+    /**
+     *  机构id
+     */
     private String orgId;
+    /**
+     *  租户id
+     */
     private String tenantId;
+    /**
+     *  机构类型
+     */
     private String orgType;
+    /**
+     *  机构名称
+     */
     private String orgName;
-
-
+    /**
+     *  开始时间
+     */
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date startTime;
     /**
-     *
+     *  结束时间
      */
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date endTime;
