@@ -5,6 +5,7 @@ import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.model.bo.ChatPartyBO;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.vo.ChatUserVO;
+import cn.com.xinxin.sass.biz.vo.PageVO;
 import cn.com.xinxin.sass.biz.vo.QueryMsgConditionVO;
 import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.constants.WeChatWorkChatRecordsTypeConstants;
@@ -240,4 +241,40 @@ public class WeChatMessageRestController extends AclController {
         return ChatPartyConvert.convert2ChatPartyList(chatPartyBOS);
     }
 
+    /**
+     * 查询会话记录所在页码
+     * @param queryForm
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/queryPageIndex")
+    @ResponseBody
+    public Object queryPageIndex(@RequestBody WeChatMessageQueryForm queryForm, HttpServletRequest request){
+        if (null == queryForm) {
+            LOGGER.error("查询会话记录所在页码, queryForm不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    " 查询会话记录所在页码,queryForm不能为空");
+        }
+        if (queryForm.getId() == null) {
+            LOGGER.error("查询会话记录所在页码, 消息id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "查询会话记录所在页码, 消息id不能为空");
+        }
+        if (StringUtils.isEmpty(queryForm.getRoomId()) && (StringUtils.isEmpty(queryForm.getUserId()) || StringUtils.isEmpty(queryForm.getUserIdTwo()))) {
+            LOGGER.error("查询会话记录所在页码, 群聊id和用户id不能同时为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "查询会话记录所在页码, 群聊id和用户id不能同时为空");
+        }
+        String tenantId = "";
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        if(StringUtils.isEmpty(queryForm.getTenantId())){
+            tenantId = sassUserInfo.getTenantId();
+        }else{
+            tenantId = queryForm.getTenantId();
+        }
+        Integer pageSize = (queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize();
+        PageVO result = msgRecordService.getPageIndex(queryForm.getId(),tenantId,queryForm.getRoomId(),
+                queryForm.getUserId(),queryForm.getUserIdTwo(),pageSize);
+        return result;
+    }
 }

@@ -82,22 +82,34 @@
   <select id="selectMsgRecordBetweenPersons" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from msg_record where tenant_id = #{tenantId} and ((from_user_id = #{userIdOne} and to_user_id = concat('[',#{userIdTwo},']'))  or (from_user_id = #{userIdTwo} and to_user_id = concat('[',#{userIdOne},']') ))
-    <if test="keyWord != null and keyWord != ''">
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
       and content like concat('%',#{keyWord,jdbcType=VARCHAR},'%')
     </if>
-    <if test="startTime != null and endTime != null">
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime) and @org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
       and <![CDATA[msg_time >= #{startTime} and msg_time < #{endTime}]]>
     </if>
     order by seq_id
   </select>
 
+  <select id="selectRowNumberById" resultType="java.lang.Integer">
+    select count(id)
+    from msg_record where tenant_id = #{tenantId}
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userIdOne) and @org.apache.commons.lang3.StringUtils@isNotBlank(userIdTwo)">
+      and ((from_user_id = #{userIdOne} and to_user_id = concat('[',#{userIdTwo},']'))  or (from_user_id = #{userIdTwo} and to_user_id = concat('[',#{userIdOne},']') ))
+    </if>
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(roomId)">
+      and room_id = #{roomId}
+    </if>
+    and id <![CDATA[ <= ]]> #{id}
+  </select>
+
   <select id="selectRoomMsgRecord" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from msg_record where tenant_id = #{tenantId} and room_id = #{roomId}
-    <if test="keyWord != null and keyWord != ''">
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
       and content like concat('%',#{keyWord,jdbcType=VARCHAR},'%')
     </if>
-    <if test="startTime != null and endTime != null">
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime) and @org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
       and <![CDATA[msg_time >= #{startTime} and msg_time < #{endTime}]]>
     </if>
     order by seq_id

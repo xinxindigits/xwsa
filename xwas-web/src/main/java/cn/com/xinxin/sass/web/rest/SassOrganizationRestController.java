@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.common.enums.OrgTypeEnum;
@@ -121,61 +122,46 @@ public class SassOrganizationRestController extends AclController {
 
     }
 
-    @RequestMapping(value = "/query/{code}",method = RequestMethod.GET)
-    @ResponseBody
-    @RequiresPermissions("/organization/query")
-    public Object queryOrganization(HttpServletRequest request, @PathVariable(value = "code")String code){
-
-        if(StringUtils.isEmpty(code)){
-            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"组织机构查询参数不能为空","组织机构查询参数");
-        }
-
-        loger.info("SassOrganizationRestController,createOrganization, code = {}",code);
-
-        //OrganizationDO organizationDO = organizationService.findByCode(code);
-        TenantBaseInfoDO tenantBaseInfoDO = tenantBaseInfoService.selectByTenantId(code);
-        if(tenantBaseInfoDO == null){
-            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST);
-        }
-        OrganizationVO result = BaseConvert.convert(tenantBaseInfoDO, OrganizationVO.class);
-        result.setCode(tenantBaseInfoDO.getTenantId());
-        result.setName(tenantBaseInfoDO.getTenantName());
-
-        return result;
-
-    }
-
     /**
      * 获取组织机构的树形结构
      * @param request
      * @return
      */
-    @RequestMapping(value = "/routes",method = RequestMethod.POST)
+    @RequestMapping(value = "/routes",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/organization/routes")
+    //@RequiresPermissions("/organization/routes")
     public Object OrganizationRoutes(HttpServletRequest request){
 
-
-        loger.info("SassOrganizationRestController,createOrganization, orgName = {}");
-
+        loger.info("SassOrganizationRestController,OrganizationRoutes");
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
+        List<OrganizationDO> organizationDOList =
+                this.organizationService.queryOrgListByTenantId(sassUserInfo.getTenantId());
 
-
-        List<OrganizationDO> organizationDOList = this.organizationService.queryOrgList();
-
-
-
-        return null;
-
+        List<OrgTreeVO> orgTreeVOS = Lists.newArrayList();
+        organizationDOList.stream().forEach(organizationDO -> {
+            OrgTreeVO orgTreeVO = new OrgTreeVO();
+            orgTreeVO.setCode(organizationDO.getCode());
+            orgTreeVO.setTenantId(organizationDO.getTenantId());
+            orgTreeVO.setOrgId(String.valueOf(organizationDO.getId()));
+            orgTreeVO.setOrgName(organizationDO.getName());
+            orgTreeVO.setParentId(String.valueOf(organizationDO.getParentId()));
+            orgTreeVO.setOrgType(organizationDO.getOrgType());
+            orgTreeVO.setOrgTypeName(OrgTypeEnum.getEnumByCode(organizationDO.getOrgType()).getDesc());
+            orgTreeVO.setStatus(organizationDO.getState());
+            orgTreeVO.setRemark(organizationDO.getRemark());
+            orgTreeVOS.add(orgTreeVO);
+        });
+        List<OrgTreeVO> resultTrees = TreeResultUtil.buildOrgTrees(orgTreeVOS);
+        return resultTrees;
     }
-
 
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/organization/create")
+    @SysLog("创建组织机构操作")
     public Object createOrganization(HttpServletRequest request,
                                      @RequestBody OrganizationForm orgForm){
 
@@ -209,6 +195,7 @@ public class SassOrganizationRestController extends AclController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/organization/update")
+    @SysLog("更新组织机构操作")
     public Object updateOrganization(HttpServletRequest request,
                                      @RequestBody OrganizationForm orgForm){
 
@@ -239,6 +226,7 @@ public class SassOrganizationRestController extends AclController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/organization/delete")
+    @SysLog("删除组织机构操作")
     public Object deleteOrganization(@RequestBody DeleteOrgForm deleteOrgForm, HttpServletRequest request){
 
         if(deleteOrgForm == null){

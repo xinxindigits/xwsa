@@ -8,12 +8,18 @@ import java.util.List;
  * @author: yanghaoxian
  * @created: 2020/4/27.
  * @updater:
- * @description:
+ * @description:删除租户/组织表单
  */
 public class DeleteOrgForm extends ToString {
 
+    /**
+     * 租户编码列表
+     */
     private List<String> codes;
 
+    /**
+     * 组织机构id列表
+     */
     private List<Long> ids;
 
     public List<String> getCodes() {

@@ -8,10 +8,13 @@ import java.util.List;
  * @author: yanghaoxian
  * @created: 2020/4/27.
  * @updater:
- * @description:
+ * @description:删除用户表单
  */
 public class DeleteUserForm extends ToString {
 
+    /**
+     * 用户列表
+     */
     private List<String> accounts;
 
     public List<String> getAccounts() {

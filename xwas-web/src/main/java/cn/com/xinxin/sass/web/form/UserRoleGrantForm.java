@@ -8,18 +8,24 @@ import java.util.List;
  * @author: zhouyang
  * @created: 13/07/2018.
  * @updater:
- * @description:
+ * @description:用户-角色授权表单
  */
 public class UserRoleGrantForm extends ToString {
 
     private static final long serialVersionUID = -679598670792406818L;
-
+    /**
+     *
+     */
     private String userAccount;
-
+    /**
+     *
+     */
     private String userName;
 
     private String extension;
-
+    /**
+     *
+     */
     private List<UserRoleForm> userRoles;
 
     public String getUserAccount() {

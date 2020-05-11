@@ -5,6 +5,7 @@ import cn.com.xinxin.sass.biz.service.CustomerService;
 import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.vo.ChatUserVO;
+import cn.com.xinxin.sass.biz.vo.PageVO;
 import cn.com.xinxin.sass.biz.vo.QueryMsgConditionVO;
 import cn.com.xinxin.sass.common.enums.ChatUserEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
@@ -250,5 +251,18 @@ public class MsgRecordServiceImpl implements MsgRecordService {
         chatPartyBOS.addAll(chatPartyRoomBOMap.values());
 
         return chatPartyBOS;
+    }
+
+    @Override
+    public PageVO getPageIndex(Long id, String tenantId, String roomId, String userIdOne, String userIdTwo,Integer pageSize) {
+        Integer rowNum = msgRecordDOMapper.selectRowNumberById(id, tenantId, roomId, userIdOne, userIdTwo);
+        Integer pageIndex = (rowNum + pageSize -1) / pageSize;
+        Integer offset = rowNum % pageSize;
+        PageVO pageVO = new PageVO();
+        pageVO.setPageIndex(pageIndex);
+        pageVO.setPageSize(pageSize);
+        pageVO.setRowNum(rowNum);
+        pageVO.setOffset(offset);
+        return pageVO;
     }
 }

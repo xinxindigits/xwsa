@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.biz.service;
 
 import cn.com.xinxin.sass.biz.model.bo.ChatPartyBO;
 import cn.com.xinxin.sass.biz.vo.ChatUserVO;
+import cn.com.xinxin.sass.biz.vo.PageVO;
 import cn.com.xinxin.sass.biz.vo.QueryMsgConditionVO;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
@@ -45,6 +46,18 @@ public interface MsgRecordService {
     PageResultVO<MsgRecordDO> selectMsgRecordBetweenPersons(PageResultVO page,String orgId, String userIdOne, String userIdTwo, QueryMsgConditionVO conditionVO);
 
     PageResultVO<MsgRecordDO> selectRoomMsgRecord(PageResultVO page,String orgId, String roomId, QueryMsgConditionVO conditionVO);
+
+    /**
+     *
+     * @param id 消息id
+     * @param tenantId  租户id
+     * @param roomId 群聊id
+     * @param userIdOne 用户1的id
+     * @param userIdTwo 用户2的id
+     * @param pageSize 页面大小
+     * @return
+     */
+    PageVO getPageIndex(Long id, String tenantId, String roomId, String userIdOne, String userIdTwo, Integer pageSize);
 
     ChatUserVO getChatUser(String orgId, String chatUserId);
 

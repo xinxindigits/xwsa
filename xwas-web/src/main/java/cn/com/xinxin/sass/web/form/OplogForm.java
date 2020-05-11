@@ -6,7 +6,7 @@ import cn.com.xinxin.sass.api.base.ToString;
  * @author: zhouyang
  * @created: 09/05/2020.
  * @updater:
- * @description:
+ * @description:日志查询表单
  */
 public class OplogForm extends ToString {
 

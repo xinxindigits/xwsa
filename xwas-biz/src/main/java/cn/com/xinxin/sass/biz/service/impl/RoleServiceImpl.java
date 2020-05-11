@@ -112,4 +112,12 @@ public class RoleServiceImpl implements RoleService {
         return roleMapper.findRolesByCodes(roleCodes);
 
     }
+
+    @Override
+    public List<RoleDO> queryAllRolesByTenantId(String tenantId) {
+
+        List<RoleDO> roleDOList = this.roleMapper.queryAllRolesByTenantId(tenantId);
+
+        return roleDOList;
+    }
 }

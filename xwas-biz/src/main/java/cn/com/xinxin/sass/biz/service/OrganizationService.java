@@ -26,7 +26,7 @@ public interface OrganizationService {
 
     int deleteByIds(List<Long> ids);
 
-    List<OrganizationDO> queryOrgList();
+    List<OrganizationDO> queryOrgListByTenantId(String tenantId);
 
     OrganizationDO findByCode(String code);
 

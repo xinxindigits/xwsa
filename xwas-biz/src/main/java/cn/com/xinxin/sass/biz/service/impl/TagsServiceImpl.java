@@ -103,9 +103,7 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public List<TagsDO> selectTagsByKeyId(String keyId) {
 
-        if(StringUtils.isEmpty(keyId)) {
-            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL, "查询参数不能为空");
-        }
+
 
         List<TagsDO> tagsDOList = this.tagsRelationsDOMapper.selectTagsByKeyId(keyId);
 
@@ -115,9 +113,6 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public List<TagsDO> selectTagsByKeyIdLists(List<String> keyIds) {
 
-        if(CollectionUtils.isEmpty(keyIds)) {
-            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL, "查询参数不能为空");
-        }
 
         List<TagsDO> tagsDOList = this.tagsRelationsDOMapper.selectTagsByKeyIdLists(keyIds);
 
@@ -127,9 +122,6 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public Map<String, List<TagsDO>> selectTagsMapsByKeyIdLists(List<String> keyIds) {
 
-        if(CollectionUtils.isEmpty(keyIds)){
-            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"查询参数不能为空");
-        }
 
         List<TagsMapDO> tagsMapDOList = this.tagsRelationsDOMapper.selectTagsMapsByKeyIds(keyIds);
 
@@ -148,5 +140,13 @@ public class TagsServiceImpl implements TagsService {
         }
 
         return resultMaps;
+    }
+
+    @Override
+    public List<TagsDO> queryAllTagsByNameAndTenantId(String tagName, String tenantId) {
+
+       List<TagsDO> tagsDOList =  this.tagsDOMapper.queryAllTagsByNameAndTenantId(tagName,tenantId);
+
+        return tagsDOList;
     }
 }
