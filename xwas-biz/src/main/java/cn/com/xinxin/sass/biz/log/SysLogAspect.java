@@ -90,7 +90,7 @@ public class SysLogAspect {
             //获取方法参数值
             Object[] args = joinPoint.getArgs();
             MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-            controllerMethodDescription = getValBySpEL(controllerMethodDescription, methodSignature, args);
+            //controllerMethodDescription = getValBySpEL(controllerMethodDescription, methodSignature, args);
         }
 
 
