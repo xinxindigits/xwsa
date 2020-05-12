@@ -258,7 +258,8 @@ export default {
             "authority",
             "url",
             "id",
-            "resourceType"
+            "resourceType",
+            "extension"
           )
         };
         if (item.children && item.children.length > 0) {
