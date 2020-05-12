@@ -68,6 +68,7 @@ export default {
       this.formItem.code = "";
       this.formItem.gender = "";
       this.formItem.status = "";
+      this.$emit("on-user-reset");
     }
   },
   watch: {

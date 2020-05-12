@@ -5,7 +5,7 @@
         ref="query"
         v-model="formItem"
         @on-log-query="changePage(1)"
-        @on-log-query-reset="changePage(1)"
+        @on-log-query-reset="init"
       ></query>
       <Table
         stripe

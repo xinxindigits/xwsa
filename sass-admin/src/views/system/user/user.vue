@@ -5,6 +5,7 @@
         ref="query"
         v-model="formItem"
         @on-user-query="changePage(1)"
+        @on-user-reset="changePage(1)"
       ></user-query>
       <user-operation
         @on-user-create="hdlSingleCreate"
@@ -60,9 +61,10 @@
         <Page
           :total="total"
           :current="page"
-          :page-size="1"
+          :page-size="pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
+          show-sizer
           show-elevator
           show-total
           transfer
