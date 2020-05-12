@@ -77,11 +77,11 @@ import {
   getCustomerList,
   queryCustomerList,
   getCustomerDetail,
-  queryTagList
+  queryTagList,
+  getAllTags
 } from "@/api";
-import CustomerDetail from "../common/customer-detail/customer-detail";
 import MsgRecord from "@/components/msg-record/msg-record";
-import Query from "./components/query";
+import { Query, CustomerDetail } from "./components";
 export default {
   name: "staff-list",
   components: {
@@ -95,7 +95,7 @@ export default {
         .map(n => {
           return n.name;
         })
-        .join("、");
+        .join("|");
     }
   },
   data() {
@@ -130,14 +130,26 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      tableData: []
+      tableData: [],
+
+      tagList: []
     };
   },
   methods: {
     hdlquery() {
       this.changePage(1);
     },
-    hdlDetailQuery(row) {
+    getTagList() {
+      return new Promise(resolve => {
+        getAllTags().then(({ data }) => {
+          resolve(data);
+        });
+      });
+    },
+    async hdlDetailQuery(row) {
+      if (this.tagList.length < 1) {
+        this.tagList = await this.getTagList();
+      }
       getCustomerDetail({ id: row.id }).then(({ data }) => {
         this.curDetail = data;
         this.cur_userId = row.userId;
@@ -172,6 +184,9 @@ export default {
           this.total = Number(data.total);
         })
         .finally(() => (this.isLoading = false));
+      getAllTags().then(({ data }) => {
+        this.tagList = data;
+      });
     },
     getAllTags() {
       queryTagList();

@@ -5,6 +5,7 @@
         ref="query"
         v-model="formItem"
         @on-tag-query="changePage(1)"
+        @on-tag-reset="changePage(1)"
       ></query>
       <operation @on-tag-create="hdlSingleModified('create')"></operation>
       <Table
@@ -22,6 +23,10 @@
         <template slot-scope="{ row }" slot="gmtUpdated">
           <span>{{ row.gmtUpdated | timeFilter }}</span>
         </template>
+        <template slot-scope="{ row }" slot="tagType">
+          <span>{{ $mapd("tagType", row.tagType) }}</span>
+        </template>
+
         <template slot-scope="{ row }" slot="action">
           <Button
             type="primary"
@@ -94,7 +99,7 @@ export default {
         { title: "id", key: "id", align: "center" },
         { title: "编号", key: "code", align: "center" },
         { title: "名称", key: "name", align: "center" },
-        { title: "类别", key: "tagType", align: "center" },
+        { title: "类别", key: "tagType", align: "center", slot: "tagType" },
         {
           title: "创建时间",
           key: "gmtCreated",

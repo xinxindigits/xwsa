@@ -12,7 +12,8 @@ import {
   createTag,
   updateTag,
   deleteTag,
-  setTagByKeyId
+  setTagByKeyId,
+  getAllTags
 } from "./sys_tag";
 import {
   getOrganizationList,
@@ -66,6 +67,7 @@ export {
   updateTag,
   deleteTag,
   setTagByKeyId,
+  getAllTags,
   getLogList,
   queryLogList,
   getLogDetail,

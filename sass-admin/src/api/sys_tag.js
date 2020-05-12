@@ -67,3 +67,9 @@ export const setTagByKeyId = ({ keyId, keyName, description, tagIds }) => {
     data
   });
 };
+export const getAllTags = () => {
+  return axios.request({
+    url: "tags/routes",
+    method: "post"
+  });
+};
