@@ -8,4 +8,6 @@ package cn.com.xinxin.sass.biz.schedule.service;
  */
 public interface QuartzJobService {
     void startJob(String tenantId, String taskType, String cronExpression);
+
+    void stopJob(String tenantId, String taskType);
 }
