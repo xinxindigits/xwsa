@@ -5,7 +5,7 @@
         ref="query"
         v-model="formItem"
         @on-log-query="changePage(1)"
-        @on-log-query-reset="changePage(1, true)"
+        @on-log-query-reset="changePage(1)"
       ></query>
       <Table
         stripe
@@ -101,14 +101,11 @@ export default {
     };
   },
   methods: {
-    hdlqueryAfterReset() {
-      this.$refs.query.reset();
-      this.changePage(1);
-    },
     changePage(pageIndex = 1, isInit) {
       this.isLoading = true;
       let pageSize = this.pageSize;
       let api = isInit ? getLogList : queryLogList;
+      this.page = isInit ? 1 : pageIndex;
       api({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
@@ -124,10 +121,13 @@ export default {
     getDetail(n) {
       this.current_log = n;
       this.showDetail = true;
+    },
+    init() {
+      this.changePage(1, true);
     }
   },
   mounted() {
-    this.changePage(1, true);
+    this.init();
   }
 };
 </script>
