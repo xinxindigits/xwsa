@@ -149,4 +149,10 @@ public class TagsServiceImpl implements TagsService {
 
         return tagsDOList;
     }
+
+    @Override
+    public int deleteTagsBykeyId(String keyId) {
+
+       return this.tagsRelationsDOMapper.deleteTagsBykeyId(keyId);
+    }
 }
