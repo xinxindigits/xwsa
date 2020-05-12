@@ -108,7 +108,7 @@ public class SassTagsRestController extends AclController {
     }
 
 
-    @RequestMapping(value = "/rotes",method = RequestMethod.POST)
+    @RequestMapping(value = "/routes",method = RequestMethod.POST)
     //@RequiresPermissions("/tags/rotes")
     public Object rotesTags(@RequestBody TagForm tagForm, HttpServletRequest request){
 
