@@ -73,9 +73,9 @@ public class SassAuthRestController {
                         @RequestBody UserLoginForm userLoginForm){
 
 
-//        if (!KaptchaUtils.checkVerifyCode(request)) {
-//            return "验证码有误！";
-//        }
+        if (!KaptchaUtils.checkVerifyCode(request)) {
+            return "验证码有误！";
+        }
 
         String userAccount = userLoginForm.getAccount();
 
