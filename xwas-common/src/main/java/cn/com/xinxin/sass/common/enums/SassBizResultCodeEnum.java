@@ -27,9 +27,9 @@ public enum SassBizResultCodeEnum implements BizResultCode {
 
     PARAMETER_NULL("NTC00005", "空参数", "参数为空，请重新操作!"),
 
-    INVALID_SESSION_ID("NTC00005", "session为空", "session为空，请登陆操作!"),
+    INVALID_SESSION_ID("NTC00005", "session为空", "session为空，请登录操作!"),
 
-    INVALID_TOKEN("NTC00006", "无效的登陆口令", "无效的登陆口令,请登陆操作!"),
+    INVALID_TOKEN("NTC00006", "无效的登录口令", "无效的登录口令,请登录操作!"),
 
     UNAUTHORIZED("UNAUTHORIZED", "无效授权", "无效授权!"),
 

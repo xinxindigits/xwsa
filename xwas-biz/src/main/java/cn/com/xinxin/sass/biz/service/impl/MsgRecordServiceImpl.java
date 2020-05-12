@@ -257,7 +257,10 @@ public class MsgRecordServiceImpl implements MsgRecordService {
     public PageVO getPageIndex(Long id, String tenantId, String roomId, String userIdOne, String userIdTwo,Integer pageSize) {
         Integer rowNum = msgRecordDOMapper.selectRowNumberById(id, tenantId, roomId, userIdOne, userIdTwo);
         Integer pageIndex = (rowNum + pageSize -1) / pageSize;
-        Integer offset = rowNum % pageSize;
+        Integer offset = 0;
+        if(pageIndex > 0) {
+            offset = rowNum - pageSize * (pageIndex - 1);
+        }
         PageVO pageVO = new PageVO();
         pageVO.setPageIndex(pageIndex);
         pageVO.setPageSize(pageSize);

@@ -17,7 +17,7 @@ public interface XSassUserFacade {
     SingleResult<SassResultCodeEnum,UserDTO> getLoginUser(String sessionId);
 
     /**
-     * 当前登陆用户对某个路径是否有权限
+     * 当前登录用户对某个路径是否有权限
      * @param sessionId
      * @param url
      * @return

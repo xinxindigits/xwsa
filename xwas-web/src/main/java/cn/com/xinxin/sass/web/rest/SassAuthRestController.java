@@ -65,7 +65,7 @@ public class SassAuthRestController {
 
     }
 
-    @SysLog("用户登陆操作")
+    @SysLog("用户登录操作")
     @RequestMapping(value = "/auth",method = RequestMethod.POST)
     public Object login(HttpServletRequest request,
                         HttpServletResponse response,
@@ -86,8 +86,8 @@ public class SassAuthRestController {
                 userDO.getSalt(), password);
 
         if(ecnryptPassword.equals(userDO.getPassword())){
-            // 登陆成功, 返回token
-            // TODO: 登陆成功之后需要将用户的信息缓存起来，方便查询读写
+            // 登录成功, 返回token
+            // TODO: 登录成功之后需要将用户的信息缓存起来，方便查询读写
             String token = getToken(userAccount, userDO.getPassword());
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
@@ -132,8 +132,8 @@ public class SassAuthRestController {
             return userTokenVO;
 
         }else{
-            // 登陆失败
-            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败,用户名或者密码错误","登陆失败,用户名或者密码错误");
+            // 登录失败
+            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登录失败,用户名或者密码错误","登录失败,用户名或者密码错误");
         }
     }
 
@@ -146,8 +146,8 @@ public class SassAuthRestController {
 
     @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public Object unauthorized(HttpServletRequest request){
-        log.info("无效登陆口令，请重新登陆");
-        throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN,"无效登陆口令","无效登陆口令，请重新登陆");
+        log.info("无效登录口令，请重新登录");
+        throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN,"无效登录口令","无效登录口令，请重新登录");
 
     }
 
