@@ -77,3 +77,12 @@ export const updateTenant = ({
     method: "post"
   });
 };
+export const queryTenantConfig = ({tenantId}) => {
+    return axios.request({
+        params: {
+            tenantId
+        },
+        url: "tenant/queryConfig",
+        method: "get"
+    });
+};

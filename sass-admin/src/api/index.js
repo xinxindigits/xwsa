@@ -28,7 +28,8 @@ import {
   queryTenant,
   delTenant,
   addTenant,
-  updateTenant
+  updateTenant,
+  queryTenantConfig
 } from "./sys_tenant";
 import { getLogList, queryLogList, getLogDetail } from "./sys_log";
 import {
@@ -102,5 +103,6 @@ export {
   queryTenant,
   delTenant,
   addTenant,
-  updateTenant
+  updateTenant,
+  queryTenantConfig
 };

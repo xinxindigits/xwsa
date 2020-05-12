@@ -150,4 +150,9 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
         }
         return tenantDataSyncConfigDOMapper.selectByTenantId(tenantId);
     }
+
+    @Override
+    public List<TenantDataSyncConfigDO> queryValidRecord() {
+        return tenantDataSyncConfigDOMapper.queryValidRecord();
+    }
 }

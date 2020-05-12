@@ -10,6 +10,7 @@
        ">
 
     <!-- - The configuration file of ROOT's ApplicationContext. -->
+    <bean id="springContextHolder" class="cn.com.xinxin.sass.biz.SpringContextHolder" />
 
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
@@ -20,6 +21,7 @@
     <import resource="classpath:spring-portal-session.xml"/>
     <import resource="classpath:spring-session-redis.xml"/>
     <import resource="classpath:spring-portal-session-aop.xml"/>
+    <import resource="classpath:spring-quartz.xml"/>
     <import resource="kaptcha.xml"/>
 
     <context:component-scan base-package="cn.com.xinxin">

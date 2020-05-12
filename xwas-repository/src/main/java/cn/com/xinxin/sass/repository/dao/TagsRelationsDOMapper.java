@@ -93,4 +93,10 @@ public interface TagsRelationsDOMapper {
     List<TagsMapDO> selectTagsMapsByKeyIds(@Param("keyIdList") List<String> keyIds);
 
 
+    /**
+     * 删除标签
+     * @param keyId
+     * @return
+     */
+    int deleteTagsBykeyId(@Param("keyId") String keyId);
 }
