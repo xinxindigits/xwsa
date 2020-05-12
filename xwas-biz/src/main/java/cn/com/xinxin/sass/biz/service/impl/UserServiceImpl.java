@@ -289,7 +289,7 @@ public class UserServiceImpl implements UserService {
         LOGGER.info("refreshSassUserInfo:{}",account);
         SassUserInfo grantedUserInfo = userAclTokenRepository.getSassUserByUserAccount(account);
         if(null != grantedUserInfo){
-            // 缓存信息以及存在用户登陆，在需要更新用户权限值
+            // 缓存信息以及存在用户登录，在需要更新用户权限值
             //跟新用户缓存的角色以及权限值
 
             List<RoleDO> roleDOS = this.findRolesByAccount(account);

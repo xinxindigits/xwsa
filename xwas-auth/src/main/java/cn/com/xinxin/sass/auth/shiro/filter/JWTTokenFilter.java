@@ -151,8 +151,8 @@ public class JWTTokenFilter extends AuthenticatingFilter {
         try {
             userAclTokenRepository.refreshToken(token,httpServletResponse);
         }catch (Exception ex){
-            log.info("Token登陆失败");
-            throw  new BusinessException(SessionBizResultCodeEnum.AUTHENTICATE_FAIL,"登陆授权失败，请重新登陆账户");
+            log.info("Token登录失败");
+            throw  new BusinessException(SessionBizResultCodeEnum.AUTHENTICATE_FAIL,"登录授权失败，请重新登录账户");
         }
         return true;
     }
@@ -201,7 +201,7 @@ public class JWTTokenFilter extends AuthenticatingFilter {
                                      Subject subject,
                                      ServletRequest request,
                                      ServletResponse response) throws Exception {
-        // 如果登陆成功，则需要刷新对应的token缓存信息，同时要判断token是否失效
+        // 如果登录成功，则需要刷新对应的token缓存信息，同时要判断token是否失效
         String url = WebUtils.toHttp(request).getRequestURI();
         log.info("鉴权成功,token:{},url:{}", authenticationToken, url);
         JWTToken jwtToken = (JWTToken)authenticationToken;

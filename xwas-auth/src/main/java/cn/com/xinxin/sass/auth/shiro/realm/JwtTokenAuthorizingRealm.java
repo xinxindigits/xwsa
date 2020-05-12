@@ -95,7 +95,7 @@ public class JwtTokenAuthorizingRealm extends AuthorizingRealm {
 
         }catch (Exception ex){
 
-            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN, "授权认证失败,请重新登陆");
+            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN, "授权认证失败,请重新登录");
         }
 
     }
