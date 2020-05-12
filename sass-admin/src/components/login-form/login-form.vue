@@ -38,7 +38,7 @@
           <img
             class="kaptcha"
             :src="cap"
-            alt=""
+            alt="点击获取"
             height="32px"
             @click="hdlClick"
           />
@@ -115,6 +115,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .kaptcha {
+  width: 100%;
+  border: 1px solid #e8eaec;
   height: 40px;
   vertical-align: middle;
 }
