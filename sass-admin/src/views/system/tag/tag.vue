@@ -132,6 +132,7 @@ export default {
       this.isLoading = true;
       let pageSize = this.pageSize;
       let api = isInit ? getTagList : queryTagList;
+      this.page = isInit ? 1 : pageIndex;
       api({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
