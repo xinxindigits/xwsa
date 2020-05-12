@@ -80,16 +80,14 @@ public class SassUserRestController extends AclController {
 
         PageResultVO<UserDO> pageUser = userService.findByConditionPage(page, queryUserConditionVO);
 
-        List<String> accounts = pageUser.getItems().stream()
-                .map(x->x.getAccount()).collect(toList());
-
-        Map<String,  List<UserOrgDO>> userOrgsMaps = this.userService.queryUserOrgsMapsByAccounts(accounts);
-
         PageResultVO<UserInfoVO> resultVO = BaseConvert.convert(pageUser, PageResultVO.class);
 
         List<UserInfoVO> userInfoVOS = Lists.newArrayList();
 
         if(!CollectionUtils.isEmpty(pageUser.getItems())){
+            List<String> accounts = pageUser.getItems().stream()
+                    .map(x->x.getAccount()).collect(toList());
+            Map<String,  List<UserOrgDO>> userOrgsMaps = this.userService.queryUserOrgsMapsByAccounts(accounts);
             userInfoVOS = pageUser.getItems().stream().map(userDO -> {
                 UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
                 userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
