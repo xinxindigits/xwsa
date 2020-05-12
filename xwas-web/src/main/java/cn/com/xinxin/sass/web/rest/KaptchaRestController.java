@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.web.utils.KaptchaUtils;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,15 @@ public class KaptchaRestController {
             out.flush();
         } finally {
             out.close();
+        }
+    }
+
+    @RequestMapping("/hello")
+    public String hello(HttpServletRequest request) {
+        if (!KaptchaUtils.checkVerifyCode(request)) {
+            return "验证码有误！";
+        } else {
+            return "hello,world";
         }
     }
 

@@ -96,6 +96,7 @@
                 /rememberMe = anon
                 /= anon
                 /kaptcha = anon
+                /hello = anon
                 /register = anon
                 /unauthorized = anon
                 /static/** = anon
