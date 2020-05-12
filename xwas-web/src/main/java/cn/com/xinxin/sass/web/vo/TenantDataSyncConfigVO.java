@@ -44,6 +44,10 @@ public class TenantDataSyncConfigVO extends ToString {
      * 更新时间
      */
     private Date gmtUpdated;
+    /**
+     * 状态
+     */
+    private Byte deleted;
 
     public Long getId() {
         return id;
@@ -107,5 +111,13 @@ public class TenantDataSyncConfigVO extends ToString {
 
     public void setGmtUpdated(Date gmtUpdated) {
         this.gmtUpdated = gmtUpdated;
+    }
+
+    public Byte getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Byte deleted) {
+        this.deleted = deleted;
     }
 }

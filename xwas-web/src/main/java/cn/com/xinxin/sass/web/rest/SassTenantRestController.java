@@ -205,13 +205,13 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/queryConfig",method = RequestMethod.GET)
     @ResponseBody
     @RequiresPermissions("/tenant/queryConfig")
-    public Object queryTenantConfig(@RequestBody TenantForm tenantForm, HttpServletRequest request){
+    public Object queryTenantConfig(@RequestParam(required = false) String tenantId, HttpServletRequest request){
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
-        if(StringUtils.isEmpty(sassUserInfo.getTenantId())){
-            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"缓存中租户id为空");
+        if(StringUtils.isEmpty(tenantId)){
+            tenantId = sassUserInfo.getTenantId();
         }
-        List<TenantDataSyncConfigDO> tenantDataSyncConfigDOS = tenantDataSyncConfigService.selectByTenantId(sassUserInfo.getTenantId());
+        List<TenantDataSyncConfigDO> tenantDataSyncConfigDOS = tenantDataSyncConfigService.selectByTenantId(tenantId);
         return tenantDataSyncConfigDOS;
     }
 
