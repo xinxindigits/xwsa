@@ -44,9 +44,29 @@ public interface TenantDataSyncConfigService {
     int updateUnLockByTenantIdAndTaskType(String tenantId, String taskType);
 
     /**
+     * 查询所有未被删除的记录
+     * @return 未被删除的记录
+     */
+    List<TenantDataSyncConfigDO> queryValidRecord();
+
+    /**
      * 通过机构id查询记录
      * @param tenantId
      * @return
      */
     List<TenantDataSyncConfigDO> selectByTenantId(String tenantId);
+
+    /**
+     * 插入配置并且初始化任务
+     * @param tenantDataSyncConfigDO 配置
+     * @return 成功插入条数
+     */
+    int insert(TenantDataSyncConfigDO tenantDataSyncConfigDO);
+
+    /**
+     * 通过id查询记录
+     * @param id 数据库主键
+     * @return 记录
+     */
+    TenantDataSyncConfigDO selectById(Long id);
 }

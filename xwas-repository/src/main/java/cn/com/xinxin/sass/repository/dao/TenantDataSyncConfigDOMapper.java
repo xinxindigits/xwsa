@@ -81,6 +81,12 @@ public interface TenantDataSyncConfigDOMapper {
                                         @Param(value = "taskType")String taskType);
 
     /**
+     * 查询所有未被删除的记录
+     * @return 未被删除的记录
+     */
+    List<TenantDataSyncConfigDO> queryValidRecord();
+
+    /**
      * 通过租户id查询记录
      * @param tenantId 租户id
      * @return
