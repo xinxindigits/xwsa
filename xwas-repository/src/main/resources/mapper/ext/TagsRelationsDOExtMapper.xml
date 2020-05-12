@@ -64,6 +64,13 @@
     where tag_id = #{tagId,jdbcType=BIGINT}
   </delete>
 
+  <delete id="deleteTagsBykeyId" parameterType="java.lang.Long">
+
+    delete from tags_relations
+    where key_id = #{keyId,jdbcType=BIGINT}
+
+  </delete>
+
 
   <select id="selectTagsByKeyId" resultMap="BaseResultMapExt" parameterType="java.lang.String" >
     select
