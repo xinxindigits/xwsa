@@ -62,12 +62,10 @@ import { createResource, updateResource } from "@/api/data";
 const _config = {
   create: {
     title: "新增",
-    success_evt: "on-create-resource",
     submit: createResource
   },
   update: {
     title: "更新",
-    success_evt: "on-update-resource",
     submit: updateResource
   }
 };
@@ -135,7 +133,7 @@ export default {
         if (valid) {
           _config[this.type].submit(this.formObj).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.type);
+            this.$emit("resource-modified", this.type);
           });
         }
       });

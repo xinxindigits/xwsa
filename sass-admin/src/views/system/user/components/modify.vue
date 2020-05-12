@@ -130,7 +130,7 @@ export default {
         gender: "",
         extension: "",
         roles: [],
-        orgCode: ""
+        orgCode: null
       },
       rules: {
         account: [{ required: true, message: "账号不能为空", trigger: "blur" }],
@@ -187,7 +187,7 @@ export default {
         gender: "",
         extension: "",
         roles: [],
-        orgCode: ""
+        orgCode: null
       };
     },
     hdlSubmit(name) {

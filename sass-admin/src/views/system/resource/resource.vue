@@ -230,6 +230,7 @@ export default {
           this.submit({ ...this.form1, resourceType: "menu" }).then(res => {
             this.curValue = false;
             let cbkdata = this.isUpdate ? data : res.data;
+            this.$Message.success(this.isUpdate ? "更新成功" : "新增成功");
             this.init().then(() => {
               if (this.isUpdate) {
                 this.query(cbkdata);
