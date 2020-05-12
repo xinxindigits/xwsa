@@ -140,7 +140,7 @@ export default {
       showUserDetail: false,
 
       isLoading: false,
-      pageSize: 1,
+      pageSize: 10,
       total: 0,
       page: 1,
       formItem: {
