@@ -16,6 +16,7 @@ import cn.com.xinxin.sass.web.form.UserLoginForm;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
+import cn.com.xinxin.sass.web.utils.KaptchaUtils;
 import cn.com.xinxin.sass.web.vo.UserTokenVO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -70,6 +71,11 @@ public class SassAuthRestController {
     public Object login(HttpServletRequest request,
                         HttpServletResponse response,
                         @RequestBody UserLoginForm userLoginForm){
+
+
+        if (!KaptchaUtils.checkVerifyCode(request)) {
+            return "验证码有误！";
+        }
 
         String userAccount = userLoginForm.getAccount();
 
