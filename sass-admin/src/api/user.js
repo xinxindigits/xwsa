@@ -1,12 +1,13 @@
 import axios from "@/libs/api.request";
 
-export const login = ({ account, password }) => {
+export const login = ({ account, password, verifyCode }) => {
   const data = {
     account,
     password
   };
   return axios.request({
     url: "auth",
+    params: { verifyCode },
     data,
     method: "post"
   });
@@ -29,5 +30,11 @@ export const logout = () => {
     url: "logout",
     data: {},
     method: "post"
+  });
+};
+export const getKaptcha = () => {
+  return axios.request({
+    url: "kaptcha?" + Math.random(),
+    method: "get"
   });
 };

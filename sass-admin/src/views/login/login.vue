@@ -1,7 +1,3 @@
-<style lang="less">
-@import "./login.less";
-</style>
-
 <template>
   <div class="login">
     <div class="login-con">
@@ -23,8 +19,8 @@ export default {
   },
   methods: {
     ...mapActions(["handleLogin", "getUserInfo"]),
-    handleSubmit({ account, password }) {
-      this.handleLogin({ account, password }).then(() => {
+    handleSubmit({ account, password, verifyCode }) {
+      this.handleLogin({ account, password, verifyCode }).then(() => {
         this.$router.push({
           name: this.$config.homeName
         });
@@ -33,5 +29,6 @@ export default {
   }
 };
 </script>
-
-<style></style>
+<style lang="less" scoped>
+@import "./login.less";
+</style>
