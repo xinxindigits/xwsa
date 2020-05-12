@@ -18,6 +18,6 @@ module.exports = {
     config.resolve.alias.set("@", resolve("src"));
   },
   devServer: {
-    proxy: "http://localhost:8081"
+    proxy: "http://172.27.0.16:8080"
   }
 };

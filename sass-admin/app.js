@@ -6,7 +6,7 @@ const cors = require("cors");
 
 var { createProxyMiddleware } = require("http-proxy-middleware");
 const app = express();
-var proxyPath = "http://localhost:8081";
+var proxyPath = "http://172.27.0.16:8080";
 var proxyOption = { target: proxyPath };
 var exampleProxy = createProxyMiddleware(proxyOption);
 app.use(express.static(path.resolve(__dirname, "./dist")));
