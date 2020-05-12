@@ -94,7 +94,8 @@
             <value>
                 /auth = anon
                 /rememberMe = anon
-                / = anon
+                /= anon
+                /kaptcha = anon
                 /register = anon
                 /unauthorized = anon
                 /static/** = anon
