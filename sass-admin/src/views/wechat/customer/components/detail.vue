@@ -113,11 +113,10 @@ export default {
       this.$emit("show-record", this.detail.userId);
     },
     hdlSubmit() {
-      debugger;
       let tagIds = this.detail.tagList.map(n => {
         return n.toString();
       });
-      setTagByKeyId({ keyId: this.detail.id, tagIds });
+      setTagByKeyId({ keyId: this.detail.userId, tagIds, keyName: "customer" });
     }
   },
   watch: {

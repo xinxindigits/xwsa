@@ -59,7 +59,7 @@ export const deleteTag = ({ tagId }) => {
   });
 };
 
-export const setTagByKeyId = ({ keyId, keyName, description, tagIds }) => {
+export const setTagByKeyId = ({ keyId, keyName, description = "", tagIds }) => {
   let data = { keyId, keyName, description, tagIds };
   return axios.request({
     url: "tags/fixdata",
