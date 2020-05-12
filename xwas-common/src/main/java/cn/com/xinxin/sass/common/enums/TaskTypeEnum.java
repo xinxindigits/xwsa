@@ -27,4 +27,8 @@ public enum TaskTypeEnum {
     public String getType() {
         return type;
     }
+
+    public String getDesc() {
+        return desc;
+    }
 }

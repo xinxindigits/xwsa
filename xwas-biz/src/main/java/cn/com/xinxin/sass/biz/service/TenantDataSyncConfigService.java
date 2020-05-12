@@ -2,6 +2,8 @@ package cn.com.xinxin.sass.biz.service;
 
 import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
 
+import java.util.List;
+
 /**
  * @author: liuhangzhou
  * @created: 2020/4/27.
@@ -40,4 +42,11 @@ public interface TenantDataSyncConfigService {
      * @return 成功更新记录条数
      */
     int updateUnLockByTenantIdAndTaskType(String tenantId, String taskType);
+
+    /**
+     * 通过机构id查询记录
+     * @param tenantId
+     * @return
+     */
+    List<TenantDataSyncConfigDO> selectByTenantId(String tenantId);
 }
