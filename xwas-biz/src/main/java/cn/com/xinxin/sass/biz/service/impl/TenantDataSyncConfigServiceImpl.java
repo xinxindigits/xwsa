@@ -5,6 +5,7 @@ import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.repository.dao.TenantDataSyncConfigDOMapper;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.result.BizResultCode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,5 +155,51 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
     @Override
     public List<TenantDataSyncConfigDO> queryValidRecord() {
         return tenantDataSyncConfigDOMapper.queryValidRecord();
+    }
+
+    /**
+     * 插入配置
+     * @param tenantDataSyncConfigDO 配置
+     * @return 成功插入条数
+     */
+    @Override
+    public int insert(TenantDataSyncConfigDO tenantDataSyncConfigDO) {
+        if (null == tenantDataSyncConfigDO) {
+            LOGGER.error("插入配置, tenantDataSyncConfigDO不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "插入配置, tenantDataSyncConfigDO不能为空");
+        }
+        if (StringUtils.isBlank(tenantDataSyncConfigDO.getTenantId())) {
+            LOGGER.error("插入配置, TenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "插入配置, TenantId不能为空");
+        }
+        if (StringUtils.isBlank(tenantDataSyncConfigDO.getTaskType())) {
+            LOGGER.error("插入配置, TaskType不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "插入配置, TaskType不能为空");
+        }
+        if (StringUtils.isBlank(tenantDataSyncConfigDO.getCronExpression())) {
+            LOGGER.error("插入配置, CronExpression不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "插入配置, CronExpression不能为空");
+        }
+
+        return tenantDataSyncConfigDOMapper.insertSelective(tenantDataSyncConfigDO);
+    }
+
+    /**
+     * 通过id查询记录
+     * @param id 数据库主键
+     * @return 记录
+     */
+    @Override
+    public TenantDataSyncConfigDO selectById(Long id) {
+        if (null == id) {
+            LOGGER.error("通过id查询记录, id不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过id查询记录, id不能为空");
+        }
+        return tenantDataSyncConfigDOMapper.selectByPrimaryKey(id);
     }
 }

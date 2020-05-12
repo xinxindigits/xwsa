@@ -42,8 +42,14 @@ public class QuartzJobInitialization {
 
         if (CollectionUtils.isNotEmpty(tenantDataSyncConfigDOS)) {
             for (TenantDataSyncConfigDO tenantDataSyncConfigDO : tenantDataSyncConfigDOS) {
-                quartzJobService.startJob(tenantDataSyncConfigDO.getTenantId(), tenantDataSyncConfigDO.getTaskType(),
-                        tenantDataSyncConfigDO.getCronExpression());
+                try {
+                    quartzJobService.startJob(tenantDataSyncConfigDO.getTenantId(), tenantDataSyncConfigDO.getTaskType(),
+                            tenantDataSyncConfigDO.getCronExpression());
+                } catch (Exception e) {
+                    LOGGER.info("Quartz job initialization -- failed to start scheduler, tenantId[{}], taskType[{}]",
+                            tenantDataSyncConfigDO.getTenantId(), tenantDataSyncConfigDO.getTaskType());
+                }
+
             }
         }
     }
