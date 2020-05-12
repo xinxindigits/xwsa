@@ -22,7 +22,6 @@
         <module>xwas-web</module>
         <module>xwas-common</module>
         <module>xwas-auth</module>
-        <module>xwas-job</module>
     </modules>
 
     <properties>
@@ -48,9 +47,8 @@
         <pagehelper.version>5.1.4</pagehelper.version>
         <shiro.encache.version>1.3.2</shiro.encache.version>
         <java.jtw.version>3.8.3</java.jtw.version>
-        <xxl.job.version>1.9.1</xxl.job.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
-
+        <quartz.version>2.3.1</quartz.version>
     </properties>
 
     <dependencyManagement>
@@ -70,12 +68,6 @@
 
 
             <!-- api version -->
-
-            <dependency>
-                <groupId>com.xuxueli</groupId>
-                <artifactId>xxl-job-core</artifactId>
-                <version>${xxl.job.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>com.xinxinfinance.xwas</groupId>
@@ -215,6 +207,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
         </dependency>
     </dependencies>
 
