@@ -5,9 +5,12 @@ import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
+import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.common.enums.TaskTypeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
+import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
 import cn.com.xinxin.sass.web.form.TenantForm;
 import cn.com.xinxin.sass.web.vo.*;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -42,14 +46,17 @@ public class SassTenantRestController extends AclController {
 
     private final TenantBaseInfoService tenantBaseInfoService;
 
+    private final TenantDataSyncConfigService tenantDataSyncConfigService;
+
     private static final String OG = "OG";
 
     private static final String DATE_FORMAT_NOSIGN = "yyyyMMdd";
 
     private static final String PADDING = "000";
 
-    public SassTenantRestController(OrganizationService organizationService, TenantBaseInfoService tenantBaseInfoService) {
+    public SassTenantRestController(TenantBaseInfoService tenantBaseInfoService, TenantDataSyncConfigService tenantDataSyncConfigService) {
         this.tenantBaseInfoService = tenantBaseInfoService;
+        this.tenantDataSyncConfigService = tenantDataSyncConfigService;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -193,6 +200,19 @@ public class SassTenantRestController extends AclController {
         }else {
             return SassBizResultCodeEnum.FAIL.getAlertMessage();
         }
+    }
+
+    @RequestMapping(value = "/queryConfig",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresPermissions("/tenant/queryConfig")
+    public Object queryTenantConfig(@RequestBody TenantForm tenantForm, HttpServletRequest request){
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        if(StringUtils.isEmpty(sassUserInfo.getTenantId())){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"缓存中租户id为空");
+        }
+        List<TenantDataSyncConfigDO> tenantDataSyncConfigDOS = tenantDataSyncConfigService.selectByTenantId(sassUserInfo.getTenantId());
+        return tenantDataSyncConfigDOS;
     }
 
 }

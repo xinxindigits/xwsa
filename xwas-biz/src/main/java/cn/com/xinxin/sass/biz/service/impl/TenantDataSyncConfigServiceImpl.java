@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 /**
  * @author: liuhangzhou
@@ -137,5 +139,15 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
         }
 
         return result;
+    }
+
+    @Override
+    public List<TenantDataSyncConfigDO> selectByTenantId(String tenantId) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("通过机构id和任务类型查询记录, tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过机构id和任务类型查询记录, tenantId不能为空");
+        }
+        return tenantDataSyncConfigDOMapper.selectByTenantId(tenantId);
     }
 }
