@@ -46,7 +46,7 @@
 
 <script>
 export default {
-  name: "member-detail",
+  name: "customer-detail",
   props: {
     items: Object
   },

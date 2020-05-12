@@ -5,6 +5,7 @@
         ref="query"
         v-model="formItem"
         @on-role-query="changePage(1)"
+        @on-role-reset="changePage(1)"
       ></role-query>
       <role-operation
         @on-role-create="hdlSingleModified('create')"

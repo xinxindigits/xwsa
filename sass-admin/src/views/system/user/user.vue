@@ -90,6 +90,9 @@
         <Col span="12">id：{{ userDetail.id }}</Col>
       </Row>
       <Row class="row-detail">
+        <Col span="24">状态：{{ $mapd("userStatus", userDetail.status) }}</Col>
+      </Row>
+      <Row class="row-detail">
         <Col span="12">名称：{{ userDetail.name }}</Col>
         <Col span="12">角色：{{ userDetail.roleName }}</Col>
       </Row>
