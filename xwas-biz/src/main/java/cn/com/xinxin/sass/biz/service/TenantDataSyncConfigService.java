@@ -44,6 +44,12 @@ public interface TenantDataSyncConfigService {
     int updateUnLockByTenantIdAndTaskType(String tenantId, String taskType);
 
     /**
+     * 查询所有未被删除的记录
+     * @return 未被删除的记录
+     */
+    List<TenantDataSyncConfigDO> queryValidRecord();
+
+    /**
      * 通过机构id查询记录
      * @param tenantId
      * @return
