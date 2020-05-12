@@ -2,11 +2,11 @@
   <Row>
     <Col span="24">
       <Card>
-        <msg-query
+        <query
           ref="query"
           v-model="formItem"
           @on-wc-msg-query="changePage(1)"
-        ></msg-query>
+        ></query>
         <Table
           stripe
           border
@@ -66,12 +66,11 @@
 
 <script>
 import { queryMsgList, getMsgByMsgId } from "@/api";
-import { MsgQuery } from "./components";
-import MsgDetail from "../common/msg-detail/msg-detail";
+import { Query, MsgDetail } from "./components";
 export default {
   name: "message-list",
   components: {
-    MsgQuery,
+    Query,
     MsgDetail
   },
   data() {

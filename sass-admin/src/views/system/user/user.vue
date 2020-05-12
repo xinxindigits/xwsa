@@ -5,6 +5,7 @@
         ref="query"
         v-model="formItem"
         @on-user-query="changePage(1)"
+        @on-user-reset="changePage(1)"
       ></user-query>
       <user-operation
         @on-user-create="hdlSingleCreate"
@@ -60,7 +61,7 @@
         <Page
           :total="total"
           :current="page"
-          :page-size-opts="[10, 20, 50, 100]"
+          :page-size="pageSize"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
           show-sizer
@@ -88,6 +89,9 @@
       <Row class="row-detail">
         <Col span="12">账号：{{ userDetail.account }}</Col>
         <Col span="12">id：{{ userDetail.id }}</Col>
+      </Row>
+      <Row class="row-detail">
+        <Col span="24">状态：{{ $mapd("userStatus", userDetail.status) }}</Col>
       </Row>
       <Row class="row-detail">
         <Col span="12">名称：{{ userDetail.name }}</Col>
@@ -190,9 +194,10 @@ export default {
     hdlquery() {
       this.changePage(1);
     },
-    changePage(pageIndex) {
+    changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
+      this.page = pageIndex;
       getUserList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;

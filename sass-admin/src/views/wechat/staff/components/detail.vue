@@ -48,7 +48,7 @@
 
 <script>
 export default {
-  name: "member-detail",
+  name: "staff-detail",
   props: {
     items: Object
   },

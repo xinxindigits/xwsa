@@ -1,5 +1,12 @@
 <template>
-  <div>
+  <Drawer
+    title="客户详情"
+    width="80"
+    v-model="showDetail"
+    scrollable
+    transfer
+    :styles="styles"
+  >
     <List>
       <ListItem>
         <ListItemMeta :title="detail.customerName" :description="description">
@@ -19,6 +26,16 @@
       <Cell>
         <span>客户类型：{{ $mapd("customerType", detail.customerType) }}</span>
       </Cell>
+      <Form label-colon>
+        <FormItem label="标签" :label-width="60">
+          <Select v-model="detail.tagList" filterable multiple>
+            <Option v-for="n in tagList" :key="n.id" :value="n.id">{{
+              n.name
+            }}</Option>
+          </Select>
+        </FormItem>
+      </Form>
+
       <Divider dashed></Divider>
       <Cell>
         <span>公司名称：{{ detail.corpFullName }}</span>
@@ -41,14 +58,21 @@
       <Divider dashed></Divider>
       <Button type="primary" @click="hdlClick">会话信息</Button>
     </CellGroup>
-  </div>
+    <div class="drawer-footer">
+      <Button style="margin-right: 8px" @click="hdlCancel">取消</Button>
+      <Button type="primary" @click="hdlSubmit">确认</Button>
+    </div>
+  </Drawer>
 </template>
 
 <script>
+import { setTagByKeyId } from "@/api";
 export default {
-  name: "member-detail",
+  name: "customer-detail",
   props: {
-    items: Object
+    value: Boolean,
+    items: Object,
+    tagList: Array
   },
   computed: {
     description() {
@@ -57,6 +81,13 @@ export default {
   },
   data() {
     return {
+      styles: {
+        height: "calc(100% - 55px)",
+        overflow: "auto",
+        paddingBottom: "53px",
+        position: "static"
+      },
+      showDetail: false,
       detail: {
         avatar: "",
         corpFullName: "",
@@ -69,7 +100,8 @@ export default {
         memberUserId: "",
         status: "",
         unionId: "",
-        userId: ""
+        userId: "",
+        tagList: []
       }
     };
   },
@@ -79,14 +111,33 @@ export default {
     },
     hdlClick() {
       this.$emit("show-record", this.detail.userId);
+    },
+    hdlSubmit() {
+      let tagIds = this.detail.tagList.map(n => {
+        return n.toString();
+      });
+      setTagByKeyId({ keyId: this.detail.userId, tagIds, keyName: "customer" });
     }
   },
   watch: {
+    value(newValue) {
+      this.showDetail = newValue;
+    },
+    showDetail(newValue) {
+      this.$emit("input", newValue);
+    },
     items: {
       immediate: true,
       deep: true,
       handler(newValue) {
+        let tag_list = [];
+        if (newValue.tags && newValue.tags.length > 0) {
+          tag_list = newValue.tags.map(n => {
+            return n.id;
+          });
+        }
         this.detail = newValue;
+        this.detail.tagList = tag_list;
       }
     }
   }
@@ -141,5 +192,15 @@ img {
   top: 0;
   bottom: 0;
   border: 1px solid rgba(0, 0, 0, 0.1);
+}
+.drawer-footer {
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border-top: 1px solid #e8e8e8;
+  padding: 10px 16px;
+  text-align: right;
+  background: #fff;
 }
 </style>

@@ -36,6 +36,7 @@ export default {
     },
     reset() {
       this.formItem.name = "";
+      this.$emit("on-tag-reset");
     }
   },
   watch: {

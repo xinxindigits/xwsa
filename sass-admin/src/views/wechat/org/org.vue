@@ -59,10 +59,10 @@
       ></Col>
     </Row>
     <Drawer title="详情" width="80" v-model="showDetail" scrollable transfer>
-      <member-detail
+      <staff-detail
         :items="memberDetail"
         @show-record="hdlShowRecord"
-      ></member-detail>
+      ></staff-detail>
     </Drawer>
     <msg-record
       v-model="showRecord"
@@ -79,12 +79,12 @@ import {
   queryMemberByDeptId,
   getMemberDetail
 } from "@/api";
-import MemberDetail from "../common/member-detail/member-detail";
+import { StaffDetail } from "@/views/wechat/staff/components";
 import MsgRecord from "@/components/msg-record/msg-record";
 export default {
   name: "org-list",
   components: {
-    MemberDetail,
+    StaffDetail,
     MsgRecord
   },
   data() {

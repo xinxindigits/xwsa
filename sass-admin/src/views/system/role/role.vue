@@ -5,6 +5,7 @@
         ref="query"
         v-model="formItem"
         @on-role-query="changePage(1)"
+        @on-role-reset="changePage(1)"
       ></role-query>
       <role-operation
         @on-role-create="hdlSingleModified('create')"
@@ -125,6 +126,7 @@ export default {
     changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
+      this.page = pageIndex;
       getRoleList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
