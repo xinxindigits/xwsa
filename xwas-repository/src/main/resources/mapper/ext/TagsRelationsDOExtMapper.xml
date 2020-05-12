@@ -64,10 +64,10 @@
     where tag_id = #{tagId,jdbcType=BIGINT}
   </delete>
 
-  <delete id="deleteTagsBykeyId" parameterType="java.lang.Long">
+  <delete id="deleteTagsBykeyId" parameterType="java.lang.String">
 
     delete from tags_relations
-    where key_id = #{keyId,jdbcType=BIGINT}
+    where key_id = #{keyId,jdbcType=VARCHAR}
 
   </delete>
 
