@@ -48,22 +48,18 @@
         </Card>
       </Col>
     </Row>
-    <Drawer
-      title="客户详情"
-      width="80"
+
+    <customer-detail
       v-model="showDetail"
-      scrollable
-      transfer
-    >
-      <customer-detail
-        :items="curDetail"
-        @show-record="hdlShowRecord"
-        @on-cancel="
-          showDetail = false;
-          curDetail = {};
-        "
-      ></customer-detail>
-    </Drawer>
+      :tag-list="tagList"
+      :items="curDetail"
+      @show-record="hdlShowRecord"
+      @on-cancel="
+        showDetail = false;
+        curDetail = {};
+      "
+    ></customer-detail>
+
     <msg-record
       ref="record"
       v-model="showRecord"

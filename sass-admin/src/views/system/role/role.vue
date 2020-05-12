@@ -126,6 +126,7 @@ export default {
     changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
+      this.page = pageIndex;
       getRoleList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;

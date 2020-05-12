@@ -60,10 +60,9 @@
         <Page
           :total="total"
           :current="page"
-          :page-size-opts="[10, 20, 50, 100]"
+          :page-size="1"
           @on-change="changePage"
           @on-page-size-change="changePageSize"
-          show-sizer
           show-elevator
           show-total
           transfer
@@ -141,7 +140,7 @@ export default {
       showUserDetail: false,
 
       isLoading: false,
-      pageSize: 10,
+      pageSize: 1,
       total: 0,
       page: 1,
       formItem: {
@@ -193,9 +192,10 @@ export default {
     hdlquery() {
       this.changePage(1);
     },
-    changePage(pageIndex) {
+    changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
+      this.page = pageIndex;
       getUserList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;

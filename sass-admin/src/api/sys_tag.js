@@ -63,13 +63,14 @@ export const setTagByKeyId = ({ keyId, keyName, description, tagIds }) => {
   let data = { keyId, keyName, description, tagIds };
   return axios.request({
     url: "tags/fixdata",
-    method: "delete",
+    method: "post",
     data
   });
 };
 export const getAllTags = () => {
   return axios.request({
     url: "tags/routes",
-    method: "post"
+    method: "post",
+    data: {}
   });
 };
