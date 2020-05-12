@@ -27,6 +27,13 @@
             >删除</Button
           ></Col
         >
+        <Col
+        ><Button
+                icon="md-person-add"
+                @click="hdlSetTask(deleteOrgCodes)"
+        >配置任务</Button
+        ></Col
+        >
       </Row>
       <Table
         stripe
@@ -88,7 +95,7 @@
 </template>
 
 <script>
-import { getTenantList, delTenant, queryTenant } from "@/api";
+import { getTenantList, delTenant, queryTenant,queryTenantConfig } from "@/api";
 import OrganizationUpdate from "./modify";
 export default {
   name: "organization",
@@ -178,6 +185,17 @@ export default {
       } else {
         this.$Message.warning("请选择一条记录!");
       }
+    },
+    hdlSetTask(codes) {
+        let self = this;
+        if (codes.length > 0) {
+            queryTenantConfig({ codes }).then(() => {
+                this.$Message.success("配置成功！");
+                self.hdlquery();
+            });
+        } else {
+            this.$Message.warning("请选择一条记录!");
+        }
     },
     hdlSingleCreate() {
       this.$refs.createModal.setData({
