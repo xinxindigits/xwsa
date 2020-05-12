@@ -11,6 +11,7 @@
     "@riophae/vue-treeselect": "^0.4.0",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "md5": "^2.2.1",
     "mockjs": "^1.1.0",
     "view-design": "^4.0.0",
     "vue": "^2.6.11",

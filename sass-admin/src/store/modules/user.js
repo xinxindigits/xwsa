@@ -30,12 +30,13 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin({ commit }, { account, password }) {
+    handleLogin({ commit }, { account, password, verifyCode }) {
       account = account.trim();
       return new Promise((resolve, reject) => {
         login({
           account,
-          password
+          password,
+          verifyCode
         })
           .then(res => {
             const data = res.data;

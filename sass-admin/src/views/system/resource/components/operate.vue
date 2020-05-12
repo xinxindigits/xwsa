@@ -41,8 +41,7 @@
       ref="modifyModal"
       v-model="showModal"
       :type="modifyType"
-      @on-create-resource="hdlModified"
-      @on-update-resource="hdlModified"
+      @resource-modified="hdlModified"
     ></resource-func-modify
   ></Card>
 </template>

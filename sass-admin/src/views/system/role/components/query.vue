@@ -13,8 +13,8 @@
         style="width:160px"
         filterable
       >
-        <Option value="admin">admin</Option>
-        <Option value="user">user</Option>
+        <Option value="admin">管理员</Option>
+        <Option value="user">用户</Option>
       </Select>
     </FormItem>
     <FormItem>
@@ -54,6 +54,7 @@ export default {
     },
     reset() {
       this.$refs.form.resetFields();
+      this.$emit("on-role-reset");
     }
   },
   watch: {

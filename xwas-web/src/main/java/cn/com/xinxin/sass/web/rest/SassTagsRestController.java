@@ -223,6 +223,10 @@ public class SassTagsRestController extends AclController {
 
         }
 
+        // 首先删除
+
+        this.tagsService.deleteTagsBykeyId(keyId);
+
         int result = this.tagsService.createTagsRelations(tagsRelationsDOS);
 
         return result;

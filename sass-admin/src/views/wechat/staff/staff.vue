@@ -58,10 +58,10 @@
       scrollable
       transfer
     >
-      <member-detail
+      <staff-detail
         :items="memberDetail"
         @show-record="hdlShowRecord"
-      ></member-detail>
+      ></staff-detail>
     </Drawer>
     <msg-record
       v-model="showRecord"
@@ -73,12 +73,12 @@
 
 <script>
 import { getMemberList, getMemberDetail, queryMember } from "@/api";
-import MemberDetail from "../common/member-detail/member-detail";
+import { StaffDetail } from "./components";
 import MsgRecord from "@/components/msg-record/msg-record";
 export default {
   name: "staff-list",
   components: {
-    MemberDetail,
+    StaffDetail,
     MsgRecord
   },
   data() {

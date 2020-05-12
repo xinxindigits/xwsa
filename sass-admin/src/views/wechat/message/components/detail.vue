@@ -18,7 +18,7 @@
         <ListItem>发送时间：{{ detail.msgTime | timeFilter }}</ListItem>
         <ListItem>消息类型：{{ $mapd("msgType", detail.msgType) }}</ListItem>
         <ListItem>接收人：{{ detail.toUserId }}</ListItem>
-        <ListItem>房间号：{{ detail.roomId }}</ListItem>
+        <ListItem>群号：{{ detail.roomId }}</ListItem>
       </List>
       <Divider dashed></Divider>
     </CellGroup>
