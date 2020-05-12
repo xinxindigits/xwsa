@@ -216,6 +216,8 @@ public class SassResourceRestController extends AclController {
                     menuTreeVO.setCode(resourceVO.getCode());
                     menuTreeVO.setUrl(resourceVO.getUrl());
                     menuTreeVO.setAuthority(resourceVO.getAuthority());
+                    menuTreeVO.setExtension(resourceVO.getExtension());
+                    menuTreeVO.setChecked(false);
                     menuTreeVO.setOrder(0);
                     resourceTreeVOList.add(menuTreeVO);
                 }
