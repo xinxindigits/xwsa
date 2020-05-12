@@ -49,6 +49,13 @@ public interface TagsService {
      */
     int deleteTagsByIds(Long tagsIds);
 
+    /**
+     * 删除
+     * @param keyId
+     * @return
+     */
+    int deleteTagsBykeyId(String keyId);
+
 
     /**
      * 创建tag对应的映射关系
