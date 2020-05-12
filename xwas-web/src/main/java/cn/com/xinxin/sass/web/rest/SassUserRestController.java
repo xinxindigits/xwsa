@@ -80,16 +80,14 @@ public class SassUserRestController extends AclController {
 
         PageResultVO<UserDO> pageUser = userService.findByConditionPage(page, queryUserConditionVO);
 
-        List<String> accounts = pageUser.getItems().stream()
-                .map(x->x.getAccount()).collect(toList());
-
-        Map<String,  List<UserOrgDO>> userOrgsMaps = this.userService.queryUserOrgsMapsByAccounts(accounts);
-
         PageResultVO<UserInfoVO> resultVO = BaseConvert.convert(pageUser, PageResultVO.class);
 
         List<UserInfoVO> userInfoVOS = Lists.newArrayList();
 
         if(!CollectionUtils.isEmpty(pageUser.getItems())){
+            List<String> accounts = pageUser.getItems().stream()
+                    .map(x->x.getAccount()).collect(toList());
+            Map<String,  List<UserOrgDO>> userOrgsMaps = this.userService.queryUserOrgsMapsByAccounts(accounts);
             userInfoVOS = pageUser.getItems().stream().map(userDO -> {
                 UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
                 userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
@@ -401,7 +399,7 @@ public class SassUserRestController extends AclController {
          */
         SassUserInfo grantedUserInfo = userAclTokenRepository.getSassUserByUserAccount(grantedUserAccount);
         if(null != grantedUserInfo){
-            // 缓存信息以及存在用户登陆，在需要更新用户权限值
+            // 缓存信息以及存在用户登录，在需要更新用户权限值
             //跟新用户缓存的角色以及权限值
             if (!CollectionUtils.isEmpty(userRoleDOS)){
                 Set<String> roleCodes = new HashSet<>(userRoleDOS.size());

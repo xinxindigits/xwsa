@@ -1,4 +1,12 @@
 import {
+  getRoleList,
+  addRole,
+  updateRole,
+  delRole,
+  grantRole,
+  getAllRoles
+} from "./sys_role";
+import {
   getTagList,
   queryTagList,
   createTag,
@@ -11,7 +19,8 @@ import {
   queryOrganization,
   delOrganization,
   addOrganization,
-  updateOrganization
+  updateOrganization,
+  getAllOrganizationTree
 } from "./sys_organization";
 import {
   getTenantList,
@@ -36,7 +45,8 @@ import {
   getMsgByMsgId,
   getUserInMsgList,
   getMsgDetailByUserId,
-  getMsgDetailByRoomId
+  getMsgDetailByRoomId,
+  getPageIndex
 } from "./wc_msg";
 import {
   getCustomerList,
@@ -44,6 +54,12 @@ import {
   getCustomerDetail
 } from "./wc_cus";
 export {
+  getAllRoles,
+  getRoleList,
+  addRole,
+  updateRole,
+  delRole,
+  grantRole,
   getTagList,
   queryTagList,
   createTag,
@@ -70,6 +86,7 @@ export {
   getUserInMsgList,
   getMsgDetailByUserId,
   getMsgDetailByRoomId,
+  getPageIndex,
   getCustomerList,
   queryCustomerList,
   getCustomerDetail,
@@ -78,6 +95,7 @@ export {
   delOrganization,
   addOrganization,
   updateOrganization,
+  getAllOrganizationTree,
   getTenantList,
   queryTenant,
   delTenant,

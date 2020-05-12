@@ -2,6 +2,7 @@
   <Drawer title="会话管理" v-model="showRecord" width="100">
     <div class="wrapper">
       <div class="list-box">
+        <Query ref="query" @on-query="hdlQuery" @on-reset="hdlReset" />
         <Card class="list-box-content">
           <CellGroup>
             <Cell
@@ -16,7 +17,11 @@
       </div>
       <div class="content">
         <div class="msg-wrapper">
-          <chat-list :list="msg_list"></chat-list>
+          <chat-list
+            :list="msg_list"
+            :is-search="isSearch"
+            @get-page-index="getPage"
+          ></chat-list>
         </div>
         <div style="padding-top:10px;">
           <Page
@@ -39,8 +44,10 @@
 import {
   getUserInMsgList,
   getMsgDetailByUserId,
-  getMsgDetailByRoomId
+  getMsgDetailByRoomId,
+  getPageIndex
 } from "@/api";
+import Query from "./query";
 import ChatList from "./chat-list";
 const getVal = function(n, keyArray) {
   if (!n) return "";
@@ -53,11 +60,21 @@ const getVal = function(n, keyArray) {
 export default {
   name: "msg-record",
   components: {
+    Query,
     ChatList
   },
   props: {
     value: Boolean,
     userId: String
+  },
+  computed: {
+    isSearch() {
+      return !(
+        this.formObj.keyWord == "" &&
+        this.formObj.startTime == "" &&
+        this.formObj.endTime == ""
+      );
+    }
   },
   filters: {
     name: function(n) {
@@ -72,10 +89,19 @@ export default {
       pageSize: 50,
       list: [],
       msg_list: [],
-      current_chat: {}
+      current_chat: {},
+      formObj: {
+        keyWord: "",
+        startTime: "",
+        endTime: ""
+      }
     };
   },
   methods: {
+    init(userId) {
+      this.userId = userId;
+      this.$refs.query.hdlReset();
+    },
     selectChat(n) {
       this.resetPageComp();
       this.current_chat = n;
@@ -99,12 +125,18 @@ export default {
           userId: this.userId,
           userIdTwo: id,
           pageSize: this.pageSize,
-          pageIndex: this.page
+          pageIndex: this.page,
+          ...this.formObj
         };
       } else if (n.type === 1) {
         id = n.roomId;
         api = getMsgDetailByRoomId;
-        params = { roomId: id, pageSize: this.pageSize, pageIndex: this.page };
+        params = {
+          roomId: id,
+          pageSize: this.pageSize,
+          pageIndex: this.page,
+          ...this.formObj
+        };
       }
       api(params).then(({ data }) => {
         this.msg_list = data.items.map(n => {
@@ -113,23 +145,53 @@ export default {
             content: n.content,
             time: n.msgTime,
             msgType: n.msgType,
-            avatar: n.avatar
+            avatar: n.avatar,
+            id: n.id
           };
         });
         this.total = data.total;
       });
     },
-    getMsgList(userId) {
+    getMsgList(userId, query = {}) {
       this.list = [];
       this.msg_list = [];
       this.resetPageComp();
-      getUserInMsgList({ userId }).then(({ data }) => {
+      getUserInMsgList({ userId, ...query }).then(({ data }) => {
         this.list = data;
       });
     },
     changePage(page) {
       this.page = page;
       this.getDetail();
+    },
+    hdlQuery(data) {
+      this.formObj = data;
+      this.getMsgList(this.userId, this.formObj);
+    },
+    hdlReset() {
+      this.formObj = {
+        keyWord: "",
+        startTime: "",
+        endTime: ""
+      };
+      this.getMsgList(this.userId);
+    },
+    getPage(id) {
+      let n = this.current_chat;
+      getPageIndex({
+        id,
+        pageSize: this.pageSize,
+        roomId: n.roomId,
+        userId: this.userId,
+        userIdTwo: n.userId
+      }).then(({ data }) => {
+        this.formObj = {
+          keyWord: "",
+          startTime: "",
+          endTime: ""
+        };
+        this.changePage(data.pageIndex);
+      });
     }
   },
   watch: {
@@ -147,6 +209,9 @@ export default {
 .wrapper {
   display: flex;
   height: 100%;
+  .search {
+    margin-bottom: 10px;
+  }
   .content {
     flex: 1;
     display: flex;

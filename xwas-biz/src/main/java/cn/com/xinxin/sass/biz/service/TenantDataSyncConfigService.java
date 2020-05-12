@@ -48,4 +48,11 @@ public interface TenantDataSyncConfigService {
      * @return 未被删除的记录
      */
     List<TenantDataSyncConfigDO> queryValidRecord();
+
+    /**
+     * 通过机构id查询记录
+     * @param tenantId
+     * @return
+     */
+    List<TenantDataSyncConfigDO> selectByTenantId(String tenantId);
 }

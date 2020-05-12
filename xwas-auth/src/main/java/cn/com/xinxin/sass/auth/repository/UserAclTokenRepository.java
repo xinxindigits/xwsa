@@ -120,8 +120,8 @@ public class UserAclTokenRepository {
             Date cachedTokenExpiredDate = JWTUtil.getExpiresTime(cachedToken);
 
             if(!DateUtils.isSameInstant(expireDate,cachedTokenExpiredDate)){
-                // 如果两个token的时间不一致，则表示使用的不是同一个token，需要重新登陆使用新的token
-                throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN,"token已无效，请重新登陆");
+                // 如果两个token的时间不一致，则表示使用的不是同一个token，需要重新登录使用新的token
+                throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN,"token已无效，请重新登录");
             }
 
             // 获取用户的信息重新生成token

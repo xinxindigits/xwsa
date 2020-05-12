@@ -16,6 +16,7 @@ import cn.com.xinxin.sass.web.form.UserLoginForm;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
+import cn.com.xinxin.sass.web.utils.KaptchaUtils;
 import cn.com.xinxin.sass.web.vo.UserTokenVO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -65,11 +66,16 @@ public class SassAuthRestController {
 
     }
 
-    @SysLog("用户登陆操作")
+    @SysLog("用户登录操作")
     @RequestMapping(value = "/auth",method = RequestMethod.POST)
     public Object login(HttpServletRequest request,
                         HttpServletResponse response,
                         @RequestBody UserLoginForm userLoginForm){
+
+
+        if (!KaptchaUtils.checkVerifyCode(request)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
+        }
 
         String userAccount = userLoginForm.getAccount();
 
@@ -86,8 +92,8 @@ public class SassAuthRestController {
                 userDO.getSalt(), password);
 
         if(ecnryptPassword.equals(userDO.getPassword())){
-            // 登陆成功, 返回token
-            // TODO: 登陆成功之后需要将用户的信息缓存起来，方便查询读写
+            // 登录成功, 返回token
+            // TODO: 登录成功之后需要将用户的信息缓存起来，方便查询读写
             String token = getToken(userAccount, userDO.getPassword());
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
@@ -132,8 +138,8 @@ public class SassAuthRestController {
             return userTokenVO;
 
         }else{
-            // 登陆失败
-            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败,用户名或者密码错误","登陆失败,用户名或者密码错误");
+            // 登录失败
+            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登录失败,用户名或者密码错误","登录失败,用户名或者密码错误");
         }
     }
 
@@ -146,8 +152,8 @@ public class SassAuthRestController {
 
     @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public Object unauthorized(HttpServletRequest request){
-        log.info("无效登陆口令，请重新登陆");
-        throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN,"无效登陆口令","无效登陆口令，请重新登陆");
+        log.info("无效登录口令，请重新登录");
+        throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN,"无效登录口令","无效登录口令，请重新登录");
 
     }
 

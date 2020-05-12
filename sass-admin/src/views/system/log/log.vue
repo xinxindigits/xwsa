@@ -45,7 +45,7 @@
       </div>
     </Card>
     <Drawer
-      :closable="false"
+      title="日志详情"
       width="40"
       v-model="showDetail"
       scrollable

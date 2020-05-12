@@ -1,7 +1,7 @@
 <template>
   <div class="chat-list">
-    <div v-if="currentValue.length == 0" style="text-align:center">
-      -无会话记录-
+    <div v-if="currentValue.length == 0">
+      <div style="text-align:center">-无会话记录-</div>
     </div>
     <div class="chat-list-items" v-else>
       <div
@@ -18,6 +18,9 @@
             <span class="chat-list-item-time">{{
               item.time | timeFilter
             }}</span>
+            <span class="check" v-if="isSearch" @click="hdlClick(item.id)"
+              >查看前后消息</span
+            >
           </div>
           <div class="chat-list-item-message" v-if="item.msgType == 'text'">
             {{ item.content }}
@@ -36,12 +39,18 @@ export default {
   props: {
     list: {
       type: Array
-    }
+    },
+    isSearch: { type: Boolean, default: false }
   },
   data() {
     return {
       currentValue: []
     };
+  },
+  methods: {
+    hdlClick(id) {
+      this.$emit("get-page-index", id);
+    }
   },
   watch: {
     list: {
@@ -87,6 +96,13 @@ export default {
     height: 100%;
     overflow-y: scroll;
   }
+  &-item:hover {
+    .check {
+      display: inline-block;
+      cursor: pointer;
+      color: #2d8cf0;
+    }
+  }
   &-item {
     display: flex;
     padding: 12px 0;
@@ -108,6 +124,10 @@ export default {
     &-message {
       font-size: 14px;
       line-height: 22px;
+    }
+    .check {
+      display: none;
+      padding-left: 10px;
     }
   }
 }

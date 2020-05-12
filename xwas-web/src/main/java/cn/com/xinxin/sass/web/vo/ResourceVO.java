@@ -26,6 +26,8 @@ public class ResourceVO extends ToString {
 
     private Boolean root;
 
+    private String extension;
+
     public Long getId() {
         return id;
     }
@@ -88,5 +90,13 @@ public class ResourceVO extends ToString {
 
     public void setRoot(Boolean root) {
         this.root = root;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 }

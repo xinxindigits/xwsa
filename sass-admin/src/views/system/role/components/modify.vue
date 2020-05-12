@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { addRole, updateRole } from "@/api/data";
+import { addRole, updateRole } from "@/api";
 const _config = {
   create: {
     title: "新增角色",

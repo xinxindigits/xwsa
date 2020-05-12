@@ -2,7 +2,7 @@
   <div>
     <Row :gutter="10" type="flex">
       <Col span="6">
-        <Card style="height:100%">
+        <Card>
           <Button type="primary" @click="hdlClick">新增</Button>
 
           <Tree
@@ -64,20 +64,20 @@
         </Card>
       </Col>
       <Col span="8">
-        <resource-list-function
+        <Operate
           :table-data="tableData"
           @on-delete-resource="query"
           :cur-tree-data="selectedTreeData"
           @resource-modified="hdlResourceModified"
         >
-        </resource-list-function>
+        </Operate>
       </Col>
     </Row>
   </div>
 </template>
 
 <script>
-import ResourceListFunction from "./function";
+import { Operate } from "./components";
 import {
   getResourceMenuTree,
   getResourceQueryTree,
@@ -88,7 +88,7 @@ import {
 export default {
   name: "resource-list",
   components: {
-    ResourceListFunction
+    Operate
   },
   data() {
     return {
@@ -207,7 +207,6 @@ export default {
         });
     },
     hdlTreeSelected(i, n) {
-      console.log(n);
       n.extension = n.extension || "";
       n.resourceType = "menu";
       this.form1 = this._.pick(
