@@ -47,7 +47,7 @@
   <select id="selectByTenantId" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from tenant_sync_config
-    where tenant_id = #{tenantId} and deleted = 0;
+    where tenant_id = #{tenantId} order by id;
   </select>
 
 </mapper>
