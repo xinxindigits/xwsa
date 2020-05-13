@@ -10,9 +10,12 @@ import cn.com.xinxin.sass.api.base.ToString;
  */
 public class UserTokenVO extends ToString {
 
+    private static final long serialVersionUID = -2337325084064734206L;
+
+
     private String account;
 
-    private String userName;
+    private String name;
 
     private String tenantId;
 
@@ -34,12 +37,12 @@ public class UserTokenVO extends ToString {
         this.token = token;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getTenantId() {
