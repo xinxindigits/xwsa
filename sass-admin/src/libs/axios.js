@@ -59,20 +59,16 @@ class HttpRequest {
       res => {
         this.destroy(url);
         const { data, status, config } = res;
-        if (!res.config.headers.isRetry && status && status === 460) {
-          if (res.headers && res.headers.XToken) {
-            store.commit("setToken", res.headers.XToken);
+        if (status && status === 460) {
+          let arr = Object.keys(res.headers).filter(n => {
+            return n.toUpperCase() == "XTOKEN";
+          });
+          if (res.headers && arr.length > 0) {
+            console.log("refresh");
+            store.commit("setToken", res.headers[arr[0]]);
             console.log("token updated");
           }
-          const oldReq = res.config;
-          oldReq.headers.isRetry = true;
-          let olddata = oldReq.data;
-          if (typeof olddata == "string") {
-            oldReq.data = JSON.parse(olddata);
-          } else {
-            oldReq.data = olddata;
-          }
-          return this.request(oldReq);
+          return data;
         } else if (data && data.code != "SUCCESS") {
           let message = data.message || "响应数据异常:无响应描述";
           !config.silent && Message.error(message);
@@ -100,6 +96,14 @@ class HttpRequest {
           Message.error("服务器禁止访问！");
         } else if (errorInfo.status === 400) {
           Message.error("请求错误，请检查参数或请求头");
+        } else if (errorInfo.status === 401) {
+          Message.error({
+            content: "登录信息失效，请重新登录",
+            onClose() {
+              store.commit("setToken", "");
+              location.reload();
+            }
+          });
         }
         if (!errorInfo) {
           const {
