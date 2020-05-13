@@ -88,7 +88,7 @@ export default {
       tableData: [],
       columns: [
         { title: "消息id", key: "msgId", align: "center" },
-        { title: "发送方", key: "fromUserId", align: "center" },
+        { title: "发送方", key: "fromUserName", align: "center" },
         { title: "发送时间", key: "msgTime", align: "center", slot: "msgTime" },
         { title: "类型", key: "msgType", align: "center", slot: "msgType" },
         {
