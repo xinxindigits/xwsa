@@ -98,7 +98,7 @@ public class SassAuthRestController {
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
             userTokenVO.setToken(token);
-            userTokenVO.setUserName(userDO.getName());
+            userTokenVO.setName(userDO.getName());
             userTokenVO.setTenantId(userDO.getTenantId());
 
             // 获取必要的用户信息,缓存到redis
