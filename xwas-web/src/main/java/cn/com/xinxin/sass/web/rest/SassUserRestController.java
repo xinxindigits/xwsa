@@ -13,6 +13,7 @@ import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.*;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.web.form.*;
+import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.vo.*;
 import com.tencent.wework.Finance;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
@@ -181,6 +182,12 @@ public class SassUserRestController extends AclController {
 
         // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
         String userAccount = userForm.getAccount();
+
+        if(!RegexUtils.isUsername(userAccount)){
+            // 如果匹配不是useraccount格式
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"账号不能包含特殊字符","账号不能包含特殊字符");
+        }
+
         // 查询已经存在的用户信息
         UserDO existUserDO = this.userService.findByUserAccount(userAccount);
 
