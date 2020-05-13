@@ -7,6 +7,7 @@ import cn.com.xinxin.sass.biz.schedule.service.QuartzJobService;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
+import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.enums.TaskTypeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
@@ -24,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -53,16 +55,28 @@ public class SassTenantRestController extends AclController {
 
     private final QuartzJobService quartzJobService;
 
+    private final WeChatWorkSyncService weChatWorkAddressListSyncServiceImpl;
+
+    private final WeChatWorkSyncService weChatWorkChatRecordSyncServiceImpl;
+
     private static final String OG = "OG";
 
     private static final String DATE_FORMAT_NOSIGN = "yyyyMMdd";
 
     private static final String PADDING = "000";
 
-    public SassTenantRestController(TenantBaseInfoService tenantBaseInfoService, TenantDataSyncConfigService tenantDataSyncConfigService, final QuartzJobService quartzJobService) {
+    public SassTenantRestController(TenantBaseInfoService tenantBaseInfoService,
+                                    TenantDataSyncConfigService tenantDataSyncConfigService,
+                                    final QuartzJobService quartzJobService,
+                                    @Qualifier(value = "weChatWorkAddressListSyncServiceImpl")
+                                    final WeChatWorkSyncService weChatWorkAddressListSyncServiceImpl,
+                                    @Qualifier(value = "weChatWorkChatRecordSyncServiceImpl")
+                                    final WeChatWorkSyncService weChatWorkChatRecordSyncServiceImpl) {
         this.tenantBaseInfoService = tenantBaseInfoService;
         this.tenantDataSyncConfigService = tenantDataSyncConfigService;
         this.quartzJobService = quartzJobService;
+        this.weChatWorkAddressListSyncServiceImpl = weChatWorkAddressListSyncServiceImpl;
+        this.weChatWorkChatRecordSyncServiceImpl = weChatWorkChatRecordSyncServiceImpl;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -322,4 +336,24 @@ public class SassTenantRestController extends AclController {
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
 
+
+    @RequestMapping(value = "/executeJob",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresPermissions("/tenant/executeJob")
+    public Object executeJob(@RequestParam(required = false) String taskType, HttpServletRequest request){
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        String tenantId = sassUserInfo.getTenantId();
+
+        if (StringUtils.equals(taskType, TaskTypeEnum.MESSAGE_SYNC.getType())) {
+            weChatWorkChatRecordSyncServiceImpl.sync(tenantId);
+        } else if (StringUtils.equals(taskType, TaskTypeEnum.CONTACT_SYNC.getType())) {
+            weChatWorkAddressListSyncServiceImpl.sync(tenantId);
+        } else {
+            loger.error("手动执行任务，任务类型错误, tenantid[{}], taskType[{}]", tenantId, taskType);
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "手动执行任务，任务类型错误");
+        }
+
+        return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+    }
 }
