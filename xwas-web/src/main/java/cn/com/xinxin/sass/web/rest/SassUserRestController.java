@@ -185,7 +185,7 @@ public class SassUserRestController extends AclController {
 
         if(!RegexUtils.isUsername(userAccount)){
             // 如果匹配不是useraccount格式
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"账号不能包含特殊字符","账号不能包含特殊字符");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"账号不能包含特殊字符或者长度超过20","账号不能包含特殊字符或者长度超过20");
         }
 
         // 查询已经存在的用户信息
