@@ -56,4 +56,8 @@ public class Finance {
      * @return 1��ɡ�0δ���
      */
     public native static int IsMediaDataFinish(long mediaData);
+
+    static {
+        System.loadLibrary("WeWorkFinanceSdk_Java");
+    }
 }
