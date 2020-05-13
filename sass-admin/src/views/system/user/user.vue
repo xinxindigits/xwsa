@@ -4,8 +4,8 @@
       <user-query
         ref="query"
         v-model="formItem"
-        @on-user-query="changePage(1)"
-        @on-user-reset="changePage(1)"
+        @on-user-query="hdlQuery"
+        @on-user-reset="init"
       ></user-query>
       <user-operation
         @on-user-create="hdlSingleCreate"
@@ -75,7 +75,7 @@
         v-model="showModal"
         :type="modifyType"
         @on-cancel="showModal = false"
-        @user-modified="hdlquery"
+        @user-modified="hdlQuery"
       >
       </user-modify>
       <user-grant
@@ -187,20 +187,26 @@ export default {
         roleName: "",
         orgs: []
       },
-      roleList: []
+      roleList: [],
+      curQuery: {}
     };
   },
   methods: {
-    hdlquery() {
+    init() {
+      this.curQuery = {};
+      this.changePage(1);
+    },
+    hdlQuery() {
+      this.curQuery = this.formItem;
       this.changePage(1);
     },
     changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      this.page = pageIndex;
-      getUserList({ pageIndex, pageSize, ...this.formItem })
+      getUserList({ pageIndex, pageSize, ...this.curQuery })
         .then(res => {
           let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -219,7 +225,7 @@ export default {
           onOk() {
             deleteUser({ accounts }).then(() => {
               this.$Message.success("删除成功！");
-              self.hdlquery();
+              self.hdlQuery();
             });
           }
         });

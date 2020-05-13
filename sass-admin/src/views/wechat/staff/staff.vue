@@ -11,7 +11,7 @@
               <Input v-model="formItem.mobile" placeholder="手机号"></Input>
             </FormItem>
             <FormItem>
-              <Button type="primary" @click="hdlquery">查询</Button>
+              <Button type="primary" @click="hdlQuery">查询</Button>
               <Button style="margin-left: 8px" @click="reset">重置</Button>
             </FormItem>
           </Form>
@@ -83,16 +83,18 @@ export default {
   },
   data() {
     return {
+      formItem: {
+        memberName: "",
+        mobile: ""
+      },
+      curQuery: {},
+
       showDetail: false,
       memberDetail: {},
       showRecord: false,
       cur_userId: "",
 
-      formItem: {
-        memberName: "",
-        mobile: ""
-      },
-
+      tableData: [],
       columns: [
         { title: "id", key: "id", width: 80 },
         { title: "名称", key: "memberName" },
@@ -117,11 +119,20 @@ export default {
         authority: [
           { required: true, message: "权限值不能为空", trigger: "blur" }
         ]
-      },
-      tableData: []
+      }
     };
   },
   methods: {
+    hdlQuery() {
+      this.curQuery = this.formItem;
+      this.changePage(1);
+    },
+    reset() {
+      this.curQuery = {};
+      this.formItem.memberName = "";
+      this.formItem.mobile = "";
+      this.changePage(1);
+    },
     hdlShowRecord(userId) {
       this.$refs.record.init(userId);
       this.showRecord = true;
@@ -134,23 +145,16 @@ export default {
         this.cur_userId = row.userId;
       });
     },
-    hdlquery() {
+
+    changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      queryMember({ pageIndex: 1, pageSize, ...this.formItem })
+      let api =
+        Object.keys(this.curQuery).length == 0 ? getMemberList : queryMember;
+      api({ pageIndex, pageSize, ...this.curQuery })
         .then(res => {
           let { data } = res;
-          this.tableData = data.items;
-          this.total = Number(data.total);
-        })
-        .finally(() => (this.isLoading = false));
-    },
-    changePage(pageIndex) {
-      this.isLoading = true;
-      let pageSize = this.pageSize;
-      getMemberList({ pageIndex, pageSize })
-        .then(res => {
-          let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -159,14 +163,10 @@ export default {
     changePageSize(pageSize) {
       this.pageSize = pageSize;
       this.changePage(1);
-    },
-    reset() {
-      this.formItem.memberName = "";
-      this.formItem.mobile = "";
     }
   },
   mounted() {
-    this.changePage(1);
+    this.reset();
   }
 };
 </script>

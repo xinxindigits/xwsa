@@ -10,7 +10,7 @@ import {
   routeHasExist
 } from "@/libs/util";
 import { formatMenu } from "@/router/routers";
-import { getMenuInfo } from "@/api/user";
+import { getMenuInfo } from "@/api";
 import router from "@/router";
 import routers from "@/router/routers";
 import config from "@/config";
