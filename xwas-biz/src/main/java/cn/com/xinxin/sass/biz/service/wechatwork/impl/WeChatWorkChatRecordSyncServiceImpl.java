@@ -118,7 +118,7 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
             updateSuccessRecord(tenantDataSyncLogDO, count);
         } catch (Exception e) {
             LOGGER.error("获取聊天记录异常，orgId[{}] taskid[{}]", tenantDataSyncLogDO.getTenantId(),
-                    tenantDataSyncLogDO.getTaskId());
+                    tenantDataSyncLogDO.getTaskId(), e);
             //更新失败日志
             updateFailRecord(tenantDataSyncLogDO, count, e.getMessage());
         } finally {
