@@ -221,8 +221,13 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
         TenantDataSyncLogDO failRecord = new TenantDataSyncLogDO();
         failRecord.setTaskStatus(TaskStatusEnum.FAILURE.getStatus());
         failRecord.setErrorCode(TaskErrorEnum.IMPORTING_EXCEPTION.getErrorCode());
-        failRecord.setErrorDesc(message.length() > 500
-                ? StringUtils.substring(message, 0, 500) : message);
+        if (StringUtils.isNotBlank(message)) {
+            failRecord.setErrorDesc(message.length() > 500
+                    ? StringUtils.substring(message, 0, 500) : message);
+        } else {
+            failRecord.setErrorDesc(TaskErrorEnum.IMPORTING_EXCEPTION.getErrorDesc());
+        }
+
         failRecord.setMessageCount(count);
         failRecord.setId(tenantDataSyncLogDO.getId());
         tenantDataSyncLogService.updateById(failRecord);
