@@ -57,7 +57,7 @@ public class QuartzJobInitialization {
     @PreDestroy
     public void destroyQuartzJobInitialization(){
 
-        LOGGER.info("*****************************QuartzJobInitialization Started************************");
+        LOGGER.info("*****************************QuartzJobInitialization Stoped************************");
 
         SchedulerFactoryBean schedulerFactory = (SchedulerFactoryBean) SpringContextHolder.getBean(SchedulerFactoryBean.class);
         if (null == schedulerFactory) {
