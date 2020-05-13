@@ -4,8 +4,8 @@
       <role-query
         ref="query"
         v-model="formItem"
-        @on-role-query="changePage(1)"
-        @on-role-reset="changePage(1)"
+        @on-role-query="hdlQuery"
+        @on-role-reset="init"
       ></role-query>
       <role-operation
         @on-role-create="hdlSingleModified('create')"
@@ -115,21 +115,29 @@ export default {
           align: "center"
         }
       ],
-      tbSelection: []
+      tbSelection: [],
+      curQuery: {}
     };
   },
   methods: {
+    init() {
+      this.curQuery = {};
+      this.changePage(1);
+    },
+    hdlQuery() {
+      this.curQuery = this.formItem;
+      this.changePage(1);
+    },
     hdlqueryAfterReset() {
       this.$refs.query.reset();
-      this.changePage(1);
     },
     changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      this.page = pageIndex;
-      getRoleList({ pageIndex, pageSize, ...this.formItem })
+      getRoleList({ pageIndex, pageSize, ...this.curQuery })
         .then(res => {
           let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -185,7 +193,7 @@ export default {
     }
   },
   mounted() {
-    this.changePage(1);
+    this.init();
   }
 };
 </script>

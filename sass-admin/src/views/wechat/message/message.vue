@@ -5,7 +5,8 @@
         <query
           ref="query"
           v-model="formItem"
-          @on-wc-msg-query="changePage(1)"
+          @on-wc-msg-query="hdlQuery"
+          @on-wc-msg-reset="reset"
         ></query>
         <Table
           stripe
@@ -106,16 +107,27 @@ export default {
       tbSelection: [],
 
       showDetail: false,
-      curDetail: {}
+      curDetail: {},
+
+      curQuery: {}
     };
   },
   methods: {
+    hdlQuery() {
+      this.curQuery = this.formItem;
+      this.changePage(1);
+    },
+    reset() {
+      this.curQuery = {};
+      this.changePage(1);
+    },
     changePage(pageIndex) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      queryMsgList({ pageIndex, pageSize, ...this.formItem })
+      queryMsgList({ pageIndex, pageSize, ...this.curQuery })
         .then(res => {
           let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -137,7 +149,7 @@ export default {
     }
   },
   mounted() {
-    this.changePage(1);
+    this.reset();
   }
 };
 </script>

@@ -4,8 +4,8 @@
       <query
         ref="query"
         v-model="formItem"
-        @on-tag-query="changePage(1)"
-        @on-tag-reset="changePage(1)"
+        @on-tag-query="hdlQuery"
+        @on-tag-reset="init"
       ></query>
       <operation @on-tag-create="hdlSingleModified('create')"></operation>
       <Table
@@ -120,22 +120,33 @@ export default {
           align: "center"
         }
       ],
-      tbSelection: []
+      tbSelection: [],
+
+      curQuery: {}
     };
   },
   methods: {
+    init() {
+      this.curQuery = {};
+      this.changePage(1);
+    },
+    hdlQuery() {
+      this.curQuery = this.formItem;
+      this.changePage(1);
+    },
     hdlqueryAfterReset() {
       this.$refs.query.reset();
       this.changePage(1);
     },
-    changePage(pageIndex = 1, isInit) {
+    changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      let api = isInit ? getTagList : queryTagList;
-      this.page = isInit ? 1 : pageIndex;
-      api({ pageIndex, pageSize, ...this.formItem })
+      let api =
+        Object.keys(this.curQuery).length == 0 ? getTagList : queryTagList;
+      api({ pageIndex, pageSize, ...this.curQuery })
         .then(res => {
           let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -179,7 +190,7 @@ export default {
     }
   },
   mounted() {
-    this.changePage(1, true);
+    this.init();
   }
 };
 </script>

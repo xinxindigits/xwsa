@@ -4,7 +4,7 @@
       <query
         ref="query"
         v-model="formItem"
-        @on-log-query="changePage(1)"
+        @on-log-query="hdlQuery"
         @on-log-query-reset="init"
       ></query>
       <Table
@@ -97,18 +97,28 @@ export default {
         }
       ],
       tbSelection: [],
-      current_log: {}
+      current_log: {},
+      curQuery: {}
     };
   },
   methods: {
-    changePage(pageIndex = 1, isInit) {
+    init() {
+      this.curQuery = {};
+      this.changePage(1);
+    },
+    hdlQuery() {
+      this.curQuery = this.formItem;
+      this.changePage(1);
+    },
+    changePage(pageIndex = 1) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      let api = isInit ? getLogList : queryLogList;
-      this.page = isInit ? 1 : pageIndex;
-      api({ pageIndex, pageSize, ...this.formItem })
+      let api =
+        Object.keys(this.curQuery).length == 0 ? getLogList : queryLogList;
+      api({ pageIndex, pageSize, ...this.curQuery })
         .then(res => {
           let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -121,9 +131,6 @@ export default {
     getDetail(n) {
       this.current_log = n;
       this.showDetail = true;
-    },
-    init() {
-      this.changePage(1, true);
     }
   },
   mounted() {
