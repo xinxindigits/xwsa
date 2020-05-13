@@ -175,6 +175,7 @@ export default {
       this.isLoading = true;
       queryMemberByDeptId(params)
         .then(res => {
+          this.page = pageIndex;
           let { data } = res;
           this.tableData = data.items;
           this.total = data.total;

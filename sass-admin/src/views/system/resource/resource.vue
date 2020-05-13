@@ -163,26 +163,19 @@ export default {
       if (!this.isUpdate) {
         return;
       }
-      let arr = this.$refs.tree.getCheckedNodes();
       let self = this;
-      if (arr.length > 1) {
-        this.$Message.warning("只能勾选一个节点进行新增操作");
-      } else if (arr.length > 0) {
-        this.$Modal.confirm({
-          title: "确认删除？",
-          content: `确定删除选中记录?`,
-          onOk() {
-            deleteResource({ id: self.form1.id }).then(() => {
-              this.$Message.success("删除成功！");
-              self.init().then(() => {
-                self.reset();
-              });
+      this.$Modal.confirm({
+        title: "确认删除？",
+        content: `确定删除当前资源?`,
+        onOk() {
+          deleteResource({ id: self.form1.id }).then(() => {
+            this.$Message.success("删除成功！");
+            self.init().then(() => {
+              self.reset();
             });
-          }
-        });
-      } else {
-        this.$Message.warning("请选择一条记录!");
-      }
+          });
+        }
+      });
     },
     query(data) {
       this.tableData = [];

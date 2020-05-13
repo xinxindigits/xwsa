@@ -1,4 +1,4 @@
-import { login, getUserInfo, logout } from "@/api/user";
+import { login, getUserInfo, logout } from "@/api";
 export default {
   state: {
     account: "",
