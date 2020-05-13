@@ -6,7 +6,7 @@
           <Query
             ref="query"
             v-model="formItem"
-            @on-customer-query="hdlquery"
+            @on-customer-query="hdlQuery"
             @on-customer-reset="reset"
           ></Query>
           <Table
@@ -73,7 +73,6 @@ import {
   getCustomerList,
   queryCustomerList,
   getCustomerDetail,
-  queryTagList,
   getAllTags
 } from "@/api";
 import MsgRecord from "@/components/msg-record/msg-record";
@@ -128,11 +127,24 @@ export default {
       page: 1,
       tableData: [],
 
-      tagList: []
+      tagList: [],
+
+      curQuery: {}
     };
   },
   methods: {
-    hdlquery() {
+    init() {
+      this.reset();
+      getAllTags().then(({ data }) => {
+        this.tagList = data;
+      });
+    },
+    hdlQuery() {
+      this.curQuery = this.formItem;
+      this.changePage(1);
+    },
+    reset() {
+      this.curQuery = {};
       this.changePage(1);
     },
     getTagList() {
@@ -155,9 +167,14 @@ export default {
     changePage(pageIndex) {
       this.isLoading = true;
       let pageSize = this.pageSize;
-      queryCustomerList({ pageIndex, pageSize, ...this.formItem })
+      let api =
+        Object.keys(this.curQuery).length == 0
+          ? getCustomerList
+          : queryCustomerList;
+      api({ pageIndex, pageSize, ...this.curQuery })
         .then(res => {
           let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -166,26 +183,6 @@ export default {
     changePageSize(pageSize) {
       this.pageSize = pageSize;
       this.changePage(1);
-    },
-    reset() {
-      this.hdlquery();
-    },
-    init() {
-      this.isLoading = true;
-      let pageSize = this.pageSize;
-      getCustomerList({ pageIndex: 1, pageSize })
-        .then(res => {
-          let { data } = res;
-          this.tableData = data.items;
-          this.total = Number(data.total);
-        })
-        .finally(() => (this.isLoading = false));
-      getAllTags().then(({ data }) => {
-        this.tagList = data;
-      });
-    },
-    getAllTags() {
-      queryTagList();
     },
     hdlShowRecord(userId) {
       this.$refs.record.init(userId);
@@ -197,9 +194,3 @@ export default {
   }
 };
 </script>
-
-<style lang="less" scoped>
-.row-operation {
-  padding: 10px 0;
-}
-</style>
