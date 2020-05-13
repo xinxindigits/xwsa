@@ -1,7 +1,9 @@
 package cn.com.xinxin.sass.biz.service;
 
 
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
+import cn.com.xinxin.sass.repository.model.bo.TenantDataSyncLogBO;
 
 /**
  * @author: liuhangzhou
@@ -24,4 +26,13 @@ public interface TenantDataSyncLogService {
      * @return 插入记录成功的条数
      */
     int insertReturnId(TenantDataSyncLogDO tenantDataSyncLogDO);
+
+
+    /**
+     * 分页查询租户任务执行日志
+     * @param tenantDataSyncLogBO 参数
+     * @param page 分页参数
+     * @return 日志
+     */
+    PageResultVO<TenantDataSyncLogDO> selectRecordSPage(TenantDataSyncLogBO tenantDataSyncLogBO, PageResultVO page);
 }

@@ -4,18 +4,23 @@ import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.schedule.service.QuartzJobService;
-import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
+import cn.com.xinxin.sass.biz.service.TenantDataSyncLogService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.enums.TaskTypeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.common.utils.DateUtils;
 import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
+import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
+import cn.com.xinxin.sass.repository.model.bo.TenantDataSyncLogBO;
+import cn.com.xinxin.sass.web.convert.TenantDataSyncLogConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
 import cn.com.xinxin.sass.web.form.TenantConfigForm;
 import cn.com.xinxin.sass.web.form.TenantForm;
+import cn.com.xinxin.sass.web.form.TenantJobLogQueryForm;
 import cn.com.xinxin.sass.web.vo.*;
 import com.alibaba.fastjson.JSONObject;
 import com.xinxinfinance.commons.exception.BusinessException;
@@ -31,7 +36,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.security.acl.LastOwnerException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -59,6 +63,8 @@ public class SassTenantRestController extends AclController {
 
     private final WeChatWorkSyncService weChatWorkChatRecordSyncServiceImpl;
 
+    private final TenantDataSyncLogService tenantDataSyncLogService;
+
     private static final String OG = "OG";
 
     private static final String DATE_FORMAT_NOSIGN = "yyyyMMdd";
@@ -71,12 +77,14 @@ public class SassTenantRestController extends AclController {
                                     @Qualifier(value = "weChatWorkAddressListSyncServiceImpl")
                                     final WeChatWorkSyncService weChatWorkAddressListSyncServiceImpl,
                                     @Qualifier(value = "weChatWorkChatRecordSyncServiceImpl")
-                                    final WeChatWorkSyncService weChatWorkChatRecordSyncServiceImpl) {
+                                    final WeChatWorkSyncService weChatWorkChatRecordSyncServiceImpl,
+                                    final TenantDataSyncLogService tenantDataSyncLogService) {
         this.tenantBaseInfoService = tenantBaseInfoService;
         this.tenantDataSyncConfigService = tenantDataSyncConfigService;
         this.quartzJobService = quartzJobService;
         this.weChatWorkAddressListSyncServiceImpl = weChatWorkAddressListSyncServiceImpl;
         this.weChatWorkChatRecordSyncServiceImpl = weChatWorkChatRecordSyncServiceImpl;
+        this.tenantDataSyncLogService = tenantDataSyncLogService;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -355,5 +363,46 @@ public class SassTenantRestController extends AclController {
         }
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+    }
+
+    @RequestMapping(value = "/jobLog/query",method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional(rollbackFor = Exception.class)
+    @RequiresPermissions("/tenant/query")
+    public Object queryTenantJobLog(@RequestBody TenantJobLogQueryForm queryForm, HttpServletRequest request) {
+        if (null == queryForm) {
+            loger.error("查询租户job日志，TenantJobLogQueryForm不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "查询租户job日志，TenantJobLogQueryForm不能为空");
+        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        PageResultVO page = new PageResultVO();
+        page.setPageNumber((queryForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageIndex());
+        page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
+
+        //将时间戳格式转化为string
+        String startTime = StringUtils.isBlank(queryForm.getStartTime()) ? ""
+                : DateUtils.formatTime(new Long(queryForm.getStartTime()), DateUtils.DATE_FORMAT_WHIPP_TIME);
+        String endTime = StringUtils.isBlank(queryForm.getEndTime()) ? ""
+                : DateUtils.formatTime(new Long(queryForm.getEndTime()), DateUtils.DATE_FORMAT_WHIPP_TIME);
+
+        TenantDataSyncLogBO tenantDataSyncLogBO = new TenantDataSyncLogBO();
+        tenantDataSyncLogBO.setTenantId(sassUserInfo.getTenantId());
+        tenantDataSyncLogBO.setTaskType(queryForm.getTaskType());
+        tenantDataSyncLogBO.setTaskDate(queryForm.getTaskDate());
+        tenantDataSyncLogBO.setTaskStatus(queryForm.getTaskStatus());
+        tenantDataSyncLogBO.setStartTime(startTime);
+        tenantDataSyncLogBO.setEndTime(endTime);
+
+        PageResultVO<TenantDataSyncLogDO> pageResultDO = tenantDataSyncLogService.selectRecordSPage(tenantDataSyncLogBO, page);
+
+        PageResultVO<TenantDataSyncLogVO> pageResultVO = new PageResultVO<>();
+        pageResultVO.setPageNumber(pageResultDO.getPageNumber());
+        pageResultVO.setPageSize(pageResultDO.getPageSize());
+        pageResultVO.setTotal(pageResultDO.getTotal());
+        pageResultVO.setItems(TenantDataSyncLogConvert.convert2TenantDataSyncLogVOList(pageResultDO.getItems()));
+
+        return pageResultVO;
     }
 }
