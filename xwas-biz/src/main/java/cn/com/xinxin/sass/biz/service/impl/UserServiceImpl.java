@@ -227,6 +227,9 @@ public class UserServiceImpl implements UserService {
         if(queryUserConditionVO.getGender() != null){
             userDO.setGender(queryUserConditionVO.getGender().byteValue());
         }
+        if(queryUserConditionVO.getStatus() != null){
+            userDO.setStatus(queryUserConditionVO.getStatus().byteValue());
+        }
         List<UserDO> userDOS = userDOMapper.findByCondition(userDO, queryUserConditionVO.getStartTime(), queryUserConditionVO.getEndTime());
 
         PageResultVO<UserDO> result = new PageResultVO<>();

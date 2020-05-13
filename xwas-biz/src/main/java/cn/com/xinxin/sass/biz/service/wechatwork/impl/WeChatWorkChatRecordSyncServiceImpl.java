@@ -118,7 +118,7 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
             updateSuccessRecord(tenantDataSyncLogDO, count);
         } catch (Exception e) {
             LOGGER.error("获取聊天记录异常，orgId[{}] taskid[{}]", tenantDataSyncLogDO.getTenantId(),
-                    tenantDataSyncLogDO.getTaskId());
+                    tenantDataSyncLogDO.getTaskId(), e);
             //更新失败日志
             updateFailRecord(tenantDataSyncLogDO, count, e.getMessage());
         } finally {
@@ -221,8 +221,13 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
         TenantDataSyncLogDO failRecord = new TenantDataSyncLogDO();
         failRecord.setTaskStatus(TaskStatusEnum.FAILURE.getStatus());
         failRecord.setErrorCode(TaskErrorEnum.IMPORTING_EXCEPTION.getErrorCode());
-        failRecord.setErrorDesc(message.length() > 500
-                ? StringUtils.substring(message, 0, 500) : message);
+        if (StringUtils.isNotBlank(message)) {
+            failRecord.setErrorDesc(message.length() > 500
+                    ? StringUtils.substring(message, 0, 500) : message);
+        } else {
+            failRecord.setErrorDesc(TaskErrorEnum.IMPORTING_EXCEPTION.getErrorDesc());
+        }
+
         failRecord.setMessageCount(count);
         failRecord.setId(tenantDataSyncLogDO.getId());
         tenantDataSyncLogService.updateById(failRecord);
