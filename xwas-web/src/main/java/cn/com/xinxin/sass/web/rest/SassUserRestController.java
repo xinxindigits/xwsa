@@ -144,6 +144,46 @@ public class SassUserRestController extends AclController {
 
     }
 
+    @RequestMapping(value = "/me",method = RequestMethod.GET)
+    @ResponseBody
+    public Object queryLoginUserByMe(HttpServletRequest request){
+
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        log.info("queryUserByAccount, account = {}",sassUserInfo.getAccount());
+
+        UserDO userDO = this.userService.findByUserAccount(sassUserInfo.getAccount());
+
+        UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
+        userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
+        userInfoVO.setStatus(userDO.getStatus() == null ? null : userDO.getStatus().intValue());
+        /**
+         * 用户对应的角色值
+         */
+        List<RoleDO> userRolesLists = this.userService.findRolesByAccount(sassUserInfo.getAccount());
+        log.info("queryUserByAccount, userRolesLists = {}",userRolesLists);
+
+        List<RoleVO> userRolesVOLists = SassFormConvert.convertRoleDO2VOs(userRolesLists);
+        userInfoVO.setRoles(userRolesVOLists);
+
+        /**
+         * 用户对应的资源权限值
+         */
+        List<ResourceDO> userResourceDOList = this.userService.findResourcesByAccount(sassUserInfo.getAccount());
+        List<ResourceVO> userResourceVOList  = SassFormConvert.convertResourceDO2VO(userResourceDOList);
+        log.info("queryUserByAccount, userRolesLists = {}",userRolesLists);
+
+        userInfoVO.setResources(userResourceVOList);
+
+        // 查询对应的组织关系
+        List<UserOrgDO> userOrgDOList = this.userService.queryUserOrgsByAccount(sassUserInfo.getAccount());
+        List<OrgSimpleVO> userOrgVOList = SassFormConvert.convertOrgDO2VOList(userOrgDOList);
+        userInfoVO.setOrgs(userOrgVOList);
+
+        return userInfoVO;
+
+    }
+
 
     @RequestMapping(value = "/restpwd",method = RequestMethod.POST)
     @ResponseBody
