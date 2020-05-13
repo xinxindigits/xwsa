@@ -11,7 +11,7 @@
         <Select
           multiple
           title="角色授权"
-          v-model="formObj.userRoles"
+          v-model="cur_roles"
           style="width: 250px"
         >
           <Option v-for="n in roleList" :value="n.code" :key="n.code">
@@ -56,6 +56,7 @@ export default {
       formObj: {
         userRoles: []
       },
+      cur_roles: [],
       rules: {
         userRoles: [
           {
@@ -70,19 +71,18 @@ export default {
   },
   methods: {
     setData(data) {
-      this.formObj.userRoles = data.userRoles;
+      this.cur_roles = data.userRoles;
+      this.formObj.userAccount = data.userAccount;
+      this.formObj.userName = data.userName;
     },
 
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config
-            .submit(this.formObj)
-            .then(() => {
-              this.curValue = false;
-              this.$emit(_config.success_evt, this.formObj);
-            })
-            .catch();
+          _config.submit(this.formObj).then(() => {
+            this.curValue = false;
+            this.$emit(_config.success_evt, this.formObj);
+          });
         }
       });
     },
@@ -92,7 +92,9 @@ export default {
     },
     reset() {
       this.formObj = {
-        userRoles: []
+        userRoles: [],
+        userAccount: "",
+        userName: ""
       };
     }
   },
@@ -106,6 +108,15 @@ export default {
     curValue(newValue) {
       this.$emit("input", newValue);
       !newValue && this.reset();
+    },
+    cur_roles(newValue) {
+      this.formObj.userRoles = this.roleList
+        .filter(n => {
+          return newValue.includes(n.code);
+        })
+        .map(n => {
+          return { roleCode: n.code, roleName: n.name };
+        });
     }
   }
 };

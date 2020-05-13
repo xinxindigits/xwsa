@@ -253,11 +253,19 @@ export default {
           let codeArr = data.roles.map(n => {
             return n.code;
           });
-          this.$refs.showRoleGrantModal.setData({ userRoles: codeArr });
+          let { account, name } = data;
+          this.$refs.showRoleGrantModal.setData({
+            userRoles: codeArr,
+            userAccount: account,
+            userName: name
+          });
         });
       }
     },
-    hdlRoleGrant() {},
+    hdlRoleGrant() {
+      this.$Message.success("授权成功！");
+      this.changePage(this.page);
+    },
     hdlSingleModified({ account }) {
       getUserDetail({ account }).then(res => {
         this.modifyType = "update";
@@ -295,7 +303,7 @@ export default {
       this.roleList = data;
       this.$refs.modifyModal.setRoleList(data);
     });
-    this.changePage(1);
+    this.init();
   }
 };
 </script>

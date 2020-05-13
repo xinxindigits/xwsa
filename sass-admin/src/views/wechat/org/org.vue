@@ -121,6 +121,15 @@ export default {
     };
   },
   methods: {
+    init() {
+      getOrgList().then(({ data }) => {
+        data.length > 0 && (data[0]._selected = true);
+        this.treeData = this.formatData(data);
+        setTimeout(() => {
+          this.changePage(1);
+        });
+      });
+    },
     hdlShowRecord(userId) {
       this.$refs.record.init(userId);
       this.showRecord = true;
@@ -133,7 +142,7 @@ export default {
     reset() {
       this.queryForm.departmentId = "";
       this.queryForm.departmentName = "";
-      this.hdlFilterOrg();
+      this.init();
     },
     hdlTreeSelected() {
       this.changePage(1);
@@ -142,11 +151,17 @@ export default {
       let arr = [];
       let self = this;
       data.forEach(item => {
-        let { departmentName: title, expanded: expand, children: funcs } = item;
+        let {
+          departmentName: title,
+          expanded: expand,
+          children: funcs,
+          _selected
+        } = item;
         let obj = {
           title,
           expand,
           funcs,
+          selected: _selected,
           ...self._.pick(item, "tenantId", "departmentId", "parentId", "id")
         };
         if (item.children && item.children.length > 0) {
@@ -188,12 +203,7 @@ export default {
     }
   },
   mounted() {
-    let self = this;
-    getOrgList().then(res => {
-      self.treeData = this.formatData(res.data);
-    });
+    this.init();
   }
 };
 </script>
-
-<style lang="less" scoped></style>
