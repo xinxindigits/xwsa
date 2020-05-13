@@ -55,4 +55,18 @@ public interface TenantDataSyncConfigService {
      * @return
      */
     List<TenantDataSyncConfigDO> selectByTenantId(String tenantId);
+
+    /**
+     * 插入配置并且初始化任务
+     * @param tenantDataSyncConfigDO 配置
+     * @return 成功插入条数
+     */
+    int insert(TenantDataSyncConfigDO tenantDataSyncConfigDO);
+
+    /**
+     * 通过id查询记录
+     * @param id 数据库主键
+     * @return 记录
+     */
+    TenantDataSyncConfigDO selectById(Long id);
 }

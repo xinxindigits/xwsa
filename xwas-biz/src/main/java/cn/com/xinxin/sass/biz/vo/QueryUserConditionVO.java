@@ -26,6 +26,18 @@ public class QueryUserConditionVO {
      * 创建时间结束
      */
     private Date endTime;
+    /**
+     * 状态
+     */
+    private Integer status;
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public String getName() {
         return name;
