@@ -193,7 +193,7 @@
     update customer
     set `status` = 'INACTIVE'
     where tenant_id = #{tenantId} and user_id not in
-    (SELECT user_id from customer where task_id = #{taskId});
+    (SELECT user_id from customer_received where task_id = #{taskId});
   </update>
 
 </mapper>
