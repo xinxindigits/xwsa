@@ -56,6 +56,12 @@ public class RegexUtils {
      * 正则：用户名，取值范围为a-z,A-Z,0-9,"_",不能以"_"结尾,用户名必须是6-20位
      */
     public static final String REGEX_USERNAME     = "^[a-zA-Z0-9_-]{4,20}$";
+
+    /**
+     * 正则：编码取之，取值范围为a-z,A-Z,0-9,"_",不能以"_"结尾,用户名必须是6-16位
+     */
+    public static final String REGEX_CODE    = "^[a-zA-Z0-9]{4,16}$";
+
     /**
      * 正则：yyyy-MM-dd格式的日期校验，已考虑平闰年
      */
@@ -200,6 +206,10 @@ public class RegexUtils {
      * @return {@code true}: 匹配<br>{@code false}: 不匹配
      */
     public static boolean isUsername(CharSequence input) {
+        return isMatch(REGEX_USERNAME, input);
+    }
+
+    public static boolean isDataCode(CharSequence input) {
         return isMatch(REGEX_USERNAME, input);
     }
 
