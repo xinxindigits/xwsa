@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: liuhangzhou
@@ -150,5 +151,16 @@ public class DepartmentServiceImpl implements DepartmentService {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "将记录状态置为失效, taskId不能为空");
         }
         return departmentDOMapper.updateInactiveStatus(tenantId, taskId);
+    }
+
+    @Override
+    public List<DepartmentDO> queryDeptsByIds(List<String> deptIds) {
+
+        List<DepartmentDO> departmentDOSList = this.departmentDOMapper.listAllWechatDepts();
+
+        List<DepartmentDO> result = departmentDOSList.stream()
+                .filter(x->deptIds.contains(String.valueOf(x.getDepartmentId())))
+                .collect(Collectors.toList());
+        return result;
     }
 }

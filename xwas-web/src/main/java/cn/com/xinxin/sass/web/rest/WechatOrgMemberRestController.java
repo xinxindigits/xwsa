@@ -20,7 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @author: zhouyang
@@ -35,15 +38,13 @@ public class WechatOrgMemberRestController extends AclController {
 
 
     private static final Logger log = LoggerFactory.getLogger(WechatOrgMemberRestController.class);
-
-
+    
 
     @Autowired
     private MemberService memberService;
 
     @Autowired
     private DepartmentService departmentService;
-
 
 
 
@@ -61,12 +62,19 @@ public class WechatOrgMemberRestController extends AclController {
 
         PageResultVO<MemberDO> pageResultDO = this.memberService.queryMembersByPages(page);
 
+        List<String> memberDeptsIds = pageResultDO.getItems()
+                .stream().map(x->String.valueOf(x.getMainDepartment()))
+                .distinct()
+                .collect(toList());
+
+        List<DepartmentDO> departmentDOList = this.departmentService.queryDeptsByIds(memberDeptsIds);
+
         PageResultVO<MemberVO> results = BaseConvert.convert(pageResultDO,PageResultVO.class);
 
         List<MemberVO> memberVOList = Lists.newArrayList();
         // 转换数据
         if(!CollectionUtils.isEmpty(pageResultDO.getItems())){
-            memberVOList = this.convertMemberGenders(pageResultDO.getItems());
+            memberVOList = this.convertMemberGendersAndDepts(pageResultDO.getItems(),departmentDOList);
         }
         results.setItems(memberVOList);
 
@@ -113,13 +121,19 @@ public class WechatOrgMemberRestController extends AclController {
 
         PageResultVO<MemberDO> pageResultDO = this.memberService.queryByDeptId(deptId, page);
 
+        List<String> memberDeptsIds = pageResultDO.getItems()
+                .stream().map(x->String.valueOf(x.getMainDepartment()))
+                .distinct()
+                .collect(toList());
+
+        List<DepartmentDO> departmentDOList = this.departmentService.queryDeptsByIds(memberDeptsIds);
 
         PageResultVO<MemberVO> results = BaseConvert.convert(pageResultDO,PageResultVO.class);
 
         List<MemberVO> memberVOList = Lists.newArrayList();
         // 转换数据
         if(!CollectionUtils.isEmpty(pageResultDO.getItems())){
-            memberVOList = this.convertMemberGenders(pageResultDO.getItems());
+            memberVOList = this.convertMemberGendersAndDepts(pageResultDO.getItems(),departmentDOList);
         }
         results.setItems(memberVOList);
 
@@ -148,12 +162,20 @@ public class WechatOrgMemberRestController extends AclController {
         PageResultVO<MemberDO> pageResultDO = this.memberService.queryByNameAndMobile(memberName, mobile, page);
 
 
+
+        List<String> memberDeptsIds = pageResultDO.getItems()
+                .stream().map(x->String.valueOf(x.getMainDepartment()))
+                .distinct()
+                .collect(toList());
+
+        List<DepartmentDO> departmentDOList = this.departmentService.queryDeptsByIds(memberDeptsIds);
+
         PageResultVO<MemberVO> results = BaseConvert.convert(pageResultDO,PageResultVO.class);
 
         List<MemberVO> memberVOList = Lists.newArrayList();
         // 转换数据
         if(!CollectionUtils.isEmpty(pageResultDO.getItems())){
-            memberVOList = this.convertMemberGenders(pageResultDO.getItems());
+            memberVOList = this.convertMemberGendersAndDepts(pageResultDO.getItems(),departmentDOList);
         }
         results.setItems(memberVOList);
 
@@ -161,12 +183,20 @@ public class WechatOrgMemberRestController extends AclController {
     }
 
 
-    private List<MemberVO> convertMemberGenders(List<MemberDO> memberVOList){
+    private List<MemberVO> convertMemberGendersAndDepts(List<MemberDO> memberVOList,
+                                                        List<DepartmentDO> departmentDOList){
+
+        Map<String,DepartmentDO> deptMap = departmentDOList.stream()
+                .collect(Collectors.toMap(departmentDO -> String.valueOf(departmentDO.getDepartmentId()),
+                        departmentDO->departmentDO));
 
         List<MemberVO> result = memberVOList.stream()
                 .map(memberDO -> {
                     MemberVO memberVO = BaseConvert.convert(memberDO, MemberVO.class);
                     memberVO.setGender(GenderTypeEnums.getEnumByNum(String.valueOf(memberDO.getGender())).getDesc());
+                    memberVO.setDeptName(
+                            deptMap.get(String.valueOf(memberDO.getMainDepartment())).getDepartmentName()
+                    );
                     return memberVO;
                 }).collect(Collectors.toList());
 
