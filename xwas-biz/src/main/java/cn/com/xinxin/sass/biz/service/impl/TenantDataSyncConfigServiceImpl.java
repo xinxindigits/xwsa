@@ -89,6 +89,7 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
      * @return 成功更新记录条数
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int updateLockByTenantIdAndTaskType(String tenantId, String taskType) {
         if (StringUtils.isBlank(tenantId)) {
             LOGGER.error("通过机构id和任务类型对任务上锁, tenantId不能为空");
@@ -119,6 +120,7 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
      * @return 成功更新记录条数
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int updateUnLockByTenantIdAndTaskType(String tenantId, String taskType) {
         if (StringUtils.isBlank(tenantId)) {
             LOGGER.error("通过机构id和任务类型对任务解锁, tenantId不能为空");

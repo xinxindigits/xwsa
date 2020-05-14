@@ -72,11 +72,21 @@ public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkSyncServi
             throw new BusinessException(SassBizResultCodeEnum.FAIL, "同步企业微信通讯录，tenantId不能为空");
         }
 
-        //初始化并持久化租户数据同步日志
-        TenantDataSyncLogDO tenantDataSyncLogDO = initAndInsertLog(tenantId);
-
         //任务上锁
         tenantDataSyncConfigService.updateLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.CONTACT_SYNC.getType());
+
+        TenantDataSyncLogDO tenantDataSyncLogDO;
+
+        try {
+            //初始化并持久化租户数据同步日志
+            tenantDataSyncLogDO = initAndInsertLog(tenantId);
+        } catch (Exception e) {
+            LOGGER.error("初始化通讯录同步任务日志失败", e);
+            //任务解锁
+            tenantDataSyncConfigService.updateUnLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.CONTACT_SYNC.getType());
+
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "初始化通讯录同步任务日志失败");
+        }
 
         try {
             //机构基础信息
