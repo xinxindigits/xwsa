@@ -65,6 +65,10 @@ const staffAccountState = {
   [4]: "已激活",
   [5]: "退出企业"
 };
+const memberStatus = {
+  INACTIVE: "非活跃",
+  ACTIVE: "活跃"
+};
 const dic = {
   gender,
   userStatus,
@@ -75,7 +79,8 @@ const dic = {
   customerType,
   staffAccountState,
   taskType,
-  taskState
+  taskState,
+  memberStatus
 };
 const mapDic = function(key, val) {
   if (dic[key]) {

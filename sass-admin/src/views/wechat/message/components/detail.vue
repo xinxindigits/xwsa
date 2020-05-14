@@ -21,13 +21,24 @@
         <ListItem>群号：{{ detail.roomId }}</ListItem>
       </List>
       <Divider dashed></Divider>
+      <Button type="primary" @click="showRecord">查看聊天记录</Button>
+      <msg-record
+        v-model="isShowRecord"
+        :user-id="cur_userId"
+        ref="record"
+      ></msg-record>
     </CellGroup>
   </div>
 </template>
 
 <script>
+import MsgRecord from "@/components/msg-record/msg-record";
+import { getPageIndex } from "@/api";
 export default {
   name: "msg-detail",
+  components: {
+    MsgRecord
+  },
   props: {
     items: Object
   },
@@ -43,6 +54,8 @@ export default {
   },
   data() {
     return {
+      isShowRecord: false,
+      cur_userId: "",
       detail: {
         fromUserName: "",
         fromUserId: "",
@@ -54,6 +67,37 @@ export default {
         userId: ""
       }
     };
+  },
+  methods: {
+    showRecord() {
+      let { fromUserId, toUserId, roomId, id } = this.detail;
+      if (roomId) {
+        toUserId = "";
+      } else {
+        toUserId = toUserId.substring(1, toUserId.length - 1);
+      }
+      this.hdlShowRecord({ id, fromUserId, toUserId, roomId });
+    },
+    hdlShowRecord(n) {
+      console.log(n);
+      let params = {
+        id: n.id,
+        pageSize: 50,
+        roomId: n.roomId,
+        userId: n.fromUserId,
+        userIdTwo: n.toUserId,
+        type: n.roomId ? 1 : 0
+      };
+      getPageIndex(params).then(({ data }) => {
+        console.log(data);
+        this.cur_userId = n.fromUserId;
+        this.$refs.record.init(this.cur_userId, {
+          ...params,
+          pageIndex: data.pageIndex
+        });
+        this.isShowRecord = true;
+      });
+    }
   },
   watch: {
     items: {

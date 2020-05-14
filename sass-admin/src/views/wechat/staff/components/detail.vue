@@ -38,7 +38,11 @@
         <span>职位：{{ detail.memberPosition }}</span>
       </Cell>
       <Cell>
-        <span>状态：{{ $mapd("staffAccountState", detail.status) }}</span>
+        <span
+          >状态：{{ $mapd("staffAccountState", detail.status) }}({{
+            $mapd("memberStatus", detail.memberStatus)
+          }})</span
+        >
       </Cell>
       <Divider dashed></Divider>
       <Button type="primary" @click="hdlClick">会话信息</Button>
@@ -72,6 +76,7 @@ export default {
         memberPosition: "",
         extension: "",
         qrCode: "",
+        memberStatus: "",
         status: ""
       }
     };
