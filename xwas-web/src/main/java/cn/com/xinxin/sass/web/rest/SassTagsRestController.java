@@ -178,7 +178,8 @@ public class SassTagsRestController extends AclController {
 
         if(!RegexUtils.isDataCode(tagForm.getCode())){
             // 如果匹配不是useraccount格式
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"不能包含特殊字符或者长度超过16","不能包含特殊字符或者长度超过16");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "不能包含特殊字符或者长度超过16","不能包含特殊字符或者长度超过16");
         }
 
 
