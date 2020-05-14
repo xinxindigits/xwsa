@@ -86,3 +86,17 @@ export const queryTenantConfig = ({ tenantId }) => {
     method: "get"
   });
 };
+export const createTenantTask = ({
+  taskType,
+  cronExpression,
+  status,
+  countCeiling,
+  timeInterval
+}) => {
+  let data = { taskType, cronExpression, status, countCeiling, timeInterval };
+  return axios.request({
+    url: "tenant/tenantConfig/create",
+    data,
+    method: "post"
+  });
+};

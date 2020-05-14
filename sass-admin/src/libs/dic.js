@@ -51,6 +51,14 @@ const organizationState = {
   ["Y"]: "启用",
   ["N"]: "禁用"
 };
+const taskType = {
+  ["CONTACT_SYNC"]: "通讯录同步",
+  ["MESSAGE_SYNC"]: "会话信息同步"
+};
+const taskState = {
+  ["0"]: "启用",
+  ["1"]: "禁用"
+};
 const staffAccountState = {
   [1]: "已激活",
   [2]: "已禁用",
@@ -66,10 +74,12 @@ const dic = {
   tagType,
   customerType,
   staffAccountState
+  taskType,
+  taskState
 };
 const mapDic = function(key, val) {
   if (dic[key]) {
     return dic[key][val] || val;
   } else return "";
 };
-export { mapDic, gender, userStatus, tagType, customerType };
+export { mapDic, gender, userStatus, tagType, customerType, taskType };
