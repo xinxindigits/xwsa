@@ -42,6 +42,7 @@ export default {
             const data = res.data;
             commit("setToken", data.token);
             commit("setAccount", data.account);
+            commit("setHasGetRouter", false);
             localStorage.removeItem("route");
             localStorage.removeItem("tagNaveList");
             resolve();
@@ -50,9 +51,9 @@ export default {
       });
     },
     // 获取用户相关信息
-    getUserInfo({ state, commit }) {
+    getUserInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.account)
+        getUserInfo()
           .then(res => {
             const data = res.data;
             commit("setUserName", data.name || "");
@@ -70,6 +71,7 @@ export default {
             commit("setToken", "");
             commit("setUserName", "");
             commit("setHasGetInfo", false);
+            commit("setHasGetRouter", false);
             // commit('setAccess', [])
             resolve();
           })

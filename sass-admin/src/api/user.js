@@ -24,9 +24,9 @@ export const login = ({ account, password, verifyCode }) => {
     method: "post"
   });
 };
-export const getUserInfo = account => {
+export const getUserInfo = () => {
   return axios.request({
-    url: "user/query/" + account,
+    url: "user/me",
     method: "get"
   });
 };

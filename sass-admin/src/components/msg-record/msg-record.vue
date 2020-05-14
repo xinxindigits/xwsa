@@ -1,5 +1,5 @@
 <template>
-  <Drawer title="会话管理" v-model="showRecord" width="100">
+  <Drawer title="会话管理" v-model="showRecord" width="80">
     <div class="wrapper">
       <div class="list-box">
         <Query ref="query" @on-query="hdlQuery" @on-reset="hdlReset" />

@@ -3,7 +3,7 @@
     <div class="login-con">
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
-          <login-form @on-success-valid="handleSubmit"></login-form>
+          <login-form ref="login" @on-success-valid="handleSubmit"></login-form>
         </div>
       </Card>
     </div>
@@ -18,13 +18,17 @@ export default {
     LoginForm
   },
   methods: {
-    ...mapActions(["handleLogin", "getUserInfo"]),
+    ...mapActions(["handleLogin"]),
     handleSubmit({ account, password, verifyCode }) {
-      this.handleLogin({ account, password, verifyCode }).then(() => {
-        this.$router.push({
-          name: this.$config.homeName
+      this.handleLogin({ account, password, verifyCode })
+        .then(() => {
+          this.$router.push({
+            name: this.$config.homeName
+          });
+        })
+        .catch(() => {
+          this.$refs.login.updateKaptcha();
         });
-      });
     }
   }
 };

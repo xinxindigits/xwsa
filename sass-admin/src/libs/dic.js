@@ -51,6 +51,12 @@ const organizationState = {
   ["Y"]: "启用",
   ["N"]: "禁用"
 };
+const staffAccountState = {
+  [1]: "已激活",
+  [2]: "已禁用",
+  [4]: "已激活",
+  [5]: "退出企业"
+};
 const dic = {
   gender,
   userStatus,
@@ -58,7 +64,8 @@ const dic = {
   msgType,
   msgAction,
   tagType,
-  customerType
+  customerType,
+  staffAccountState
 };
 const mapDic = function(key, val) {
   if (dic[key]) {
