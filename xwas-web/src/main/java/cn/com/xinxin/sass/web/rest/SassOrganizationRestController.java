@@ -84,6 +84,7 @@ public class SassOrganizationRestController extends AclController {
         page.setPageNumber(orgForm.getPageIndex());
 
         OrganizationDO condition = BaseConvert.convert(orgForm,OrganizationDO.class);
+        condition.setCode(orgForm.getOrgId());
         if(StringUtils.isEmpty(orgForm.getTenantId())){
             condition.setTenantId(sassUserInfo.getTenantId());
         }else{

@@ -6,10 +6,7 @@
           <Input v-model="formItem.tenantId" placeholder="租户编码"></Input>
         </FormItem>
         <FormItem>
-          <Input v-model="formItem.orgId" placeholder="机构编码"></Input>
-        </FormItem>
-        <FormItem>
-          <Input v-model="formItem.orgName" placeholder="机构名称"></Input>
+          <Input v-model="formItem.tenantName" placeholder="租户名称"></Input>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="hdlquery">查询</Button>
@@ -32,7 +29,6 @@
         >
       </Row>
       <Table
-        row-key="orgId"
         stripe
         border
         ref="tables"
@@ -41,11 +37,11 @@
         :loading="isLoading"
         @on-selection-change="hdlSelectionChange"
       >
-        <template slot-scope="{ row }" slot="status">
-          <span>{{ $mapd("organizationState", row.status) }}</span>
+        <template slot-scope="{ row }" slot="taskType">
+          <span>{{ $mapd("taskType", row.taskType) }}</span>
         </template>
-        <template slot-scope="{ row }" slot="create_time">
-          <span>{{ row.gmtCreated | timeFilter }}</span>
+        <template slot-scope="{ row }" slot="deleted">
+          <span>{{ $mapd("taskState", row.deleted) }}</span>
         </template>
         <template slot-scope="{ row }" slot="action">
           <Button
@@ -54,22 +50,30 @@
             style="margin-right: 5px"
             @click="hdlSingleModified(row)"
           >
-            详情
+            更新
           </Button>
           <Button
             type="error"
             size="small"
             style="margin-right: 5px"
-            @click="hdlDelete([row.orgId])"
+            @click="hdlDelete([row.tenantId])"
           >
             删除
           </Button>
           <Button
-            type="success"
+            type="info"
             size="small"
-            @click="hdlSingleCreateChild(row)"
+            style="margin-right: 5px"
+            @click="hdlDelete([row.tenantId])"
           >
-            新增下级
+            日志
+          </Button>
+          <Button
+            type="warning"
+            size="small"
+            @click="hdlDelete([row.tenantId])"
+          >
+            触发
           </Button>
         </template>
       </Table>
@@ -104,20 +108,29 @@
 </template>
 
 <script>
-import { getOrganizationList, delOrganization } from "@/api";
+import { delTenant, queryTenantConfig } from "@/api";
 import OrganizationUpdate from "./modify";
 export default {
   name: "organization",
+  props: {
+    value: Boolean,
+    type: {
+      validator: function(value) {
+        return ["create", "update"].indexOf(value) !== -1;
+      }
+    }
+  },
   components: {
     OrganizationUpdate
   },
   computed: {
     deleteOrgCodes() {
-      return this.tbSelection.map(item => item.orgId);
+      return this.tbSelection.map(item => item.tenantId);
     }
   },
   data() {
     return {
+      showTaskModal: false,
       showAddModal: false,
       showGrantModal: false,
       showUpdateModal: false,
@@ -126,10 +139,8 @@ export default {
       total: 0,
       page: 1,
       formItem: {
-        orgName: "",
-        orgId: "",
         tenantId: "",
-        orgType: "",
+        tenantName: "",
         state: ""
       },
       columns: [
@@ -138,17 +149,24 @@ export default {
           width: 60,
           align: "center"
         },
-        { title: "机构编码", key: "code", align: "left", tree: true },
-        { title: "机构名称", key: "orgName", align: "center" },
-        { title: "机构类型", key: "orgTypeName", align: "center" },
         { title: "租户编码", key: "tenantId", align: "center" },
+        { title: "任务类型", slot: "taskType", align: "center" },
         {
-          title: "创建时间",
-          key: "gmtCreated",
-          align: "center",
-          slot: "create_time"
+          title: "cron表达式",
+          width: 180,
+          key: "cronExpression",
+          align: "center"
         },
-        { title: "操作", slot: "action", align: "center", width: 225 }
+        { title: "当前消息序号", key: "fetchedSeqNo", align: "center" },
+        { title: "会话每次提取上限", key: "countCeiling", align: "center" },
+        { title: "会话每次提取间隔(秒)", key: "timeInterval", align: "center" },
+        {
+          title: "状态",
+          key: "deleted",
+          align: "center",
+          slot: "deleted"
+        },
+        { title: "操作", slot: "action", align: "center", width: 250 }
       ],
       tableData: [],
       tbSelection: []
@@ -162,11 +180,11 @@ export default {
       this.isLoading = true;
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
-      getOrganizationList({ pageIndex, pageSize, ...this.formItem })
+      queryTenantConfig({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
           this.reset();
-          this.tableData = data.items;
+          this.tableData = data;
           this.total = Number(data.total);
         })
         .finally(() => (this.isLoading = false));
@@ -176,20 +194,18 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.orgName = "";
-      this.formItem.orgId = "";
-      this.formItem.orgType = "";
+      this.formItem.tenantName = "";
       this.formItem.tenantId = "";
-      this.formItem.status = "";
+      this.formItem.state = "";
     },
-    hdlDelete(ids) {
+    hdlDelete(codes) {
       let self = this;
-      if (ids.length > 0) {
+      if (codes.length > 0) {
         this.$Modal.confirm({
           title: "确认删除？",
           content: `确定删除选中记录?`,
           onOk() {
-            delOrganization({ ids }).then(() => {
+            delTenant({ codes }).then(() => {
               this.$Message.success("删除成功！");
               self.hdlquery();
             });
@@ -201,30 +217,14 @@ export default {
     },
     hdlSingleCreate() {
       let d = {
-        no_edit_parentName: true,
-        parentName: "0",
-        parentId: "0"
-      };
-      this.$refs.createModal.setData(d);
-      this.showAddModal = true;
-    },
-    hdlSingleCreateChild(data) {
-      let d = {
-        parentName: data.orgName,
-        parentId: data.orgId,
-        no_edit_parentName: true
+        tenantId: ""
       };
       this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
     hdlSingleModified(data) {
       let d = {
-        orgType: data.orgType,
-        code: data.code,
-        parentName: data.parentName,
-        remark: data.remark,
-        name: data.orgName,
-        no_edit_parentName: true
+        tenantId: data.tenantId
       };
       this.$refs.updateModal.setData(d);
       this.showUpdateModal = true;

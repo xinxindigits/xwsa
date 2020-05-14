@@ -53,11 +53,6 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
         }
         TenantDataSyncConfigDO tenantDataSyncConfigDO = tenantDataSyncConfigDOMapper.selectByOrgIdAndTaskType(tenantId, taskType);
 
-        if (null == tenantDataSyncConfigDO) {
-            LOGGER.error("无法通过机构id[{}]找到机构同步[{}]任务配置信息", tenantId, taskType);
-            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构同步任务配置信息");
-        }
-
         return tenantDataSyncConfigDO;
     }
 
