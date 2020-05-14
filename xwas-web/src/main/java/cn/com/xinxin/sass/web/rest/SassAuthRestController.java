@@ -73,9 +73,9 @@ public class SassAuthRestController {
                         @RequestBody UserLoginForm userLoginForm){
 
 
-//        if (!KaptchaUtils.checkVerifyCode(request)) {
-//            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
-//        }
+        if (!KaptchaUtils.checkVerifyCode(request)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
+        }
 
         String userAccount = userLoginForm.getAccount();
 
@@ -98,6 +98,8 @@ public class SassAuthRestController {
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
             userTokenVO.setToken(token);
+            userTokenVO.setName(userDO.getName());
+            userTokenVO.setTenantId(userDO.getTenantId());
 
             // 获取必要的用户信息,缓存到redis
             SassUserInfo sassUserInfo = BaseConvert.convert(userDO,SassUserInfo.class);

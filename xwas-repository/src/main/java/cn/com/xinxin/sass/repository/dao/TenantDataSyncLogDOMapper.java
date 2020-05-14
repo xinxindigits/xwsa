@@ -1,7 +1,10 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
+import cn.com.xinxin.sass.repository.model.bo.TenantDataSyncLogBO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface TenantDataSyncLogDOMapper {
     /**
@@ -58,4 +61,18 @@ public interface TenantDataSyncLogDOMapper {
      * @return 插入记录成功的条数
      */
     int insertReturnId(TenantDataSyncLogDO tenantDataSyncLogDO);
+
+    /**
+     * 分页查询记录数量
+     * @param tenantDataSyncLogBO 参数
+     * @return 记录数量
+     */
+    Long selectRecordSCount(TenantDataSyncLogBO tenantDataSyncLogBO);
+
+    /**
+     * 分页查询记录
+     * @param tenantDataSyncLogBO 参数
+     * @return 记录
+     */
+    List<TenantDataSyncLogDO> selectRecordSPage(TenantDataSyncLogBO tenantDataSyncLogBO);
 }
