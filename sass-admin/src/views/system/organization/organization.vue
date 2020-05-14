@@ -6,6 +6,9 @@
           <Input v-model="formItem.tenantId" placeholder="租户编码"></Input>
         </FormItem>
         <FormItem>
+          <Input v-model="formItem.orgId" placeholder="机构编码"></Input>
+        </FormItem>
+        <FormItem>
           <Input v-model="formItem.orgName" placeholder="机构名称"></Input>
         </FormItem>
         <FormItem>
@@ -124,6 +127,7 @@ export default {
       page: 1,
       formItem: {
         orgName: "",
+        orgId:"",
         tenantId: "",
         orgType: "",
         state: ""
@@ -173,6 +177,7 @@ export default {
     },
     reset() {
       this.formItem.orgName = "";
+      this.formItem.orgId = "";
       this.formItem.orgType = "";
       this.formItem.tenantId = "";
       this.formItem.status = "";

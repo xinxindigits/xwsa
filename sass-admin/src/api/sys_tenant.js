@@ -77,7 +77,7 @@ export const updateTenant = ({
     method: "post"
   });
 };
-export const queryTenantConfig = ({tenantId}) => {
+export const queryTenantConfig = ({ tenantId }) => {
     return axios.request({
         params: {
             tenantId
@@ -86,3 +86,12 @@ export const queryTenantConfig = ({tenantId}) => {
         method: "get"
     });
 };
+export const createTenantTask= ({taskType,cronExpression,status,countCeiling,timeInterval}) =>{
+  let data = {taskType,cronExpression,status,countCeiling,timeInterval};
+    return axios.request({
+        url: "tenant/tenantConfig/create",
+        data,
+        method: "post"
+    });
+};
+
