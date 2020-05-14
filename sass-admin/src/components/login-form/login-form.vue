@@ -35,13 +35,14 @@
           ></Input>
         </Col>
         <Col span="8" offset="1">
-          <img
-            class="kaptcha"
-            :src="cap"
-            alt="点击获取"
-            height="32px"
-            @click="hdlClick"
-          />
+          <div class="captcha-wrapper">
+            <img
+              class="kaptcha"
+              :src="cap"
+              alt="点击获取"
+              @click="updateKaptcha"
+            />
+          </div>
         </Col>
       </Row>
     </FormItem>
@@ -101,7 +102,7 @@ export default {
     }
   },
   methods: {
-    hdlClick() {
+    updateKaptcha() {
       this.random = Math.random();
     },
     handleSubmit() {
@@ -119,10 +120,37 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-.kaptcha {
+img[src=""],
+img:not([src]) {
+  opacity: 0;
+}
+img:after {
+  content: "\f1c5""" attr(alt);
+  font-size: 12px;
+  color: rgb(100, 100, 100);
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: calc(100% - 2px);
+  height: 100%;
+  background-color: #fff;
+}
+.captcha-wrapper {
+  position: relative;
+  float: left;
   width: 100%;
-  border: 1px solid #e8eaec;
   height: 40px;
-  vertical-align: middle;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.kaptcha {
+  vertical-align: top;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background-color: white;
+  font-size: 0;
 }
 </style>

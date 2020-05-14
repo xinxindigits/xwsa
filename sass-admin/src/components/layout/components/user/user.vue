@@ -49,9 +49,6 @@ export default {
     },
     message() {
       console.log("todo:go to message");
-      // this.$router.push({
-      //   name: "message_page"
-      // });
     },
     handleClick(name) {
       switch (name) {
