@@ -81,4 +81,12 @@ public interface DepartmentService {
      * @return 成功更新的条数
      */
     int updateInactiveStatus(String tenantId, String taskId);
+
+
+    /**
+     * 部门列表
+     * @param deptIds
+     * @return
+     */
+    List<DepartmentDO> queryDeptsByIds(List<String> deptIds);
 }
