@@ -140,6 +140,15 @@ public class WeChatWorkMemberDataServiceImpl implements WeChatWorkDataService {
             weChatWorkImportDataBO.getMemberReceivedUserIdS().addAll(memberReceivedDOS.stream()
                     .map(MemberReceivedDO::getUserId).collect(Collectors.toList()));
         });
+
+        //失效记录
+        int inactiveCount = memberService.updateInactiveStatus(
+                weChatWorkImportDataBO.getTenantDataSyncLogDO().getTenantId(),
+                weChatWorkImportDataBO.getTenantDataSyncLogDO().getTaskId());
+        //此次成员改变的记录数
+        weChatWorkImportDataBO.getTenantDataSyncLogDO().setMemberCount(
+                weChatWorkImportDataBO.getTenantDataSyncLogDO().getMemberCount()
+                        + inactiveCount);
     }
 
     /**

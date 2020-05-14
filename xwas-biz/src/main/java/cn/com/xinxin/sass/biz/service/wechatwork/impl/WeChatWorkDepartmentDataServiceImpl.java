@@ -126,8 +126,12 @@ public class WeChatWorkDepartmentDataServiceImpl implements WeChatWorkDataServic
         //更新记录
         departmentService.updateBatchByIdPartially(updateRecord, CommonConstants.ONE_HUNDRED);
 
+        //失效记录
+        int inactiveCount = departmentService.updateInactiveStatus(weChatWorkImportDataBO.getTenantDataSyncLogDO().getTenantId(),
+                weChatWorkImportDataBO.getTenantDataSyncLogDO().getTaskId());
+
         //此次成员改变的记录数
-        weChatWorkImportDataBO.getTenantDataSyncLogDO().setDepartmentCount(insertRecord.size() + updateRecord.size());
+        weChatWorkImportDataBO.getTenantDataSyncLogDO().setDepartmentCount(insertRecord.size() + updateRecord.size() + inactiveCount);
 
         //此次同步部门信息记录表的id
         weChatWorkImportDataBO.setDepartmentReceivedIdS(departmentReceivedIdS);

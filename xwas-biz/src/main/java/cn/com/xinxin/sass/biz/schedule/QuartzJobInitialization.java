@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.quartz.*;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -21,7 +21,7 @@ import java.util.List;
  * @updater:
  * @description: 定时任务初始化类
  */
-@Component
+@Service
 public class QuartzJobInitialization {
     private static final Logger LOGGER = LoggerFactory.getLogger(QuartzJobInitialization.class);
 
