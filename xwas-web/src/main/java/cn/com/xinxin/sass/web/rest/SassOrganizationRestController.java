@@ -14,6 +14,7 @@ import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
 import cn.com.xinxin.sass.web.form.OrgQueryForm;
 import cn.com.xinxin.sass.web.form.OrganizationForm;
+import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.DeptTreeVO;
 import cn.com.xinxin.sass.web.vo.OrgTreeVO;
@@ -171,6 +172,12 @@ public class SassOrganizationRestController extends AclController {
         }
 
         loger.info("SassOrganizationRestController,createOrganization,request:{}",JSONObject.toJSONString(orgForm));
+
+        if(!RegexUtils.isDataCode(orgForm.getCode())){
+            // 如果匹配不是useraccount格式
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"不能包含特殊字符或者长度超过16","不能包含特殊字符或者长度超过16");
+        }
+
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
