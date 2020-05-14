@@ -5,7 +5,6 @@ import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import cn.com.xinxin.sass.biz.service.wechatwork.impl.WeChatWorkAddressListSyncServiceImpl;
 import cn.com.xinxin.sass.biz.service.wechatwork.impl.WeChatWorkChatRecordSyncServiceImpl;
 import cn.com.xinxin.sass.common.enums.TaskTypeEnum;
-import com.xinxinfinance.commons.exception.BusinessException;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -39,8 +38,8 @@ public class CommonJob implements Job {
                         WeChatWorkChatRecordSyncServiceImpl.class);
                 weChatWorkSyncService.sync(jobName.replace("_" + TaskTypeEnum.MESSAGE_SYNC.getType(), ""));
             }
-        } catch (BusinessException be) {
-            LOGGER.error("任务执行失败", be);
+        } catch (Exception e) {
+            LOGGER.error("任务执行失败", e);
         }
     }
 }

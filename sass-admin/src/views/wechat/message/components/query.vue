@@ -102,6 +102,7 @@ export default {
       this.formItem.userId = "";
       this.formItem.startTime = "";
       this.formItem.endTime = "";
+      this.$emit("on-wc-msg-reset");
     }
   },
   mounted() {},

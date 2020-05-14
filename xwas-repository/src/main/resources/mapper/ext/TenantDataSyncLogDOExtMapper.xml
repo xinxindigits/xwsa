@@ -47,4 +47,52 @@
     #{gmtCreator,jdbcType=VARCHAR}, #{gmtUpdated,jdbcType=TIMESTAMP}, #{gmtUpdater,jdbcType=VARCHAR})
   </insert>
 
+  <select id="selectRecordSPage" resultMap="BaseResultMapExt"
+          parameterType="cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO">
+    select <include refid="Base_Column_List_Ext"/>
+    from tenant_sync_log
+    <where>
+      tenant_id = #{tenantId} and deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskType)">
+        and task_type = #{taskType}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskDate)">
+        and task_date = #{taskDate}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskStatus)">
+        and task_status = #{taskStatus}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and task_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and task_time <= #{endTime}]]>
+      </if>
+      order by id limit #{index}, #{pageSize}
+    </where>
+  </select>
+
+  <select id="selectRecordSCount" parameterType="cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO" resultType="java.lang.Long">
+    select count(id)
+    from tenant_sync_log
+    <where>
+      tenant_id = #{tenantId} and deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskType)">
+        and task_type = #{taskType}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskDate)">
+        and task_date = #{taskDate}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskStatus)">
+        and task_status = #{taskStatus}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and task_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and task_time <= #{endTime}]]>
+      </if>
+    </where>
+  </select>
+
 </mapper>

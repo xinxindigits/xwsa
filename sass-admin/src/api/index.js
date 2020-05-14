@@ -1,3 +1,4 @@
+import { regist, login, getUserInfo, getMenuInfo, logout } from "./user";
 import {
   getRoleList,
   addRole,
@@ -57,6 +58,11 @@ import {
   getCustomerDetail
 } from "./wc_cus";
 export {
+  regist,
+  login,
+  getUserInfo,
+  getMenuInfo,
+  logout,
   getAllRoles,
   getRoleList,
   addRole,

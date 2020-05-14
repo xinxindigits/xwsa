@@ -1,20 +1,32 @@
 import axios from "@/libs/api.request";
 
-export const login = ({ account, password, verifyCode }) => {
-  const data = {
-    account,
-    password
-  };
+export const regist = ({ account, name, gender, password, extension }) => {
   return axios.request({
-    url: "auth",
-    params: { verifyCode },
-    data,
+    url: "register",
+    data: {
+      account,
+      name,
+      gender,
+      password,
+      extension
+    },
     method: "post"
   });
 };
-export const getUserInfo = account => {
+export const login = ({ account, password, verifyCode }) => {
   return axios.request({
-    url: "user/query/" + account,
+    url: "auth",
+    params: { verifyCode },
+    data: {
+      account,
+      password
+    },
+    method: "post"
+  });
+};
+export const getUserInfo = () => {
+  return axios.request({
+    url: "user/me",
     method: "get"
   });
 };
@@ -30,11 +42,5 @@ export const logout = () => {
     url: "logout",
     data: {},
     method: "post"
-  });
-};
-export const getKaptcha = () => {
-  return axios.request({
-    url: "kaptcha?" + Math.random(),
-    method: "get"
   });
 };

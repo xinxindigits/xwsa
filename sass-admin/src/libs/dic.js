@@ -59,6 +59,12 @@ const taskState = {
   ["0"]: "启用",
   ["1"]: "禁用"
 };
+const staffAccountState = {
+  [1]: "已激活",
+  [2]: "已禁用",
+  [4]: "已激活",
+  [5]: "退出企业"
+};
 const dic = {
   gender,
   userStatus,
@@ -67,6 +73,7 @@ const dic = {
   msgAction,
   tagType,
   customerType,
+  staffAccountState
   taskType,
   taskState
 };
