@@ -50,9 +50,9 @@ export default {
       });
     },
     // 获取用户相关信息
-    getUserInfo({ state, commit }) {
+    getUserInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.account)
+        getUserInfo()
           .then(res => {
             const data = res.data;
             commit("setUserName", data.name || "");
