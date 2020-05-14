@@ -29,7 +29,7 @@
             type="info"
             size="small"
             style="margin-right: 5px"
-            @click="hdlDelete([row.tenantId])"
+            @click="hdlShowRecord(row.taskType)"
           >
             日志
           </Button>
@@ -68,6 +68,7 @@
         @on-update-task="hdlquery"
         ref="updateModal"
       ></task-update>
+      <task-log v-model="showRecord" ref="record"></task-log>
     </Card>
   </div>
 </template>
@@ -75,6 +76,7 @@
 <script>
 import { queryTenantConfig, executeJob } from "@/api";
 import TaskUpdate from "./modify";
+import TaskLog from "./taskLog";
 export default {
   name: "task",
   props: {
@@ -86,7 +88,8 @@ export default {
     }
   },
   components: {
-    TaskUpdate
+    TaskUpdate,
+    TaskLog
   },
   computed: {
     deleteOrgCodes() {
@@ -95,7 +98,7 @@ export default {
   },
   data() {
     return {
-      showTaskModal: false,
+      showRecord: false,
       showAddModal: false,
       showGrantModal: false,
       showUpdateModal: false,
@@ -187,6 +190,11 @@ export default {
       executeJob({ taskType }).then(() => {
         this.$Message.success("执行成功！");
       });
+      this.hdlquery();
+    },
+    hdlShowRecord(taskType) {
+      this.$refs.record.init(taskType);
+      this.showRecord = true;
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;
