@@ -16,6 +16,9 @@ Vue.prototype.$config = config;
 Vue.prototype._ = _;
 Vue.prototype.$mapd = mapDic;
 Vue.prototype.$md5 = md5;
+Vue.prototype.$Message.config({
+  duration: 2.5,
+});
 new Vue({
   router,
   store,

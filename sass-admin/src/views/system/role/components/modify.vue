@@ -94,11 +94,15 @@ export default {
       rules: {
         code: [
           { required: true, message: "角色编号不能为空", trigger: "blur" },
-          { max: 32, message: "不能超过32个字符!", trigger: "blur" }
+          {
+            pattern: /^[a-zA-Z0-9]{4,16}$/,
+            message: "请输入4～16位英文字母或数字的组合",
+            trigger: "blur"
+          }
         ],
         name: [
           { required: true, message: "角色名称不能为空", trigger: "blur" },
-          { max: 128, message: "不能超过128个字符!", trigger: "blur" }
+          { max: 128, message: "长度超出限制!", trigger: "blur" }
         ],
         roleType: [
           { required: true, message: "请选择角色类型", trigger: "blur" }

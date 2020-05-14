@@ -133,11 +133,15 @@ export default {
       rules: {
         account: [
           { required: true, message: "账号不能为空", trigger: "blur" },
-          { max: 64, message: "不能超过64个字符!", trigger: "blur" }
+          {
+            pattern: /^[a-zA-Z0-9]{4,16}$/,
+            message: "请输入4～16位英文字母或数字的组合",
+            trigger: "blur"
+          }
         ],
         name: [
           { required: true, message: "姓名不能为空", trigger: "blur" },
-          { max: 64, message: "不能超过64个字符!", trigger: "blur" }
+          { max: 64, message: "长度超出限制!", trigger: "blur" }
         ],
         orgCode: [
           { required: true, message: "所属机构不能为空", trigger: "blur" }
