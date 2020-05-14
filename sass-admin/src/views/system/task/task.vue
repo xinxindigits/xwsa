@@ -52,16 +52,29 @@
           >
             更新
           </Button>
-          <Button type="error" size="small" style="margin-right: 5px" @click="hdlDelete([row.tenantId])">
+          <Button
+            type="error"
+            size="small"
+            style="margin-right: 5px"
+            @click="hdlDelete([row.tenantId])"
+          >
             删除
           </Button>
-          <Button type="info" size="small" style="margin-right: 5px" @click="hdlDelete([row.tenantId])">
+          <Button
+            type="info"
+            size="small"
+            style="margin-right: 5px"
+            @click="hdlDelete([row.tenantId])"
+          >
             日志
           </Button>
-          <Button type="warning" size="small"  @click="hdlDelete([row.tenantId])">
+          <Button
+            type="warning"
+            size="small"
+            @click="hdlDelete([row.tenantId])"
+          >
             触发
           </Button>
-
         </template>
       </Table>
       <div style="margin: auto; text-align: right;padding-top:10px">
@@ -95,17 +108,17 @@
 </template>
 
 <script>
-import { delTenant,queryTenantConfig } from "@/api";
+import { delTenant, queryTenantConfig } from "@/api";
 import OrganizationUpdate from "./modify";
 export default {
   name: "organization",
   props: {
-      value: Boolean,
-      type: {
-          validator: function(value) {
-              return ["create", "update"].indexOf(value) !== -1;
-          }
+    value: Boolean,
+    type: {
+      validator: function(value) {
+        return ["create", "update"].indexOf(value) !== -1;
       }
+    }
   },
   components: {
     OrganizationUpdate
@@ -204,17 +217,17 @@ export default {
     },
     hdlSingleCreate() {
       let d = {
-          tenantId:""
+        tenantId: ""
       };
       this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
     hdlSingleModified(data) {
-        let d = {
-            tenantId:data.tenantId,
-        };
-        this.$refs.updateModal.setData(d);
-        this.showUpdateModal = true;
+      let d = {
+        tenantId: data.tenantId
+      };
+      this.$refs.updateModal.setData(d);
+      this.showUpdateModal = true;
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;

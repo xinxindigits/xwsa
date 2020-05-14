@@ -145,10 +145,10 @@ export default {
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
       let data = {
-          code:this.formItem.tenantId,
-          name:this.formItem.tenantName,
-          state:this.formItem.state,
-      }
+        code: this.formItem.tenantId,
+        name: this.formItem.tenantName,
+        state: this.formItem.state
+      };
       getTenantList({ pageIndex, pageSize, ...data })
         .then(res => {
           let { data } = res;
