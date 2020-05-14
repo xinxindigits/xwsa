@@ -210,7 +210,7 @@ public class RegexUtils {
     }
 
     public static boolean isDataCode(CharSequence input) {
-        return isMatch(REGEX_USERNAME, input);
+        return isMatch(REGEX_CODE, input);
     }
 
     /**

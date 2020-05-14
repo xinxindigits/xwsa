@@ -50,7 +50,7 @@
             style="margin-right: 5px"
             @click="hdlSingleModified(row)"
           >
-            详情
+            修改
           </Button>
           <Button type="error" size="small" @click="hdlDelete([row.tenantId])">
             删除

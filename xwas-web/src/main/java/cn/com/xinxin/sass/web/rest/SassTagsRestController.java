@@ -21,6 +21,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -194,10 +195,15 @@ public class SassTagsRestController extends AclController {
         createTags.setTenantId(sassUserInfo.getTenantId());
         createTags.setGmtCreator(sassUserInfo.getAccount());
         createTags.setGmtUpdater(sassUserInfo.getAccount());
-        int result = this.tagsService.createTags(createTags);
 
-        return result;
-
+        try {
+            int result = this.tagsService.createTags(createTags);
+            return result;
+        }catch (DuplicateKeyException dex){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "编码不能重复","编码不能重复");
+        }catch (Exception ex){
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "处理异常，请稍后重试","处理异常，请稍后重试");
+        }
     }
 
 

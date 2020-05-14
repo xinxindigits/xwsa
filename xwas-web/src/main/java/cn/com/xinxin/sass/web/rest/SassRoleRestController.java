@@ -34,6 +34,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -105,11 +106,18 @@ public class SassRoleRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
         roleDO.setGmtCreator(sassUserInfo.getAccount());
         roleDO.setGmtUpdater(sassUserInfo.getAccount());
-        // FIXME: 先默认设置为xinxin租户
-        roleDO.setTenantId("xinxin");
-        roleService.createRole(roleDO, createRoleForm.getResourceList());
+        roleDO.setTenantId(sassUserInfo.getTenantId());
 
-        return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        try {
+            roleService.createRole(roleDO, createRoleForm.getResourceList());
+            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+        }catch (DuplicateKeyException dex){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "编码不能重复","编码不能重复");
+        }catch (Exception ex){
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "处理异常，请稍后重试","处理异常，请稍后重试");
+
+        }
+
     }
 
     /**

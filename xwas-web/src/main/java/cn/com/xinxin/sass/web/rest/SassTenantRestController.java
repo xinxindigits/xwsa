@@ -32,6 +32,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -169,12 +170,21 @@ public class SassTenantRestController extends AclController {
         tenantBaseInfoDO.setGmtCreator(sassUserInfo.getAccount());
         tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
 
-        boolean result = tenantBaseInfoService.createOrgBaseInfo(tenantBaseInfoDO);
 
-        if(result){
-            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
-        }else {
-            return SassBizResultCodeEnum.FAIL.getAlertMessage();
+        try {
+
+            boolean result = tenantBaseInfoService.createOrgBaseInfo(tenantBaseInfoDO);
+
+            if(result){
+                return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+            }else {
+                return SassBizResultCodeEnum.FAIL.getAlertMessage();
+            }
+
+        }catch (DuplicateKeyException dex){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "编码不能重复","编码不能重复");
+        }catch (Exception ex){
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "处理异常，请稍后重试","处理异常，请稍后重试");
         }
 
     }
@@ -358,7 +368,7 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/executeJob",method = RequestMethod.GET)
     @ResponseBody
     @RequiresPermissions("/tenant/executeJob")
-    public Object executeJob(@RequestParam(required = false) String taskType, HttpServletRequest request){
+    public Object executeJob(@RequestParam String taskType, HttpServletRequest request){
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
         String tenantId = sassUserInfo.getTenantId();

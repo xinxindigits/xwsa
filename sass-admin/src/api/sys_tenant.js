@@ -100,3 +100,34 @@ export const createTenantTask = ({
     method: "post"
   });
 };
+export const updateTenantTask = ({
+  id,
+  taskType,
+  cronExpression,
+  status,
+  countCeiling,
+  timeInterval
+}) => {
+  let data = {
+    id,
+    taskType,
+    cronExpression,
+    status,
+    countCeiling,
+    timeInterval
+  };
+  return axios.request({
+    url: "tenant/tenantConfig/update",
+    data,
+    method: "post"
+  });
+};
+export const executeJob = ({ taskType }) => {
+  return axios.request({
+    params: {
+      taskType
+    },
+    url: "tenant/executeJob",
+    method: "get"
+  });
+};
