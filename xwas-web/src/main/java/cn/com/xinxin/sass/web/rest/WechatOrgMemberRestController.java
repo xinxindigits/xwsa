@@ -38,7 +38,7 @@ public class WechatOrgMemberRestController extends AclController {
 
 
     private static final Logger log = LoggerFactory.getLogger(WechatOrgMemberRestController.class);
-    
+
 
     @Autowired
     private MemberService memberService;
