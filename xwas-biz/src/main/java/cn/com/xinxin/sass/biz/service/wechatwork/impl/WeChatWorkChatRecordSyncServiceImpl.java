@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.service.wechatwork.impl;
 
 import cn.com.xinxin.sass.biz.convert.MsgRecordConvert;
+import cn.com.xinxin.sass.biz.schedule.WeChatWorkSDKInitialization;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
@@ -50,17 +51,20 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
     private final TenantBaseInfoService tenantBaseInfoService;
     private final TenantDataSyncConfigService tenantDataSyncConfigService;
     private final TenantDataSyncLogService tenantDataSyncLogService;
+    private final WeChatWorkSDKInitialization weChatWorkSDKInitialization;
 
     public WeChatWorkChatRecordSyncServiceImpl(final WeChatWorkInteractionClient weChatWorkInteractionClient,
                                             final MsgRecordService msgRecordService,
                                             final TenantBaseInfoService tenantBaseInfoService,
                                             final TenantDataSyncConfigService tenantDataSyncConfigService,
-                                            final TenantDataSyncLogService tenantDataSyncLogService) {
+                                            final TenantDataSyncLogService tenantDataSyncLogService,
+                                               final WeChatWorkSDKInitialization weChatWorkSDKInitialization) {
         this.weChatWorkInteractionClient = weChatWorkInteractionClient;
         this.msgRecordService = msgRecordService;
         this.tenantBaseInfoService = tenantBaseInfoService;
         this.tenantDataSyncConfigService = tenantDataSyncConfigService;
         this.tenantDataSyncLogService = tenantDataSyncLogService;
+        this.weChatWorkSDKInitialization = weChatWorkSDKInitialization;
     }
 
     /**
@@ -106,7 +110,7 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
                 throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构同步任务配置信息");
             }
             //初始化sdk
-            long sdk = ChattingRecordsUtils.initSdk(tenantBaseInfoDO.getCorpId(), tenantBaseInfoDO.getChatRecordSecret());
+            long sdk = weChatWorkSDKInitialization.getSdk(tenantBaseInfoDO.getCorpId());
 
             //拉取数据的请求BO
             WeChatWorkChattingRecordsReqBO reqBO = new WeChatWorkChattingRecordsReqBO();
@@ -129,11 +133,11 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
 
             //更新成功日志
             updateSuccessRecord(tenantDataSyncLogDO, count);
-        } catch (Exception e) {
+        } catch (Throwable t) {
             LOGGER.error("获取聊天记录异常，orgId[{}] taskid[{}]", tenantDataSyncLogDO.getTenantId(),
-                    tenantDataSyncLogDO.getTaskId(), e);
+                    tenantDataSyncLogDO.getTaskId(), t);
             //更新失败日志
-            updateFailRecord(tenantDataSyncLogDO, count, e.toString());
+            updateFailRecord(tenantDataSyncLogDO, count, t.getMessage());
         } finally {
             //任务解锁
             tenantDataSyncConfigService.updateUnLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.MESSAGE_SYNC.getType());

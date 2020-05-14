@@ -69,4 +69,6 @@ public interface TenantBaseInfoDOMapper {
     List<TenantBaseInfoDO> listAlltenants();
 
     List<TenantBaseInfoDO> findByCondition(@Param("condition") TenantBaseInfoDO condition);
+
+    TenantBaseInfoDO selectByCorpId(@Param(value = "corpId") String corpId);
 }
