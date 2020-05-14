@@ -38,7 +38,7 @@ public class MemberDetailVO extends ToString {
 
     private String alias;
 
-    private String status;
+    private Integer status;
 
     private String qrCode;
 
@@ -158,11 +158,11 @@ public class MemberDetailVO extends ToString {
         this.alias = alias;
     }
 
-    public String getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
