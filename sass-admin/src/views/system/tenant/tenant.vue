@@ -144,7 +144,12 @@ export default {
       this.isLoading = true;
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
-      getTenantList({ pageIndex, pageSize, ...this.formItem })
+      let data = {
+        code: this.formItem.tenantId,
+        name: this.formItem.tenantName,
+        state: this.formItem.state
+      };
+      getTenantList({ pageIndex, pageSize, ...data })
         .then(res => {
           let { data } = res;
           this.reset();

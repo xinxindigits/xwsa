@@ -120,6 +120,14 @@ public interface CustomerDOMapper {
     List<CustomerDO> queryAllCustomerByPages();
 
 
+    /**
+     * 将记录状态置为失效
+     * @param tenantId 租户id
+     * @param taskId 任务流水
+     * @return 成功更新的条数
+     */
+    int updateInactiveStatus(@Param(value = "tenantId") String tenantId, @Param(value = "taskId") String taskId);
+
 
 
 }

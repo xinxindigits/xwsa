@@ -53,11 +53,6 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
         }
         TenantDataSyncConfigDO tenantDataSyncConfigDO = tenantDataSyncConfigDOMapper.selectByOrgIdAndTaskType(tenantId, taskType);
 
-        if (null == tenantDataSyncConfigDO) {
-            LOGGER.error("无法通过机构id[{}]找到机构同步[{}]任务配置信息", tenantId, taskType);
-            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构同步任务配置信息");
-        }
-
         return tenantDataSyncConfigDO;
     }
 
@@ -89,6 +84,7 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
      * @return 成功更新记录条数
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int updateLockByTenantIdAndTaskType(String tenantId, String taskType) {
         if (StringUtils.isBlank(tenantId)) {
             LOGGER.error("通过机构id和任务类型对任务上锁, tenantId不能为空");
@@ -119,6 +115,7 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
      * @return 成功更新记录条数
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = Exception.class)
     public int updateUnLockByTenantIdAndTaskType(String tenantId, String taskType) {
         if (StringUtils.isBlank(tenantId)) {
             LOGGER.error("通过机构id和任务类型对任务解锁, tenantId不能为空");

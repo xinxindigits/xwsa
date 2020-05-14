@@ -73,4 +73,12 @@ public interface DepartmentService {
      * @param size 大小
      */
     void updateBatchByIdPartially(List<DepartmentDO> departmentDOS, int size);
+
+    /**
+     * 将记录状态置为失效
+     * @param tenantId 租户id
+     * @param taskId 任务流水
+     * @return 成功更新的条数
+     */
+    int updateInactiveStatus(String tenantId, String taskId);
 }

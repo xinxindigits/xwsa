@@ -14,6 +14,7 @@ import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
 import cn.com.xinxin.sass.web.form.OrgQueryForm;
 import cn.com.xinxin.sass.web.form.OrganizationForm;
+import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.DeptTreeVO;
 import cn.com.xinxin.sass.web.vo.OrgTreeVO;
@@ -28,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -84,6 +86,7 @@ public class SassOrganizationRestController extends AclController {
         page.setPageNumber(orgForm.getPageIndex());
 
         OrganizationDO condition = BaseConvert.convert(orgForm,OrganizationDO.class);
+        condition.setCode(orgForm.getOrgId());
         if(StringUtils.isEmpty(orgForm.getTenantId())){
             condition.setTenantId(sassUserInfo.getTenantId());
         }else{
@@ -171,6 +174,13 @@ public class SassOrganizationRestController extends AclController {
 
         loger.info("SassOrganizationRestController,createOrganization,request:{}",JSONObject.toJSONString(orgForm));
 
+        if(!RegexUtils.isDataCode(orgForm.getCode())){
+            // 如果匹配不是useraccount格式
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "编码不能包含特殊字符或者长度超过16","编码不能包含特殊字符或者长度超过16");
+        }
+
+
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
         OrganizationDO organizationDO = SassFormConvert.convertOrgForm2OrganizationDO(orgForm);
@@ -180,13 +190,24 @@ public class SassOrganizationRestController extends AclController {
             organizationDO.setTenantId(sassUserInfo.getTenantId());
         }
         // 创建对象
-        int result = this.organizationService.createOrganization(organizationDO);
+        try {
+            int result = this.organizationService.createOrganization(organizationDO);
 
-        if(result > 0){
-            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
-        }else {
-            return SassBizResultCodeEnum.FAIL.getAlertMessage();
+            if(result > 0){
+                return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+            }else {
+                return SassBizResultCodeEnum.FAIL.getAlertMessage();
+            }
+        }catch (DuplicateKeyException dex){
+
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "编码不能重复","编码不能重复");
+
+        }catch (Exception ex){
+
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "处理异常，请稍后重试","处理异常，请稍后重试");
+
         }
+
 
     }
 

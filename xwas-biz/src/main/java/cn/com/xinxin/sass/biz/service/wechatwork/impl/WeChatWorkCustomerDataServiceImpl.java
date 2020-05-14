@@ -115,7 +115,11 @@ public class WeChatWorkCustomerDataServiceImpl implements WeChatWorkDataService 
             startId = customerReceivedDOS.get(customerReceivedDOS.size() - 1).getId();
         }
 
-        weChatWorkImportDataBO.getTenantDataSyncLogDO().setCustomerCount(count);
+        //失效记录
+        int inactiveCount = customerService.updateInactiveStatus(weChatWorkImportDataBO.getTenantDataSyncLogDO().getTenantId(),
+                weChatWorkImportDataBO.getTenantDataSyncLogDO().getTaskId());
+
+        weChatWorkImportDataBO.getTenantDataSyncLogDO().setCustomerCount(count + inactiveCount);
     }
 
     /**

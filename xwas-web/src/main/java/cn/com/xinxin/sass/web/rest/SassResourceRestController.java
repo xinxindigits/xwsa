@@ -14,6 +14,7 @@ import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.ResourceForm;
 import cn.com.xinxin.sass.web.form.ResourceQueryForm;
+import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
@@ -27,6 +28,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -236,6 +238,12 @@ public class SassResourceRestController extends AclController {
     public Object createResource(HttpServletRequest request,
                                    @RequestBody ResourceForm resourceForm){
 
+        if(!RegexUtils.isDataCode(resourceForm.getCode())){
+            // 如果匹配不是useraccount格式
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "编码不能包含特殊字符或者长度超过16","编码不能包含特殊字符或者长度超过16");
+        }
+
         SassUserInfo sassUserInfo = this.getSassUser(request);
         String userAccount = sassUserInfo.getAccount();
 
@@ -248,10 +256,21 @@ public class SassResourceRestController extends AclController {
         resourceDO.setTenantId("xinxin");
 
 
-        int result = resourceService.createResource(resourceDO);
+        try {
+            int result = resourceService.createResource(resourceDO);
 
-        if(result==0){
-            throw new BusinessException(SassBizResultCodeEnum.FAIL,"创建资源出错","清检查参数是否正确");
+            if(result==0){
+                throw new BusinessException(SassBizResultCodeEnum.FAIL,"创建资源出错","清检查参数是否正确");
+            }
+
+        }catch (DuplicateKeyException dex){
+
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "编码不能重复","编码不能重复");
+
+        }catch (Exception ex){
+
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "处理异常，请稍后重试","处理异常，请稍后重试");
+
         }
 
         ResourceDO createdResourceDO = this.resourceService.findByResourceCode(resourceForm.getCode());

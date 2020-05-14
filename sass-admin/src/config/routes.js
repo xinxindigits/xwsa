@@ -100,6 +100,13 @@ let routes_config = {
       title: "操作日志管理"
     },
     component: () => import("@/views/system/log/log.vue")
+  },
+  ["/tenant/queryConfig"]: {
+    name: "task_config",
+    meta: {
+      title: "任务配置管理"
+    },
+    component: () => import("@/views/system/task/task.vue")
   }
 };
 export default routes_config;
