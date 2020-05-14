@@ -11,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +22,7 @@ import java.util.Map;
  * @description: 企业微信sdk初始化类
  */
 @Service
+@Deprecated
 public class WeChatWorkSDKInitialization {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatWorkSDKInitialization.class);
@@ -36,7 +35,7 @@ public class WeChatWorkSDKInitialization {
         this.tenantBaseInfoDOMapper = tenantBaseInfoDOMapper;
     }
 
-    @PostConstruct
+    //@PostConstruct
     public void initSDK() {
         LOGGER.info("初始化企业微信sdk");
         List<TenantBaseInfoDO> tenantBaseInfoDOS = tenantBaseInfoDOMapper.listAlltenants();
@@ -55,7 +54,7 @@ public class WeChatWorkSDKInitialization {
         }
     }
 
-    @PreDestroy
+    //@PreDestroy
     public void destroy() {
         LOGGER.info("销毁企业微信sdk");
         if (null != sdkMap) {

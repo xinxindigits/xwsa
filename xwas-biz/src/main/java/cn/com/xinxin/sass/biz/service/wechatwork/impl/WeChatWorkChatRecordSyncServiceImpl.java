@@ -51,20 +51,17 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
     private final TenantBaseInfoService tenantBaseInfoService;
     private final TenantDataSyncConfigService tenantDataSyncConfigService;
     private final TenantDataSyncLogService tenantDataSyncLogService;
-    private final WeChatWorkSDKInitialization weChatWorkSDKInitialization;
 
     public WeChatWorkChatRecordSyncServiceImpl(final WeChatWorkInteractionClient weChatWorkInteractionClient,
                                             final MsgRecordService msgRecordService,
                                             final TenantBaseInfoService tenantBaseInfoService,
                                             final TenantDataSyncConfigService tenantDataSyncConfigService,
-                                            final TenantDataSyncLogService tenantDataSyncLogService,
-                                               final WeChatWorkSDKInitialization weChatWorkSDKInitialization) {
+                                            final TenantDataSyncLogService tenantDataSyncLogService) {
         this.weChatWorkInteractionClient = weChatWorkInteractionClient;
         this.msgRecordService = msgRecordService;
         this.tenantBaseInfoService = tenantBaseInfoService;
         this.tenantDataSyncConfigService = tenantDataSyncConfigService;
         this.tenantDataSyncLogService = tenantDataSyncLogService;
-        this.weChatWorkSDKInitialization = weChatWorkSDKInitialization;
     }
 
     /**
@@ -110,7 +107,7 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
                 throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构同步任务配置信息");
             }
             //初始化sdk
-            long sdk = weChatWorkSDKInitialization.getSdk(tenantBaseInfoDO.getCorpId());
+            long sdk = ChattingRecordsUtils.initSdk(tenantBaseInfoDO.getCorpId(), tenantBaseInfoDO.getChatRecordSecret());
 
             //拉取数据的请求BO
             WeChatWorkChattingRecordsReqBO reqBO = new WeChatWorkChattingRecordsReqBO();
@@ -129,6 +126,7 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
                 updateOrgDataSyncConfig.setId(tenantDataSyncConfigDO.getId());
                 updateOrgDataSyncConfig.setFetchedSeqNo(reqBO.getStartSeq());
                 tenantDataSyncConfigService.updateById(updateOrgDataSyncConfig);
+                ChattingRecordsUtils.destorySdk(sdk);
             }
 
             //更新成功日志
