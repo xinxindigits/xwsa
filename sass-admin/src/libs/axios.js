@@ -98,7 +98,8 @@ class HttpRequest {
           Message.error("请求错误，请检查参数或请求头");
         } else if (errorInfo.status === 401) {
           Message.error({
-            content: "登录信息失效，请重新登录",
+            content: "登录信息失效，即将返回登录页！",
+            duration: 3,
             onClose() {
               store.commit("setToken", "");
               location.reload();
