@@ -92,7 +92,8 @@ public class SassRoleRestController extends AclController {
 
         if(!RegexUtils.isDataCode(roleCode)){
             // 如果匹配不是useraccount格式
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"不能包含特殊字符或者长度超过16","不能包含特殊字符或者长度超过16");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "编码不能包含特殊字符或者长度超过16","编码不能包含特殊字符或者长度超过16");
         }
 
         RoleDO existedRole = roleService.findByRoleCode(roleCode);
