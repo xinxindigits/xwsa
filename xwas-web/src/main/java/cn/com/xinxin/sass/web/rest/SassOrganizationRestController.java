@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -189,13 +190,24 @@ public class SassOrganizationRestController extends AclController {
             organizationDO.setTenantId(sassUserInfo.getTenantId());
         }
         // 创建对象
-        int result = this.organizationService.createOrganization(organizationDO);
+        try {
+            int result = this.organizationService.createOrganization(organizationDO);
 
-        if(result > 0){
-            return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
-        }else {
-            return SassBizResultCodeEnum.FAIL.getAlertMessage();
+            if(result > 0){
+                return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
+            }else {
+                return SassBizResultCodeEnum.FAIL.getAlertMessage();
+            }
+        }catch (DuplicateKeyException dex){
+
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "编码不能重复","编码不能重复");
+
+        }catch (Exception ex){
+
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "处理异常，请稍后重试","处理异常，请稍后重试");
+
         }
+
 
     }
 
