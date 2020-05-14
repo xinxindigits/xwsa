@@ -31,7 +31,9 @@ import {
   addTenant,
   updateTenant,
   queryTenantConfig,
-  createTenantTask
+  createTenantTask,
+  executeJob,
+  updateTenantTask
 } from "./sys_tenant";
 import { getLogList, queryLogList, getLogDetail } from "./sys_log";
 import {
@@ -112,5 +114,7 @@ export {
   addTenant,
   updateTenant,
   queryTenantConfig,
-  createTenantTask
+  createTenantTask,
+  executeJob,
+  updateTenantTask
 };
