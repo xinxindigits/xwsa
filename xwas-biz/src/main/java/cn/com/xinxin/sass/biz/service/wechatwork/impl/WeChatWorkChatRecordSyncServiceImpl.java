@@ -75,11 +75,21 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
             throw new BusinessException(SassBizResultCodeEnum.FAIL, "获取聊天记录，tenantId不能为空");
         }
 
-        //初始化任务日志,并保存到日志表中
-        TenantDataSyncLogDO tenantDataSyncLogDO = initLog(tenantId);
-
         //任务上锁
         tenantDataSyncConfigService.updateLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.MESSAGE_SYNC.getType());
+
+        TenantDataSyncLogDO tenantDataSyncLogDO;
+
+        try {
+            //初始化并持久化租户数据同步日志
+            tenantDataSyncLogDO = initLog(tenantId);
+        } catch (Exception e) {
+            LOGGER.error("初始化获取聊天记录任务日志失败", e);
+            //任务解锁
+            tenantDataSyncConfigService.updateUnLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.CONTACT_SYNC.getType());
+
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "初始化获取聊天记录任务日志失败");
+        }
 
         //此次更新的数量
         Integer count = 0;
@@ -125,6 +135,11 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
             //更新失败日志
             updateFailRecord(tenantDataSyncLogDO, count, e.toString());
         } finally {
+            if (!StringUtils.equals(tenantDataSyncLogDO.getTaskStatus(), TaskStatusEnum.FAILURE.getStatus())
+                    && !StringUtils.equals(tenantDataSyncLogDO.getTaskStatus(), TaskStatusEnum.SUCCESS.getStatus())) {
+                //更新失败日志
+                updateFailRecord(tenantDataSyncLogDO, count, "运行中出现未知异常");
+            }
             //任务解锁
             tenantDataSyncConfigService.updateUnLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.MESSAGE_SYNC.getType());
         }
