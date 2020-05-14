@@ -1,5 +1,7 @@
 package cn.com.xinxin.sass.web.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -43,7 +45,8 @@ public class KaptchaUtils {
                 request.getSession().getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
         //获取用户输入的验证码
         String verifyCodeActual = KaptchaUtils.getString(request, "verifyCode");
-        if(verifyCodeActual == null ||!verifyCodeActual.equals(verifyCodeExpected)) {
+
+        if(verifyCodeActual == null ||!StringUtils.equalsIgnoreCase(verifyCodeActual,verifyCodeExpected)) {
             return false;
         }
         return true;

@@ -1,33 +1,6 @@
 <template>
   <div>
     <Card>
-      <Form :model="formItem" inline label-colon>
-        <FormItem>
-          <Input v-model="formItem.tenantId" placeholder="租户编码"></Input>
-        </FormItem>
-        <FormItem>
-          <Input v-model="formItem.tenantName" placeholder="租户名称"></Input>
-        </FormItem>
-        <FormItem>
-          <Button type="primary" @click="hdlquery">查询</Button>
-          <Button style="margin-left: 8px" @click="reset">重置</Button>
-        </FormItem>
-      </Form>
-      <Row type="flex" :gutter="20" class="row-operation">
-        <Col
-          ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
-            >新增</Button
-          >
-        </Col>
-        <Col
-          ><Button
-            icon="md-trash"
-            type="error"
-            @click="hdlDelete(deleteOrgCodes)"
-            >删除</Button
-          ></Col
-        >
-      </Row>
       <Table
         stripe
         border
@@ -53,14 +26,6 @@
             更新
           </Button>
           <Button
-            type="error"
-            size="small"
-            style="margin-right: 5px"
-            @click="hdlDelete([row.tenantId])"
-          >
-            删除
-          </Button>
-          <Button
             type="info"
             size="small"
             style="margin-right: 5px"
@@ -71,7 +36,7 @@
           <Button
             type="warning"
             size="small"
-            @click="hdlDelete([row.tenantId])"
+            @click="hdlSingleExecuteJob(row.taskType)"
           >
             触发
           </Button>
@@ -90,28 +55,28 @@
           transfer
         ></Page>
       </div>
-      <organization-update
+      <task-update
         type="create"
         ref="createModal"
         v-model="showAddModal"
         @on-cancel="showAddModal = false"
-        @on-add-organization="hdlquery"
-      ></organization-update>
-      <organization-update
+        @on-add-task="hdlquery"
+      ></task-update>
+      <task-update
         type="update"
         v-model="showUpdateModal"
-        @on-update-organization="hdlquery"
+        @on-update-task="hdlquery"
         ref="updateModal"
-      ></organization-update>
+      ></task-update>
     </Card>
   </div>
 </template>
 
 <script>
-import { delTenant, queryTenantConfig } from "@/api";
-import OrganizationUpdate from "./modify";
+import { queryTenantConfig, executeJob } from "@/api";
+import TaskUpdate from "./modify";
 export default {
-  name: "organization",
+  name: "task",
   props: {
     value: Boolean,
     type: {
@@ -121,7 +86,7 @@ export default {
     }
   },
   components: {
-    OrganizationUpdate
+    TaskUpdate
   },
   computed: {
     deleteOrgCodes() {
@@ -198,23 +163,6 @@ export default {
       this.formItem.tenantId = "";
       this.formItem.state = "";
     },
-    hdlDelete(codes) {
-      let self = this;
-      if (codes.length > 0) {
-        this.$Modal.confirm({
-          title: "确认删除？",
-          content: `确定删除选中记录?`,
-          onOk() {
-            delTenant({ codes }).then(() => {
-              this.$Message.success("删除成功！");
-              self.hdlquery();
-            });
-          }
-        });
-      } else {
-        this.$Message.warning("请选择一条记录!");
-      }
-    },
     hdlSingleCreate() {
       let d = {
         tenantId: ""
@@ -224,10 +172,21 @@ export default {
     },
     hdlSingleModified(data) {
       let d = {
-        tenantId: data.tenantId
+        id: data.id,
+        tenantId: data.tenantId,
+        taskType: data.taskType,
+        cronExpression: data.cronExpression,
+        countCeiling: data.countCeiling,
+        timeInterval: data.timeInterval,
+        deleted: data.deleted
       };
       this.$refs.updateModal.setData(d);
       this.showUpdateModal = true;
+    },
+    hdlSingleExecuteJob(taskType) {
+      executeJob({ taskType }).then(() => {
+        this.$Message.success("执行成功！");
+      });
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;

@@ -54,7 +54,7 @@
             style="margin-right: 5px"
             @click="hdlSingleModified(row)"
           >
-            详情
+            修改
           </Button>
           <Button
             type="error"
@@ -234,7 +234,7 @@ export default {
     }
   },
   mounted() {
-    this.changePage(1);
+    this.hdlquery();
   }
 };
 </script>
