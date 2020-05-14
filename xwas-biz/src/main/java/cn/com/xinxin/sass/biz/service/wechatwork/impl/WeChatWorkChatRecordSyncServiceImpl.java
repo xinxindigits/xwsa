@@ -132,8 +132,8 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
             //更新失败日志
             updateFailRecord(tenantDataSyncLogDO, count, e.toString());
         } finally {
-            if (StringUtils.equals(tenantDataSyncLogDO.getTaskStatus(), TaskStatusEnum.FAILURE.getStatus())
-                    || StringUtils.equals(tenantDataSyncLogDO.getTaskStatus(), TaskStatusEnum.SUCCESS.getStatus())) {
+            if (!StringUtils.equals(tenantDataSyncLogDO.getTaskStatus(), TaskStatusEnum.FAILURE.getStatus())
+                    && !StringUtils.equals(tenantDataSyncLogDO.getTaskStatus(), TaskStatusEnum.SUCCESS.getStatus())) {
                 //更新失败日志
                 updateFailRecord(tenantDataSyncLogDO, count, "运行中出现未知异常");
             }
