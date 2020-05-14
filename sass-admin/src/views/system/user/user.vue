@@ -75,7 +75,7 @@
         v-model="showModal"
         :type="modifyType"
         @on-cancel="showModal = false"
-        @user-modified="hdlQuery"
+        @user-modified="hdlModified"
       >
       </user-modify>
       <user-grant
@@ -293,6 +293,10 @@ export default {
         this.userDetail = data;
         this.showUserDetail = true;
       });
+    },
+    hdlModified(type) {
+      this.$Message.success(`${type == "create" ? "新增" : "修改"}成功！`);
+      this.hdlQuery();
     }
   },
   mounted() {

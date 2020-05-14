@@ -100,22 +100,26 @@ export default {
       rules: {
         code: [
           { required: true, message: "资源编号不能为空", trigger: "blur" },
-          { max: 32, message: "不能超过32个字符!", trigger: "blur" }
+          {
+            pattern: /^[a-zA-Z0-9]{4,16}$/,
+            message: "请输入4～16位英文字母或数字的组合",
+            trigger: "blur"
+          }
         ],
         resourceType: [
           { required: true, message: "资源类型不能为空", trigger: "blur" }
         ],
         authority: [
           { required: true, message: "资源权限不能为空", trigger: "blur" },
-          { max: 128, message: "不能超过128个字符!", trigger: "blur" }
+          { max: 128, message: "长度超出限制!", trigger: "blur" }
         ],
         name: [
           { required: true, message: "资源名称不能为空", trigger: "blur" },
-          { max: 128, message: "不能超过128个字符!", trigger: "blur" }
+          { max: 128, message: "长度超出限制!", trigger: "blur" }
         ],
         url: [
           { required: true, message: "组件URI不能为空", trigger: "blur" },
-          { max: 128, message: "不能超过128个字符!", trigger: "blur" }
+          { max: 128, message: "长度超出限制!", trigger: "blur" }
         ],
         extension: [
           { max: 4000, message: "不能超过4000个字符!", trigger: "blur" }

@@ -71,7 +71,7 @@ class HttpRequest {
           return data;
         } else if (data && data.code != "SUCCESS") {
           let message = data.message || "响应数据异常:无响应描述";
-          !config.silent && Message.error(message);
+          !config.silent && Message.error({ content: message, duration: 3 });
           const err = new Error(message);
           err.data = data;
           err.response = res;
