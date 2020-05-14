@@ -65,9 +65,7 @@
         <Input
           v-model="formObj.extension"
           type="textarea"
-          :maxlength="50"
           style="width: 250px"
-          :show-word-limit="true"
           :rows="5"
         ></Input>
       </FormItem>
@@ -133,8 +131,14 @@ export default {
         orgCode: null
       },
       rules: {
-        account: [{ required: true, message: "账号不能为空", trigger: "blur" }],
-        name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+        account: [
+          { required: true, message: "账号不能为空", trigger: "blur" },
+          { max: 64, message: "不能超过64个字符!", trigger: "blur" }
+        ],
+        name: [
+          { required: true, message: "姓名不能为空", trigger: "blur" },
+          { max: 64, message: "不能超过64个字符!", trigger: "blur" }
+        ],
         orgCode: [
           { required: true, message: "所属机构不能为空", trigger: "blur" }
         ],
@@ -145,6 +149,9 @@ export default {
             trigger: "blur",
             type: "number"
           }
+        ],
+        extension: [
+          { max: 4000, message: "不能超过4000个字符!", trigger: "blur" }
         ]
       }
     };
