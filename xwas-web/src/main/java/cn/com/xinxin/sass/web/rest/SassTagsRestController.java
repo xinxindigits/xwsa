@@ -8,6 +8,7 @@ import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.*;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.*;
+import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.*;
 import com.alibaba.fastjson.JSONObject;
@@ -174,6 +175,14 @@ public class SassTagsRestController extends AclController {
         if(null == tagForm){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"标签参数不能为空");
         }
+
+        if(!RegexUtils.isDataCode(tagForm.getCode())){
+            // 如果匹配不是useraccount格式
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "编码不能包含特殊字符或者长度超过16","编码不能包含特殊字符或者长度超过16");
+        }
+
+
         SassUserInfo sassUserInfo = this.getSassUser(request);
         TagsDO createTags = BaseConvert.convert(tagForm,TagsDO.class);
         if(StringUtils.isEmpty(createTags.getCode())){

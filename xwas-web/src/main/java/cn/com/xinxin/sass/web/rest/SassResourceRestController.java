@@ -14,6 +14,7 @@ import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.ResourceForm;
 import cn.com.xinxin.sass.web.form.ResourceQueryForm;
+import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
@@ -235,6 +236,12 @@ public class SassResourceRestController extends AclController {
     @RequiresPermissions("/resource/create")
     public Object createResource(HttpServletRequest request,
                                    @RequestBody ResourceForm resourceForm){
+
+        if(!RegexUtils.isDataCode(resourceForm.getCode())){
+            // 如果匹配不是useraccount格式
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "编码不能包含特殊字符或者长度超过16","编码不能包含特殊字符或者长度超过16");
+        }
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
         String userAccount = sassUserInfo.getAccount();

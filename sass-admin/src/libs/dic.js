@@ -73,7 +73,7 @@ const dic = {
   msgAction,
   tagType,
   customerType,
-  staffAccountState
+  staffAccountState,
   taskType,
   taskState
 };
