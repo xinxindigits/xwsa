@@ -193,4 +193,23 @@ public class MemberServiceImpl implements MemberService {
         List<List<MemberDO>> memberDOSList = CommonUtils.split(memberDOS, size);
         memberDOSList.forEach(this::updateBatchById);
     }
+
+    /**
+     * 将记录状态置为失效
+     * @param tenantId 租户id
+     * @param taskId 任务流水
+     * @return 成功更新的条数
+     */
+    @Override
+    public int updateInactiveStatus(String tenantId, String taskId) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("将记录状态置为失效, tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "将记录状态置为失效, tenantId不能为空");
+        }
+        if (StringUtils.isBlank(taskId)) {
+            LOGGER.error("将记录状态置为失效, taskId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "将记录状态置为失效, taskId不能为空");
+        }
+        return memberDOMapper.updateInactiveStatus(tenantId, taskId);
+    }
 }

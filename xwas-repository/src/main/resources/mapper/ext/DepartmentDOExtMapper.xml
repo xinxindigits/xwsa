@@ -146,4 +146,11 @@
 
   </select>
 
+  <update id="updateInactiveStatus" parameterType="java.lang.String">
+    update department
+    set `status` = 'INACTIVE'
+    where tenant_id = #{tenantId} and department_id not in
+    (SELECT department_id from department_received where task_id = #{taskId});
+  </update>
+
 </mapper>
