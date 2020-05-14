@@ -78,20 +78,25 @@ export const updateTenant = ({
   });
 };
 export const queryTenantConfig = ({ tenantId }) => {
-    return axios.request({
-        params: {
-            tenantId
-        },
-        url: "tenant/queryConfig",
-        method: "get"
-    });
+  return axios.request({
+    params: {
+      tenantId
+    },
+    url: "tenant/queryConfig",
+    method: "get"
+  });
 };
-export const createTenantTask= ({taskType,cronExpression,status,countCeiling,timeInterval}) =>{
-  let data = {taskType,cronExpression,status,countCeiling,timeInterval};
-    return axios.request({
-        url: "tenant/tenantConfig/create",
-        data,
-        method: "post"
-    });
+export const createTenantTask = ({
+  taskType,
+  cronExpression,
+  status,
+  countCeiling,
+  timeInterval
+}) => {
+  let data = { taskType, cronExpression, status, countCeiling, timeInterval };
+  return axios.request({
+    url: "tenant/tenantConfig/create",
+    data,
+    method: "post"
+  });
 };
-

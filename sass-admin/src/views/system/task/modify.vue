@@ -21,12 +21,9 @@
       </FormItem>
       <FormItem label="任务类型" prop="taskType">
         <Select v-model="formObj.taskType" style="width:280px">
-          <Option
-                  v-for="item in statusEnum"
-                  :value="item[0]"
-                  :key="item[0]"
-          >{{ item[1] }}</Option
-          >
+          <Option v-for="item in statusEnum" :value="item[0]" :key="item[0]">{{
+            item[1]
+          }}</Option>
         </Select>
       </FormItem>
       <FormItem label="cron表达式" prop="cronExpression">
@@ -68,7 +65,7 @@
 </template>
 
 <script>
-import { updateTenant,createTenantTask } from "@/api";
+import { updateTenant, createTenantTask } from "@/api";
 import { taskType } from "@/libs/dic";
 const _config = {
   create: {
@@ -103,24 +100,44 @@ export default {
       curValue: false,
       statusEnum: Object.entries(taskType),
       formObj: {
-        code:"",
-        taskType:"",
-        cronExpression:"",
-        countCeiling:"",
-        timeInterval:"",
+        code: "",
+        taskType: "",
+        cronExpression: "",
+        countCeiling: "",
+        timeInterval: ""
       },
       rules: {
-        taskType: [{ required: true, message: "任务类型不能为空", trigger: "blur" }],
-        cronExpression: [{ required: true, message: "corn表达式不能为空", trigger: "blur" }],
-        status: [{ required: true, message: "状态不能为空", trigger: "change" }],
-        countCeiling: [{ required: false,type:"number", message: "请填写数字", trigger: "blur" }],
-        timeInterval: [{ required: false,type:"number", message: "请填写数字", trigger: "blur" }]
+        taskType: [
+          { required: true, message: "任务类型不能为空", trigger: "blur" }
+        ],
+        cronExpression: [
+          { required: true, message: "corn表达式不能为空", trigger: "blur" }
+        ],
+        status: [
+          { required: true, message: "状态不能为空", trigger: "change" }
+        ],
+        countCeiling: [
+          {
+            required: false,
+            type: "number",
+            message: "请填写数字",
+            trigger: "blur"
+          }
+        ],
+        timeInterval: [
+          {
+            required: false,
+            type: "number",
+            message: "请填写数字",
+            trigger: "blur"
+          }
+        ]
       }
     };
   },
   methods: {
     setData(obj) {
-        this.formObj.code = obj.tenantId;
+      this.formObj.code = obj.tenantId;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {

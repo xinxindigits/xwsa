@@ -75,4 +75,4 @@ const mapDic = function(key, val) {
     return dic[key][val] || val;
   } else return "";
 };
-export { mapDic, gender, userStatus, tagType, customerType, taskType};
+export { mapDic, gender, userStatus, tagType, customerType, taskType };
