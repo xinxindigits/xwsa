@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.service.wechatwork.impl;
 
 import cn.com.xinxin.sass.biz.convert.MsgRecordConvert;
+import cn.com.xinxin.sass.biz.schedule.WeChatWorkSDKInitialization;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
@@ -125,15 +126,16 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
                 updateOrgDataSyncConfig.setId(tenantDataSyncConfigDO.getId());
                 updateOrgDataSyncConfig.setFetchedSeqNo(reqBO.getStartSeq());
                 tenantDataSyncConfigService.updateById(updateOrgDataSyncConfig);
+                ChattingRecordsUtils.destorySdk(sdk);
             }
 
             //更新成功日志
             updateSuccessRecord(tenantDataSyncLogDO, count);
-        } catch (Exception e) {
+        } catch (Throwable t) {
             LOGGER.error("获取聊天记录异常，orgId[{}] taskid[{}]", tenantDataSyncLogDO.getTenantId(),
-                    tenantDataSyncLogDO.getTaskId(), e);
+                    tenantDataSyncLogDO.getTaskId(), t);
             //更新失败日志
-            updateFailRecord(tenantDataSyncLogDO, count, e.toString());
+            updateFailRecord(tenantDataSyncLogDO, count, t.getMessage());
         } finally {
             //任务解锁
             tenantDataSyncConfigService.updateUnLockByTenantIdAndTaskType(tenantId, TaskTypeEnum.MESSAGE_SYNC.getType());

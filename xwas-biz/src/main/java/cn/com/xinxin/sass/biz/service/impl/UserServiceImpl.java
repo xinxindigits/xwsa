@@ -37,6 +37,8 @@ import java.util.*;
 
 import java.util.stream.Collectors;
 
+import static cn.com.xinxin.sass.common.CommonUtils.distinctByKey;
+
 /**
  * Created by dengyunhui on 2018/4/24
  **/
@@ -155,10 +157,16 @@ public class UserServiceImpl implements UserService {
 
         List<RoleDO> roleDOS = userRoleService.findRoleByUserAccount(account);
 
+
         if (!CollectionUtils.isEmpty(roleDOS)){
+
             List<String> roleCodes = roleDOS.stream().map(RoleDO::getCode).collect(Collectors.toList());
 
-            return roleResourceService.findResourcesByRoleCode(roleCodes);
+            List<ResourceDO>  resourceDOList = roleResourceService.findResourcesByRoleCode(roleCodes);
+
+            List<ResourceDO> result = resourceDOList.stream()
+                    .filter(distinctByKey(x->x.getCode())).collect(Collectors.toList());
+            return result;
         }
 
         return null;

@@ -30,10 +30,18 @@
         <Input v-model="formObj.cronExpression" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="会话每次提取上限" prop="countCeiling">
-        <Input v-model="formObj.countCeiling" style="width: 280px"></Input>
+        <Input
+          v-model="formObj.countCeiling"
+          number
+          style="width: 280px"
+        ></Input>
       </FormItem>
       <FormItem label="会话每次提取间隔" prop="timeInterval">
-        <Input v-model="formObj.timeInterval" style="width: 280px"></Input>
+        <Input
+          v-model="formObj.timeInterval"
+          number
+          style="width: 280px"
+        ></Input>
       </FormItem>
       <FormItem label="状态" prop="status">
         <RadioGroup v-model="formObj.status">
@@ -65,23 +73,23 @@
 </template>
 
 <script>
-import { updateTenant, createTenantTask } from "@/api";
+import { updateTenantTask, createTenantTask } from "@/api";
 import { taskType } from "@/libs/dic";
 const _config = {
   create: {
     title: "新增任务",
-    success_evt: "on-add-organization",
+    success_evt: "on-add-task",
     submit: createTenantTask
   },
   update: {
     title: "更新任务",
-    success_evt: "on-update-organization",
-    submit: updateTenant
+    success_evt: "on-update-task",
+    submit: updateTenantTask
   }
 };
 
 export default {
-  name: "organization-update",
+  name: "organization-task",
   props: {
     value: Boolean,
     type: {
@@ -100,11 +108,13 @@ export default {
       curValue: false,
       statusEnum: Object.entries(taskType),
       formObj: {
+        id: "",
         code: "",
         taskType: "",
         cronExpression: "",
         countCeiling: "",
-        timeInterval: ""
+        timeInterval: "",
+        status: ""
       },
       rules: {
         taskType: [
@@ -117,27 +127,23 @@ export default {
           { required: true, message: "状态不能为空", trigger: "change" }
         ],
         countCeiling: [
-          {
-            required: false,
-            type: "number",
-            message: "请填写数字",
-            trigger: "blur"
-          }
+          { type: "number", message: "请输入数字", trigger: "blur" }
         ],
         timeInterval: [
-          {
-            required: false,
-            type: "number",
-            message: "请填写数字",
-            trigger: "blur"
-          }
+          { type: "number", message: "请输入数字", trigger: "blur" }
         ]
       }
     };
   },
   methods: {
     setData(obj) {
+      this.formObj.id = obj.id;
       this.formObj.code = obj.tenantId;
+      this.formObj.taskType = obj.taskType;
+      this.formObj.cronExpression = obj.cronExpression;
+      this.formObj.countCeiling = obj.countCeiling;
+      this.formObj.timeInterval = obj.timeInterval;
+      this.formObj.status = "" + obj.deleted;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
