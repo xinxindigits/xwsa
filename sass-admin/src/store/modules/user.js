@@ -42,6 +42,7 @@ export default {
             const data = res.data;
             commit("setToken", data.token);
             commit("setAccount", data.account);
+            commit("setHasGetRouter", false);
             localStorage.removeItem("route");
             localStorage.removeItem("tagNaveList");
             resolve();
@@ -70,6 +71,7 @@ export default {
             commit("setToken", "");
             commit("setUserName", "");
             commit("setHasGetInfo", false);
+            commit("setHasGetRouter", false);
             // commit('setAccess', [])
             resolve();
           })
