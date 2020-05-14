@@ -55,8 +55,7 @@ public class WeChatWorkInteractionClientImpl implements WeChatWorkInteractionCli
     @Override
     public void checkResponseStatus(Integer errorCode, String errorMessage, String errorDescription) {
         if (null == errorCode || 0L != errorCode) {
-            String log = errorDescription + ", message[{}]";
-            LOGGER.error(log, errorMessage);
+            LOGGER.error("向企业微信发起请求，错误码[{}]", errorMessage);
             throw new BusinessException(SassBizResultCodeEnum.FAIL, errorDescription);
         }
     }

@@ -120,6 +120,12 @@
       order by gmt_created desc
   </select>
 
+  <select id="selectByCorpId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from tenant
+    where corp_id = #{corpId,jdbcType=VARCHAR} and deleted = '0';
+  </select>
+
 
 
 </mapper>
