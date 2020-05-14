@@ -38,9 +38,7 @@
         <Input
           v-model="formObj.extension"
           type="textarea"
-          :maxlength="50"
           style="width: 250px"
-          :show-word-limit="true"
           :rows="5"
         ></Input>
       </FormItem>
@@ -101,18 +99,27 @@ export default {
       },
       rules: {
         code: [
-          { required: true, message: "资源编号不能为空", trigger: "blur" }
+          { required: true, message: "资源编号不能为空", trigger: "blur" },
+          { max: 32, message: "不能超过32个字符!", trigger: "blur" }
         ],
         resourceType: [
           { required: true, message: "资源类型不能为空", trigger: "blur" }
         ],
         authority: [
-          { required: true, message: "资源权限不能为空", trigger: "blur" }
+          { required: true, message: "资源权限不能为空", trigger: "blur" },
+          { max: 128, message: "不能超过128个字符!", trigger: "blur" }
         ],
         name: [
-          { required: true, message: "资源名称不能为空", trigger: "blur" }
+          { required: true, message: "资源名称不能为空", trigger: "blur" },
+          { max: 128, message: "不能超过128个字符!", trigger: "blur" }
         ],
-        url: [{ required: true, message: "组件URI不能为空", trigger: "blur" }]
+        url: [
+          { required: true, message: "组件URI不能为空", trigger: "blur" },
+          { max: 128, message: "不能超过128个字符!", trigger: "blur" }
+        ],
+        extension: [
+          { max: 4000, message: "不能超过4000个字符!", trigger: "blur" }
+        ]
       }
     };
   },

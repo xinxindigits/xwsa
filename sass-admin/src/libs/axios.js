@@ -101,10 +101,10 @@ class HttpRequest {
             content: "登录信息失效，即将返回登录页！",
             duration: 3,
             onClose() {
-              store.commit("setToken", "");
               location.reload();
             }
           });
+          store.commit("setToken", "");
         }
         if (!errorInfo) {
           const {
