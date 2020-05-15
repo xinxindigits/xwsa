@@ -1,5 +1,9 @@
 package cn.com.xinxin.sass.auth.enums;
 
+import org.apache.commons.lang3.EnumUtils;
+
+import java.util.List;
+
 /**
  * @author: zhouyang
  * @created: 15/05/2020.
@@ -52,4 +56,35 @@ public enum AuthEnums {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+    /**
+     *
+     * 根据value获取对应的枚举。
+     *
+     * @param value 枚举值
+     * @return <value>FilmServiceErrors</value>
+     */
+    static AuthEnums getEnumByCode(final String value) {
+
+        // value为空，返回null
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+
+        // 遍历
+        for (final AuthEnums errEnum : values()) {
+            if (value.equals(String.valueOf(errEnum.getCode()))) {
+                return errEnum;
+            }
+        }
+        // 找不到匹配的，返回null
+        return null;
+    }
+
+
+    public static List<AuthEnums> toLists(){
+        // 转换为list
+        return EnumUtils.getEnumList(AuthEnums.class);
+    }
+
 }
