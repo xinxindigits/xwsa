@@ -46,7 +46,7 @@
     </Card>
     <Drawer
       title="日志详情"
-      width="40"
+      width="80"
       v-model="showDetail"
       scrollable
       transfer

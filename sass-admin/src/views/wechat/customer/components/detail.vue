@@ -116,7 +116,15 @@ export default {
       let tagIds = this.detail.tagList.map(n => {
         return n.toString();
       });
-      setTagByKeyId({ keyId: this.detail.userId, tagIds, keyName: "customer" });
+      setTagByKeyId({
+        keyId: this.detail.userId,
+        tagIds,
+        keyName: "customer"
+      }).then(() => {
+        this.showDetail = false;
+        this.$Message.success("更新成功");
+        this.$emit("tag-updated");
+      });
     }
   },
   watch: {
