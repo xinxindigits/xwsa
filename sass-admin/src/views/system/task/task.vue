@@ -1,6 +1,13 @@
 <template>
   <div>
     <Card>
+      <Row type="flex" :gutter="20" class="row-operation">
+        <Col
+        ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
+        >新增</Button
+        >
+        </Col>
+      </Row>
       <Table
         stripe
         border
@@ -8,7 +15,6 @@
         :columns="columns"
         :data="tableData"
         :loading="isLoading"
-        @on-selection-change="hdlSelectionChange"
       >
         <template slot-scope="{ row }" slot="taskType">
           <span>{{ $mapd("taskType", row.taskType) }}</span>
@@ -92,9 +98,6 @@ export default {
     TaskLog
   },
   computed: {
-    deleteOrgCodes() {
-      return this.tbSelection.map(item => item.tenantId);
-    }
   },
   data() {
     return {
@@ -112,11 +115,6 @@ export default {
         state: ""
       },
       columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
         { title: "租户编码", key: "tenantId", align: "center" },
         { title: "任务类型", slot: "taskType", align: "center" },
         {
@@ -137,7 +135,6 @@ export default {
         { title: "操作", slot: "action", align: "center", width: 250 }
       ],
       tableData: [],
-      tbSelection: []
     };
   },
   methods: {
@@ -196,9 +193,6 @@ export default {
       this.$refs.record.init(taskType);
       this.showRecord = true;
     },
-    hdlSelectionChange(selection) {
-      this.tbSelection = selection;
-    }
   },
   mounted() {
     this.changePage(1);
