@@ -165,7 +165,7 @@ export default {
       getOrganizationList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
-          this.reset();
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -181,6 +181,7 @@ export default {
       this.formItem.orgType = "";
       this.formItem.tenantId = "";
       this.formItem.status = "";
+      this.hdlquery();
     },
     hdlDelete(ids) {
       let self = this;

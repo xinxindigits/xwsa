@@ -1,6 +1,13 @@
 <template>
   <div>
     <Card>
+      <Row type="flex" :gutter="20" class="row-operation">
+        <Col
+          ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
+            >新增</Button
+          >
+        </Col>
+      </Row>
       <Table
         stripe
         border
@@ -8,7 +15,6 @@
         :columns="columns"
         :data="tableData"
         :loading="isLoading"
-        @on-selection-change="hdlSelectionChange"
       >
         <template slot-scope="{ row }" slot="taskType">
           <span>{{ $mapd("taskType", row.taskType) }}</span>
@@ -42,19 +48,6 @@
           </Button>
         </template>
       </Table>
-      <div style="margin: auto; text-align: right;padding-top:10px">
-        <Page
-          :total="total"
-          :current="page"
-          :page-size-opts="[10, 20, 50, 100]"
-          @on-change="changePage"
-          @on-page-size-change="changePageSize"
-          show-sizer
-          show-elevator
-          show-total
-          transfer
-        ></Page>
-      </div>
       <task-update
         type="create"
         ref="createModal"
@@ -91,11 +84,7 @@ export default {
     TaskUpdate,
     TaskLog
   },
-  computed: {
-    deleteOrgCodes() {
-      return this.tbSelection.map(item => item.tenantId);
-    }
-  },
+  computed: {},
   data() {
     return {
       showRecord: false,
@@ -112,11 +101,6 @@ export default {
         state: ""
       },
       columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
         { title: "租户编码", key: "tenantId", align: "center" },
         { title: "任务类型", slot: "taskType", align: "center" },
         {
@@ -136,8 +120,7 @@ export default {
         },
         { title: "操作", slot: "action", align: "center", width: 250 }
       ],
-      tableData: [],
-      tbSelection: []
+      tableData: []
     };
   },
   methods: {
@@ -195,9 +178,6 @@ export default {
     hdlShowRecord(taskType) {
       this.$refs.record.init(taskType);
       this.showRecord = true;
-    },
-    hdlSelectionChange(selection) {
-      this.tbSelection = selection;
     }
   },
   mounted() {
