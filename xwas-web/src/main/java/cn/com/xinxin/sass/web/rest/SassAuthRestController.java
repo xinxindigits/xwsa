@@ -81,6 +81,12 @@ public class SassAuthRestController {
 
         String password = userLoginForm.getPassword();
 
+        // 执行登陆之前先清除掉用户登陆缓存信息
+
+//        userAclTokenRepository.cleanSassUserInfoCache(userAccount);
+//        userAclTokenRepository.cleanSassUserTokenCache(userAccount);
+//        SassBaseContextHolder.remove();
+
         UserDO userDO = userService.findByUserAccount(userAccount);
 
         if (userDO == null) {
