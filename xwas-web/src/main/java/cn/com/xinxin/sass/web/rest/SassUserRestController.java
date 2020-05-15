@@ -20,6 +20,7 @@ import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.security.SecureUtils;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -206,12 +207,13 @@ public class SassUserRestController extends AclController {
         if(StringUtils.isNotBlank(userOldPwd)&&StringUtils.isNotBlank(userNewPwd)){
             // 新旧密码都不为空，表示修改密码
             this.userService.modifyPassword(userAccount,userOldPwd,userNewPwd,sassUserInfo.getAccount());
-            resultMsg = "你的密码以及修改成功，退出来重新登陆即可";
+            resultMsg = "你的密码已经修改成功，退出来重新登陆即可";
         }else {
             // 重置密码
             String randomPwd = RandomPasswordUtils.getPasswordSimple(4,4);
-            this.userService.resetPassword(userAccount,randomPwd,sassUserInfo.getAccount());
-            resultMsg = "你的密码以及重置为:[" + randomPwd +"],登陆后请重新修改密码";
+            String md5Pwd = SecureUtils.getMD5(randomPwd);
+            this.userService.resetPassword(userAccount,md5Pwd,sassUserInfo.getAccount());
+            resultMsg = "你的密码已经重置为:[" + randomPwd +"],登录后请重新修改密码";
         }
 
         //FIXME: 重置密码同时需要清除用户缓存以及对应的token
