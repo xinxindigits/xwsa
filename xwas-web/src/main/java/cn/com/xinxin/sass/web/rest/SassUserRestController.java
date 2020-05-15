@@ -212,7 +212,7 @@ public class SassUserRestController extends AclController {
             // 重置密码
             String randomPwd = RandomPasswordUtils.getPasswordSimple(4,4);
             String md5Pwd = SecureUtils.getMD5(randomPwd);
-            this.userService.resetPassword(userAccount,randomPwd,sassUserInfo.getAccount());
+            this.userService.resetPassword(userAccount,md5Pwd,sassUserInfo.getAccount());
             resultMsg = "你的密码已经重置为:[" + randomPwd +"],登录后请重新修改密码";
         }
 
