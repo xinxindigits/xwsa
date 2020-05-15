@@ -20,7 +20,11 @@
         ></Input>
       </FormItem>
       <FormItem label="任务类型" prop="taskType">
-        <Select v-model="formObj.taskType" style="width:280px" :disable="true">
+        <Select
+          v-model="formObj.taskType"
+          style="width:280px"
+          :disabled="type == 'update'"
+        >
           <Option v-for="item in statusEnum" :value="item[0]" :key="item[0]">{{
             item[1]
           }}</Option>
@@ -29,16 +33,26 @@
       <FormItem label="cron表达式" prop="cronExpression">
         <Input v-model="formObj.cronExpression" style="width: 280px"></Input>
       </FormItem>
-      <FormItem label="会话每次提取上限" prop="countCeiling">
+      <FormItem
+        label="会话每次提取上限"
+        prop="countCeiling"
+        v-if="formObj.taskType == this.MESSAGE_SYNC"
+      >
         <Input
           v-model="formObj.countCeiling"
           number
+          placeholder="请输入1-1000范围内的整数"
           style="width: 280px"
         ></Input>
       </FormItem>
-      <FormItem label="会话每次提取间隔" prop="timeInterval">
+      <FormItem
+        label="会话每次提取间隔"
+        prop="timeInterval"
+        v-if="formObj.taskType == this.MESSAGE_SYNC"
+      >
         <Input
           v-model="formObj.timeInterval"
+          placeholder="请输入大于等于1的整数"
           number
           style="width: 280px"
         ></Input>
@@ -107,6 +121,7 @@ export default {
     return {
       curValue: false,
       statusEnum: Object.entries(taskType),
+      MESSAGE_SYNC: "MESSAGE_SYNC",
       formObj: {
         id: "",
         code: "",
@@ -127,10 +142,23 @@ export default {
           { required: true, message: "状态不能为空", trigger: "change" }
         ],
         countCeiling: [
-          { type: "number", message: "请输入数字", trigger: "blur" }
+          {
+            required: true,
+            min: 1,
+            max: 1000,
+            type: "integer",
+            message: "请输入1-1000范围内的整数",
+            trigger: "blur"
+          }
         ],
         timeInterval: [
-          { type: "number", message: "请输入数字", trigger: "blur" }
+          {
+            required: true,
+            type: "integer",
+            min: 1,
+            message: "请输入大于等于1的整数",
+            trigger: "blur"
+          }
         ]
       }
     };
