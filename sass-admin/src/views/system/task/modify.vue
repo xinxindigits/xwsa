@@ -20,7 +20,7 @@
         ></Input>
       </FormItem>
       <FormItem label="任务类型" prop="taskType">
-        <Select v-model="formObj.taskType" style="width:280px">
+        <Select v-model="formObj.taskType" style="width:280px" :disable="true">
           <Option v-for="item in statusEnum" :value="item[0]" :key="item[0]">{{
             item[1]
           }}</Option>

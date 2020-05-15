@@ -3,9 +3,9 @@
     <Card>
       <Row type="flex" :gutter="20" class="row-operation">
         <Col
-        ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
-        >新增</Button
-        >
+          ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
+            >新增</Button
+          >
         </Col>
       </Row>
       <Table
@@ -97,8 +97,7 @@ export default {
     TaskUpdate,
     TaskLog
   },
-  computed: {
-  },
+  computed: {},
   data() {
     return {
       showRecord: false,
@@ -134,7 +133,7 @@ export default {
         },
         { title: "操作", slot: "action", align: "center", width: 250 }
       ],
-      tableData: [],
+      tableData: []
     };
   },
   methods: {
@@ -192,7 +191,7 @@ export default {
     hdlShowRecord(taskType) {
       this.$refs.record.init(taskType);
       this.showRecord = true;
-    },
+    }
   },
   mounted() {
     this.changePage(1);
