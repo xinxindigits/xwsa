@@ -36,7 +36,7 @@
         <Input
           v-model="formObj.description"
           type="textarea"
-          :maxlength="50"
+          :maxlength="500"
           style="width: 250px"
           :show-word-limit="true"
           :rows="5"
@@ -90,9 +90,22 @@ export default {
         description: ""
       },
       rules: {
-        code: [{ required: true, message: "编号不能为空", trigger: "blur" }],
-        name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
-        tagType: [{ required: true, message: "请选择类型", trigger: "blur" }]
+        code: [
+          { required: true, message: "编号不能为空", trigger: "blur" },
+          {
+            pattern: /^[a-zA-Z0-9]{4,16}$/,
+            message: "请输入4～16位英文字母或数字的组合",
+            trigger: "blur"
+          }
+        ],
+        name: [
+          { required: true, message: "名称不能为空", trigger: "blur" },
+          { max: 128, message: "长度超出限制!", trigger: "blur" }
+        ],
+        tagType: [{ required: true, message: "请选择类型", trigger: "blur" }],
+        description: [
+          { max: 512, message: "不能超过512个字符!", trigger: "blur" }
+        ]
       }
     };
   },

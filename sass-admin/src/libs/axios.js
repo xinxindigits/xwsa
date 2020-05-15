@@ -71,7 +71,7 @@ class HttpRequest {
           return data;
         } else if (data && data.code != "SUCCESS") {
           let message = data.message || "响应数据异常:无响应描述";
-          !config.silent && Message.error(message);
+          !config.silent && Message.error({ content: message, duration: 3 });
           const err = new Error(message);
           err.data = data;
           err.response = res;
@@ -101,10 +101,10 @@ class HttpRequest {
             content: "登录信息失效，即将返回登录页！",
             duration: 3,
             onClose() {
-              store.commit("setToken", "");
               location.reload();
             }
           });
+          store.commit("setToken", "");
         }
         if (!errorInfo) {
           const {

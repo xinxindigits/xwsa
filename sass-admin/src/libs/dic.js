@@ -65,6 +65,10 @@ const staffAccountState = {
   [4]: "已激活",
   [5]: "退出企业"
 };
+const memberStatus = {
+  INACTIVE: "非活跃",
+  ACTIVE: "活跃"
+};
 const taskResult = {
   ["INIT"]: "已激活",
   ["RECEIVING"]: "获取数据中",
@@ -83,6 +87,7 @@ const dic = {
   staffAccountState,
   taskType,
   taskState,
+  memberStatus,
   taskResult
 };
 const mapDic = function(key, val) {

@@ -128,7 +128,8 @@ export default {
         newValue[0] instanceof Date
       ) {
         this.formItem.startTime = newValue[0].getTime() + "";
-        this.formItem.endTime = newValue[1].getTime() + "";
+        this.formItem.endTime =
+          newValue[1].getTime() + 24 * 60 * 60 * 1000 - 1000 + "";
       } else {
         this.formItem.startTime = "";
         this.formItem.endTime = "";
