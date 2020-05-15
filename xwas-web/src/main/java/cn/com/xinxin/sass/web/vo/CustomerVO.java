@@ -89,7 +89,7 @@ public class CustomerVO extends ToString {
     /**
      * 创建时间
      */
-    private String createdTime;
+    private Long createdTime;
 
 
     public List<TagsVO> getTags() {
@@ -212,11 +212,11 @@ public class CustomerVO extends ToString {
         this.avatar = avatar;
     }
 
-    public String getCreatedTime() {
+    public Long getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(String createdTime) {
+    public void setCreatedTime(Long createdTime) {
         this.createdTime = createdTime;
     }
 }
