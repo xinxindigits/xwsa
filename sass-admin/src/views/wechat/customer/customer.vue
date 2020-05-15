@@ -54,6 +54,7 @@
       :tag-list="tagList"
       :items="curDetail"
       @show-record="hdlShowRecord"
+      @tag-updated="changePage(page)"
       @on-cancel="
         showDetail = false;
         curDetail = {};

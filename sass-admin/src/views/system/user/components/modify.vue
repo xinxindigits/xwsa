@@ -76,6 +76,7 @@
       </FormItem>
     </Form>
     <div slot="footer">
+      <Button type="primary" @click="hdlResetPwd">重置密码</Button>
       <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
       <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
     </div>
@@ -85,7 +86,7 @@
 <script>
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import { addUser, updateUser } from "@/api/data_user";
+import { addUser, updateUser, resetUserPwd } from "@/api";
 const _config = {
   create: {
     title: "新增用户",
@@ -226,6 +227,22 @@ export default {
     },
     hdlCancel() {
       this.$emit("on-cancel");
+    },
+    hdlResetPwd() {
+      let self = this;
+      this.$Modal.confirm({
+        title: "确认操作",
+        content: `确定重置${this.formObj.account}的密码?`,
+        onOk() {
+          resetUserPwd({
+            account: self.formObj.account,
+            newPassword: "123456"
+          }).then(() => {
+            self.$emit("user-pwd-reset");
+            self.$Message.success("密码重置成功！");
+          });
+        }
+      });
     }
   },
   watch: {

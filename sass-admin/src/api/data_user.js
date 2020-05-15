@@ -1,5 +1,5 @@
 import axios from "@/libs/api.request";
-
+import md5 from "md5";
 export const getUserList = data => {
   return axios.request({
     url: "user/list",
@@ -61,5 +61,14 @@ export const grantUserRoles = ({
     url: "user/grant",
     method: "post",
     data: { userAccount, userName, userRoles, extension }
+  });
+};
+//重置密码
+export const resetUserPwd = ({ account, oldPassword, newPassword }) => {
+  newPassword = md5(newPassword);
+  return axios.request({
+    url: "user/restpwd",
+    method: "post",
+    data: { account, oldPassword, newPassword }
   });
 };
