@@ -165,6 +165,7 @@ export default {
       getOrganizationList({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })

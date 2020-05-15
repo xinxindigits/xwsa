@@ -152,6 +152,7 @@ export default {
       getTenantList({ pageIndex, pageSize, ...data })
         .then(res => {
           let { data } = res;
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
