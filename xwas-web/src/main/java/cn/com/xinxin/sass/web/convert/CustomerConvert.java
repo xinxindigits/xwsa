@@ -41,7 +41,7 @@ public class CustomerConvert {
         customerVO.setFollowUser(customerDO.getFollowUser());
         customerVO.setStatus(customerDO.getStatus());
         customerVO.setAvatar(customerDO.getAvatar());
-        customerVO.setCreatedTime(customerDO.getGmtCreated().toString());
+        customerVO.setCreatedTime(customerDO.getGmtCreated().getTime());
         return customerVO;
     }
 
