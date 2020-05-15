@@ -221,31 +221,26 @@ public class SassTagsRestController extends AclController {
         String keyName = tagForm.getKeyName();
         List<String> tagIds = tagForm.getTagIds();
         SassUserInfo sassUserInfo = this.getSassUser(request);
-
-        List<TagsRelationsDO> tagsRelationsDOS = Lists.newArrayList();
-
-        for(String id: tagIds){
-
-            TagsRelationsDO tagsRelationsDO = new TagsRelationsDO();
-            tagsRelationsDO.setKeyId(keyId);
-            tagsRelationsDO.setKeyName(keyName);
-            tagsRelationsDO.setTagId(id);
-            tagsRelationsDO.setDescription(tagForm.getDescription());
-            tagsRelationsDO.setGmtCreator(sassUserInfo.getAccount());
-            tagsRelationsDO.setGmtUpdater(sassUserInfo.getAccount());
-            tagsRelationsDO.setTenantId(sassUserInfo.getTenantId());
-            tagsRelationsDOS.add(tagsRelationsDO);
-
-        }
-
         // 首先删除
-
         this.tagsService.deleteTagsBykeyId(keyId);
+        if(!CollectionUtils.isEmpty(tagIds)){
+            List<TagsRelationsDO> tagsRelationsDOS = Lists.newArrayList();
+            for(String id: tagIds){
+                TagsRelationsDO tagsRelationsDO = new TagsRelationsDO();
+                tagsRelationsDO.setKeyId(keyId);
+                tagsRelationsDO.setKeyName(keyName);
+                tagsRelationsDO.setTagId(id);
+                tagsRelationsDO.setDescription(tagForm.getDescription());
+                tagsRelationsDO.setGmtCreator(sassUserInfo.getAccount());
+                tagsRelationsDO.setGmtUpdater(sassUserInfo.getAccount());
+                tagsRelationsDO.setTenantId(sassUserInfo.getTenantId());
+                tagsRelationsDOS.add(tagsRelationsDO);
 
-        int result = this.tagsService.createTagsRelations(tagsRelationsDOS);
-
-        return result;
-
+            }
+            int result = this.tagsService.createTagsRelations(tagsRelationsDOS);
+            return result;
+        }
+        return 0;
     }
 
 }

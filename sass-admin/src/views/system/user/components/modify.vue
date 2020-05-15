@@ -52,7 +52,12 @@
           </Option>
         </Select>
       </FormItem>
-      <FormItem label="密码" prop="password" v-if="type == 'create'">
+      <FormItem
+        label="密码"
+        prop="password"
+        v-if="type == 'create'"
+        :rules="checkPass"
+      >
         <Input
           v-model="formObj.password"
           style="width: 250px"
@@ -65,9 +70,7 @@
         <Input
           v-model="formObj.extension"
           type="textarea"
-          :maxlength="50"
           style="width: 250px"
-          :show-word-limit="true"
           :rows="5"
         ></Input>
       </FormItem>
@@ -94,7 +97,7 @@ const _config = {
   }
 };
 export default {
-  name: "role-update",
+  name: "role-modify",
   props: {
     value: Boolean,
     type: {
@@ -132,9 +135,27 @@ export default {
         roles: [],
         orgCode: null
       },
+      checkPass: [
+        { required: true, message: "密码不能为空", trigger: "blur" },
+        {
+          pattern: /^[a-zA-Z0-9]{4,16}$/,
+          message: "请输入4～16位英文字母或数字的组合",
+          trigger: "blur"
+        }
+      ],
       rules: {
-        account: [{ required: true, message: "账号不能为空", trigger: "blur" }],
-        name: [{ required: true, message: "姓名不能为空", trigger: "blur" }],
+        account: [
+          { required: true, message: "账号不能为空", trigger: "blur" },
+          {
+            pattern: /^[a-zA-Z0-9]{4,16}$/,
+            message: "请输入4～16位英文字母或数字的组合",
+            trigger: "blur"
+          }
+        ],
+        name: [
+          { required: true, message: "姓名不能为空", trigger: "blur" },
+          { max: 64, message: "长度超出限制!", trigger: "blur" }
+        ],
         orgCode: [
           { required: true, message: "所属机构不能为空", trigger: "blur" }
         ],
@@ -145,6 +166,9 @@ export default {
             trigger: "blur",
             type: "number"
           }
+        ],
+        extension: [
+          { max: 4000, message: "不能超过4000个字符!", trigger: "blur" }
         ]
       }
     };

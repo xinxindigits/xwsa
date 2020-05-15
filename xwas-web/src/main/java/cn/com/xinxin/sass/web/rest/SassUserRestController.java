@@ -15,7 +15,6 @@ import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.web.form.*;
 import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.vo.*;
-import com.tencent.wework.Finance;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
@@ -189,7 +188,7 @@ public class SassUserRestController extends AclController {
     @RequestMapping(value = "/restpwd",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/restpwd")
-    public Object restUserPassword(HttpServletRequest request, @RequestBody UserLoginForm pwdForm){
+    public Object restUserPassword(HttpServletRequest request, @RequestBody UserPwdForm pwdForm){
 
         if(null == pwdForm){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"重置密码参数不能为空","重置密码参数不能为空");
@@ -198,11 +197,13 @@ public class SassUserRestController extends AclController {
         // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
         String userAccount = pwdForm.getAccount();
 
-        String userPwd = pwdForm.getPassword();
+        String userPwd = pwdForm.getOldPassword();
+
+        String newPwd = pwdForm.getNewPassword();
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
-        this.userService.resetPassword(userAccount,userPwd,sassUserInfo.getAccount());
+        this.userService.resetPassword(userAccount,newPwd,sassUserInfo.getAccount());
         //FIXME: 重置密码同时需要清除用户缓存以及对应的token
         userAclTokenRepository.cleanSassUserTokenCache(userAccount);
         userAclTokenRepository.cleanSassUserInfoCache(userAccount);

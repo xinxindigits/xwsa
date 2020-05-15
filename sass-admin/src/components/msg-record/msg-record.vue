@@ -98,9 +98,20 @@ export default {
     };
   },
   methods: {
-    init(userId) {
-      this.userId = userId;
-      this.$refs.query.hdlReset();
+    init(userId, opt = {}) {
+      this.$refs.query.reset();
+      this.formObj = {
+        keyWord: "",
+        startTime: "",
+        endTime: ""
+      };
+      this.getMsgList(userId).then(() => {
+        if (Object.keys(opt).length > 0) {
+          this.page = opt.pageIndex;
+          let { roomId, type, userIdTwo } = opt;
+          this.selectChat({ roomId, type, userId: userIdTwo });
+        }
+      });
     },
     selectChat(n) {
       this.resetPageComp();
@@ -153,11 +164,15 @@ export default {
       });
     },
     getMsgList(userId, query = {}) {
-      this.list = [];
-      this.msg_list = [];
-      this.resetPageComp();
-      getUserInMsgList({ userId, ...query }).then(({ data }) => {
-        this.list = data;
+      return new Promise(resolve => {
+        this.list = [];
+        this.msg_list = [];
+        this.resetPageComp();
+        getUserInMsgList({ userId, ...query }).then(({ data }) => {
+          this.list = data;
+          this.$emit("has-get-chat-list");
+          resolve();
+        });
       });
     },
     changePage(page) {

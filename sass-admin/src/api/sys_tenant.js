@@ -131,3 +131,10 @@ export const executeJob = ({ taskType }) => {
     method: "get"
   });
 };
+export const queryTaskLog = data => {
+  return axios.request({
+    data,
+    url: "tenant/jobLog/query",
+    method: "post"
+  });
+};

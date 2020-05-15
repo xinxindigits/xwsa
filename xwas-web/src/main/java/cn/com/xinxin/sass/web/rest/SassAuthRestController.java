@@ -81,6 +81,8 @@ public class SassAuthRestController {
 
         String password = userLoginForm.getPassword();
 
+        // 执行登陆之前先清除掉用户登陆缓存信息
+
         UserDO userDO = userService.findByUserAccount(userAccount);
 
         if (userDO == null) {
@@ -133,10 +135,6 @@ public class SassAuthRestController {
             response.setHeader("access-control-expose-headers", "XToken");
 
             // 设置基本的content
-            SassBaseContextHolder.setAccount(sassUserInfo.getAccount());
-            SassBaseContextHolder.setTenantId(sassUserInfo.getTenantId());
-            SassBaseContextHolder.setUserId(sassUserInfo.getId());
-
             return userTokenVO;
 
         }else{

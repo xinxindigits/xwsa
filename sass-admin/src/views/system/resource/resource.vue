@@ -113,14 +113,31 @@ export default {
         parentId: [
           { required: true, message: "上级ID不能为空", trigger: "blur" }
         ],
-        code: [{ required: true, message: "编号不能为空", trigger: "blur" }],
-        name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+        code: [
+          { required: true, message: "编号不能为空", trigger: "blur" },
+          {
+            pattern: /^[a-zA-Z0-9]{4,16}$/,
+            message: "请输入4～16位英文字母或数字的组合",
+            trigger: "blur"
+          }
+        ],
+        name: [
+          { required: true, message: "名称不能为空", trigger: "blur" },
+          { max: 128, message: "长度超出限制!", trigger: "blur" }
+        ],
         resourceType: [
           { required: true, message: "权限类型不能为空", trigger: "blur" }
         ],
-        url: [{ required: true, message: "URI不能为空", trigger: "blur" }],
+        url: [
+          { required: true, message: "URI不能为空", trigger: "blur" },
+          { max: 128, message: "长度超出限制!", trigger: "blur" }
+        ],
         authority: [
-          { required: true, message: "权限值不能为空", trigger: "blur" }
+          { required: true, message: "权限值不能为空", trigger: "blur" },
+          { max: 128, message: "长度超出限制!", trigger: "blur" }
+        ],
+        extension: [
+          { max: 4000, message: "不能超过4000个字符!", trigger: "blur" }
         ]
       }
     };

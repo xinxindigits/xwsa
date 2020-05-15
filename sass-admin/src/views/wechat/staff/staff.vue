@@ -97,8 +97,8 @@ export default {
       tableData: [],
       columns: [
         { title: "id", key: "id", width: 80 },
-        { title: "名称", key: "memberName" },
-        { title: "微信号", key: "userId", ellipsis: true },
+        { title: "姓名", key: "memberName" },
+        { title: "账号", key: "userId", ellipsis: true },
         { title: "手机", key: "mobile" },
         { title: "部门", key: "deptName" },
         { title: "邮箱", key: "mail" },

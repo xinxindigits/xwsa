@@ -87,13 +87,13 @@ export const getMsgDetailByRoomId = ({
   });
 };
 //查询指定消息的页码
-export const getPageIndex = ({ id, roomId, userId, userITwo, pageSize }) => {
+export const getPageIndex = ({ id, roomId, userId, userIdTwo, pageSize }) => {
   let data = {
     tenantId: "xinxin",
     id,
     roomId,
     userId,
-    userITwo,
+    userIdTwo,
     pageSize
   };
   return axios.request({

@@ -1,6 +1,13 @@
 <template>
   <div>
     <Card>
+      <Row type="flex" :gutter="20" class="row-operation">
+        <Col
+          ><Button icon="md-add" type="primary" @click="hdlSingleCreate"
+            >新增</Button
+          >
+        </Col>
+      </Row>
       <Table
         stripe
         border
@@ -8,7 +15,6 @@
         :columns="columns"
         :data="tableData"
         :loading="isLoading"
-        @on-selection-change="hdlSelectionChange"
       >
         <template slot-scope="{ row }" slot="taskType">
           <span>{{ $mapd("taskType", row.taskType) }}</span>
@@ -29,7 +35,7 @@
             type="info"
             size="small"
             style="margin-right: 5px"
-            @click="hdlDelete([row.tenantId])"
+            @click="hdlShowRecord(row.taskType)"
           >
             日志
           </Button>
@@ -68,6 +74,7 @@
         @on-update-task="hdlquery"
         ref="updateModal"
       ></task-update>
+      <task-log v-model="showRecord" ref="record"></task-log>
     </Card>
   </div>
 </template>
@@ -75,6 +82,7 @@
 <script>
 import { queryTenantConfig, executeJob } from "@/api";
 import TaskUpdate from "./modify";
+import TaskLog from "./taskLog";
 export default {
   name: "task",
   props: {
@@ -86,16 +94,13 @@ export default {
     }
   },
   components: {
-    TaskUpdate
+    TaskUpdate,
+    TaskLog
   },
-  computed: {
-    deleteOrgCodes() {
-      return this.tbSelection.map(item => item.tenantId);
-    }
-  },
+  computed: {},
   data() {
     return {
-      showTaskModal: false,
+      showRecord: false,
       showAddModal: false,
       showGrantModal: false,
       showUpdateModal: false,
@@ -109,11 +114,6 @@ export default {
         state: ""
       },
       columns: [
-        {
-          type: "selection",
-          width: 60,
-          align: "center"
-        },
         { title: "租户编码", key: "tenantId", align: "center" },
         { title: "任务类型", slot: "taskType", align: "center" },
         {
@@ -133,8 +133,7 @@ export default {
         },
         { title: "操作", slot: "action", align: "center", width: 250 }
       ],
-      tableData: [],
-      tbSelection: []
+      tableData: []
     };
   },
   methods: {
@@ -187,9 +186,11 @@ export default {
       executeJob({ taskType }).then(() => {
         this.$Message.success("执行成功！");
       });
+      this.hdlquery();
     },
-    hdlSelectionChange(selection) {
-      this.tbSelection = selection;
+    hdlShowRecord(taskType) {
+      this.$refs.record.init(taskType);
+      this.showRecord = true;
     }
   },
   mounted() {
