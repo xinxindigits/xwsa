@@ -85,28 +85,7 @@
         :roleList="roleList"
       ></user-grant>
     </Card>
-    <Modal v-model="showUserDetail" title="用户详情" footer-hide>
-      <Row class="row-detail">
-        <Col span="12">账号：{{ userDetail.account }}</Col>
-        <Col span="12">id：{{ userDetail.id }}</Col>
-      </Row>
-      <Row class="row-detail">
-        <Col span="24">状态：{{ $mapd("userStatus", userDetail.status) }}</Col>
-      </Row>
-      <Row class="row-detail">
-        <Col span="12">名称：{{ userDetail.name }}</Col>
-        <Col span="12">角色：{{ userDetail.roleName }}</Col>
-      </Row>
-      <Row class="row-detail">
-        <Col span="24">所属机构：{{ userDetail | orgName }}</Col>
-      </Row>
-      <Row class="row-detail">
-        <Col span="24">创建时间：{{ userDetail.gmtCreated | timeFilter }}</Col>
-      </Row>
-      <Row class="row-detail">
-        <Col span="24">备注：{{ userDetail.extension }}</Col>
-      </Row>
-    </Modal>
+    <user-detail v-model="showUserDetail" :items="userDetail"></user-detail>
   </div>
 </template>
 
@@ -118,10 +97,16 @@ import {
   getAllRoles,
   getAllOrganizationTree
 } from "@/api";
-import { UserGrant, UserModify, UserOperation, UserQuery } from "./components";
+import {
+  UserGrant,
+  UserModify,
+  UserOperation,
+  UserQuery,
+  UserDetail
+} from "./components";
 export default {
   name: "user-list",
-  components: { UserGrant, UserModify, UserOperation, UserQuery },
+  components: { UserGrant, UserModify, UserOperation, UserQuery, UserDetail },
   computed: {
     selectedAccounts() {
       return this.tbSelection.map(item => item.account);

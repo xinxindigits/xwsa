@@ -90,17 +90,24 @@ export default {
         { title: "消息id", key: "msgId", align: "center" },
         { title: "发送方", key: "fromUserName", align: "center" },
         { title: "发送时间", key: "msgTime", align: "center", slot: "msgTime" },
-        { title: "类型", key: "msgType", align: "center", slot: "msgType" },
+        {
+          title: "类型",
+          key: "msgType",
+          align: "center",
+          slot: "msgType",
+          width: 150
+        },
         {
           title: "操作类型",
           key: "action",
           align: "center",
-          slot: "msgAction"
+          slot: "msgAction",
+          width: 100
         },
         {
           title: "操作",
           slot: "action",
-          width: 200,
+          width: 100,
           align: "center"
         }
       ],
