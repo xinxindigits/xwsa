@@ -1,5 +1,7 @@
 package cn.com.xinxin.sass.biz.log;
 
+import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.biz.service.OplogService;
 import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
 import cn.com.xinxin.sass.common.utils.CommonHttpRequestUtil;
@@ -127,10 +129,17 @@ public class SysLogAspect {
 
         }
         //获取用户名
-        oplog.setAccount(SassBaseContextHolder.getAccount());
-        oplog.setGmtCreator(SassBaseContextHolder.getAccount());
-        oplog.setGmtUpdater(SassBaseContextHolder.getAccount());
-
+        String token = HttpRequestUtil.getLoginToken(request);
+        String account = "";
+        if(StringUtils.isNotBlank(token)){
+            // 无token的接口，则使用默认的记录
+            account = JWTUtil.getUserAccount(token);
+        }else{
+            account = "NOTNEEDLOGIN";
+        }
+        oplog.setAccount(account);
+        oplog.setGmtCreator(account);
+        oplog.setGmtUpdater(account);
         //调用service保存SysLog实体类到数据库
         oplogService.createOplog(oplog);
 
