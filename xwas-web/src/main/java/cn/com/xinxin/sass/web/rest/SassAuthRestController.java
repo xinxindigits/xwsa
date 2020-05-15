@@ -83,10 +83,6 @@ public class SassAuthRestController {
 
         // 执行登陆之前先清除掉用户登陆缓存信息
 
-//        userAclTokenRepository.cleanSassUserInfoCache(userAccount);
-//        userAclTokenRepository.cleanSassUserTokenCache(userAccount);
-//        SassBaseContextHolder.remove();
-
         UserDO userDO = userService.findByUserAccount(userAccount);
 
         if (userDO == null) {
@@ -139,10 +135,6 @@ public class SassAuthRestController {
             response.setHeader("access-control-expose-headers", "XToken");
 
             // 设置基本的content
-            SassBaseContextHolder.setAccount(sassUserInfo.getAccount());
-            SassBaseContextHolder.setTenantId(sassUserInfo.getTenantId());
-            SassBaseContextHolder.setUserId(sassUserInfo.getId());
-
             return userTokenVO;
 
         }else{

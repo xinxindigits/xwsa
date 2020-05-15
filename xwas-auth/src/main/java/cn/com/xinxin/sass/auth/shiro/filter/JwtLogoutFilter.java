@@ -58,7 +58,6 @@ public class JwtLogoutFilter extends LogoutFilter {
         }
         subject.logout();
         sendResultToRequest(response);
-        SassBaseContextHolder.remove();
         return false;
     }
 
