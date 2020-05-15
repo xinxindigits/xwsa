@@ -48,19 +48,6 @@
           </Button>
         </template>
       </Table>
-      <div style="margin: auto; text-align: right;padding-top:10px">
-        <Page
-          :total="total"
-          :current="page"
-          :page-size-opts="[10, 20, 50, 100]"
-          @on-change="changePage"
-          @on-page-size-change="changePageSize"
-          show-sizer
-          show-elevator
-          show-total
-          transfer
-        ></Page>
-      </div>
       <task-update
         type="create"
         ref="createModal"
