@@ -1,33 +1,41 @@
 <template>
   <div>
-    <List>
-      <ListItem>
-        <ListItemMeta :title="detail.fromUserName" :description="description">
-        </ListItemMeta>
-      </ListItem>
-    </List>
-    <CellGroup>
-      <Divider dashed></Divider>
-      <List :split="false">
-        <ListItem>内容:</ListItem>
-        <ListItem>{{ detail | content }}</ListItem>
+    <Drawer
+      title="数据详情"
+      width="80"
+      v-model="isShowDetail"
+      scrollable
+      transfer
+    >
+      <List>
+        <ListItem>
+          <ListItemMeta :title="detail.fromUserName" :description="description">
+          </ListItemMeta>
+        </ListItem>
       </List>
-      <Divider dashed></Divider>
-      <List :split="false">
-        <ListItem>消息编号：{{ detail.msgId }}</ListItem>
-        <ListItem>发送时间：{{ detail.msgTime | timeFilter }}</ListItem>
-        <ListItem>消息类型：{{ $mapd("msgType", detail.msgType) }}</ListItem>
-        <ListItem>接收人：{{ detail.toUserId }}</ListItem>
-        <ListItem>群号：{{ detail.roomId }}</ListItem>
-      </List>
-      <Divider dashed></Divider>
-      <Button type="primary" @click="showRecord">查看聊天记录</Button>
-      <msg-record
-        v-model="isShowRecord"
-        :user-id="cur_userId"
-        ref="record"
-      ></msg-record>
-    </CellGroup>
+      <CellGroup>
+        <Divider dashed></Divider>
+        <List :split="false">
+          <ListItem>内容:</ListItem>
+          <ListItem>{{ detail | content }}</ListItem>
+        </List>
+        <Divider dashed></Divider>
+        <List :split="false">
+          <ListItem>消息编号：{{ detail.msgId }}</ListItem>
+          <ListItem>发送时间：{{ detail.msgTime | timeFilter }}</ListItem>
+          <ListItem>消息类型：{{ $mapd("msgType", detail.msgType) }}</ListItem>
+          <ListItem>接收人：{{ detail.toUserId }}</ListItem>
+          <ListItem>群号：{{ detail.roomId }}</ListItem>
+        </List>
+        <Divider dashed></Divider>
+        <Button type="primary" @click="showRecord">查看聊天记录</Button>
+      </CellGroup>
+    </Drawer>
+    <msg-record
+      v-model="isShowRecord"
+      :user-id="cur_userId"
+      ref="record"
+    ></msg-record>
   </div>
 </template>
 
@@ -40,6 +48,7 @@ export default {
     MsgRecord
   },
   props: {
+    value: Boolean,
     items: Object
   },
   filters: {
@@ -54,6 +63,7 @@ export default {
   },
   data() {
     return {
+      isShowDetail: false,
       isShowRecord: false,
       cur_userId: "",
       detail: {
@@ -100,6 +110,12 @@ export default {
     }
   },
   watch: {
+    value(newValue) {
+      this.isShowDetail = newValue;
+    },
+    isShowDetail(newValue) {
+      this.$emit("input", newValue);
+    },
     items: {
       immediate: true,
       deep: true,

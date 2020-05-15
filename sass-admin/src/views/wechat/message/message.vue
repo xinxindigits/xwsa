@@ -51,15 +51,8 @@
             transfer
           ></Page>
         </div>
-        <Drawer
-          title="数据详情"
-          width="80"
-          v-model="showDetail"
-          scrollable
-          transfer
-        >
-          <msg-detail :items="curDetail"></msg-detail>
-        </Drawer>
+
+        <msg-detail v-model="showDetail" :items="curDetail"></msg-detail>
       </Card>
     </Col>
   </Row>

@@ -76,7 +76,9 @@
       </FormItem>
     </Form>
     <div slot="footer">
-      <Button type="primary" @click="hdlResetPwd">重置密码</Button>
+      <Button type="primary" @click="hdlResetPwd" :loading="isReseting"
+        >重置密码</Button
+      >
       <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
       <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
     </div>
@@ -171,7 +173,8 @@ export default {
         extension: [
           { max: 4000, message: "不能超过4000个字符!", trigger: "blur" }
         ]
-      }
+      },
+      isReseting: false
     };
   },
   methods: {
@@ -228,19 +231,31 @@ export default {
     hdlCancel() {
       this.$emit("on-cancel");
     },
+    resetPwd() {
+      resetUserPwd({
+        account: this.formObj.account
+      })
+        .then(({ data }) => {
+          this.$Modal.success({
+            title: "重置成功！",
+            content: `${data}`
+          });
+        })
+        .finally(() => {
+          this.isReseting = false;
+        });
+    },
     hdlResetPwd() {
       let self = this;
       this.$Modal.confirm({
         title: "确认操作",
         content: `确定重置${this.formObj.account}的密码?`,
         onOk() {
-          resetUserPwd({
-            account: self.formObj.account,
-            newPassword: "123456"
-          }).then(() => {
-            self.$emit("user-pwd-reset");
-            self.$Message.success("密码重置成功！");
-          });
+          self.$emit("user-pwd-reset");
+          self.isReseting = true;
+          setTimeout(() => {
+            self.resetPwd();
+          }, 500);
         }
       });
     }
