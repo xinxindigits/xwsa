@@ -1,5 +1,5 @@
 import axios from "@/libs/api.request";
-
+import md5 from "md5";
 export const regist = ({ account, name, gender, password, extension }) => {
   return axios.request({
     url: "register",
@@ -14,6 +14,7 @@ export const regist = ({ account, name, gender, password, extension }) => {
   });
 };
 export const login = ({ account, password, verifyCode }) => {
+  password = md5(password);
   return axios.request({
     url: "auth",
     params: { verifyCode },
