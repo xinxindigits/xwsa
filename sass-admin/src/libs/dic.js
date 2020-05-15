@@ -69,6 +69,13 @@ const memberStatus = {
   INACTIVE: "非活跃",
   ACTIVE: "活跃"
 };
+const taskResult = {
+  ["INIT"]: "已激活",
+  ["RECEIVING"]: "获取数据中",
+  ["IMPORTING"]: "数据导入中",
+  ["SUCCESS"]: "成功同步",
+  ["FAILURE"]: "任务失败"
+};
 const dic = {
   gender,
   userStatus,
@@ -80,11 +87,20 @@ const dic = {
   staffAccountState,
   taskType,
   taskState,
-  memberStatus
+  memberStatus,
+  taskResult
 };
 const mapDic = function(key, val) {
   if (dic[key]) {
     return dic[key][val] || val;
   } else return "";
 };
-export { mapDic, gender, userStatus, tagType, customerType, taskType };
+export {
+  mapDic,
+  gender,
+  userStatus,
+  tagType,
+  customerType,
+  taskType,
+  taskResult
+};

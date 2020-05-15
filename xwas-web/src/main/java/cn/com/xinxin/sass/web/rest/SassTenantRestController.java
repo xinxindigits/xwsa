@@ -403,9 +403,9 @@ public class SassTenantRestController extends AclController {
 
         //将时间戳格式转化为string
         String startTime = StringUtils.isBlank(queryForm.getStartTime()) ? ""
-                : DateUtils.formatTime(new Long(queryForm.getStartTime()), DateUtils.DATE_FORMAT_WHIPP_TIME);
+                : DateUtils.formatTime(new Long(queryForm.getStartTime()), DateUtils.DATE_FORMAT_TIME);
         String endTime = StringUtils.isBlank(queryForm.getEndTime()) ? ""
-                : DateUtils.formatTime(new Long(queryForm.getEndTime()), DateUtils.DATE_FORMAT_WHIPP_TIME);
+                : DateUtils.formatTime(new Long(queryForm.getEndTime()), DateUtils.DATE_FORMAT_TIME);
 
         TenantDataSyncLogBO tenantDataSyncLogBO = new TenantDataSyncLogBO();
         tenantDataSyncLogBO.setTenantId(sassUserInfo.getTenantId());
