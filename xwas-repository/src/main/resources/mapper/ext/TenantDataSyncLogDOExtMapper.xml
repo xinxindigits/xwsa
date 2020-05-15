@@ -68,7 +68,7 @@
       <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
         <![CDATA[and task_time <= #{endTime}]]>
       </if>
-      order by id limit #{index}, #{pageSize}
+      order by id desc limit #{index}, #{pageSize}
     </where>
   </select>
 

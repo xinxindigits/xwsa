@@ -19,3 +19,19 @@
     3.test-----项目测试环境
     4.pre------生产验证环境
     5.prod-----对应生产环境配置文件
+    
+    
+
+## 权限值编码规则:
+   
+   1.基本名称:SASS+功能名称(如资源权限操作:RESOURCE)+分类(如菜单:MENU)+操作(CREATE/REMOVE/UPDATE)
+   具体实例比如说对于菜单菜单管理功能:
+   
+   2.查询以及列表功能: SASS_RESOURCE_MENU_QUERY_LIST
+   3.权限值码表:
+     3.1 资源权限类编码 
+       菜单查询以及列表功能: SASS_RESOURCE_MENU_QUERY_LIST
+       资源权限添加: SASS_RESOURCE_MENU_FUNCTION_ADD
+       资源权限删除: SASS_RESOURCE_MENU_FUNCTION_REMOVE
+       资源权限修改: SASS_RESOURCE_MENU_FUNCTION_UPDATE
+   
