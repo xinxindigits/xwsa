@@ -368,6 +368,7 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/executeJob",method = RequestMethod.GET)
     @ResponseBody
     @RequiresPermissions("/tenant/executeJob")
+    @SysLog("手动执行租户任务操作")
     public Object executeJob(@RequestParam String taskType, HttpServletRequest request){
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
