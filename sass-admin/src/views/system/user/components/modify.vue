@@ -52,7 +52,12 @@
           </Option>
         </Select>
       </FormItem>
-      <FormItem label="密码" prop="password" v-if="type == 'create'">
+      <FormItem
+        label="密码"
+        prop="password"
+        v-if="type == 'create'"
+        :rules="checkPass"
+      >
         <Input
           v-model="formObj.password"
           style="width: 250px"
@@ -92,7 +97,7 @@ const _config = {
   }
 };
 export default {
-  name: "role-update",
+  name: "role-modify",
   props: {
     value: Boolean,
     type: {
@@ -130,6 +135,14 @@ export default {
         roles: [],
         orgCode: null
       },
+      checkPass: [
+        { required: true, message: "密码不能为空", trigger: "blur" },
+        {
+          pattern: /^[a-zA-Z0-9]{4,16}$/,
+          message: "请输入4～16位英文字母或数字的组合",
+          trigger: "blur"
+        }
+      ],
       rules: {
         account: [
           { required: true, message: "账号不能为空", trigger: "blur" },
