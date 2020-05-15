@@ -152,7 +152,6 @@ export default {
       getTenantList({ pageIndex, pageSize, ...data })
         .then(res => {
           let { data } = res;
-          this.reset();
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -166,6 +165,7 @@ export default {
       this.formItem.tenantName = "";
       this.formItem.tenantId = "";
       this.formItem.state = "";
+      this.hdlquery();
     },
     hdlDelete(codes) {
       let self = this;
