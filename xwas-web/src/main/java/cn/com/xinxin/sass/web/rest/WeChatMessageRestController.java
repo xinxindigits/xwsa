@@ -81,8 +81,12 @@ public class WeChatMessageRestController extends AclController {
         pageResultVO.setTotal(pageResultDO.getTotal());
         List<MsgRecordVO> msgRecordVOS = new ArrayList<>();
         pageResultDO.getItems().forEach(m -> {
-            ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), m.getFromUserId());
-            msgRecordVOS.add(MessageConvert.convert2MsgRecordVO(m, chatUserVO.getChatUserName()));
+            try {
+                ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), m.getFromUserId());
+                msgRecordVOS.add(MessageConvert.convert2MsgRecordVO(m, chatUserVO.getChatUserName()));
+            } catch (Exception e) {
+                LOGGER.info("获取聊天记录异常", e);
+            }
         });
         pageResultVO.setItems(msgRecordVOS);
 

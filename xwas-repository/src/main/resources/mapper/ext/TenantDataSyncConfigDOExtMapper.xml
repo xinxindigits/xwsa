@@ -9,17 +9,19 @@
     <result column="fetched_seq_no" jdbcType="BIGINT" property="fetchedSeqNo" />
     <result column="count_ceiling" jdbcType="INTEGER" property="countCeiling" />
     <result column="time_interval" jdbcType="INTEGER" property="timeInterval" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="lock_flag" jdbcType="INTEGER" property="lockFlag" />
     <result column="extension" jdbcType="VARCHAR" property="extension" />
     <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
     <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
     <result column="gmt_updated" jdbcType="TIMESTAMP" property="gmtUpdated" />
     <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
-    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+    <result column="deleted" jdbcType="INTEGER" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List_Ext">
-    id, tenant_id, task_type, cron_expression, fetched_seq_no, count_ceiling, time_interval, lock_flag,
-    extension, gmt_created, gmt_creator, gmt_updated, gmt_updater, deleted
+    id, tenant_id, task_type, cron_expression, fetched_seq_no, count_ceiling, time_interval,
+    status, lock_flag, extension, gmt_created, gmt_creator, gmt_updated, gmt_updater,
+    deleted
   </sql>
   <select id="selectByOrgIdAndTaskType" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
@@ -30,24 +32,24 @@
   <update id="updateLockByTenantIdAndTaskType" parameterType="java.lang.String">
     update tenant_sync_config
     set lock_flag = 1
-    where tenant_id = #{tenantId} and task_type = #{taskType} and lock_flag = 0 and deleted = 0
+    where tenant_id = #{tenantId} and task_type = #{taskType} and lock_flag = 0 and deleted = 0 and status =0
   </update>
 
   <update id="updateUnLockByTenantIdAndTaskType" parameterType="java.lang.String">
     update tenant_sync_config
     set lock_flag= 0
-    where tenant_id = #{tenantId} and task_type = #{taskType} and deleted = 0
+    where tenant_id = #{tenantId} and task_type = #{taskType} and deleted = 0 and status = 0
   </update>
 
   <select id="queryValidRecord" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
-    from tenant_sync_config where deleted = 0
+    from tenant_sync_config where deleted = 0 and status = 0
   </select>
 
   <select id="selectByTenantId" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from tenant_sync_config
-    where tenant_id = #{tenantId} order by id;
+    where tenant_id = #{tenantId} and deleted = 0 order by id;
   </select>
 
 </mapper>
