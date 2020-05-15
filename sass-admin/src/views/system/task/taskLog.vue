@@ -136,7 +136,7 @@ export default {
       queryTaskLog({ pageIndex, pageSize, ...this.formObj })
         .then(res => {
           let { data } = res;
-          //this.reset();
+          this.page = pageIndex;
           this.tableData = data.items;
           this.total = Number(data.total);
         })
@@ -172,7 +172,8 @@ export default {
         newValue[0] instanceof Date
       ) {
         this.formObj.startTime = newValue[0].getTime() + "";
-        this.formObj.endTime =  newValue[1].getTime() + 24 * 60 * 60 * 1000 - 1000 + "";
+        this.formObj.endTime =
+          newValue[1].getTime() + 24 * 60 * 60 * 1000 - 1000 + "";
       } else {
         this.formObj.startTime = "";
         this.formObj.endTime = "";

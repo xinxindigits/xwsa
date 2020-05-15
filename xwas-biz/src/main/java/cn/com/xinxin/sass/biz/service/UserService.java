@@ -29,12 +29,12 @@ public interface UserService {
 
     /**
      * 修改用户密码
-     * @param userId
+     * @param account
      * @param originPassword
      * @param newPassword
      * @param updater
      */
-    void modifyPassword(String userId,
+    void modifyPassword(String account,
                         String originPassword,
                         String newPassword,
                         String updater);
