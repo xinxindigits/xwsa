@@ -29,9 +29,10 @@
    
    2.查询以及列表功能: SASS_RESOURCE_MENU_QUERY_LIST
    3.权限值码表:
-     3.1 资源权限类编码 
-       菜单查询以及列表功能: SASS_RESOURCE_MENU_QUERY_LIST
-       资源权限添加: SASS_RESOURCE_MENU_FUNCTION_ADD
-       资源权限删除: SASS_RESOURCE_MENU_FUNCTION_REMOVE
-       资源权限修改: SASS_RESOURCE_MENU_FUNCTION_UPDATE
-   
+     
+     | 中文名称  | 编码 |  值 |
+     | 菜单查询以及列表功能  | SASS_RESOURCE_MENU_QUERY_LIST  |   |
+     | 资源权限添加 | SASS_RESOURCE_MENU_FUNCTION_ADD  |   |
+     | 资源权限删除  | SASS_RESOURCE_MENU_FUNCTION_REMOVE  |   |
+     | 资源权限修改  | SASS_RESOURCE_MENU_FUNCTION_UPDATE  |   |
+     |   |   |   |
