@@ -1,26 +1,71 @@
-# 统一的WEB Portal入口
+# XWSASS(Xinxin And Weixin Enterprise Edition Customer Information SASS)
 
-## 统一的业务管理界面入口, 接入操作日志层
-
-## 定时调度任务使用XXL-JOB工具以及框架等
-
-    1. 在安装配置定时调度时候安装， https://www.xuxueli.com/xxl-job/安装文档即可。将地址增加到对应的配置文件目录下即可
-    
+  新心以及企业微信客户关系存留SASS系统。主要设计来保留企业员工与微信企业客户之间的业务交流信息。方便使用企业微信的公司，企业，组织留存企业微信客户，发现必要的业务可能性等。
+  主要通过企业维系api，拉取到聊天信息，企业客户信息等。
+  主要功能：
+  1. 全面的权限管理，基于角色，人，组织关系的权限管理功能。
+  2. 操作日志记录功能。
+  3. 企业租户，组织架构管理等基本的租户管理功能。
+  4. 定时调度任务配置管理等。主要用于同步企业微信信息到本地系统
+  5. 企业微信部门，员工，客户信息，各种聊天消息信息等功能.视频，图片等功能还在开发中
 
 ## 产品需求
-    2.提供给其他系统调用方方便的API
-    3.测试服务器地址：******  weblogic/Xinxinpass1
+   
+   1. 基于本公司业务人员与客户沟通，联系，业务往来的过程中的需求，希望在各个方面都能更好的服务客户，维系企业客户之间的联系。
+   2. 市面上也很少有这样的业务系统，希望可以能够给一些公司带来业务上的方便
+   3. 基于技术需要，使用前后端分离的方式。
+   4. 可直接接入dubbo即可实现SOA等分布式开发模式
+   5. 采用jwt token的方式进行登陆验证等
     
-
 ## 配置文件说明
 
-    1.local----默认对应开发环境
-    2.dev-----周版本测试环境
-    3.test-----项目测试环境
-    4.pre------生产验证环境
-    5.prod-----对应生产环境配置文件
+   1. local----默认对应开发环境
+   2. dev-----周版本测试环境
+   3. test-----项目测试环境
+   4. pre------生产验证环境
+   5. prod-----对应生产环境配置文件
     
+## 工程项目概述
     
+   1. 工程结构说明,该项目工程文档中包含: 
+   
+        1. ci目录：主要使用了gitlab一些CI功能配置脚本，如sonar代码扫描等。
+        2. sass-admin目录: 主要为前端代码目录。前端代码使用VUE技术，模版使用iview模版
+        3. sql目录: 必要的数据初始化sql脚本，包括新增表，数据初始化脚本等
+        4. *.dll文件主要是企业微信API接口SDK。为windows下格式。linux下的稍后在部署安装文档里面介绍
+        5. 主要的java工程源代码包含7个子模块。由于公司技术规范以及开发框架等适应需要。
+            
+            + xwas-api主要包含对外提供Dubbo API相关的接口内容；
+            + xwas-auth模块主要包括登陆验证，鉴权等功能代码；
+            + xwaz-biz主要为业务代码实现功能，其中也包括对Dubbo API服务层的具体实现。
+            + xwas-common 主要包含一些基本工具类，枚举值，全局变量等。
+            + xwas-repository 主要包括mybatis的数据库访问层对象，逻辑代码等
+            + xwas-sal 主要为对外API调用层代码实现。
+            + xwas-web 主要为前端web接口，各种controller以及数据封装等业务代码
+   
+   
+   2. 工具技术说明。主要使用的技术:
+   
+        1. Spring基本组件，Shiro权限管理组件，Dubbo服务化组件，Mybatis持久化组件, Quartz定时调度组件,
+        2. 前端代码使用VUE技术，模版使用iview模版
+        3. MySQL, Redis
+        4. 企业微信SDK
+        5. Java 8
+
+    
+## 安装启动配置说明
+    
+   1. 后端项目部署
+   2. 前端项目部署
+   3. 微信API配置说明
+    
+## 数据初始化
+    
+## 操作界面说明
+
+
+## 二次开发说明
+   
 
 ## 权限值编码规则:
    
@@ -31,7 +76,7 @@
    
    3.权限值码表:
    
-   | 中文名称  | 编码 |  值 |
+   | 中文名称  | 编码值 |  备注说明 |
    | :---- | :---- | :---- |
    | 菜单查询以及列表功能  | SASS_RESOURCE_MENU_QUERY_LIST  |   |
    | 资源权限添加 | SASS_RESOURCE_MENU_FUNCTION_ADD  |   |
@@ -69,3 +114,15 @@
    | 重置用户密码  | SASS_USER_PASSWORD_REST  |   |
    | 用户管理功能  | SASS_USER_MNG  |   |
 
+
+## 开源协议
+
+本代码遵循 [MIT License](https://opensource.org/licenses/mit-license.php?spm=a2c4e.10696291.0.0.48ef19a4SnBzka)
+
+Copyright 2020 www.xinxindigits.com
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
