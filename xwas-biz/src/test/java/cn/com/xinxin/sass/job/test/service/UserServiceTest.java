@@ -32,7 +32,7 @@ public class UserServiceTest extends SpringBaseTest {
 
         String account = "admin001";
 
-        String newPasswd = "123456";
+        String newPasswd = "admin001";
 
         String md5Pwd = SecureUtils.getMD5(newPasswd);
 
