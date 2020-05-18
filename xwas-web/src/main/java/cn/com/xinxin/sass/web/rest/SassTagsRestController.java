@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.auth.enums.AuthEnums;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.log.SysLog;
@@ -18,6 +19,7 @@ import com.google.common.collect.Sets;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +58,8 @@ public class SassTagsRestController extends AclController {
 
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)
-    //@RequiresPermissions("/tags/query")
+    //修改权限注解方式
+    //@RequiresPermissions(value = {"SASS_TAG_MNG","SASS_TAG_QUERY_LIST"},logical= Logical.OR)
     public Object queryTags(@RequestBody TagForm tagForm, HttpServletRequest request){
 
         logger.info("SassTagsRestController,query,tagForm ={}",tagForm);
