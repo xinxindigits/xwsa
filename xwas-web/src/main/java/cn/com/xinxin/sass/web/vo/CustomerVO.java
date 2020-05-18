@@ -79,6 +79,8 @@ public class CustomerVO extends ToString {
      */
     private String followUser;
 
+    private String folloUserName;
+
     /**
      * 状态
      */
@@ -232,4 +234,13 @@ public class CustomerVO extends ToString {
     public void setMemberName(String memberName) {
         this.memberName = memberName;
     }
+
+    public String getFolloUserName() {
+        return folloUserName;
+    }
+
+    public void setFolloUserName(String folloUserName) {
+        this.folloUserName = folloUserName;
+    }
 }
+
