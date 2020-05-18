@@ -44,11 +44,11 @@
    
    2. 工具技术说明。主要使用的技术:
    
-     2.1 Spring基本组件，Shiro权限管理组件，Dubbo服务化组件，Mybatis持久化组件, Quartz定时调度组件,
-     2.2 前端代码使用VUE技术，模版使用iview模版
-     2.3 MySQL, Redis
-     2.4 企业微信SDK
-     2.5 Java 8
+   2.1 Spring基本组件，Shiro权限管理组件，Dubbo服务化组件，Mybatis持久化组件, Quartz定时调度组件,
+   2.2 前端代码使用VUE技术，模版使用iview模版
+   2.3 MySQL, Redis
+   2.4 企业微信SDK
+   2.5 Java 8
 
     
 ## 安装启动配置说明
