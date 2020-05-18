@@ -104,6 +104,8 @@
         <!--enableUpdateByExample="false"/>-->
         <!--<table tableName="user_org" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
         <!--enableUpdateByExample="false"/>-->
+        <!--<table tableName="group_chat" domainObjectName="GroupChatDO" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
 
     </context>
 </generatorConfiguration>
