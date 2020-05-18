@@ -29,26 +29,27 @@
     
    1. 工程结构说明,该项目工程文档中包含: 
    
-      1.1  ci目录：主要使用了gitlab一些CI功能配置脚本，如sonar代码扫描等。
-      1.2 sass-admin目录: 主要为前端代码目录。前端代码使用VUE技术，模版使用iview模版
-      1.3 sql目录: 必要的数据初始化sql脚本，包括新增表，数据初始化脚本等
-      1.4 *.dll文件主要是企业微信API接口SDK。为windows下格式。linux下的稍后在部署安装文档里面介绍
-      1.5 主要的java工程源代码包含7个子模块。由于公司技术规范以及开发框架等适应需要。
-         1.5.1  xwas-api主要包含对外提供Dubbo API相关的接口内容；
-         1.5.2 xwas-auth模块主要包括登陆验证，鉴权等功能代码；
-         1.5.3 xwaz-biz主要为业务代码实现功能，其中也包括对Dubbo API服务层的具体实现。
-         1.5.4 xwas-common 主要包含一些基本工具类，枚举值，全局变量等。
-         1.5.5 xwas-repository 主要包括mybatis的数据库访问层对象，逻辑代码等
-         1.5.6 xwas-sal 主要为对外API调用层代码实现。
-         1.5.7 xwas-web 主要为前端web接口，各种controller以及数据封装等业务代码
+        1.1  ci目录：主要使用了gitlab一些CI功能配置脚本，如sonar代码扫描等。
+        1.2 sass-admin目录: 主要为前端代码目录。前端代码使用VUE技术，模版使用iview模版
+        1.3 sql目录: 必要的数据初始化sql脚本，包括新增表，数据初始化脚本等
+        1.4 *.dll文件主要是企业微信API接口SDK。为windows下格式。linux下的稍后在部署安装文档里面介绍
+        1.5 主要的java工程源代码包含7个子模块。由于公司技术规范以及开发框架等适应需要。
+            
+            1.5.1  xwas-api主要包含对外提供Dubbo API相关的接口内容；
+            1.5.2 xwas-auth模块主要包括登陆验证，鉴权等功能代码；
+            1.5.3 xwaz-biz主要为业务代码实现功能，其中也包括对Dubbo API服务层的具体实现。
+            1.5.4 xwas-common 主要包含一些基本工具类，枚举值，全局变量等。
+            1.5.5 xwas-repository 主要包括mybatis的数据库访问层对象，逻辑代码等
+            1.5.6 xwas-sal 主要为对外API调用层代码实现。
+            1.5.7 xwas-web 主要为前端web接口，各种controller以及数据封装等业务代码
    
    2. 工具技术说明。主要使用的技术:
    
-   2.1 Spring基本组件，Shiro权限管理组件，Dubbo服务化组件，Mybatis持久化组件, Quartz定时调度组件,
-   2.2 前端代码使用VUE技术，模版使用iview模版
-   2.3 MySQL, Redis
-   2.4 企业微信SDK
-   2.5 Java 8
+        2.1 Spring基本组件，Shiro权限管理组件，Dubbo服务化组件，Mybatis持久化组件, Quartz定时调度组件,
+        2.2 前端代码使用VUE技术，模版使用iview模版
+        2.3 MySQL, Redis
+        2.4 企业微信SDK
+        2.5 Java 8
 
     
 ## 安装启动配置说明
