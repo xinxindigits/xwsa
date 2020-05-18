@@ -25,6 +25,11 @@ public class CustomerVO extends ToString {
     private String memberUserId;
 
     /**
+     * 新增member name
+     */
+    private String memberName;
+
+    /**
      * 客户userId
      */
     private String userId;
@@ -73,6 +78,8 @@ public class CustomerVO extends ToString {
      * 跟进成员
      */
     private String followUser;
+
+    private String folloUserName;
 
     /**
      * 状态
@@ -219,4 +226,21 @@ public class CustomerVO extends ToString {
     public void setCreatedTime(Long createdTime) {
         this.createdTime = createdTime;
     }
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
+    }
+
+    public String getFolloUserName() {
+        return folloUserName;
+    }
+
+    public void setFolloUserName(String folloUserName) {
+        this.folloUserName = folloUserName;
+    }
 }
+

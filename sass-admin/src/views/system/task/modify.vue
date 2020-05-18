@@ -171,7 +171,7 @@ export default {
       this.formObj.cronExpression = obj.cronExpression;
       this.formObj.countCeiling = obj.countCeiling;
       this.formObj.timeInterval = obj.timeInterval;
-      this.formObj.status = "" + obj.deleted;
+      this.formObj.status = "" + obj.status;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {

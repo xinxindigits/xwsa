@@ -19,8 +19,8 @@
         <template slot-scope="{ row }" slot="taskType">
           <span>{{ $mapd("taskType", row.taskType) }}</span>
         </template>
-        <template slot-scope="{ row }" slot="deleted">
-          <span>{{ $mapd("taskState", row.deleted) }}</span>
+        <template slot-scope="{ row }" slot="status">
+          <span>{{ $mapd("taskState", row.status) }}</span>
         </template>
         <template slot-scope="{ row }" slot="action">
           <Button
@@ -114,9 +114,9 @@ export default {
         { title: "会话每次提取间隔(秒)", key: "timeInterval", align: "center" },
         {
           title: "状态",
-          key: "deleted",
+          key: "status",
           align: "center",
-          slot: "deleted"
+          slot: "status"
         },
         { title: "操作", slot: "action", align: "center", width: 250 }
       ],
@@ -166,7 +166,7 @@ export default {
         cronExpression: data.cronExpression,
         countCeiling: data.countCeiling,
         timeInterval: data.timeInterval,
-        deleted: data.deleted
+        status: data.status
       };
       this.$refs.updateModal.setData(d);
       this.showUpdateModal = true;

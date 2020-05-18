@@ -239,4 +239,14 @@
      (SELECT user_id from member_received where task_id = #{taskId});
   </update>
 
+
+  <select id="queryByUserId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where user_id = #{userId,jdbcType=VARCHAR}
+    and deleted = 0
+
+  </select>
+
 </mapper>

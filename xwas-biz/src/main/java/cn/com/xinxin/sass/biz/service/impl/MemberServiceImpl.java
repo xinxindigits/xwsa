@@ -212,4 +212,12 @@ public class MemberServiceImpl implements MemberService {
         }
         return memberDOMapper.updateInactiveStatus(tenantId, taskId);
     }
+
+    @Override
+    public MemberDO queryMemberDetailByUserId(String userId) {
+
+        MemberDO memberDO  = this.memberDOMapper.queryByUserId(userId);
+
+        return memberDO;
+    }
 }

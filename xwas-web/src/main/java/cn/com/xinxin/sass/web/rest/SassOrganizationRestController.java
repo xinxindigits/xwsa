@@ -54,17 +54,8 @@ public class SassOrganizationRestController extends AclController {
 
     private final OrganizationService organizationService;
 
-    private final TenantBaseInfoService tenantBaseInfoService;
-
-    private static final String OG = "OG";
-
-    private static final String DATE_FORMAT_NOSIGN = "yyyyMMdd";
-
-    private static final String PADDING = "000";
-
-    public SassOrganizationRestController(OrganizationService organizationService, TenantBaseInfoService tenantBaseInfoService) {
+    public SassOrganizationRestController(OrganizationService organizationService) {
         this.organizationService = organizationService;
-        this.tenantBaseInfoService = tenantBaseInfoService;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -270,6 +261,7 @@ public class SassOrganizationRestController extends AclController {
             return SassBizResultCodeEnum.FAIL.getAlertMessage();
         }
     }
+
 
 
 }

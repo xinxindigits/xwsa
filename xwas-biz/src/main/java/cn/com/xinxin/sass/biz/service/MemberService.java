@@ -56,6 +56,13 @@ public interface MemberService {
      */
     MemberDO queryMemberDetailById(String memeberId);
 
+    /**
+     * @param userId
+     * @return
+     */
+    MemberDO queryMemberDetailByUserId(String userId);
+
+
 
     /**
      *
