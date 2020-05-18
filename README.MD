@@ -31,8 +31,33 @@
    3.权限值码表:
      
      | 中文名称  | 编码 |  值 |
+     | :----: | :----: | :----: |
      | 菜单查询以及列表功能  | SASS_RESOURCE_MENU_QUERY_LIST  |   |
      | 资源权限添加 | SASS_RESOURCE_MENU_FUNCTION_ADD  |   |
      | 资源权限删除  | SASS_RESOURCE_MENU_FUNCTION_REMOVE  |   |
      | 资源权限修改  | SASS_RESOURCE_MENU_FUNCTION_UPDATE  |   |
-     |   |   |   |
+     | 组织机构查询以及列表功能  | SASS_ORG_QUERY_LIST  |   |
+     | 组织机构新增  | SASS_ORG_ADD  |   |
+     | 组织机构修改  | SASS_ORG_UPDATE  |   |
+     | 组织机构删除  | SASS_ORG_DELETE  |   |
+     | 角色权限查询列表  | SASS_ROLE_QUERY_LIST  |   |
+     | 角色权限新增  | SASS_ROLE_ADD  |   |
+     | 角色权限修改  | SASS_ROLE_UPDATE  |   |
+     | 角色权限删除  | SASS_ROLE_DELETE  |   |
+     | 角色权限授权资源  | SASS_ROLE_GRANT_RESOURECE  |   |
+     | 标签权限查询列表  | SASS_TAG_QUERY_LIST  |   |
+     | 标签权限新增  | SASS_TAG_ADD  |   |
+     | 标签权限修改  | SASS_TAG_UPDATE  |   |
+     | 标签权限删除  | SASS_TAG_DELETE  |   |
+     | 给数据上标签  | SASS_TAG_FIX_DATA  |   |
+     | 租户查询列表  | SASS_TENANT_QUERY_LIST  |   |
+     | 租户权限新增  | SASS_TENANT_ADD  |   |
+     | 租户权限修改  | SASS_TENANT_UPDATE  |   |
+     | 租户权限删除  | SASS_TENANT_DELETE  |   |
+     | 租户定时任务配置管理  | SASS_TENANT_TASK_CONFIG_MNG  |   |
+     | 用户查询列表  | SASS_USER_QUERY_LIST  |   |
+     | 用户权限新增  | SASS_USER_ADD  |   |
+     | 用户权限修改  | SASS_TUSER_UPDATE  |   |
+     | 用户权限删除  | SASS_USER_DELETE  |   |
+     | 用户角色授权  | SASS_USER_ROLE_GRANT  |   |
+     | 重置用户密码  | SASS_USER_PASSWORD_REST  |   |
