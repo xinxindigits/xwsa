@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.sal.model.wechatwork.response;
 
-import cn.com.xinxin.sass.sal.model.wechatwork.WeChatWorkGroupChatBO;
+import cn.com.xinxin.sass.sal.model.wechatwork.WeChatWorkGroupChatBaseBO;
+import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.List;
 
@@ -14,13 +15,14 @@ public class WeChatWorkGroupChatResponseBO extends WeChatWorkResponseBaseBO{
     /**
      * 群列表
      */
-    private List<WeChatWorkGroupChatBO> weChatWorkGroupChatBOS;
+    @JSONField(name = "group_chat_list")
+    private List<WeChatWorkGroupChatBaseBO> weChatWorkGroupChatBaseBOS;
 
-    public List<WeChatWorkGroupChatBO> getWeChatWorkGroupChatBOS() {
-        return weChatWorkGroupChatBOS;
+    public List<WeChatWorkGroupChatBaseBO> getWeChatWorkGroupChatBaseBOS() {
+        return weChatWorkGroupChatBaseBOS;
     }
 
-    public void setWeChatWorkGroupChatBOS(List<WeChatWorkGroupChatBO> weChatWorkGroupChatBOS) {
-        this.weChatWorkGroupChatBOS = weChatWorkGroupChatBOS;
+    public void setWeChatWorkGroupChatBaseBOS(List<WeChatWorkGroupChatBaseBO> weChatWorkGroupChatBaseBOS) {
+        this.weChatWorkGroupChatBaseBOS = weChatWorkGroupChatBaseBOS;
     }
 }
