@@ -69,6 +69,10 @@ const memberStatus = {
   INACTIVE: "非活跃",
   ACTIVE: "活跃"
 };
+const customerStatus = {
+  INACTIVE: "非活跃",
+  ACTIVE: "活跃"
+};
 const taskResult = {
   ["INIT"]: "已激活",
   ["RECEIVING"]: "获取数据中",
@@ -88,7 +92,8 @@ const dic = {
   taskType,
   taskState,
   memberStatus,
-  taskResult
+  taskResult,
+  customerStatus
 };
 const mapDic = function(key, val) {
   if (dic[key]) {

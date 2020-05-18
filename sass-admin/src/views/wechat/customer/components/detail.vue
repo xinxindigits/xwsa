@@ -18,7 +18,7 @@
     </List>
     <CellGroup>
       <Cell>
-        <span>状态：{{ detail.status }}</span>
+        <span>状态：{{ $mapd("customerStatus", detail.status) }}</span>
       </Cell>
       <Cell>
         <span>性别：{{ detail.gender }}</span>
@@ -45,10 +45,10 @@
       </Cell>
       <Divider dashed></Divider>
       <Cell>
-        <span>添加人：{{ detail.memberUserId }}</span>
+        <span>添加人：{{ memberName }}</span>
       </Cell>
       <Cell>
-        <span>跟进人：{{ detail.followUser }}</span>
+        <span>跟进人：{{ detail.folloUserName }}</span>
       </Cell>
 
       <Divider orientation="left" dashed> 其他</Divider>
@@ -77,6 +77,9 @@ export default {
   computed: {
     description() {
       return `账号：${this.detail.userId || ""}`;
+    },
+    memberName() {
+      return `${this.detail.memberName}(${this.detail.memberUserId})`;
     }
   },
   data() {
@@ -97,11 +100,13 @@ export default {
         externalProfile: "",
         gender: "",
         id: "",
+        memberName: "",
         memberUserId: "",
         status: "",
         unionId: "",
         userId: "",
-        tagList: []
+        tagList: [],
+        folloUserName: ""
       }
     };
   },
