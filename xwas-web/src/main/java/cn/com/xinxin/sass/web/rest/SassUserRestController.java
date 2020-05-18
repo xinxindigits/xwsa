@@ -214,13 +214,14 @@ public class SassUserRestController extends AclController {
             String randomPwd = RandomPasswordUtils.getPasswordSimple(4,4);
             String md5Pwd = SecureUtils.getMD5(randomPwd);
             this.userService.resetPassword(userAccount,md5Pwd,sassUserInfo.getAccount());
+            try {
+                userAclTokenRepository.cleanSassUserTokenCache(userAccount);
+                userAclTokenRepository.cleanSassUserInfoCache(userAccount);
+            }catch (Exception ex){
+                log.warn("restUserPassword clean user cache ex = {}", ex.getMessage());
+            }
             resultMsg = "你的密码已经重置为:[" + randomPwd +"],登录后请重新修改密码";
         }
-
-        //FIXME: 重置密码同时需要清除用户缓存以及对应的token
-        userAclTokenRepository.cleanSassUserTokenCache(userAccount);
-        userAclTokenRepository.cleanSassUserInfoCache(userAccount);
-
         return resultMsg;
     }
 
