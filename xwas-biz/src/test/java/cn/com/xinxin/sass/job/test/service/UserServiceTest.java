@@ -5,6 +5,7 @@ import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.job.test.base.SpringBaseTest;
 import cn.com.xinxin.sass.repository.model.TagsDO;
 import com.google.common.collect.Lists;
+import com.xinxinfinance.commons.security.SecureUtils;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,13 +32,15 @@ public class UserServiceTest extends SpringBaseTest {
 
         String account = "admin001";
 
-        String newPasswd = "4EEF1E1EA34879A2AE60C60815927ED9";
+        String newPasswd = "admin001";
+
+        String md5Pwd = SecureUtils.getMD5(newPasswd);
 
         String randomPwd = UserServiceTest.getPasswordSimple(4,4);
 
-        //this.userService.resetPassword(account,newPasswd,account);
+        //this.userService.resetPassword(account,md5Pwd,account);
 
-        System.out.println(randomPwd);
+        System.out.println(md5Pwd);
 
     }
 
