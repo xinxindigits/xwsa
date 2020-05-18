@@ -1,5 +1,7 @@
 package cn.com.xinxin.sass.biz.log;
 
+import cn.com.xinxin.sass.auth.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.biz.service.OplogService;
@@ -45,6 +47,9 @@ public class SysLogAspect {
 
     @Autowired
     private OplogService oplogService;
+
+    @Autowired
+    private UserAclTokenRepository userAclTokenRepository;
 
     /**
      * 用于获取方法参数定义名字.
@@ -125,7 +130,7 @@ public class SysLogAspect {
             oplog.setUri(CommonHttpRequestUtil.getPath(request.getRequestURI()));
             oplog.setHttpMethod(request.getMethod());
             oplog.setUa(StringUtils.substring(request.getHeader("user-agent"), 0, 256));
-            oplog.setTenantId(SassBaseContextHolder.getTenantId());
+
 
         }
         //获取用户名
@@ -134,8 +139,11 @@ public class SysLogAspect {
         if(StringUtils.isNotBlank(token)){
             // 无token的接口，则使用默认的记录
             account = JWTUtil.getUserAccount(token);
+            SassUserInfo sassUserInfo = userAclTokenRepository.getSassUserByUserAccount(account);
+            oplog.setTenantId(sassUserInfo.getTenantId());
         }else{
             account = "NOTNEEDLOGIN";
+            oplog.setTenantId("NOTNEEDLOGIN");
         }
         oplog.setAccount(account);
         oplog.setGmtCreator(account);

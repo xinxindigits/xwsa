@@ -260,7 +260,7 @@ public class SassTenantRestController extends AclController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/tenant/create")
-    @SysLog("新增租户配置操作")
+    @SysLog("新增任务配置操作")
     public Object insertTenantConfig(@RequestBody TenantConfigForm queryForm, HttpServletRequest request) {
 
         if (StringUtils.isBlank(queryForm.getTaskType())) {
@@ -311,7 +311,7 @@ public class SassTenantRestController extends AclController {
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
     @RequiresPermissions("/tenant/update")
-    @SysLog("更新租户配置操作")
+    @SysLog("更新任务配置操作")
     public Object updateTenantConfig(@RequestBody TenantConfigForm queryForm, HttpServletRequest request) {
 
         if (null == queryForm.getId()) {

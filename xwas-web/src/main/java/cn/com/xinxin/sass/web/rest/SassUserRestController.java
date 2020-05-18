@@ -13,12 +13,14 @@ import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.*;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.web.form.*;
+import cn.com.xinxin.sass.web.utils.RandomPasswordUtils;
 import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.vo.*;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.security.SecureUtils;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -193,21 +195,32 @@ public class SassUserRestController extends AclController {
         if(null == pwdForm){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"重置密码参数不能为空","重置密码参数不能为空");
         }
-
+        SassUserInfo sassUserInfo = this.getSassUser(request);
         // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
         String userAccount = pwdForm.getAccount();
 
-        String userPwd = pwdForm.getOldPassword();
+        String userOldPwd = pwdForm.getOldPassword();
+        String userNewPwd = pwdForm.getNewPassword();
 
-        String newPwd = pwdForm.getNewPassword();
+        String resultMsg = "";
 
-        SassUserInfo sassUserInfo = this.getSassUser(request);
+        if(StringUtils.isNotBlank(userOldPwd)&&StringUtils.isNotBlank(userNewPwd)){
+            // 新旧密码都不为空，表示修改密码
+            this.userService.modifyPassword(userAccount,userOldPwd,userNewPwd,sassUserInfo.getAccount());
+            resultMsg = "你的密码已经修改成功，退出来重新登陆即可";
+        }else {
+            // 重置密码
+            String randomPwd = RandomPasswordUtils.getPasswordSimple(4,4);
+            String md5Pwd = SecureUtils.getMD5(randomPwd);
+            this.userService.resetPassword(userAccount,md5Pwd,sassUserInfo.getAccount());
+            resultMsg = "你的密码已经重置为:[" + randomPwd +"],登录后请重新修改密码";
+        }
 
-        this.userService.resetPassword(userAccount,newPwd,sassUserInfo.getAccount());
         //FIXME: 重置密码同时需要清除用户缓存以及对应的token
         userAclTokenRepository.cleanSassUserTokenCache(userAccount);
         userAclTokenRepository.cleanSassUserInfoCache(userAccount);
-        return SassBizResultCodeEnum.SUCCESS;
+
+        return resultMsg;
     }
 
 
