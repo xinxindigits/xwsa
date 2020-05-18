@@ -45,4 +45,12 @@ public interface GroupChatService {
      * @param size 大小
      */
     void updateBatchByIdPartially(List<GroupChatDO> groupChatDOS, int size);
+
+    /**
+     * 根据群id查询群名
+     * @param chatId 群id
+     * @param tenantId 租户id
+     * @return 群名
+     */
+    String queryChatNameByChatId(String chatId, String tenantId);
 }
