@@ -48,7 +48,7 @@
         <span>添加人：{{ memberName }}</span>
       </Cell>
       <Cell>
-        <span>跟进人：{{ detail.folloUserName }}</span>
+        <span>跟进人：{{ folloUserName }}</span>
       </Cell>
 
       <Divider orientation="left" dashed> 其他</Divider>
@@ -79,7 +79,14 @@ export default {
       return `账号：${this.detail.userId || ""}`;
     },
     memberName() {
-      return `${this.detail.memberName}(${this.detail.memberUserId})`;
+      return this.detail.memberName && this.detail.memberUserId
+        ? `${this.detail.memberName}(${this.detail.memberUserId})`
+        : "";
+    },
+    folloUserName() {
+      return this.detail.folloUserName && this.detail.folloUser
+        ? `${this.detail.folloUserName}(${this.detail.folloUser})`
+        : "";
     }
   },
   data() {
