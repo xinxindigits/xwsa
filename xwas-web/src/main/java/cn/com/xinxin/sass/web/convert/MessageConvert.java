@@ -79,11 +79,16 @@ public class MessageConvert {
      * 将MsgRecordDO转化为MsgRecordVO
      * @param msgRecordDO 消息记录DO
      * @param fromUserName 发送方
+     * @param toName 接受方
+     * @param type 类型 0-人 ，1-群
      * @return 消息记录VO
      */
-    public static MsgRecordVO convert2MsgRecordVO(MsgRecordDO msgRecordDO, String fromUserName) {
+    public static MsgRecordVO convert2MsgRecordVO(MsgRecordDO msgRecordDO, String fromUserName, String toName,
+                                                  Integer type) {
         MsgRecordVO msgRecordVO = convert2MsgRecordVO(msgRecordDO);
         msgRecordVO.setFromUserName(fromUserName);
+        msgRecordVO.setToChatPartyName(toName);
+        msgRecordVO.setType(type);
         return msgRecordVO;
     }
 }

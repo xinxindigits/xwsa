@@ -58,6 +58,9 @@
       <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
         <![CDATA[and msg_time <= #{endTime}]]>
       </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
+        and content like concat('%', #{keyWord}, '%')
+      </if>
       order by id limit #{index}, #{pageSize}
     </where>
   </select>
@@ -75,6 +78,9 @@
       </if>
       <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
         <![CDATA[and msg_time <= #{endTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
+        and content like concat('%', #{keyWord}, '%')
       </if>
     </where>
   </select>

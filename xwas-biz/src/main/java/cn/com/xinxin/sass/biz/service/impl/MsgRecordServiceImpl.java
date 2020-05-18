@@ -71,11 +71,12 @@ public class MsgRecordServiceImpl implements MsgRecordService {
      * @param endTime 消息发送时间范围之终止时间
      * @param page 分页信息
      * @param orgId 机构id
+     * @param keyWord 关键词
      * @return 消息记录
      */
     @Override
     public PageResultVO<MsgRecordDO> queryByOrgIdAndMemberUserIdAndTime(String userId, String startTime, String endTime,
-                                                                        PageResultVO page, String orgId) {
+                                                                        PageResultVO page, String orgId, String keyWord) {
 
         if (StringUtils.isBlank(orgId)) {
             LOGGER.error("通过机构id，userid，消息发送时间范围查询消息记录,orgId不能为空");
@@ -91,7 +92,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
         //计算分页的起始偏移量
         Long index = (page.getPageNumber() - 1) * page.getPageSize().longValue();
 
-        Long count = msgRecordDOMapper.selectCountByOrgIdAndUserIdAndTime(userId, startTime, endTime, orgId);
+        Long count = msgRecordDOMapper.selectCountByOrgIdAndUserIdAndTime(userId, startTime, endTime, orgId, keyWord);
 
         List<MsgRecordDO> msgRecordDOS = new ArrayList<>();
 
@@ -104,7 +105,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
         if (count > 0L) {
             //会话记录
             msgRecordDOS = msgRecordDOMapper.selectPageByOrgIdAndUserIdAndTime(userId, startTime,
-                    endTime, index, page.getPageSize(), orgId);
+                    endTime, index, page.getPageSize(), orgId, keyWord);
         }
 
         resultVO.setItems(msgRecordDOS);
@@ -228,7 +229,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
                     chatPartyPersonBOMap.put(r.getFromUserId(), chatPartyBO);
                 }
 
-                String toUserId = r.getToUserId().replace("[", "").replace("]", "");
+                String toUserId = r.getToUserId().substring(1, r.getToUserId().length() - 1);
                 if (!chatPartyPersonBOMap.containsKey(toUserId) && !StringUtils.equals(toUserId, userId)) {
                     ChatPartyBO chatPartyBO = new ChatPartyBO();
                     chatPartyBO.setType(0);
@@ -240,8 +241,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
                     ChatPartyBO chatPartyBO = new ChatPartyBO();
                     chatPartyBO.setType(1);
                     chatPartyBO.setRoomId(r.getRoomId());
-                    //Fixme 暂时写死
-                    chatPartyBO.setRoomName("群聊" + chatPartyRoomBOMap.size());
+                    chatPartyBO.setToUserList(r.getToUserId());
                     chatPartyRoomBOMap.put(r.getRoomId(), chatPartyBO);
                 }
             }

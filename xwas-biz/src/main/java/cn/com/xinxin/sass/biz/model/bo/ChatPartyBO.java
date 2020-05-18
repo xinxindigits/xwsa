@@ -32,6 +32,11 @@ public class ChatPartyBO {
      */
     private String avatar;
 
+    /**
+     * 接受信息成员
+     */
+    private String toUserList;
+
     public Integer getType() {
         return type;
     }
@@ -78,5 +83,13 @@ public class ChatPartyBO {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getToUserList() {
+        return toUserList;
+    }
+
+    public void setToUserList(String toUserList) {
+        this.toUserList = toUserList;
     }
 }
