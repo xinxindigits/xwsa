@@ -117,4 +117,12 @@ public interface MemberDOMapper {
     int updateInactiveStatus(@Param(value = "tenantId") String tenantId, @Param(value = "taskId") String taskId);
 
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
+    MemberDO queryByUserId(@Param("userId")String userId);
+
+
 }
