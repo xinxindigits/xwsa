@@ -25,6 +25,11 @@ public class CustomerVO extends ToString {
     private String memberUserId;
 
     /**
+     * 新增member name
+     */
+    private String memberName;
+
+    /**
      * 客户userId
      */
     private String userId;
@@ -218,5 +223,13 @@ public class CustomerVO extends ToString {
 
     public void setCreatedTime(Long createdTime) {
         this.createdTime = createdTime;
+    }
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
     }
 }
