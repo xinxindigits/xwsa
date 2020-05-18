@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
@@ -235,6 +236,7 @@ public class SassResourceRestController extends AclController {
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/resource/create")
+    @SysLog("创建资源权限")
     public Object createResource(HttpServletRequest request,
                                    @RequestBody ResourceForm resourceForm){
 
@@ -281,6 +283,7 @@ public class SassResourceRestController extends AclController {
 
     }
 
+    @SysLog("更新资源权限")
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/resource/update")
@@ -301,7 +304,7 @@ public class SassResourceRestController extends AclController {
 
     }
 
-
+    @SysLog("删除资源权限")
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     @ResponseBody
     @RequiresPermissions("/resource/delete")
