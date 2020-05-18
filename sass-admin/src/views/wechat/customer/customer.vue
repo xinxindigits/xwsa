@@ -20,6 +20,9 @@
             <template slot-scope="{ row }" slot="tags">
               <span>{{ row.tags | tags }}</span>
             </template>
+            <template slot-scope="{ row }" slot="createdTime">
+              <span>{{ row.createdTime | timeFilter }}</span>
+            </template>
             <template slot-scope="{ row }" slot="action">
               <Button
                 type="primary"
@@ -54,6 +57,7 @@
       :tag-list="tagList"
       :items="curDetail"
       @show-record="hdlShowRecord"
+      @tag-updated="changePage(page)"
       @on-cancel="
         showDetail = false;
         curDetail = {};
@@ -111,7 +115,7 @@ export default {
         { title: "id", key: "id", width: 80 },
         { title: "客户名称", key: "customerName" },
         { title: "企业名称", key: "corpName", ellipsis: true },
-        { title: "添加时间", key: "mobile" },
+        { title: "添加时间", key: "createdTime", slot: "createdTime" },
         { title: "标签", key: "tags", align: "center", slot: "tags" },
         {
           title: "操作",
