@@ -1,6 +1,7 @@
 package cn.com.xinxin.sass.biz.model.bo;
 
 import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
+import cn.com.xinxin.sass.sal.model.wechatwork.WeChatWorkGroupChatDetailBO;
 import cn.com.xinxin.sass.sal.model.wechatwork.WeChatWorkUserBO;
 
 import java.util.List;
@@ -33,6 +34,11 @@ public class WeChatWorkFetchDataBO {
      */
     private List<WeChatWorkUserBO> weChatWorkUserBOS;
 
+    /**
+     * 企业微信群聊详情
+     */
+    private List<WeChatWorkGroupChatDetailBO> weChatWorkGroupChatDetailBOS;
+
     public TenantBaseInfoDO getTenantBaseInfoDO() {
         return tenantBaseInfoDO;
     }
@@ -63,5 +69,13 @@ public class WeChatWorkFetchDataBO {
 
     public void setWeChatWorkUserBOS(List<WeChatWorkUserBO> weChatWorkUserBOS) {
         this.weChatWorkUserBOS = weChatWorkUserBOS;
+    }
+
+    public List<WeChatWorkGroupChatDetailBO> getWeChatWorkGroupChatDetailBOS() {
+        return weChatWorkGroupChatDetailBOS;
+    }
+
+    public void setWeChatWorkGroupChatDetailBOS(List<WeChatWorkGroupChatDetailBO> weChatWorkGroupChatDetailBOS) {
+        this.weChatWorkGroupChatDetailBOS = weChatWorkGroupChatDetailBOS;
     }
 }

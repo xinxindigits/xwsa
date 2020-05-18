@@ -8,7 +8,7 @@ import com.alibaba.fastjson.annotation.JSONField;
  * @updater:
  * @description: 企业微信群聊信息
  */
-public class WeChatWorkGroupChatBO {
+public class WeChatWorkGroupChatBaseBO {
 
     /**
      * 群id

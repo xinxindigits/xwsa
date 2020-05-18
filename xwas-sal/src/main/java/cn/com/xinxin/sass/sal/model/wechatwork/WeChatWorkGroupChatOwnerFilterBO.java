@@ -1,5 +1,7 @@
 package cn.com.xinxin.sass.sal.model.wechatwork;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.List;
 
 /**
@@ -12,11 +14,13 @@ public class WeChatWorkGroupChatOwnerFilterBO {
     /**
      * 用户id列表
      */
+    @JSONField(name = "userid_list")
     private List<String> userIdList;
 
     /**
      * 部门id列表
      */
+    @JSONField(name = "partyid_list")
     private List<Integer> partyIdList;
 
     public List<String> getUserIdList() {
