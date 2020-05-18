@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.web.vo;
 import cn.com.xinxin.sass.api.base.ToString;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author: zhouyang
@@ -55,6 +56,8 @@ public class MemberDetailVO extends ToString {
     private Long mainDepartment;
 
     private String mainDepartmentName;
+
+    List<DepartmentVO> departments;
 
     private String memberStatus;
 
@@ -252,5 +255,14 @@ public class MemberDetailVO extends ToString {
 
     public void setMainDepartmentName(String mainDepartmentName) {
         this.mainDepartmentName = mainDepartmentName;
+    }
+
+
+    public List<DepartmentVO> getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(List<DepartmentVO> departments) {
+        this.departments = departments;
     }
 }
