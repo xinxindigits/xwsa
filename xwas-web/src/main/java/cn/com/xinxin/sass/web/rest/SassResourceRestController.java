@@ -1,7 +1,9 @@
 package cn.com.xinxin.sass.web.rest;
 
+import cn.com.xinxin.sass.auth.enums.AuthEnums;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.RoleResourceService;
 import cn.com.xinxin.sass.biz.service.RoleService;
@@ -16,6 +18,7 @@ import cn.com.xinxin.sass.web.form.ResourceForm;
 import cn.com.xinxin.sass.web.form.ResourceQueryForm;
 import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
+import cn.com.xinxin.sass.web.vo.GrantsVO;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
 import com.google.common.collect.Lists;
@@ -88,6 +91,27 @@ public class SassResourceRestController extends AclController {
 
         return result;
     }
+
+
+    @RequestMapping(value = "/grants/list",method = RequestMethod.GET)
+    @ResponseBody
+//    @RequiresPermissions("/grants/list")
+    public Object listAllGrantsValues(HttpServletRequest request){
+
+        log.info("ResourceController.listAllGrantsValues");
+        List<AuthEnums> authEnumsList = AuthEnums.toLists();
+        List<GrantsVO> allGrants = Lists.newArrayList();
+        authEnumsList.stream().forEach(authEnums -> {
+            GrantsVO grantsVO = new GrantsVO();
+            grantsVO.setCode(authEnums.getCode());
+            grantsVO.setName(authEnums.getName());
+            grantsVO.setDesc(authEnums.getDesc());
+            allGrants.add(grantsVO);
+
+        });
+        return allGrants;
+    }
+
 
 
 
@@ -235,6 +259,7 @@ public class SassResourceRestController extends AclController {
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/resource/create")
+    @SysLog("创建资源权限")
     public Object createResource(HttpServletRequest request,
                                    @RequestBody ResourceForm resourceForm){
 
@@ -281,6 +306,7 @@ public class SassResourceRestController extends AclController {
 
     }
 
+    @SysLog("更新资源权限")
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/resource/update")
@@ -301,7 +327,7 @@ public class SassResourceRestController extends AclController {
 
     }
 
-
+    @SysLog("删除资源权限")
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     @ResponseBody
     @RequiresPermissions("/resource/delete")

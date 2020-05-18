@@ -86,6 +86,17 @@ export default [
           icon: "md-home"
         },
         component: () => import("@/views/home")
+      },
+      {
+        path: "/profile",
+        name: "profile",
+        meta: {
+          hideInMenu: true,
+          title: "个人信息",
+          notCache: true,
+          icon: "md-person"
+        },
+        component: () => import("@/views/profile/profile.vue")
       }
     ]
   }

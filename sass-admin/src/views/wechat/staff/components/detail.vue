@@ -32,7 +32,7 @@
       </Cell>
       <Divider dashed></Divider>
       <Cell>
-        <span>部门：{{ detail.mainDepartmentName }}</span>
+        <span>部门：{{ departments }}</span>
       </Cell>
       <Cell>
         <span>职位：{{ detail.memberPosition }}</span>
@@ -59,6 +59,11 @@ export default {
   computed: {
     description() {
       return `账号：${this.detail.userId}`;
+    },
+    departments() {
+      return this.detail.departments
+        ? this.detail.departments.map(n => n.departmentName).join(",")
+        : "";
     }
   },
   data() {
@@ -77,7 +82,8 @@ export default {
         extension: "",
         qrCode: "",
         memberStatus: "",
-        status: ""
+        status: "",
+        departments: []
       }
     };
   },

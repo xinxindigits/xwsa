@@ -8,6 +8,7 @@ import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.DepartmentDO;
 import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.web.form.WechatmemberQueryForm;
+import cn.com.xinxin.sass.web.vo.DepartmentVO;
 import cn.com.xinxin.sass.web.vo.MemberDetailVO;
 import cn.com.xinxin.sass.web.vo.MemberVO;
 import com.google.common.collect.Lists;
@@ -91,13 +92,31 @@ public class WechatOrgMemberRestController extends AclController {
 
         MemberDO  memberDO = this.memberService.queryMemberDetailById(memberId);
 
-        DepartmentDO departmentDO =
+        String deptIdString = memberDO.getDepartmentIdList();
+
+        String[] deptIdArray = deptIdString.split("@");
+
+        List<String> deptIdsList = Lists.newArrayList(deptIdArray);
+
+
+
+        DepartmentDO mainDepartmentDO =
                 this.departmentService.queryDeptByDeptId(String.valueOf(memberDO.getMainDepartment()));
 
         MemberDetailVO memberDetailVO = BaseConvert.convert(memberDO,MemberDetailVO.class);
 
         memberDetailVO.setGender(GenderTypeEnums.getEnumByNum(String.valueOf(memberDO.getGender())).getDesc());
-        memberDetailVO.setMainDepartmentName(departmentDO.getDepartmentName());
+        memberDetailVO.setMainDepartmentName(mainDepartmentDO.getDepartmentName());
+
+        if(CollectionUtils.isNotEmpty(deptIdsList)){
+
+            List<DepartmentDO> departmentDOList = this.departmentService.queryDeptsByIds(deptIdsList);
+
+            List<DepartmentVO> departmentVOList = BaseConvert.convertList(departmentDOList,DepartmentVO.class);
+
+            memberDetailVO.setDepartments(departmentVOList);
+        }
+
 
         return memberDetailVO;
     }

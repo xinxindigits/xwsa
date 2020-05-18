@@ -3,22 +3,26 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.CustomerService;
+import cn.com.xinxin.sass.biz.service.MemberService;
 import cn.com.xinxin.sass.biz.service.TagsService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.common.utils.DateUtils;
 import cn.com.xinxin.sass.repository.model.CustomerDO;
+import cn.com.xinxin.sass.repository.model.MemberDO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.TagsDO;
 import cn.com.xinxin.sass.web.convert.CustomerConvert;
 import cn.com.xinxin.sass.web.form.WeChatCustomerQueryForm;
 import cn.com.xinxin.sass.web.vo.CustomerVO;
+import cn.com.xinxin.sass.web.vo.MemberDetailVO;
 import cn.com.xinxin.sass.web.vo.TagsVO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,10 +48,14 @@ public class WeChatOrgCustomerRestController extends AclController {
 
     private final TagsService tagsService;
 
+    private final MemberService memberService;
+
     public WeChatOrgCustomerRestController(final CustomerService customerService,
-                                           final TagsService tagsService) {
+                                           final TagsService tagsService,
+                                           final MemberService memberService) {
         this.customerService = customerService;
         this.tagsService = tagsService;
+        this.memberService = memberService;
     }
 
 
@@ -187,6 +195,12 @@ public class WeChatOrgCustomerRestController extends AclController {
         CustomerDO customerDO =  customerService.queryById(id);
 
         CustomerVO customerVO = CustomerConvert.convert2CustomerVO(customerDO);
+
+        String userId = customerVO.getMemberUserId();
+
+        MemberDO memberDO = this.memberService.queryMemberDetailByUserId(userId);
+
+        customerVO.setMemberName(memberDO.getMemberName());
 
         // 查询客户的标签
         List<TagsDO> tagsDOList = this.tagsService.selectTagsByKeyId(customerDO.getUserId());

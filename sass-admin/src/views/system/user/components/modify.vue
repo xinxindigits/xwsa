@@ -76,6 +76,9 @@
       </FormItem>
     </Form>
     <div slot="footer">
+      <Button type="primary" @click="hdlResetPwd" :loading="isReseting"
+        >重置密码</Button
+      >
       <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
       <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
     </div>
@@ -85,7 +88,7 @@
 <script>
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
-import { addUser, updateUser } from "@/api/data_user";
+import { addUser, updateUser, resetUserPwd } from "@/api";
 const _config = {
   create: {
     title: "新增用户",
@@ -170,7 +173,8 @@ export default {
         extension: [
           { max: 4000, message: "不能超过4000个字符!", trigger: "blur" }
         ]
-      }
+      },
+      isReseting: false
     };
   },
   methods: {
@@ -226,6 +230,34 @@ export default {
     },
     hdlCancel() {
       this.$emit("on-cancel");
+    },
+    resetPwd() {
+      resetUserPwd({
+        account: this.formObj.account
+      })
+        .then(({ data }) => {
+          this.$Modal.success({
+            title: "重置成功！",
+            content: `${data}`
+          });
+        })
+        .finally(() => {
+          this.isReseting = false;
+        });
+    },
+    hdlResetPwd() {
+      let self = this;
+      this.$Modal.confirm({
+        title: "确认操作",
+        content: `确定重置${this.formObj.account}的密码?`,
+        onOk() {
+          self.$emit("user-pwd-reset");
+          self.isReseting = true;
+          setTimeout(() => {
+            self.resetPwd();
+          }, 500);
+        }
+      });
     }
   },
   watch: {
