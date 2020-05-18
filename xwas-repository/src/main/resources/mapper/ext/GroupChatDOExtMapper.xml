@@ -27,7 +27,7 @@
   <select id="selectByChatIdS" parameterType="java.util.List" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from group_chat
-    where chat_id in
+    where deleted = 0 and chat_id in
     <foreach collection="chatIdS" index="index" item="item" open="(" separator="," close=")">
       #{item}
     </foreach>
@@ -103,5 +103,11 @@
       where id = #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>
+
+  <select id="selectByChatId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from group_chat
+    where chat_id = #{chatId} and deleted = 0
+  </select>
 
 </mapper>

@@ -76,4 +76,11 @@ public interface GroupChatDOMapper {
      * @return 成功更新记录的条数
      */
     int updateBatch(@Param(value = "groupChatDOS") List<GroupChatDO> groupChatDOS);
+
+    /**
+     * 通过chatId查询记录
+     * @param chatId 群id
+     * @return 记录
+     */
+    GroupChatDO selectByChatId(@Param(value = "chatId") String chatId);
 }
