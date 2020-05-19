@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.xinxinfinance.commons</groupId>
         <artifactId>commons-webapp-parent</artifactId>
-        <version>1.4.0</version>
+        <version>1.5.0</version>
     </parent>
 
     <groupId>com.xinxinfinance.xwas</groupId>
@@ -35,7 +35,6 @@
         <xwas.auth.version>1.6-SNAPSHOT</xwas.auth.version>
         <commons-util.version>1.0.6-SNAPSHOT</commons-util.version>
         <commons-api-support.version>1.2.0-SNAPSHOT</commons-api-support.version>
-        <rocektmq.version>1.6</rocektmq.version>
         <oplog.client.version>1.2-SNAPSHOT</oplog.client.version>
         <protobuf.version>2.5.0</protobuf.version>
         <freemarker.version>2.3.20</freemarker.version>
@@ -47,13 +46,35 @@
         <pagehelper.version>5.1.4</pagehelper.version>
         <shiro.encache.version>1.3.2</shiro.encache.version>
         <java.jtw.version>3.8.3</java.jtw.version>
-
+        <commons-httpclient.version>3.1</commons-httpclient.version>
+        <quartz.version>2.3.1</quartz.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
 
+
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>5.5.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.penggle</groupId>
+                <artifactId>kaptcha</artifactId>
+                <version>2.3.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.java.dev.jna</groupId>
+                <artifactId>jna-platform</artifactId>
+                <version>5.5.0</version>
+            </dependency>
+
+
             <!-- api version -->
+
             <dependency>
                 <groupId>com.xinxinfinance.xwas</groupId>
                 <artifactId>xwas-api</artifactId>
@@ -71,11 +92,6 @@
                 <!--<version>${shiro.encache.version}</version>-->
             <!--</dependency>-->
 
-            <dependency>
-                <groupId>com.xinxinfinance.xcif</groupId>
-                <artifactId>xcif-api</artifactId>
-                <version>${xcif.api.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.xinxinfinance.oplog</groupId>
                 <artifactId>oplog-client</artifactId>
@@ -145,11 +161,6 @@
                 <artifactId>commons-api-support</artifactId>
                 <version>${commons-api-support.version}</version>
             </dependency>
-            <dependency>
-                <groupId>cn.com.xinxin.commons</groupId>
-                <artifactId>xinxin-rocektmq-client</artifactId>
-                <version>${rocektmq.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
@@ -169,6 +180,11 @@
                 <version>${jedis.version}</version>
             </dependency>
             <!-- Third-party SDKs -->
+            <dependency>
+                <groupId>commons-httpclient</groupId>
+                <artifactId>commons-httpclient</artifactId>
+                <version>${commons-httpclient.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -192,6 +208,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>${quartz.version}</version>
         </dependency>
     </dependencies>
 

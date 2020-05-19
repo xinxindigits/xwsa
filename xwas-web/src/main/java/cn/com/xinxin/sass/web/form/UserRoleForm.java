@@ -9,6 +9,7 @@ import cn.com.xinxin.sass.api.base.ToString;
  * @description:
  */
 public class UserRoleForm extends ToString {
+
     private static final long serialVersionUID = -679598670792406818L;
 
     private Long id;
@@ -17,7 +18,7 @@ public class UserRoleForm extends ToString {
 
     private String roleName;
 
-    private String userNo;
+    private String userAccount;
 
     private String userName;
 
@@ -47,12 +48,12 @@ public class UserRoleForm extends ToString {
         this.roleName = roleName;
     }
 
-    public String getUserNo() {
-        return userNo;
+    public String getUserAccount() {
+        return userAccount;
     }
 
-    public void setUserNo(String userNo) {
-        this.userNo = userNo;
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
     }
 
     public String getUserName() {

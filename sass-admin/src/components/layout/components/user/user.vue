@@ -13,6 +13,9 @@
             :count="messageUnreadCount"
           ></Badge>
         </DropdownItem>
+        <DropdownItem name="profile">
+          修改密码
+        </DropdownItem>
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -49,9 +52,9 @@ export default {
     },
     message() {
       console.log("todo:go to message");
-      // this.$router.push({
-      //   name: "message_page"
-      // });
+    },
+    profile() {
+      this.$router.push("/profile");
     },
     handleClick(name) {
       switch (name) {
@@ -60,6 +63,9 @@ export default {
           break;
         case "message":
           this.message();
+          break;
+        case "profile":
+          this.profile();
           break;
       }
     }

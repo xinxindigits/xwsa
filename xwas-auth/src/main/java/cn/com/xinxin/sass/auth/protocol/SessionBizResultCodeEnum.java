@@ -18,11 +18,13 @@ public enum SessionBizResultCodeEnum implements BizResultCode {
     SYSTEM_ERROR("SYSTEM_ERROR", "系统异常", "系统繁忙，请稍后再试!"),
 
 
-    INVALID_SESSION_ID("NTC00005", "session为空", "session为空，请登陆操作!"),
+    INVALID_SESSION_ID("NTC00005", "session为空", "session为空，请登录操作!"),
+
+    INVALID_TOKEN("INVALID_TOKEN", "无效登录口令", "无效登录口令!"),
 
     NO_PERMISSION("NO_PERMISSION", "无权限操作", "无权限操作!"),
 
-    AUTHENTICATE_FAIL("AUTHENTICATE_FAIL", "登陆授权失败", "登陆授权失败,请登陆操作!"),
+    AUTHENTICATE_FAIL("AUTHENTICATE_FAIL", "登录授权失败", "登录授权失败,请登录操作!"),
 
     /* Enum end */;
 

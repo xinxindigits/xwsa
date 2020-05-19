@@ -1,0 +1,111 @@
+package cn.com.xinxin.sass.biz.schedule.service.impl;
+
+import cn.com.xinxin.sass.biz.SpringContextHolder;
+import cn.com.xinxin.sass.biz.schedule.CommonJob;
+import cn.com.xinxin.sass.biz.schedule.service.QuartzJobService;
+import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import com.xinxinfinance.commons.exception.BusinessException;
+import org.quartz.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+
+/**
+ * @author: liuhangzhou
+ * @created: 2020/5/12.
+ * @updater:
+ * @description: 定时任务服务
+ */
+@Service
+public class QuartzJobServiceImpl implements QuartzJobService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(QuartzJobServiceImpl.class);
+
+    @Override
+    public void startJob(String tenantId, String taskType, String cronExpression) {
+        SchedulerFactoryBean schedulerFactory = (SchedulerFactoryBean) SpringContextHolder.getBean(
+                SchedulerFactoryBean.class);
+
+        if (null == schedulerFactory) {
+            LOGGER.error("无法找到Spring容器中的SchedulerFactoryBean实例");
+            return;
+        }
+        Scheduler scheduler = schedulerFactory.getScheduler();
+        if (null == scheduler) {
+            LOGGER.error("无法找到SchedulerFactoryBean实例中的调度器对象");
+            return;
+        }
+
+        String jobName = tenantId + "_" + taskType;
+
+        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, "1");
+        Trigger originTrigger;
+        try {
+            originTrigger = scheduler.getTrigger(triggerKey);
+        } catch (SchedulerException e) {
+            LOGGER.info("Quartz job initialization -- failed to start scheduler, jobname[{}]", jobName);
+            return;
+        }
+
+        long time = System.currentTimeMillis();
+        Date startTime = new Date(time);
+
+        Trigger trigger = TriggerBuilder.newTrigger()
+                .withDescription(jobName)
+                .withIdentity(jobName, "1")
+                .startAt(startTime)
+                .withSchedule(CronScheduleBuilder.cronSchedule(cronExpression))
+                .build();
+        try {
+            if (null == originTrigger) {
+                JobDetail job = JobBuilder.newJob(CommonJob.class)
+                        .withDescription(jobName)
+                        .withIdentity(jobName, "1")
+                        .build();
+                scheduler.scheduleJob(job, trigger);
+
+            } else {
+                scheduler.rescheduleJob(triggerKey, trigger);
+            }
+
+            if(!scheduler.isStarted()){
+                scheduler.start();
+            }
+        } catch (SchedulerException e) {
+            LOGGER.error("Quartz job initialization -- failed to start scheduler", e);
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "任务[{}]初始化失败", jobName);
+        }
+    }
+
+    @Override
+    public void stopJob(String tenantId, String taskType) {
+        SchedulerFactoryBean schedulerFactory = (SchedulerFactoryBean) SpringContextHolder.getBean(
+                SchedulerFactoryBean.class);
+
+        if (null == schedulerFactory) {
+            LOGGER.error("无法找到Spring容器中的SchedulerFactoryBean实例");
+            return;
+        }
+        Scheduler scheduler = schedulerFactory.getScheduler();
+        if (null == scheduler) {
+            LOGGER.error("无法找到SchedulerFactoryBean实例中的调度器对象");
+            return;
+        }
+
+        String jobName = tenantId + "_" + taskType;
+
+        JobKey jobKey = JobKey.jobKey(jobName, "1");
+
+        try {
+            if (null != jobKey) {
+                scheduler.deleteJob(jobKey);
+            }
+        } catch (SchedulerException e) {
+            LOGGER.info("删除任务失败, jobname[{}]", jobName);
+            throw new BusinessException(SassBizResultCodeEnum.FAIL, "删除任务失败");
+        }
+    }
+}

@@ -24,6 +24,8 @@
     <bean id="salDigestInterceptor" class="com.xinxinfinance.commons.interceptor.InvocationDigestInterceptor"
           c:logger="sal-digest-log" p:appName="xportal"/>
 
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
     <aop:config>
         <aop:pointcut id="apiPointcut" expression="execution(public * cn.com.xinxin.sass.api..*.*(..))"/>
         <aop:pointcut id="bizPointcut" expression="execution(public * cn.com.xinxin.sass.biz.service..*.*(..))"/>

@@ -1,8 +1,8 @@
-import { login, getUserInfo, logout } from "@/api/user";
+import { login, getUserInfo, logout } from "@/api";
 export default {
   state: {
     account: "",
-    userId: "",
+    userName: "",
     avatarImgPath: "",
     access: "super_admin",
     token: "",
@@ -12,8 +12,8 @@ export default {
     setAvatar(state, avatarPath) {
       state.avatarImgPath = avatarPath;
     },
-    setUserId(state, id) {
-      state.userId = id;
+    setUserName(state, id) {
+      state.userName = id;
     },
     setAccount(state, name) {
       state.account = name;
@@ -30,54 +30,52 @@ export default {
   },
   actions: {
     // 登录
-    handleLogin({ commit }, { account, password }) {
+    handleLogin({ commit }, { account, password, verifyCode }) {
       account = account.trim();
       return new Promise((resolve, reject) => {
         login({
           account,
-          password
+          password,
+          verifyCode
         })
           .then(res => {
             const data = res.data;
             commit("setToken", data.token);
             commit("setAccount", data.account);
+            commit("setHasGetRouter", false);
+            localStorage.removeItem("route");
+            localStorage.removeItem("tagNaveList");
             resolve();
           })
-          .catch(err => {
-            reject(err);
-          });
+          .catch(reject);
       });
     },
     // 获取用户相关信息
-    getUserInfo({ state, commit }) {
+    getUserInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.account)
+        getUserInfo()
           .then(res => {
-            debugger;
             const data = res.data;
-            // commit("setAvatar", data.avatar);
-
-            commit("setUserId", data.user_id);
-            commit("setAccess", data.access);
+            commit("setUserName", data.name || "");
             commit("setHasGetInfo", true);
             resolve(data);
           })
-          .catch(err => {
-            reject(err);
-          });
+          .catch(reject);
       });
     },
-    handleLogout({ commit }) {
+
+    handleLogOut({ commit }) {
       return new Promise((resolve, reject) => {
         logout()
           .then(() => {
             commit("setToken", "");
+            commit("setUserName", "");
+            commit("setHasGetInfo", false);
+            commit("setHasGetRouter", false);
             // commit('setAccess', [])
             resolve();
           })
-          .catch(err => {
-            reject(err);
-          });
+          .catch(reject);
       });
     }
   }

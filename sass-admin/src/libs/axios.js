@@ -26,6 +26,7 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {},
+      silent: false,
       validateStatus: function(status) {
         return (status >= 200 && status < 300) || status === 460;
       }
@@ -57,25 +58,21 @@ class HttpRequest {
     instance.interceptors.response.use(
       res => {
         this.destroy(url);
-        const { data, status } = res;
-
-        if (!res.config.headers.isRetry && status && status === 460) {
-          if (res.headers && res.headers.XToken) {
-            store.commit("setToken", res.headers.XToken);
+        const { data, status, config } = res;
+        if (status && status === 460) {
+          let arr = Object.keys(res.headers).filter(n => {
+            return n.toUpperCase() == "XTOKEN";
+          });
+          if (res.headers && arr.length > 0) {
+            console.log("refresh");
+            store.commit("setToken", res.headers[arr[0]]);
             console.log("token updated");
           }
-          const oldReq = res.config;
-          oldReq.headers.isRetry = true;
-          let olddata = oldReq.data;
-          if (typeof olddata == "string") {
-            oldReq.data = JSON.parse(olddata);
-          } else {
-            oldReq.data = olddata;
-          }
-          return this.request(oldReq);
+          return data;
         } else if (data && data.code != "SUCCESS") {
-          Message.error(data.message);
-          const err = new Error(data.message);
+          let message = data.message || "响应数据异常:无响应描述";
+          !config.silent && Message.error({ content: message, duration: 3 });
+          const err = new Error(message);
           err.data = data;
           err.response = res;
           throw err;
@@ -93,8 +90,21 @@ class HttpRequest {
           Message.error("服务器繁忙，请稍后再试！");
         } else if (errorInfo.status === 404) {
           Message.error("请求地址不存在！");
+        } else if (errorInfo.status === 405) {
+          Message.error("请求方法不合法！");
+        } else if (errorInfo.status === 403) {
+          Message.error("服务器禁止访问！");
         } else if (errorInfo.status === 400) {
           Message.error("请求错误，请检查参数或请求头");
+        } else if (errorInfo.status === 401) {
+          Message.error({
+            content: "登录信息失效，即将返回登录页！",
+            duration: 3,
+            onClose() {
+              location.reload();
+            }
+          });
+          store.commit("setToken", "");
         }
         if (!errorInfo) {
           const {

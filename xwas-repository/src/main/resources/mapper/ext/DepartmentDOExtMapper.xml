@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xinxin.sass.repository.dao.DepartmentDOMapper">
+  <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.DepartmentDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
+    <result column="department_id" jdbcType="BIGINT" property="departmentId" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result column="english_name" jdbcType="VARCHAR" property="englishName" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="department_order" jdbcType="BIGINT" property="departmentOrder" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="extension" jdbcType="VARCHAR" property="extension" />
+    <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+    <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
+    <result column="gmt_updated" jdbcType="TIMESTAMP" property="gmtUpdated" />
+    <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List_Ext">
+    id, tenant_id, department_id, department_name, english_name, parent_id, department_order, 
+    status, task_id, extension, gmt_created, gmt_creator, gmt_updated, gmt_updater, deleted
+  </sql>
+  <select id="selectByOrgId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from department
+    where tenant_id= #{tenantId} and deleted = 0
+  </select>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into department (tenant_id, department_id,
+      department_name, english_name, parent_id,
+      department_order, status, task_id,
+      extension, gmt_created, gmt_creator,
+      gmt_updated, gmt_updater
+      )
+    values
+    <foreach collection="departmentDOS" item="item" index="index" separator=",">
+      (#{item.tenantId,jdbcType=VARCHAR}, #{item.departmentId,jdbcType=BIGINT},
+      #{item.departmentName,jdbcType=VARCHAR}, #{item.englishName,jdbcType=VARCHAR}, #{item.parentId,jdbcType=BIGINT},
+      #{item.departmentOrder,jdbcType=BIGINT}, #{item.status,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR},
+      #{item.extension,jdbcType=VARCHAR}, #{item.gmtCreated,jdbcType=TIMESTAMP}, #{item.gmtCreator,jdbcType=VARCHAR},
+      #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+
+  <update id="updateBatchById" parameterType="java.util.List">
+    <foreach collection="departmentDOS" item="item" index="index" separator=";">
+      update department
+      <set>
+        <if test="item.tenantId != null">
+          tenant_id = #{item.tenantId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.departmentId != null">
+          department_id = #{item.departmentId,jdbcType=BIGINT},
+        </if>
+        <if test="item.departmentName != null">
+          department_name = #{item.departmentName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.englishName != null">
+          english_name = #{item.englishName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.parentId != null">
+          parent_id = #{item.parentId,jdbcType=BIGINT},
+        </if>
+        <if test="item.departmentOrder != null">
+          department_order = #{item.departmentOrder,jdbcType=BIGINT},
+        </if>
+        <if test="item.status != null">
+          status = #{item.status,jdbcType=VARCHAR},
+        </if>
+        <if test="item.taskId != null">
+          task_id = #{item.taskId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.extension != null">
+          extension = #{item.extension,jdbcType=VARCHAR},
+        </if>
+        <if test="item.gmtCreated != null">
+          gmt_created = #{item.gmtCreated,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.gmtCreator != null">
+          gmt_creator = #{item.gmtCreator,jdbcType=VARCHAR},
+        </if>
+        <if test="item.gmtUpdated != null">
+          gmt_updated = #{item.gmtUpdated,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.gmtUpdater != null">
+          gmt_updater = #{item.gmtUpdater,jdbcType=VARCHAR},
+        </if>
+        <if test="item.deleted != null">
+          deleted = #{item.deleted,jdbcType=TINYINT},
+        </if>
+      </set>
+      where id = #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+
+  <select id="listAllWechatDepts"  resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from department
+    where deleted = 0
+
+  </select>
+
+
+  <select id="selectByDeptId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from department
+    where deleted = 0
+    <if test="deptId != null and deptId != ''">
+    and department_id = #{deptId,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+
+
+  <select id="queryDeptsByNameOrId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from department
+    where deleted = 0
+    <if test="deptId != null and deptId != ''">
+      and department_id = #{deptId,jdbcType=VARCHAR},
+    </if>
+    <if test="deptName != null and deptName != ''">
+      and department_name like concat('%',#{deptName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="deptEngName != null and deptEngName != ''">
+      and english_name like concat('%',#{deptEngName,jdbcType=VARCHAR},'%')
+    </if>
+
+  </select>
+
+
+  <select id="selectSubDeptsByDeptId"  parameterType="java.util.List" resultType="java.lang.String">
+    select department_id
+    from department
+    where deleted = 0
+    and parent_id in
+    <foreach collection="deptIds" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+
+  </select>
+
+  <update id="updateInactiveStatus" parameterType="java.lang.String">
+    update department
+    set `status` = 'INACTIVE'
+    where tenant_id = #{tenantId} and department_id not in
+    (SELECT department_id from department_received where task_id = #{taskId});
+  </update>
+
+</mapper>

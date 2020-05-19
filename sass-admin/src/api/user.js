@@ -1,28 +1,46 @@
 import axios from "@/libs/api.request";
-
-export const login = ({ account, password }) => {
-  const data = {
-    account,
-    password
-  };
+import md5 from "md5";
+export const regist = ({ account, name, gender, password, extension }) => {
   return axios.request({
-    url: "sass/auth",
-    data,
+    url: "register",
+    data: {
+      account,
+      name,
+      gender,
+      password,
+      extension
+    },
     method: "post"
   });
 };
-export const getUserInfo = account => {
+export const login = ({ account, password, verifyCode }) => {
+  password = md5(password);
   return axios.request({
-    url: "sass/user/query",
-    params: {
-      account
+    url: "auth",
+    params: { verifyCode },
+    data: {
+      account,
+      password
     },
+    method: "post"
+  });
+};
+export const getUserInfo = () => {
+  return axios.request({
+    url: "user/me",
     method: "get"
   });
 };
+export const getMenuInfo = () => {
+  return axios.request({
+    url: "menu/routes",
+    method: "get"
+  });
+};
+
 export const logout = () => {
   return axios.request({
-    url: "sass/logout",
+    url: "logout",
     data: {},
     method: "post"
   });

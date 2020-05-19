@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.auth.repository;
 
 import cn.com.xinxin.sass.auth.constant.SessionCacheConstants;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
+import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.result.CommonResultCode;
@@ -46,10 +47,18 @@ public class UserAclTokenRepository {
         return cacheToken;
     }
 
+    // 暂时不失效
+//    public void setSassUserTokenCache(String account, String token){
+//        sessionRedisTemplate.opsForValue().set(
+//                SessionCacheConstants.SASS_USER_TOKEN_CACHE_KEY + account,
+//                token, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.MILLISECONDS);
+//
+//    }
+
     public void setSassUserTokenCache(String account, String token){
         sessionRedisTemplate.opsForValue().set(
                 SessionCacheConstants.SASS_USER_TOKEN_CACHE_KEY + account,
-                token, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.MILLISECONDS);
+                token);
 
     }
 
@@ -65,25 +74,25 @@ public class UserAclTokenRepository {
     public void setSassUserByUserAccount(String account, SassUserInfo sassUserInfo){
         sessionRedisTemplate.opsForValue().set(
             SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + account,
-                sassUserInfo, JWTUtil.TOKEN_EXPIRE_TIME,TimeUnit.MILLISECONDS);
+                sassUserInfo);
     }
 
 
     public void cleanSassUserTokenCache(String account){
         try {
             sessionRedisTemplate.delete(SessionCacheConstants.SASS_USER_TOKEN_CACHE_KEY + account);
-            logger.error("UserAclTokenRepository.delete user cache account :\n[]", account);
+            logger.info("UserAclTokenRepository.cleanSassUserTokenCache user cache account:{}", account);
         } catch (Exception e) {
-            logger.error("UserAclTokenRepository.delete occurs exception:\n[]",e);
+            logger.error("UserAclTokenRepository.cleanSassUserTokenCache occurs exception:{}",e);
         }
     }
 
     public void cleanSassUserInfoCache(String account){
         try {
             sessionRedisTemplate.delete(SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + account);
-            logger.error("UserAclTokenRepository.delete user cache account :\n[]", account);
+            logger.info("UserAclTokenRepository.cleanSassUserInfoCache user cache account:{}", account);
         } catch (Exception e) {
-            logger.error("UserAclTokenRepository.delete occurs exception:\n[]",e);
+            logger.error("UserAclTokenRepository.cleanSassUserInfoCache occurs exception:{}",e);
         }
     }
 
@@ -98,17 +107,23 @@ public class UserAclTokenRepository {
         String account = JWTUtil.getUserAccount(token);
         // 如果(当前时间+倒计时)>过期时间，则刷新token
         boolean isNeedrefresh = DateUtils.addSeconds(new Date(),JWTUtil.TOKEN_EXPIRE_TIME_COUNT).after(expireDate);
-        if (!isNeedrefresh) {
+        if (isNeedrefresh) {
             // 不需要刷新
-            return;
-        }else{
             // 需要刷新token
             // 如果在redis中已经存在token，则表示在某个地方已经刷新了缓存
             String cachedToken = this.getSassUserCacheToken(account);
-            if(StringUtils.isNotEmpty(cachedToken)){
+            if(StringUtils.isEmpty(cachedToken)){
                 httpServletResponse.setStatus(SessionCacheConstants.JWT_INVALID_TOKEN_CODE);
-                throw new AuthenticationException("token已无效，请使用已刷新的token");
+                throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN,"token已无效，请使用已刷新的token");
             }
+
+            Date cachedTokenExpiredDate = JWTUtil.getExpiresTime(cachedToken);
+
+            if(!DateUtils.isSameInstant(expireDate,cachedTokenExpiredDate)){
+                // 如果两个token的时间不一致，则表示使用的不是同一个token，需要重新登录使用新的token
+                throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN,"token已无效，请重新登录");
+            }
+
             // 获取用户的信息重新生成token
             SassUserInfo sassUserInfo = this.getSassUserByUserAccount(account);
             String newToken = JWTUtil.sign(sassUserInfo.getAccount(),sassUserInfo.getPassword());
@@ -118,6 +133,9 @@ public class UserAclTokenRepository {
             // 刷新token
             httpServletResponse.setStatus(SessionCacheConstants.JWT_REFRESH_TOKEN_CODE);
             httpServletResponse.setHeader(JWTUtil.TOKEN_NAME, newToken);
+        }else{
+            logger.error("UserAclTokenRepository.refreshToken no need account :\n[]", account);
+            return;
         }
 
     }

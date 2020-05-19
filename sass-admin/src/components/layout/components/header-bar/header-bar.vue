@@ -8,22 +8,10 @@
     ></sider-trigger>
 
     <div class="header-bar-nav">
-      <MenuItem name="home" to="home">
-        <Icon type="ios-home" size="21" style="margin-right:0" />
-        首页
-      </MenuItem>
-      <MenuItem name="mine">
-        我的工作
-      </MenuItem>
-      <MenuItem name="monitor">
-        监控流程
-      </MenuItem>
-      <MenuItem name="sysconfig">
-        系统配置
-      </MenuItem>
-    </div>
-    <div class="custom-content-con">
-      <slot></slot>
+      <slot name="nav"></slot>
+      <div class="custom-content-con">
+        <slot></slot>
+      </div>
     </div>
   </Menu>
 </template>

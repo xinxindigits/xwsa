@@ -1,6 +1,6 @@
 package cn.com.xinxin.sass.biz.service;
 
-import cn.com.xinxin.sass.common.Page;
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  **/
 public interface ResourceService {
 
-    ResourceDO createResource(ResourceDO resourceDO);
+    int createResource(ResourceDO resourceDO);
 
     int updateResource(ResourceDO resourceDO);
 
@@ -34,7 +34,12 @@ public interface ResourceService {
 
     boolean deleteById(Long id);
 
-    Page<ResourceDO> findByConditionPage(Page page,ResourceDO condition);
+    PageResultVO<ResourceDO> findByConditionPage(PageResultVO pageVO, ResourceDO condition);
 
     ResourceDO findByResourceCode(String code);
+
+
+    List<ResourceDO> queryResourceTrees(String code,
+                                        String type,
+                                        String parentId);
 }

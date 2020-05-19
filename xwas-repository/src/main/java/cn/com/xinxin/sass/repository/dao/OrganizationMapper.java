@@ -1,7 +1,9 @@
 package cn.com.xinxin.sass.repository.dao;
 
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
+import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface OrganizationMapper {
@@ -61,5 +63,20 @@ public interface OrganizationMapper {
      */
     int updateByPrimaryKey(OrganizationDO record);
 
-    List<OrganizationDO> findByCondition(OrganizationDO condition);
+    List<OrganizationDO> findByCondition(@Param("condition") OrganizationDO condition);
+
+
+    List<OrganizationDO> selectAllOrgsByTenantId(@Param("tenantId")String tenantId);
+
+    OrganizationDO findByCode(@Param("code") String code);
+
+    int updateByCodeSelective(OrganizationDO record);
+
+    int deleteByCodes(@Param("codes") List<String> codes, @Param("tenantId") String tenantId);
+
+    List<OrganizationDO> findChildren(@Param("parentIds") List<Long> parentIds);
+
+    int deleteByIds(List<Long> ids);
+
+    List<OrganizationDO> findNotRoot(@Param("tenantId") String tenantId);
 }

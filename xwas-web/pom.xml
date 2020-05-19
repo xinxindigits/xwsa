@@ -109,6 +109,12 @@
             <artifactId>java-jwt</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+        </dependency>
+
+
     </dependencies>
 
     <build>
@@ -185,7 +191,7 @@
             <properties>
                 <properties.name>cloud-dev</properties.name>
                 <log.home>/home/appuser/logs/app</log.home>
-                <log.level>debug</log.level>
+                <log.level>info</log.level>
             </properties>
         </profile>
         <profile>

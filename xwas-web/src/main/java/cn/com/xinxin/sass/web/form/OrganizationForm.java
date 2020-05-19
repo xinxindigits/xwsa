@@ -11,25 +11,46 @@ import cn.com.xinxin.sass.api.base.ToString;
 public class OrganizationForm extends ToString {
 
     private static final long serialVersionUID = 4596813473833470938L;
-
+    /**
+     * 组织id
+     */
     private Long id;
-
+    /**
+     * 租户id
+     */
+    private String tenantId;
+    /**
+     * 组织编号
+     */
     private String code;
-
+    /**
+     * 组织名称
+     */
     private String name;
-
+    /**
+     * 父节点id
+     */
     private Long parentId;
-
+    /**
+     * 组织类型
+     */
     private String orgType;
-
-    private Boolean isLeaf;
-
+    /**
+     * 是否是叶子节点
+     */
+    private boolean isLeaf;
+    /**
+     * 状态
+     */
     private String state;
-
+    /**
+     * 备注
+     */
     private String remark;
-
+    /**
+     * 扩充字段
+     */
     private String extension;
-
 
     public Long getId() {
         return id;
@@ -101,5 +122,21 @@ public class OrganizationForm extends ToString {
 
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    public boolean isLeaf() {
+        return isLeaf;
+    }
+
+    public void setLeaf(boolean leaf) {
+        isLeaf = leaf;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

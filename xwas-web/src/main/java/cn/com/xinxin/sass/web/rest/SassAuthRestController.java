@@ -4,20 +4,21 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
-import cn.com.xinxin.sass.web.controller.UserController;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
 import cn.com.xinxin.sass.web.form.UserLoginForm;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
+import cn.com.xinxin.sass.web.utils.KaptchaUtils;
 import cn.com.xinxin.sass.web.vo.UserTokenVO;
 import com.xinxinfinance.commons.exception.BusinessException;
-import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,7 +43,7 @@ import java.util.Set;
 @RequestMapping(produces = "application/json; charset=UTF-8")
 public class SassAuthRestController {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(SassAuthRestController.class);
 
     @Autowired
     private UserService userService;
@@ -50,7 +52,7 @@ public class SassAuthRestController {
     private UserAclTokenRepository userAclTokenRepository;
 
 
-    @RequestMapping(value = "/register",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
     public Object register(HttpServletRequest request, @RequestBody UserForm userForm){
 
@@ -64,12 +66,22 @@ public class SassAuthRestController {
 
     }
 
-    @RequestMapping(value = "/auth",method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
-    public Object login(HttpServletRequest request, @RequestBody UserLoginForm userLoginForm){
+    @SysLog("用户登录操作")
+    @RequestMapping(value = "/auth",method = RequestMethod.POST)
+    public Object login(HttpServletRequest request,
+                        HttpServletResponse response,
+                        @RequestBody UserLoginForm userLoginForm){
+
+
+        if (!KaptchaUtils.checkVerifyCode(request)) {
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
+        }
 
         String userAccount = userLoginForm.getAccount();
 
         String password = userLoginForm.getPassword();
+
+        // 执行登陆之前先清除掉用户登陆缓存信息
 
         UserDO userDO = userService.findByUserAccount(userAccount);
 
@@ -82,17 +94,22 @@ public class SassAuthRestController {
                 userDO.getSalt(), password);
 
         if(ecnryptPassword.equals(userDO.getPassword())){
-            // 登陆成功, 返回token
-            // TODO: 登陆成功之后需要将用户的信息缓存起来，方便查询读写
+            // 登录成功, 返回token
+            // TODO: 登录成功之后需要将用户的信息缓存起来，方便查询读写
             String token = getToken(userAccount, userDO.getPassword());
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
             userTokenVO.setToken(token);
+            userTokenVO.setName(userDO.getName());
+            userTokenVO.setTenantId(userDO.getTenantId());
 
             // 获取必要的用户信息,缓存到redis
             SassUserInfo sassUserInfo = BaseConvert.convert(userDO,SassUserInfo.class);
             sassUserInfo.setDevice(HttpRequestUtil.getRequestDevice(request));
             sassUserInfo.setIp(HttpRequestUtil.getIpAddress(request));
+
+            //设置用户的租户ID
+            sassUserInfo.setTenantId(userDO.getTenantId());
 
             List<RoleDO> roleDOList = userService.findRolesByAccount(userAccount);
 
@@ -105,17 +122,24 @@ public class SassAuthRestController {
             List<ResourceDO> resourceDOS = userService.findResourcesByAccount(userAccount);
             if (!CollectionUtils.isEmpty(resourceDOS)){
                 Set<String> permissionUrls = new HashSet<>(resourceDOS.size());
-                resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getUrl()));
+                resourceDOS.forEach(resourceDO -> permissionUrls.add(resourceDO.getAuthority()));
                 sassUserInfo.setStringPermissions(permissionUrls);
             }
             // 设置用户的token以及角色，权限等信息缓存
             userAclTokenRepository.setSassUserByUserAccount(userAccount,sassUserInfo);
             userAclTokenRepository.setSassUserTokenCache(userAccount,token);
+            response.setHeader(JWTUtil.TOKEN_NAME,token);
+            response.setHeader("Access-control-Allow-Origin", request.getHeader("Origin"));
+            response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
+            response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
+            response.setHeader("access-control-expose-headers", "XToken");
 
+            // 设置基本的content
             return userTokenVO;
+
         }else{
-            // 登陆失败
-            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登陆失败","登陆失败");
+            // 登录失败
+            throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN, "登录失败,用户名或者密码错误","登录失败,用户名或者密码错误");
         }
     }
 
@@ -128,8 +152,8 @@ public class SassAuthRestController {
 
     @RequestMapping(value = "/unauthorized",method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public Object unauthorized(HttpServletRequest request){
-        log.info("无效登陆口令，请重新登陆");
-        throw new BusinessException(CommonResultCode.REMOTE_ERROR,"无效登陆口令","无效登陆口令，请重新登陆");
+        log.info("无效登录口令，请重新登录");
+        throw new BusinessException(SassBizResultCodeEnum.INVALID_TOKEN,"无效登录口令","无效登录口令，请重新登录");
 
     }
 
