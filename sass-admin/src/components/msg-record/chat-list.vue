@@ -12,7 +12,10 @@
         <div shape="square" class="chat-list-item-avatar">
           <Avatar shape="square" icon="ios-person" :src="item.avatar" />
         </div>
-        <div class="chat-list-item-content">
+        <div
+          class="chat-list-item-content"
+          :class="[item.highlight ? 'highlight' : '']"
+        >
           <div class="chat-list-item-title">
             <span>{{ item.name }}</span>
             <span class="chat-list-item-time">{{
@@ -67,6 +70,8 @@ export default {
           }
         });
         this.currentValue = newValue;
+        document.getElementsByClassName("highlight").length > 0 &&
+          document.getElementsByClassName("highlight")[0].scrollIntoView();
       }
     }
   }
@@ -113,6 +118,9 @@ export default {
     }
     &-content {
       flex: 1;
+      &.highlight {
+        color: #2d8cf0;
+      }
     }
     &-title {
       font-size: 12px;

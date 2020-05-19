@@ -98,10 +98,14 @@ class HttpRequest {
           Message.error("请求错误，请检查参数或请求头");
         } else if (errorInfo.status === 401) {
           Message.error({
-            content: "登录信息失效，即将返回登录页！",
+            content: "登录信息失效",
             duration: 3,
             onClose() {
-              location.reload();
+              store.dispatch("handleLogout").then(() => {
+                this.$router.push({
+                  name: "login"
+                });
+              });
             }
           });
           store.commit("setToken", "");

@@ -11,7 +11,7 @@
               ></Input>
             </FormItem>
             <FormItem>
-              <Button type="primary" @click="hdlFilterOrg">搜索</Button>
+              <Button type="primary" @click="hdlFilterOrg">查询</Button>
               <Button @click="reset" style="margin-left:6px">重置</Button>
             </FormItem>
           </Form>
@@ -135,8 +135,13 @@ export default {
       this.showRecord = true;
     },
     hdlFilterOrg() {
-      queryOrgList(this.queryForm).then(res => {
-        this.treeData = this.formatData(res.data);
+      queryOrgList(this.queryForm).then(({ data }) => {
+        data.length > 0 && (data[0]._selected = true);
+        this.treeData = this.formatData(data);
+        this.tableData = [];
+        setTimeout(() => {
+          this.changePage(1);
+        });
       });
     },
     reset() {
