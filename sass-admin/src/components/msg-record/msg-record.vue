@@ -4,13 +4,16 @@
       <div class="list-box">
         <Query ref="query" @on-query="hdlQuery" @on-reset="hdlReset" />
         <Card class="list-box-content">
-          <CellGroup>
+          <CellGroup ref="cellgroup">
             <Cell
-              :title="n | name"
               v-for="(n, index) in list"
               :key="index"
+              :selected="!!n.selected"
+              :ref="`list_${index}`"
               @click.native="selectChat(n)"
-            />
+            >
+              <div class="list-box-item-title">{{ n | name }}</div>
+            </Cell>
             <p v-if="list.length == 0" style="text-align:center">-无会话-</p>
           </CellGroup>
         </Card>
@@ -100,6 +103,7 @@ export default {
   methods: {
     init(userId, opt = {}) {
       this.$refs.query.reset();
+      this.current_chat = {};
       this.formObj = {
         keyWord: "",
         startTime: "",
@@ -107,22 +111,26 @@ export default {
       };
       this.getMsgList(userId).then(() => {
         if (Object.keys(opt).length > 0) {
-          this.page = opt.pageIndex;
           let { roomId, type, userIdTwo } = opt;
-          this.selectChat({ roomId, type, userId: userIdTwo });
+          this.selectChat(
+            { roomId, type, userId: userIdTwo },
+            { pageIndex: opt.pageIndex, row: opt.row }
+          );
         }
       });
     },
-    selectChat(n) {
+    selectChat(n, opt = { pageIndex: 1, row: 0 }) {
       this.resetPageComp();
       this.current_chat = n;
-      this.getDetail();
+      console.log("here", opt.row);
+      this.getDetail(opt.pageIndex, opt.row);
     },
     resetPageComp() {
       this.page = 1;
       this.total = 0;
     },
-    getDetail() {
+    getDetail(page = 1, row) {
+      this.page = page;
       let n = this.current_chat;
       if (!(n.type === 0 || n.type === 1)) {
         this.$Message.error("未知会话类型！");
@@ -150,14 +158,16 @@ export default {
         };
       }
       api(params).then(({ data }) => {
-        this.msg_list = data.items.map(n => {
+        // debugger;
+        this.msg_list = data.items.map((n, i) => {
           return {
             name: n.fromUserName,
             content: n.content,
             time: n.msgTime,
             msgType: n.msgType,
             avatar: n.avatar,
-            id: n.id
+            id: n.id,
+            highlight: row && i == row - 1
           };
         });
         this.total = data.total;
@@ -207,14 +217,43 @@ export default {
         };
         this.changePage(data.pageIndex);
       });
+    },
+    getChatIdByType(n) {
+      if (n.type == 1) {
+        return n.roomId;
+      } else {
+        return n.userId;
+      }
     }
   },
   watch: {
+    page(newValue) {
+      console.log(newValue);
+    },
     value(newValue) {
       this.showRecord = newValue;
     },
     showRecord(newValue) {
       this.$emit("input", newValue);
+    },
+    current_chat: {
+      deep: true,
+      handler(newValue) {
+        let current_chat_id = this.getChatIdByType(newValue);
+        this.list = this.list.map(n => {
+          let list_item_id = this.getChatIdByType(n);
+          return { ...n, selected: current_chat_id == list_item_id };
+        });
+      }
+    },
+    list(newValue) {
+      let target = 0;
+      newValue.forEach((n, i) => {
+        n.selected && (target = i);
+      });
+      this.$refs[`list_${target}`] &&
+        this.$refs[`list_${target}`].length > 0 &&
+        this.$refs[`list_${target}`][0].$el.scrollIntoView();
     }
   }
 };
@@ -242,6 +281,13 @@ export default {
   &-content {
     height: 100%;
     overflow-y: scroll;
+  }
+  &-item-title {
+    display: inline-block;
+    overflow: hidden;
+    width: 15em;
+    text-overflow: ellipsis;
+    vertical-align: middle;
   }
 }
 .msg-wrapper {

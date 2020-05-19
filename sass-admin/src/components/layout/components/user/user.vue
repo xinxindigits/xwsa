@@ -1,18 +1,10 @@
 <template>
   <div class="user-avatar-dropdown">
     <Dropdown @on-click="handleClick">
-      <Badge :dot="!!messageUnreadCount">
-        <Avatar :src="userAvatar" :size="24" />
-      </Badge>
+      <Avatar :src="userAvatar" :size="24" />
       <span class="user-name">{{ account }}</span>
       <Icon :size="18" type="md-arrow-dropdown" color="transparent"></Icon>
       <DropdownMenu slot="list">
-        <DropdownItem name="message">
-          消息中心<Badge
-            style="margin-left: 10px"
-            :count="messageUnreadCount"
-          ></Badge>
-        </DropdownItem>
         <DropdownItem name="profile">
           修改密码
         </DropdownItem>
@@ -35,10 +27,6 @@ export default {
     account: {
       type: String,
       default: ""
-    },
-    messageUnreadCount: {
-      type: Number,
-      default: 0
     }
   },
   methods: {

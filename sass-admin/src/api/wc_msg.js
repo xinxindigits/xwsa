@@ -3,6 +3,7 @@ export const queryMsgList = ({
   userId,
   startTime,
   endTime,
+  keyWord,
   pageIndex,
   pageSize
 }) => {
@@ -11,6 +12,7 @@ export const queryMsgList = ({
     userId,
     startTime,
     endTime,
+    keyWord,
     pageIndex,
     pageSize
   };
