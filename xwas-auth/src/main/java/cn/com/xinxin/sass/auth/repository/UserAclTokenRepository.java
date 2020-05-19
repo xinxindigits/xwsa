@@ -81,18 +81,18 @@ public class UserAclTokenRepository {
     public void cleanSassUserTokenCache(String account){
         try {
             sessionRedisTemplate.delete(SessionCacheConstants.SASS_USER_TOKEN_CACHE_KEY + account);
-            logger.error("UserAclTokenRepository.delete user cache account :\n[]", account);
+            logger.info("UserAclTokenRepository.cleanSassUserTokenCache user cache account:{}", account);
         } catch (Exception e) {
-            logger.error("UserAclTokenRepository.delete occurs exception:\n[]",e);
+            logger.error("UserAclTokenRepository.cleanSassUserTokenCache occurs exception:{}",e);
         }
     }
 
     public void cleanSassUserInfoCache(String account){
         try {
             sessionRedisTemplate.delete(SessionCacheConstants.SASS_USER_INFO_CACHE_KEY + account);
-            logger.error("UserAclTokenRepository.delete user cache account :\n[]", account);
+            logger.info("UserAclTokenRepository.cleanSassUserInfoCache user cache account:{}", account);
         } catch (Exception e) {
-            logger.error("UserAclTokenRepository.delete occurs exception:\n[]",e);
+            logger.error("UserAclTokenRepository.cleanSassUserInfoCache occurs exception:{}",e);
         }
     }
 
