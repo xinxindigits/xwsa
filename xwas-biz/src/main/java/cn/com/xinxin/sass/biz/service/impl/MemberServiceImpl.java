@@ -220,4 +220,25 @@ public class MemberServiceImpl implements MemberService {
 
         return memberDO;
     }
+
+    /**
+     * 查询成员用户名
+     * @param tenantId 租户id
+     * @param userIdS 成员userids
+     * @return 成员用户名及userid
+     */
+    @Override
+    public List<MemberDO> queryMemberNameByTenantIdAndUserIdS(String tenantId, List<String> userIdS) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("通过机构id和用户id查询记录, tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过机构id和用户id查询记录, tenantId不能为空");
+        }
+        if (CollectionUtils.isEmpty(userIdS)) {
+            LOGGER.error("通过机构id和用户id查询记录, userIdS不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过机构id和用户id查询记录, userIdS不能为空");
+        }
+        return memberDOMapper.queryMemberNameByTenantIdAndUserIdS(tenantId, userIdS);
+    }
 }
