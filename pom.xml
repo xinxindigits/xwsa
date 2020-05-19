@@ -35,7 +35,6 @@
         <xwas.auth.version>1.6-SNAPSHOT</xwas.auth.version>
         <commons-util.version>1.0.6-SNAPSHOT</commons-util.version>
         <commons-api-support.version>1.2.0-SNAPSHOT</commons-api-support.version>
-        <rocektmq.version>1.6</rocektmq.version>
         <oplog.client.version>1.2-SNAPSHOT</oplog.client.version>
         <protobuf.version>2.5.0</protobuf.version>
         <freemarker.version>2.3.20</freemarker.version>
@@ -161,11 +160,6 @@
                 <groupId>com.xinxinfinance.commons</groupId>
                 <artifactId>commons-api-support</artifactId>
                 <version>${commons-api-support.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.com.xinxin.commons</groupId>
-                <artifactId>xinxin-rocektmq-client</artifactId>
-                <version>${rocektmq.version}</version>
             </dependency>
 
             <dependency>

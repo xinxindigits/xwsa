@@ -46,7 +46,7 @@ public class MsgRecordVO extends ToString {
      */
     private String fromUserName;
     /**
-     * 群名
+     * 群id
      */
     private String roomId;
 
@@ -72,6 +72,16 @@ public class MsgRecordVO extends ToString {
      * 发送方头像
      */
     private String avatar;
+
+    /**
+     * 聊天方类型，0-人，1-群
+     */
+    private Integer type;
+
+    /**
+     * 接收方姓名
+     */
+    private String toChatPartyName;
 
     public String getAvatar() {
         return avatar;
@@ -177,20 +187,19 @@ public class MsgRecordVO extends ToString {
         this.fromUserName = fromUserName;
     }
 
-    @Override
-    public String toString() {
-        return "MsgRecordVO{" +
-                "tenantId='" + tenantId + '\'' +
-                ", seqId=" + seqId +
-                ", msgId='" + msgId + '\'' +
-                ", action='" + action + '\'' +
-                ", fromUserId='" + fromUserId + '\'' +
-                ", fromUserName='" + fromUserName+ '\'' +
-                ", roomId='" + roomId + '\'' +
-                ", msgTime='" + msgTime + '\'' +
-                ", msgType='" + msgType + '\'' +
-                ", toUserId='" + toUserId + '\'' +
-                ", content='" + content + '\'' +
-                '}';
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getToChatPartyName() {
+        return toChatPartyName;
+    }
+
+    public void setToChatPartyName(String toChatPartyName) {
+        this.toChatPartyName = toChatPartyName;
     }
 }

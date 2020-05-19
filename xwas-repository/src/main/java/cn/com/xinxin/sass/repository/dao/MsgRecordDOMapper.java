@@ -69,6 +69,7 @@ public interface MsgRecordDOMapper {
      * @param index 消息记录起始
      * @param pageSize 页大小
      * @param tenantId 机构id
+     * @param keyWord 关键字
      * @return 消息记录
      */
     List<MsgRecordDO> selectPageByOrgIdAndUserIdAndTime(@Param(value = "userId") String userId,
@@ -76,7 +77,8 @@ public interface MsgRecordDOMapper {
                                                     @Param(value = "endTime") String endTime,
                                                     @Param(value = "index") Long index,
                                                     @Param(value = "pageSize") Integer pageSize,
-                                                    @Param(value = "tenantId") String tenantId);
+                                                    @Param(value = "tenantId") String tenantId,
+                                                    @Param(value = "keyWord") String keyWord);
 
     /**
      * 通过机构id，userid，消息发送时间范围查询记录总数
@@ -84,12 +86,14 @@ public interface MsgRecordDOMapper {
      * @param startTime 消息发送时间范围之起始时间
      * @param endTime 消息发送时间范围之终止时间
      * @param tenantId 机构id
+     * @param keyWord 关键字
      * @return 消息记录总数
      */
     Long selectCountByOrgIdAndUserIdAndTime(@Param(value = "userId") String userId,
                                                     @Param(value = "startTime") String startTime,
                                                     @Param(value = "endTime") String endTime,
-                                                    @Param(value = "tenantId") String tenantId);
+                                                    @Param(value = "tenantId") String tenantId,
+                                                    @Param(value = "keyWord") String keyWord);
 
     /**
      * 查询两个用户之间的会话记录

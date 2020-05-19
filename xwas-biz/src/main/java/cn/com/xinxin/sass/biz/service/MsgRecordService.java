@@ -31,10 +31,12 @@ public interface MsgRecordService {
      * @param endTime 消息发送时间范围之终止时间
      * @param page 分页信息
      * @param orgId 机构id
+     * @param keyWord 关键字
      * @return 消息记录
      */
     PageResultVO<MsgRecordDO> queryByOrgIdAndMemberUserIdAndTime(String userId, String startTime,
-                                                                  String endTime, PageResultVO page, String orgId);
+                                                                  String endTime, PageResultVO page, String orgId,
+                                                                 String keyWord);
 
     /**
      * 通过id查询会话详情
@@ -75,4 +77,12 @@ public interface MsgRecordService {
                                                             String keyWord,
                                                             String startTime,
                                                             String endTime);
+
+    /**
+     * 获取聊天对象用户名
+     * @param tenantId 租户id
+     * @param chatUserIdS 聊天对象userid
+     * @return 聊天对象用户名
+     */
+    List<String> getChatPartyNameList(String tenantId, List<String> chatUserIdS);
 }

@@ -249,4 +249,14 @@
 
   </select>
 
+  <select id="queryMemberNameByTenantIdAndUserIdS" resultMap="BaseResultMapExt">
+    select member_name, user_id
+    from member
+    where tenant_id = #{tenantId} and user_id in
+    <foreach collection="userIdS" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    and deleted = 0
+  </select>
+
 </mapper>

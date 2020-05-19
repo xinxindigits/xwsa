@@ -42,22 +42,26 @@ public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkSyncServi
     private WeChatWorkDataService weChatWorkDepartmentDataServiceImpl;
     private WeChatWorkDataService weChatWorkCustomerDataServiceImpl;
     private TenantDataSyncLogService tenantDataSyncLogService;
+    private WeChatWorkDataService weChatWorkGroupChatDataServiceImpl;
 
     public WeChatWorkAddressListSyncServiceImpl(TenantDataSyncConfigService tenantDataSyncConfigService,
                                                 TenantBaseInfoService tenantBaseInfoService,
                                                 @Qualifier(value = "weChatWorkMemberDataServiceImpl")
-                                                         WeChatWorkDataService weChatWorkMemberDataServiceImpl,
+                                                WeChatWorkDataService weChatWorkMemberDataServiceImpl,
                                                 @Qualifier(value = "weChatWorkDepartmentDataServiceImpl")
-                                                         WeChatWorkDataService weChatWorkDepartmentDataServiceImpl,
+                                                WeChatWorkDataService weChatWorkDepartmentDataServiceImpl,
                                                 @Qualifier(value = "weChatWorkCustomerDataServiceImpl")
-                                                         WeChatWorkDataService weChatWorkCustomerDataServiceImpl,
-                                                TenantDataSyncLogService tenantDataSyncLogService) {
+                                                WeChatWorkDataService weChatWorkCustomerDataServiceImpl,
+                                                TenantDataSyncLogService tenantDataSyncLogService,
+                                                @Qualifier(value = "weChatWorkGroupChatDataServiceImpl")
+                                                WeChatWorkDataService weChatWorkGroupChatDataServiceImpl) {
         this.tenantDataSyncConfigService = tenantDataSyncConfigService;
         this.tenantBaseInfoService = tenantBaseInfoService;
         this.weChatWorkCustomerDataServiceImpl = weChatWorkCustomerDataServiceImpl;
         this.weChatWorkDepartmentDataServiceImpl = weChatWorkDepartmentDataServiceImpl;
         this.weChatWorkMemberDataServiceImpl = weChatWorkMemberDataServiceImpl;
         this.tenantDataSyncLogService = tenantDataSyncLogService;
+        this.weChatWorkGroupChatDataServiceImpl = weChatWorkGroupChatDataServiceImpl;
     }
 
     /**
@@ -104,6 +108,8 @@ public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkSyncServi
                 weChatWorkMemberDataServiceImpl.fetchData(weChatWorkFetchDataBO);
                 //获取客户信息
                 weChatWorkCustomerDataServiceImpl.fetchData(weChatWorkFetchDataBO);
+                //获取群信息
+                weChatWorkGroupChatDataServiceImpl.fetchData(weChatWorkFetchDataBO);
             } catch (Exception e) {
                 LOGGER.error("从企业微信拉取通讯录数据保存到相关数据暂存表失败，TenantId[{}]",
                         tenantDataSyncLogDO.getTenantId(), e);
@@ -117,6 +123,7 @@ public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkSyncServi
             WeChatWorkImportDataBO weChatWorkImportDataBO = new WeChatWorkImportDataBO();
             weChatWorkImportDataBO.setMemberReceivedUserIdS(new ArrayList<>());
             weChatWorkImportDataBO.setTenantDataSyncLogDO(tenantDataSyncLogDO);
+            weChatWorkImportDataBO.setWeChatWorkGroupChatDetailBOS(weChatWorkFetchDataBO.getWeChatWorkGroupChatDetailBOS());
 
             try {
                 //导入部门信息
@@ -125,6 +132,8 @@ public class WeChatWorkAddressListSyncServiceImpl implements WeChatWorkSyncServi
                 weChatWorkMemberDataServiceImpl.importData(weChatWorkImportDataBO);
                 //导入客户信息
                 weChatWorkCustomerDataServiceImpl.importData(weChatWorkImportDataBO);
+                //导入群信息
+                weChatWorkGroupChatDataServiceImpl.importData(weChatWorkImportDataBO);
             } catch (Exception e) {
                 LOGGER.error("导入更新通讯录失败，orgId[{}]", tenantDataSyncLogDO.getTenantId(), e);
                 updateLog(tenantDataSyncLogDO, TaskErrorEnum.IMPORTING_EXCEPTION.getErrorCode(), e.getMessage(),

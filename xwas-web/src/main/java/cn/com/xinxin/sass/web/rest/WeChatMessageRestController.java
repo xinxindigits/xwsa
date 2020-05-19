@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.model.bo.ChatPartyBO;
+import cn.com.xinxin.sass.biz.service.GroupChatService;
 import cn.com.xinxin.sass.biz.service.MsgRecordService;
 import cn.com.xinxin.sass.biz.vo.ChatUserVO;
 import cn.com.xinxin.sass.biz.vo.PageVO;
@@ -26,10 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: zhouyang
@@ -43,9 +41,12 @@ public class WeChatMessageRestController extends AclController {
     private static final Logger LOGGER = LoggerFactory.getLogger(WeChatMessageRestController.class);
 
     private final MsgRecordService msgRecordService;
+    private final GroupChatService groupChatService;
 
-    public WeChatMessageRestController(final MsgRecordService msgRecordService) {
+    public WeChatMessageRestController(final MsgRecordService msgRecordService,
+                                       final GroupChatService groupChatService) {
         this.msgRecordService = msgRecordService;
+        this.groupChatService = groupChatService;
     }
 
     /**
@@ -72,7 +73,8 @@ public class WeChatMessageRestController extends AclController {
 
         //查询客户信息
         PageResultVO<MsgRecordDO> pageResultDO = msgRecordService.queryByOrgIdAndMemberUserIdAndTime(
-                queryForm.getUserId(), queryForm.getStartTime(), queryForm.getEndTime(), page, sassUserInfo.getTenantId());
+                queryForm.getUserId(), queryForm.getStartTime(), queryForm.getEndTime(), page, sassUserInfo.getTenantId(),
+                queryForm.getKeyWord());
 
         //将DO装换为VO
         PageResultVO<MsgRecordVO> pageResultVO = new PageResultVO<>();
@@ -82,8 +84,7 @@ public class WeChatMessageRestController extends AclController {
         List<MsgRecordVO> msgRecordVOS = new ArrayList<>();
         pageResultDO.getItems().forEach(m -> {
             try {
-                ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), m.getFromUserId());
-                msgRecordVOS.add(MessageConvert.convert2MsgRecordVO(m, chatUserVO.getChatUserName()));
+                msgRecordVOS.add(getMsgRecordVO(m, sassUserInfo.getTenantId()));
             } catch (Exception e) {
                 LOGGER.info("获取聊天记录异常", e);
             }
@@ -117,10 +118,7 @@ public class WeChatMessageRestController extends AclController {
             LOGGER.error("查询企业微信客户信息, 数据不存在");
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "查询数据不存在");
         }
-
-        ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), msgRecordDO.getFromUserId());
-
-        return MessageConvert.convert2MsgRecordVO(msgRecordDO, chatUserVO.getChatUserName());
+        return getMsgRecordVO(msgRecordDO, sassUserInfo.getTenantId());
     }
 
     @RequestMapping(value = "/query/user",method = RequestMethod.POST)
@@ -236,6 +234,16 @@ public class WeChatMessageRestController extends AclController {
                 sassUserInfo.getTenantId(), queryForm.getUserId(), queryForm.getKeyWord(), queryForm.getStartTime(),
                 queryForm.getEndTime());
 
+        chatPartyBOS.stream()
+                .filter(c -> 1 == c.getType())
+                .forEach(c -> {
+                    String chatName = groupChatService.queryChatNameByChatId(c.getRoomId(), sassUserInfo.getTenantId());
+                    c.setRoomName(chatName);
+                    if (StringUtils.equals(chatName, c.getRoomId())) {
+                        c.setRoomName(getToUserName(c.getToUserList(), sassUserInfo.getTenantId(), c.getRoomId()));
+                    }
+                });
+
         chatPartyBOS.stream().filter(c -> 0 == c.getType()).forEach(c -> {
             ChatUserVO chatUserVO = msgRecordService.getChatUser(sassUserInfo.getTenantId(), c.getUserId());
             c.setUserName(chatUserVO.getChatUserName());
@@ -280,5 +288,49 @@ public class WeChatMessageRestController extends AclController {
         PageVO result = msgRecordService.getPageIndex(queryForm.getId(),tenantId,queryForm.getRoomId(),
                 queryForm.getUserId(),queryForm.getUserIdTwo(),pageSize);
         return result;
+    }
+
+    /**
+     * 获取ToUserName
+     * @param toUserId 接受方id
+     * @param tenantId 租户id
+     * @param roomId 群id
+     * @return 接受方名
+     */
+    private String getToUserName(String toUserId, String tenantId, String roomId) {
+        StringBuilder sb = new StringBuilder();
+        String[] userIdS = toUserId.substring(1, toUserId.length() - 1).split(", ");
+        List<String> userIdList = new ArrayList<>(userIdS.length);
+        Collections.addAll(userIdList, userIdS);
+        msgRecordService.getChatPartyNameList(tenantId, userIdList).forEach(s -> sb.append(s).append(","));
+        if (StringUtils.isBlank(sb)) {
+            return roomId;
+        }
+        return sb.deleteCharAt(sb.lastIndexOf(",")).toString();
+    }
+
+    /**
+     * 讲DO装化为BO
+     * @param msgRecordDO 记录
+     * @param tenantId 租户id
+     * @return MsgRecordVO
+     */
+    private MsgRecordVO getMsgRecordVO(MsgRecordDO msgRecordDO, String tenantId) {
+        ChatUserVO chatUserVO = msgRecordService.getChatUser(tenantId, msgRecordDO.getFromUserId());
+        String toChatPartyName;
+        Integer type;
+        if (StringUtils.isBlank(msgRecordDO.getRoomId())) {
+            toChatPartyName = msgRecordService.getChatUser(tenantId,
+                    msgRecordDO.getToUserId().substring(1, msgRecordDO.getToUserId().length() - 1))
+                    .getChatUserName();
+            type = 0;
+        } else {
+            toChatPartyName = groupChatService.queryChatNameByChatId(msgRecordDO.getRoomId(), tenantId);
+            if (StringUtils.equals(toChatPartyName, msgRecordDO.getRoomId())) {
+                toChatPartyName = getToUserName(msgRecordDO.getToUserId(), tenantId, msgRecordDO.getRoomId());
+            }
+            type = 1;
+        }
+        return MessageConvert.convert2MsgRecordVO(msgRecordDO, chatUserVO.getChatUserName(), toChatPartyName, type);
     }
 }

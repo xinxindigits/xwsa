@@ -128,6 +128,12 @@ public interface CustomerDOMapper {
      */
     int updateInactiveStatus(@Param(value = "tenantId") String tenantId, @Param(value = "taskId") String taskId);
 
-
-
+    /**
+     * 查询客户用户名
+     * @param tenantId 租户id
+     * @param userIdS 客户userids
+     * @return 客户用户名及userid
+     */
+    List<CustomerDO> queryCustomerNameByTenantIdAndUserIdS(@Param(value = "tenantId") String tenantId,
+                                                           @Param(value = "userIdS") List<String> userIdS);
 }

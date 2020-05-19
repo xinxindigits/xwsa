@@ -37,7 +37,7 @@ public class HttpClientUtils {
         // 创建httpClient实例对象
         HttpClient httpClient = new HttpClient();
         // 设置httpClient连接主机服务器超时时间：15000毫秒
-        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(15000);
+        httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(60000);
         // 创建post请求方法实例对象
         PostMethod postMethod = new PostMethod(urlParam);
         // 设置post请求超时时间
