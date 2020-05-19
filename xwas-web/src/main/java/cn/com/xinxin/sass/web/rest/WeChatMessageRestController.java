@@ -27,10 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: zhouyang
@@ -302,11 +299,10 @@ public class WeChatMessageRestController extends AclController {
      */
     private String getToUserName(String toUserId, String tenantId, String roomId) {
         StringBuilder sb = new StringBuilder();
-        String[] userIdS = toUserId.substring(1, toUserId.length() - 1).split(",");
-        for (String userId : userIdS) {
-            sb.append(msgRecordService.getChatUser(tenantId, userId.trim()).getChatUserName());
-            sb.append(",");
-        }
+        String[] userIdS = toUserId.substring(1, toUserId.length() - 1).split(", ");
+        List<String> userIdList = new ArrayList<>(userIdS.length);
+        Collections.addAll(userIdList, userIdS);
+        msgRecordService.getChatPartyNameList(tenantId, userIdList).forEach(s -> sb.append(s).append(","));
         if (StringUtils.isBlank(sb)) {
             return roomId;
         }

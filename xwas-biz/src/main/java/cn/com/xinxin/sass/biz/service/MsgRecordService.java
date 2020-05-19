@@ -77,4 +77,12 @@ public interface MsgRecordService {
                                                             String keyWord,
                                                             String startTime,
                                                             String endTime);
+
+    /**
+     * 获取聊天对象用户名
+     * @param tenantId 租户id
+     * @param chatUserIdS 聊天对象userid
+     * @return 聊天对象用户名
+     */
+    List<String> getChatPartyNameList(String tenantId, List<String> chatUserIdS);
 }

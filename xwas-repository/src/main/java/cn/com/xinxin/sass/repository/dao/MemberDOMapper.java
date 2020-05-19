@@ -124,5 +124,13 @@ public interface MemberDOMapper {
      */
     MemberDO queryByUserId(@Param("userId")String userId);
 
+    /**
+     * 查询成员用户名
+     * @param tenantId 租户id
+     * @param userIdS 成员userids
+     * @return 成员用户名及userid
+     */
+    List<MemberDO> queryMemberNameByTenantIdAndUserIdS(@Param(value = "tenantId") String tenantId,
+                                         @Param(value = "userIdS") List<String> userIdS);
 
 }

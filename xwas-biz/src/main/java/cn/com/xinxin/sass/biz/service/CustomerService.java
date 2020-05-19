@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.biz.service;
 
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.CustomerDO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -80,4 +81,13 @@ public interface CustomerService {
      * @return 成功更新的条数
      */
     int updateInactiveStatus(String tenantId, String taskId);
+
+    /**
+     * 查询客户用户名
+     * @param tenantId 租户id
+     * @param userIdS 客户userids
+     * @return 客户用户名及userid
+     */
+    List<CustomerDO> queryCustomerNameByTenantIdAndUserIdS(String tenantId,
+                                                           List<String> userIdS);
 }
