@@ -24,8 +24,7 @@
           <ListItem>消息编号：{{ detail.msgId }}</ListItem>
           <ListItem>发送时间：{{ detail.msgTime | timeFilter }}</ListItem>
           <ListItem>消息类型：{{ $mapd("msgType", detail.msgType) }}</ListItem>
-          <ListItem>接收人：{{ detail.toUserId }}</ListItem>
-          <ListItem>群号：{{ detail.roomId }}</ListItem>
+          <ListItem>接收人：{{ detail.toChatPartyName }}</ListItem>
         </List>
         <Divider dashed></Divider>
         <Button type="primary" @click="showRecord">查看聊天记录</Button>
@@ -74,7 +73,8 @@ export default {
         msgTime: "",
         toUserId: "[]",
         roomId: "",
-        userId: ""
+        userId: "",
+        toChatPartyName: ""
       }
     };
   },
@@ -89,7 +89,6 @@ export default {
       this.hdlShowRecord({ id, fromUserId, toUserId, roomId });
     },
     hdlShowRecord(n) {
-      console.log(n);
       let params = {
         id: n.id,
         pageSize: 50,
@@ -103,6 +102,7 @@ export default {
         this.cur_userId = n.fromUserId;
         this.$refs.record.init(this.cur_userId, {
           ...params,
+          row: data.offset ? data.offset : null,
           pageIndex: data.pageIndex
         });
         this.isShowRecord = true;
