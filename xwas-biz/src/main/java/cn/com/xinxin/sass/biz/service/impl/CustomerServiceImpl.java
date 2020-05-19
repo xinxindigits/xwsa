@@ -214,4 +214,25 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return customerDOMapper.updateInactiveStatus(tenantId, taskId);
     }
+
+    /**
+     * 查询客户用户名
+     * @param tenantId 租户id
+     * @param userIdS 客户userids
+     * @return 客户用户名及userid
+     */
+    @Override
+    public List<CustomerDO> queryCustomerNameByTenantIdAndUserIdS(String tenantId, List<String> userIdS) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("通过租户id和客户userId查询客户信息,tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过租户id和客户userId查询客户信息,tenantId不能为空");
+        }
+        if (CollectionUtils.isEmpty(userIdS)) {
+            LOGGER.error("通过租户id和客户userId查询客户信息, userIdS不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
+                    "通过租户id和客户userId查询客户信息, userIdS不能为空");
+        }
+        return customerDOMapper.queryCustomerNameByTenantIdAndUserIdS(tenantId, userIdS);
+    }
 }

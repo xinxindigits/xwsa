@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author: liuhangzhou
@@ -213,6 +214,7 @@ public class MsgRecordServiceImpl implements MsgRecordService {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
                     "通过租户id和成员userid查询会话记录, tenantId不能为空");
         }
+        //Fixme 查询需要优化
         List<MsgRecordDO> msgRecordDOS = msgRecordDOMapper.selectByMemberUserIdAndKeyWordAndTime(tenantId, userId,
                 keyWord, startTime, endTime);
 
@@ -267,5 +269,41 @@ public class MsgRecordServiceImpl implements MsgRecordService {
         pageVO.setRowNum(rowNum);
         pageVO.setOffset(offset);
         return pageVO;
+    }
+
+    /**
+     * 获取聊天对象用户名
+     * @param tenantId 租户id
+     * @param chatUserIdS 聊天对象userid
+     * @return 聊天对象用户名
+     */
+    @Override
+    public List<String> getChatPartyNameList(String tenantId, List<String> chatUserIdS) {
+        if (StringUtils.isBlank(tenantId)) {
+            LOGGER.error("查询聊天方名字列表， tenantId不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "tenantId不能为空");
+        }
+        if (CollectionUtils.isEmpty(chatUserIdS)) {
+            LOGGER.error("查询聊天方名字列表， chatUserIdS不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "查询聊天方名字列表， chatUserIdS不能为空");
+        }
+        List<MemberDO> memberDOS = memberService.queryMemberNameByTenantIdAndUserIdS(tenantId, chatUserIdS);
+        List<String> chatPartyNameS = memberDOS.stream().map(MemberDO::getMemberName).collect(Collectors.toList());
+
+        List<String> memBerUserIdS = memberDOS.stream().map(MemberDO::getUserId).collect(Collectors.toList());
+        List<String> restUserIdS = chatUserIdS.stream().filter(c -> !memBerUserIdS.contains(c)).collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(restUserIdS)) {
+            return chatPartyNameS;
+        }
+
+        List<CustomerDO> customerDOS = customerService.queryCustomerNameByTenantIdAndUserIdS(tenantId, restUserIdS);
+
+        chatPartyNameS.addAll(customerDOS.stream().map(CustomerDO::getCustomerName).collect(Collectors.toList()));
+
+        List<String> customerUserIdS = customerDOS.stream().map(CustomerDO::getUserId).collect(Collectors.toList());
+        chatPartyNameS.addAll(restUserIdS.stream().filter(r -> !customerUserIdS.contains(r)).collect(Collectors.toList()));
+
+        return chatPartyNameS;
     }
 }
