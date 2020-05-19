@@ -196,4 +196,14 @@
     (SELECT user_id from customer_received where task_id = #{taskId});
   </update>
 
+  <select id="queryCustomerNameByTenantIdAndUserIdS" resultMap="BaseResultMapExt">
+    select customer_name, user_id
+    from customer
+    where tenant_id = #{tenantId} and user_id in
+    <foreach collection="userIdS" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    and deleted = 0
+  </select>
+
 </mapper>
