@@ -59,7 +59,8 @@
     
    1. 后端项目部署
       
-      1. clone代码到本地,修改必要的配置，如mysql数据库配置, Redis配置, Zookeeper配置等.具体位置在xwas-web的resources目录下面。见下图![xwas-config](./doc/image/xwas-web-config.jpg)
+      1. clone代码到本地,修改必要的配置，如mysql数据库配置, Redis配置, Zookeeper配置等.具体位置在xwas-web的resources目录下面。见下图
+      ![xwas-config](./doc/image/xwas-web-config.jpg)
       2. 执行编译打包。可以用下面的命令(mvn clean install -U -X -Dmaven.skip.test=true)绕过单元测试执行打包，也可以导入到编辑工具如IDEA等打包即可.
       3. xwas-web target目录下生成的war包拷贝到已经配置好的tomcat服务器对应的webapp目录下启动即可
       4. 如果有需要修改tomcat的配置，如context配置，路径等可以参考tomcat官网相关的说明.
