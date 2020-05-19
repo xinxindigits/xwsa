@@ -20,7 +20,9 @@ import cn.com.xinxin.sass.web.vo.*;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
+import com.xinxinfinance.commons.api.result.support.Results;
 import com.xinxinfinance.commons.exception.BusinessException;
+import com.xinxinfinance.commons.result.CommonResultCode;
 import com.xinxinfinance.commons.security.SecureUtils;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
@@ -217,14 +219,14 @@ public class SassUserRestController extends AclController {
             resultMsg = "你的密码已经重置为:[" + randomPwd +"],登录后请重新修改密码";
         }
 
-        try {
-            userAclTokenRepository.cleanSassUserTokenCache(userAccount);
-            userAclTokenRepository.cleanSassUserInfoCache(userAccount);
-        }catch (Exception ex){
-            log.warn("restUserPassword clean user cache ex = {}", ex.getMessage());
-        }
+//        try {
+//            userAclTokenRepository.cleanSassUserTokenCache(userAccount);
+//            userAclTokenRepository.cleanSassUserInfoCache(userAccount);
+//        }catch (Exception ex){
+//            log.warn("restUserPassword clean user cache ex = {}", ex.getMessage());
+//        }
 
-        return resultMsg;
+        return  resultMsg;
     }
 
 
