@@ -78,6 +78,9 @@
     
 ## 操作界面说明
 
+   1. [租户以及微信API相关的配置操作](./doc/TENANT_USAGE.MD)
+   2. [资源角色权限用户等相关的操作](./doc/ROLE_USER_USAGE.MD)
+   3. [企业微信相关的数据功能操作](./doc/WEIXIN_USAGE.MD)
 
 ## 二次开发说明
    
