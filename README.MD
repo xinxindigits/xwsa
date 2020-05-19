@@ -54,10 +54,25 @@
 
     
 ## 安装启动配置说明
+   
+   通常来讲，我们的部署方案尽量考虑到多机备份，使用负载均衡服务等.如果在公有云上部署，可以使用SLB等.可以参考下面的 ![部署方案](./doc/image/deploy.png)
     
    1. 后端项目部署
+   
    2. 前端项目部署
+   
    3. 微信API配置说明
+   
+        因为微信API调用使用native的方式，因此需要单独解压其API到具体的系统，服务器lib扩展包下面。
+      
+        1. Window环境的配置。将Doc目录下Weixin_sdk_win.7z解压。 将里面的5个.dll![见下图](./doc/image/weixin_win_sdk.jpg)文件放到windows的系统文件夹(system32)下面。
+        Java加载扩展包的顺序为系统级lib--->jre的lib-->扩展lib.因此将.dll文件放到工程代码目录里面也可以直接运行程序.     
+       
+        2. Linux环境配置. 将Doc目录下解压 weixin_linux_sdk_20200401.zip, 将解压后的java_sdk目录下面的libWeWorkFinanceSdk_Java.so文件放到Linux的lib目录下面
+        /usr/lib。Java环境回默认读取该目录下的扩展包。如![下图](./doc/image/linux_weixin_lib.jpg)
+        
+        3. 特别说明由于java系统在加载native级别的lib的时候是一次性加载完成的，随着虚拟机的关闭而销毁。在每次启动应用程序，如tomact/spring boot的时候需要手动kill未停止的java进程。
+    
     
 ## 数据初始化
     
