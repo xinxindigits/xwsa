@@ -1,11 +1,12 @@
 package cn.com.xinxin.sass.biz.service.impl;
 
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
+import cn.com.xinxin.sass.common.constants.CommonConstants;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
+import cn.com.xinxin.sass.common.utils.DateUtils;
 import cn.com.xinxin.sass.repository.dao.TenantDataSyncConfigDOMapper;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
 import com.xinxinfinance.commons.exception.BusinessException;
-import com.xinxinfinance.commons.result.BizResultCode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -100,6 +102,10 @@ public class TenantDataSyncConfigServiceImpl implements TenantDataSyncConfigServ
         int result = tenantDataSyncConfigDOMapper.updateLockByTenantIdAndTaskType(tenantId, taskType);
 
         if (result < 1) {
+            TenantDataSyncConfigDO configDO = tenantDataSyncConfigDOMapper.selectByOrgIdAndTaskType(tenantId, taskType);
+            if (null != configDO && DateUtils.diffHour(configDO.getLockTime(), new Date()) > CommonConstants.THREE) {
+                return 1;
+            }
             LOGGER.error("当前有任务在执行，无法再次执行，请确认，机构id[{}], 项目编码[{}]", tenantId, taskType);
             throw new BusinessException(SassBizResultCodeEnum.FAIL,
                     "当前有任务在执行，无法再次执行，请确认");
