@@ -30,6 +30,9 @@
       ></DatePicker>
     </FormItem>
     <FormItem>
+      <Input v-model="formItem.keyWord" placeholder="内容"></Input>
+    </FormItem>
+    <FormItem>
       <Button type="primary" @click="hdlquery">查询</Button>
       <Button style="margin-left: 8px" @click="reset">重置</Button>
     </FormItem>
@@ -48,7 +51,8 @@ export default {
           tenantId: "",
           userId: "",
           startTime: "",
-          endTime: ""
+          endTime: "",
+          keyWord: ""
         };
       }
     }
@@ -69,7 +73,8 @@ export default {
         tenantId: "",
         userId: "",
         startTime: "",
-        endTime: ""
+        endTime: "",
+        keyWord: ""
       }
     };
   },
