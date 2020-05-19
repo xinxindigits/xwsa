@@ -76,7 +76,11 @@
       </FormItem>
     </Form>
     <div slot="footer">
-      <Button type="primary" @click="hdlResetPwd" :loading="isReseting"
+      <Button
+        type="primary"
+        v-if="type == 'update'"
+        @click="hdlResetPwd"
+        :loading="isReseting"
         >重置密码</Button
       >
       <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
@@ -221,7 +225,13 @@ export default {
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.formObj).then(() => {
+          let params =
+            this.type == "create"
+              ? Object.assign({}, this.formObj, {
+                  password: this.$md5(this.formObj.password)
+                })
+              : this.formObj;
+          _config[this.type].submit(params).then(() => {
             this.curValue = false;
             this.$emit("user-modified", this.type);
           });
