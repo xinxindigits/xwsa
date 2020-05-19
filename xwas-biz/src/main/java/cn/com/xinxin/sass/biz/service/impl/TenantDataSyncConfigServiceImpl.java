@@ -7,7 +7,6 @@ import cn.com.xinxin.sass.common.utils.DateUtils;
 import cn.com.xinxin.sass.repository.dao.TenantDataSyncConfigDOMapper;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
 import com.xinxinfinance.commons.exception.BusinessException;
-import com.xinxinfinance.commons.result.BizResultCode;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

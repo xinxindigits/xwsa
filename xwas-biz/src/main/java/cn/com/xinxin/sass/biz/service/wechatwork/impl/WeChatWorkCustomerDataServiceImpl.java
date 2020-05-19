@@ -65,8 +65,8 @@ public class WeChatWorkCustomerDataServiceImpl implements WeChatWorkDataService 
         List<CustomerReceivedDO> customerReceivedDOS = new ArrayList<>();
         weChatWorkFetchDataBO.getWeChatWorkUserBOS().forEach(u -> {
             List<String> customerUserIdS = weChatWorkCustomerClient.queryCustomerUserId(token, u.getUserId());
-            List<WeChatWorkCustomerBO> weChatWorkCustomerBOS = weChatWorkCustomerClient.queryCustomerDetail(
-                    token, customerUserIdS);
+            List<WeChatWorkCustomerBO> weChatWorkCustomerBOS = new ArrayList<>();
+            customerUserIdS.forEach(c -> weChatWorkCustomerBOS.add(weChatWorkCustomerClient.queryCustomerDetail(token, c)));
             customerReceivedDOS.addAll(CustomerConvert.convert2CustomerReceivedDOList(
                     weChatWorkCustomerBOS, weChatWorkFetchDataBO.getTaskId(),
                     weChatWorkFetchDataBO.getTenantBaseInfoDO().getTenantId(), u.getUserId()));
