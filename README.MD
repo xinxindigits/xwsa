@@ -58,10 +58,19 @@
    通常来讲，我们的部署方案尽量考虑到多机备份，使用负载均衡服务等.如果在公有云上部署，可以使用SLB等.可以参考下面的 ![部署方案](./doc/image/deploy.png)
     
    1. 后端项目部署
-   
+      
+      1. clone代码到本地,修改必要的配置，如mysql数据库配置, Redis配置, Zookeeper配置等.具体位置在xwas-web的resources目录下面。见下图![xwas-config](./doc/image/xwas-web-config.jpg)
+      2. 执行编译打包。可以用下面的命令(mvn clean install -U -X -Dmaven.skip.test=true)绕过单元测试执行打包，也可以导入到编辑工具如IDEA等打包即可.
+      3. xwas-web target目录下生成的war包拷贝到已经配置好的tomcat服务器对应的webapp目录下启动即可
+      4. 如果有需要修改tomcat的配置，如context配置，路径等可以参考tomcat官网相关的说明.
+      5. 特别说明: 在启动应用之前需要初始化相关的数据信息以及配置好企业微信的SDK。
+      6. 前端部署参见下面的前端部署内容
+      
    2. 前端项目部署
    
-   3. 微信API配置说明
+   3. 如有需要配置nginx相关的代理
+   
+   4. 微信API配置说明
    
         因为微信API调用使用native的方式，因此需要单独解压其API到具体的系统，服务器lib扩展包下面。
       
@@ -73,6 +82,10 @@
         
         3. 特别说明由于java系统在加载native级别的lib的时候是一次性加载完成的，随着虚拟机的关闭而销毁。在每次启动应用程序，如tomact/spring boot的时候需要手动kill未停止的java进程。
     
+   5. 访问首页即可, 参见下面的截图.![index](./doc/image/xwas_index.jpg)
+   
+   
+   
     
 ## 数据初始化
     
@@ -84,6 +97,21 @@
 
 ## 二次开发说明
 
+
+## 界面展示
+
+   1. 权限资源管理![resource_mng](./doc/image/xwas_index_resource.jpg)
+   2. 角色权限管理![role_mng](./doc/image/xwas_index_role_mng.jpg)
+   3. 用户管理![user_mng](./doc/image/xwas_index_user_mng.jpg)
+   4. 组织机构管理![org_mng](./doc/image/xwas_index_org_mng.jpg)
+   5. 用户操作日志记录审计![oplog_mng](./doc/image/xwas_oplog_mng.jpg)
+   6. 租户机构管理![tenant_mng](./doc/image/xwas_tenant_mng.jpg)
+   7. 标签功能![tag_mng](./doc/image/xwas_index_tag_mng.jpg)
+   8. 定时任务配置![task_mng](./doc/image/xwas_index_task_mng.jpg)
+   9. 企业微信部门信息查看![weixin_dept_mng](./doc/image/xwas_index_weixin_dept_mng.jpg)
+   10. 企业微信员工查看![weixin_staff_mng](./doc/image/xwas_index_wexin_staff_mng.jpg)
+   10. 企业微信客户信息查看![weixin_cust_mng](./doc/image/xwas_index_weixin_cust_mng.jpg)
+   10. 企业微信消息内容查看![weixin_msg_mng](./doc/image/xwas_wexin_msg_mng.jpg)
 
 ## 开源协议
 
