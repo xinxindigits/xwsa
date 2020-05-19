@@ -118,7 +118,8 @@ public class UserServiceImpl implements UserService {
         update.setSalt(userPwdVO.getSalt());
         update.setPassword(userPwdVO.getPassword());
         update.setGmtUpdater(updater);
-        userDOMapper.updateByPrimaryKeySelective(update);
+        int result =  userDOMapper.updateByPrimaryKeySelective(update);
+
     }
 
     @Override
