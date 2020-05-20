@@ -6,27 +6,27 @@
     :mask-closable="false"
   >
     <Form
-      ref="formObj"
-      :model="formObj"
+      ref="form"
+      :model="form"
       label-position="right"
       :label-width="150"
       :rules="rules"
     >
       <FormItem label="ID" prop="id" v-if="this.type == 'update'">
-        <Input v-model="formObj.id" style="width: 250px" disabled></Input>
+        <Input v-model="form.id" style="width: 250px" disabled></Input>
       </FormItem>
       <FormItem label="编号" prop="code">
         <Input
-          v-model="formObj.code"
+          v-model="form.code"
           style="width: 250px"
           :disabled="this.type == 'update'"
         ></Input>
       </FormItem>
       <FormItem label="名称" prop="name">
-        <Input v-model="formObj.name" style="width: 250px"></Input>
+        <Input v-model="form.name" style="width: 250px"></Input>
       </FormItem>
       <FormItem label="类型" prop="tagType">
-        <Select v-model="formObj.tagType" style="width: 250px">
+        <Select v-model="form.tagType" style="width: 250px">
           <Option v-for="item in statusEnum" :value="item[0]" :key="item[0]">
             {{ item[1] }}
           </Option>
@@ -34,7 +34,7 @@
       </FormItem>
       <FormItem label="描述" prop="description">
         <Input
-          v-model="formObj.description"
+          v-model="form.description"
           type="textarea"
           :maxlength="500"
           style="width: 250px"
@@ -44,7 +44,7 @@
       </FormItem>
     </Form>
     <div slot="footer">
-      <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
+      <Button type="primary" @click="hdlSubmit('form')">确认</Button>
       <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
     </div>
   </Modal>
@@ -82,7 +82,7 @@ export default {
     return {
       curValue: false,
       statusEnum: Object.entries(tagType),
-      formObj: {
+      form: {
         id: "",
         name: "",
         code: "",
@@ -111,16 +111,16 @@ export default {
   },
   methods: {
     setData(obj) {
-      this.formObj.code = obj.code;
-      this.formObj.description = obj.description;
-      this.formObj.tagType = obj.tagType;
-      this.formObj.name = obj.name;
-      this.formObj.id = obj.id;
+      this.form.code = obj.code;
+      this.form.description = obj.description;
+      this.form.tagType = obj.tagType;
+      this.form.name = obj.name;
+      this.form.id = obj.id;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.formObj).then(() => {
+          _config[this.type].submit(this.form).then(() => {
             this.curValue = false;
             this.$emit("tag-modified", this.type);
           });

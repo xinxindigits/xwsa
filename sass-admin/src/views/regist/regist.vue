@@ -5,27 +5,27 @@
         <div class="form-con">
           <Form
             ref="form"
-            :model="formObj"
+            :model="form"
             label-colon
             label-position="right"
             :rules="rules"
           >
             <FormItem prop="account">
               <Input
-                v-model="formObj.account"
+                v-model="form.account"
                 placeholder="账号"
                 maxlength="20"
               ></Input>
             </FormItem>
             <FormItem prop="name">
               <Input
-                v-model="formObj.name"
+                v-model="form.name"
                 placeholder="姓名"
                 maxlength="20"
               ></Input>
             </FormItem>
             <FormItem prop="gender">
-              <Select v-model="formObj.gender" placeholder="性别">
+              <Select v-model="form.gender" placeholder="性别">
                 <template v-for="(n, index) in gender">
                   <Option
                     v-if="index > 0"
@@ -38,7 +38,7 @@
             </FormItem>
             <FormItem prop="password">
               <Input
-                v-model="formObj.password"
+                v-model="form.password"
                 placeholder="请输入密码"
                 type="password"
                 maxlength="32"
@@ -47,7 +47,7 @@
             </FormItem>
             <FormItem prop="passwdCheck">
               <Input
-                v-model="formObj.passwdCheck"
+                v-model="form.passwdCheck"
                 placeholder="再次输入密码"
                 maxlength="32"
                 type="password"
@@ -59,7 +59,7 @@
                 :rows="3"
                 :autosize="false"
                 type="textarea"
-                v-model="formObj.extension"
+                v-model="form.extension"
                 placeholder="备注"
               ></Input>
             </FormItem>
@@ -86,7 +86,7 @@ export default {
       if (value === "") {
         callback(new Error("密码不能为空！"));
       } else {
-        if (this.formObj.passwdCheck !== "") {
+        if (this.form.passwdCheck !== "") {
           this.$refs.form.validateField("passwdCheck");
         }
         callback();
@@ -95,7 +95,7 @@ export default {
     const validatePassCheck = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("密码不能为空！"));
-      } else if (value !== this.formObj.password) {
+      } else if (value !== this.form.password) {
         callback(new Error("两次密码不一致！"));
       } else {
         callback();
@@ -103,7 +103,7 @@ export default {
     };
     return {
       gender,
-      formObj: {
+      form: {
         account: "",
         name: "",
         gender: null,
@@ -129,10 +129,9 @@ export default {
   },
   methods: {
     hdlSubmit() {
-      debugger;
       this.$refs.form.validate(valid => {
         if (valid) {
-          regist(this.formObj);
+          regist(this.form);
         }
       });
     },
