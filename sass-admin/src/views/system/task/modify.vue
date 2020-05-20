@@ -34,7 +34,7 @@
         <Input v-model="form.cronExpression" style="width: 280px"></Input>
       </FormItem>
       <FormItem
-        label="会话每次提取上限"
+        label="会话每次提取上限(条)"
         prop="countCeiling"
         v-if="form.taskType == this.MESSAGE_SYNC"
       >
@@ -46,7 +46,7 @@
         ></Input>
       </FormItem>
       <FormItem
-        label="会话每次提取间隔"
+        label="会话每次提取间隔(秒)"
         prop="timeInterval"
         v-if="form.taskType == this.MESSAGE_SYNC"
       >
