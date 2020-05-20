@@ -27,6 +27,7 @@ import com.xinxinfinance.commons.security.SecureUtils;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,7 @@ public class SassUserRestController extends AclController {
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/user/list")
+    @RequiresPermissions(value = {"SASS_USER_MNG", "SASS_USER_QUERY_LIST"},logical= Logical.OR)
     public Object pageQueryUser(@RequestBody UserForm userForm, HttpServletRequest request){
         if(userForm == null){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "参数不能为空");
@@ -112,7 +113,7 @@ public class SassUserRestController extends AclController {
 
     @RequestMapping(value = "/query/{account}",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/user/query")
+    @RequiresPermissions(value = {"SASS_USER_MNG", "SASS_USER_QUERY_LIST"},logical= Logical.OR)
     public Object queryUserByAccount(HttpServletRequest request,@PathVariable String account){
 
         log.info("queryUserByAccount, account = {}",account);
@@ -192,7 +193,7 @@ public class SassUserRestController extends AclController {
     @SysLog("重置用户密码")
     @RequestMapping(value = "/restpwd",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/user/restpwd")
+    @RequiresPermissions(value = {"SASS_USER_MNG", "SASS_USER_PASSWORD_REST"},logical= Logical.OR)
     public Object restUserPassword(HttpServletRequest request, @RequestBody UserPwdForm pwdForm){
 
         if(null == pwdForm){
@@ -236,7 +237,7 @@ public class SassUserRestController extends AclController {
     @SysLog("创建用户信息")
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/user/create")
+    @RequiresPermissions(value = {"SASS_USER_MNG", "SASS_USER_ADD"},logical= Logical.OR)
     public Object createUserInfo(HttpServletRequest request, @RequestBody UserForm userForm){
 
         if(null == userForm){
@@ -321,7 +322,7 @@ public class SassUserRestController extends AclController {
     @SysLog("更新用户信息")
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/user/update")
+    @RequiresPermissions(value = {"SASS_USER_MNG", "SASS_USER_UPDATE"},logical= Logical.OR)
     public Object updateUserInfo(HttpServletRequest request, @RequestBody UserForm userForm){
 
         if(null == userForm){
@@ -397,7 +398,7 @@ public class SassUserRestController extends AclController {
     @SysLog("删除用户信息")
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/user/delete")
+    @RequiresPermissions(value = {"SASS_USER_MNG", "SASS_USER_DELETE"},logical= Logical.OR)
     public Object deleteUserInfo(HttpServletRequest request,@RequestBody DeleteUserForm deleteUserForm){
 
         if(deleteUserForm == null){
@@ -444,7 +445,7 @@ public class SassUserRestController extends AclController {
     @SysLog("用户角色授权信息")
     @RequestMapping(value = "/grant",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/user/grant")
+    @RequiresPermissions(value = {"SASS_USER_MNG", "SASS_USER_ROLE_GRANT"},logical= Logical.OR)
     public Object grantRoleUserInfo(HttpServletRequest request,
                                     @RequestBody UserRoleGrantForm grantForm){
         if(null == grantForm){
@@ -515,34 +516,5 @@ public class SassUserRestController extends AclController {
 
         return SassBizResultCodeEnum.SUCCESS;
     }
-
-
-    @RequestMapping(value = "/system",method = RequestMethod.GET)
-    @ResponseBody
-    public Object system(HttpServletRequest request){
-
-
-        Object systempath = System.getProperties().get("java.library.path");
-
-        System.out.println(systempath);
-
-
-        //System.loadLibrary("WeWorkFinanceSdk_Java");
-
-        //long sdk = Finance.NewSdk();
-
-        //System.out.println(Finance.Init(sdk,  "wwd08c8e7c775ab44d","zJ6k0naVVQ--gt9PUSSEvs03zW_nlDVmjLCTOTAfrew"));
-
-        Map<String, Object> result = new HashMap<String, Object>();
-
-        result.put("systempath",systempath);
-        //result.put("sdk",sdk);
-
-        return result;
-
-
-    }
-
-
 
 }
