@@ -22,6 +22,8 @@ import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +59,7 @@ public class WeChatMessageRestController extends AclController {
      */
     @RequestMapping(value = "/query",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_MSG_MNG"},logical= Logical.OR)
     public Object listByOrgIdAndMemberUserIdSAndTime(HttpServletRequest request,
                                                      @RequestBody WeChatMessageQueryForm queryForm){
 
@@ -102,6 +105,7 @@ public class WeChatMessageRestController extends AclController {
      */
     @RequestMapping(value = "/detail/{id}",method = RequestMethod.GET)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_MSG_MNG"},logical= Logical.OR)
     public Object queryWeChatMsgRecordDetail(HttpServletRequest request,
                                             @PathVariable Long id) {
 
@@ -123,6 +127,7 @@ public class WeChatMessageRestController extends AclController {
 
     @RequestMapping(value = "/query/user",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_MSG_MNG"},logical= Logical.OR)
     public Object queryMsgRecordBetweenUsers(HttpServletRequest request, @RequestBody WeChatMessageQueryForm queryForm){
 
         //参数检查
@@ -158,6 +163,7 @@ public class WeChatMessageRestController extends AclController {
 
     @RequestMapping(value = "/query/room",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_MSG_MNG"},logical= Logical.OR)
     public Object queryRoomMsgRecord(HttpServletRequest request, @RequestBody WeChatMessageQueryForm queryForm){
 
         //参数检查
@@ -217,6 +223,7 @@ public class WeChatMessageRestController extends AclController {
      */
     @RequestMapping(value = "/query/userList",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_MSG_MNG"},logical= Logical.OR)
     public Object queryChatPartyList(HttpServletRequest request, @RequestBody WeChatMessageQueryForm queryForm) {
         if (null == queryForm) {
             LOGGER.error("根据成员userid查询与之聊天的人或者群, queryForm不能为空");
@@ -261,6 +268,7 @@ public class WeChatMessageRestController extends AclController {
      */
     @RequestMapping(value = "/queryPageIndex")
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_MSG_MNG"},logical= Logical.OR)
     public Object queryPageIndex(@RequestBody WeChatMessageQueryForm queryForm, HttpServletRequest request){
         if (null == queryForm) {
             LOGGER.error("查询会话记录所在页码, queryForm不能为空");

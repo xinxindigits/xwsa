@@ -7,6 +7,8 @@ import cn.com.xinxin.sass.web.form.WechatOrgQueryForm;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.DeptTreeVO;
 import com.google.common.collect.Lists;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,7 @@ public class WechatOrgMngRestController extends AclController {
 
     @RequestMapping(value = "/list",method = RequestMethod.GET)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_DEPT_MNG"},logical= Logical.OR)
     public Object listAllDeptsTree(HttpServletRequest request){
 
         List<DepartmentDO> wechatDepts = this.departmentService.listAllWechatDepts();
@@ -75,6 +78,7 @@ public class WechatOrgMngRestController extends AclController {
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_DEPT_MNG"},logical= Logical.OR)
     public Object queryDeptsTree(@RequestBody WechatOrgQueryForm orgQueryForm, HttpServletRequest request){
 
 

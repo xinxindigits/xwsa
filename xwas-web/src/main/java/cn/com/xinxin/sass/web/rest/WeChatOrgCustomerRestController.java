@@ -20,6 +20,8 @@ import cn.com.xinxin.sass.web.vo.TagsVO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,7 @@ public class WeChatOrgCustomerRestController extends AclController {
      */
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_CUSTOMER_MNG"},logical= Logical.OR)
     public Object listWechatCustomers(HttpServletRequest request,
                                                      @RequestBody WeChatCustomerQueryForm queryForm){
 
@@ -119,6 +122,7 @@ public class WeChatOrgCustomerRestController extends AclController {
      */
     @RequestMapping(value = "/query",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_CUSTOMER_MNG"},logical= Logical.OR)
     public Object listByOrgIdAndMemberUserIdSAndTime(HttpServletRequest request,
                                             @RequestBody WeChatCustomerQueryForm queryForm){
 
@@ -185,6 +189,7 @@ public class WeChatOrgCustomerRestController extends AclController {
      */
     @RequestMapping(value = "/detail/{id}",method = RequestMethod.GET)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_CUSTOMER_MNG"},logical= Logical.OR)
     public Object queryWeChatCustomerDetail(HttpServletRequest request,
                                           @PathVariable Long id) {
         if (null == id) {

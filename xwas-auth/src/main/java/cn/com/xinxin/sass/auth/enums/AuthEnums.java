@@ -109,11 +109,19 @@ public enum AuthEnums {
 
     SASS_USER_OPLOG_QUERY("SASS_USER_OPLOG_QUERY","用户操作日志记录查询","用户操作日志记录查询"),
 
-    /**
-     * 操作日志管理
-     */
     SASS_USER_PASSWORD_REST("SASS_USER_PASSWORD_REST","重置用户密码","重置用户密码"),
 
+
+    /**
+     * 微信部门管理
+     */
+    SASS_WEXIN_DEPT_MNG("SASS_WEXIN_DEPT_MNG","企业微信部门管理权限","企业微信部门管理权限"),
+
+    SASS_WEXIN_STAFF_MNG("SASS_USER_PASSWORD_REST","企业微信员工管理权限","企业微信员工管理权限"),
+
+    SASS_WEXIN_CUSTOMER_MNG("SASS_WEXIN_CUSTOMER_MNG","企业微信客户管理权限","企业微信客户管理权限"),
+
+    SASS_WEXIN_MSG_MNG("SASS_USER_PASSWORD_REST","企业微信消息管理权限","企业微信消息管理权限"),
     ;
 
     private String code;
