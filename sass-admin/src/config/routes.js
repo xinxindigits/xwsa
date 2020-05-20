@@ -9,18 +9,68 @@ let routes_config = {
     }
   },
   ["/user/list"]: {
+    path: "user/list",
     name: "user_list",
     meta: {
       title: "用户查询功能"
     },
     component: () => import("@/views/system/user/user.vue")
   },
-  ["/user/query"]: {
-    name: "user_query",
+  ["/role/list"]: {
+    path: "role/list",
+    name: "role_list",
     meta: {
-      title: "用户查询功能"
+      title: "角色管理"
     },
-    component: () => import("@/views/system/user/user.vue")
+    component: () => import("@/views/system/role/role.vue")
+  },
+  ["/resource/list"]: {
+    path: "resource/list",
+    name: "resource_list",
+    meta: {
+      title: "权限资源管理"
+    },
+    component: () => import("@/views/system/resource/resource.vue")
+  },
+  ["/tenant/list"]: {
+    path: "tenant/list",
+    name: "tenant_list",
+    meta: {
+      title: "租户管理"
+    },
+    component: () => import("@/views/system/tenant/tenant.vue")
+  },
+  ["/organization/list"]: {
+    path: "organization/list",
+    name: "organization",
+    meta: {
+      title: "租户管理"
+    },
+    component: () => import("@/views/system/organization/organization.vue")
+  },
+  ["/tags/list"]: {
+    path: "tags/list",
+    name: "tag_list",
+    meta: {
+      title: "标签管理"
+    },
+    component: () => import("@/views/system/tag/tag.vue")
+  },
+  ["/ops/log/list"]: {
+    path: "ops/log/list",
+    name: "oplog_list",
+    meta: {
+      title: "操作日志管理"
+    },
+    component: () => import("@/views/system/log/log.vue")
+  },
+  ["/tenant/queryConfig"]: {
+    path: "tenant/queryConfig",
+    name: "task_config",
+    meta: {
+      title: "任务配置管理"
+    },
+    component: () => import("@/views/system/task/task.vue")
   },
   ["/wechat"]: {
     path: "/wechat",
@@ -31,82 +81,37 @@ let routes_config = {
       showAlways: true
     }
   },
-  ["/dept/list"]: {
+  ["/wechat/dept/list"]: {
+    path: "/wechat/dept/list",
     name: "org_list",
     meta: {
       title: "部门管理"
     },
     component: () => import("@/views/wechat/org/org.vue")
   },
-  ["/staff/list"]: {
-    name: "staff_list",
+  ["/wechat/staff/list"]: {
+    path: "/wechat/staff/list",
+    name: "wc_staff",
     meta: {
       title: "员工管理"
     },
     component: () => import("@/views/wechat/staff/staff.vue")
   },
-  ["/customer"]: {
+  ["/wechat/customer/list"]: {
+    path: "/wechat/customer/list",
     name: "wc_customer",
     meta: {
       title: "客户管理"
     },
     component: () => import("@/views/wechat/customer/customer.vue")
   },
-  ["/message/list"]: {
+  ["/wechat/message/list"]: {
+    path: "/wechat/message/list",
     name: "message_list",
     meta: {
       title: "数据管理"
     },
     component: () => import("@/views/wechat/message/message.vue")
-  },
-  ["/role/list"]: {
-    name: "role_list",
-    meta: {
-      title: "角色管理"
-    },
-    component: () => import("@/views/system/role/role.vue")
-  },
-  ["/resource/list"]: {
-    name: "resource_list",
-    meta: {
-      title: "权限资源管理"
-    },
-    component: () => import("@/views/system/resource/resource.vue")
-  },
-  ["/tenant/list"]: {
-    name: "tenant_list",
-    meta: {
-      title: "租户管理"
-    },
-    component: () => import("@/views/system/tenant/tenant.vue")
-  },
-  ["/organization/list"]: {
-    name: "organization",
-    meta: {
-      title: "租户管理"
-    },
-    component: () => import("@/views/system/organization/organization.vue")
-  },
-  ["/tags/list"]: {
-    name: "tag_list",
-    meta: {
-      title: "标签管理"
-    },
-    component: () => import("@/views/system/tag/tag.vue")
-  },
-  ["/ops/log/list"]: {
-    name: "oplog_list",
-    meta: {
-      title: "操作日志管理"
-    },
-    component: () => import("@/views/system/log/log.vue")
-  },
-  ["/tenant/queryConfig"]: {
-    name: "task_config",
-    meta: {
-      title: "任务配置管理"
-    },
-    component: () => import("@/views/system/task/task.vue")
   }
 };
 export default routes_config;
