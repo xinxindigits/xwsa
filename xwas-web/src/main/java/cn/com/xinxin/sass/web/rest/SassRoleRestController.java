@@ -30,6 +30,7 @@ import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.result.BizResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +81,7 @@ public class SassRoleRestController extends AclController {
      * @return
      */
     @RequestMapping(value = "/create",method = RequestMethod.POST)
-    @RequiresPermissions("/role/create")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_ADD"},logical= Logical.OR)
     @SysLog("创建角色操作")
     public Object createRole(@RequestBody CreateRoleForm createRoleForm, HttpServletRequest request){
 
@@ -127,7 +128,7 @@ public class SassRoleRestController extends AclController {
      * @return
      */
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
-    @RequiresPermissions("/role/delete")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_DELETE"},logical= Logical.OR)
     @SysLog("删除角色操作")
     public Object deleteRole(@RequestBody DeleteRoleForm deleteRoleForm, HttpServletRequest request){
 
@@ -149,7 +150,7 @@ public class SassRoleRestController extends AclController {
      * @return
      */
     @RequestMapping(value = "/update",method = RequestMethod.POST)
-    @RequiresPermissions("/role/update")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_UPDATE"},logical= Logical.OR)
     @SysLog("更新角色操作")
     public Object updateRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
 
@@ -174,7 +175,7 @@ public class SassRoleRestController extends AclController {
      */
     @RequestMapping(value = "/query/{roleId}",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/role/query")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_QUERY_LIST"},logical= Logical.OR)
     public Object queryRoleById(@PathVariable Long roleId, HttpServletRequest request){
 
         if(roleId == null){
@@ -194,7 +195,7 @@ public class SassRoleRestController extends AclController {
      * @return
      */
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    @RequiresPermissions("/role/list")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_QUERY_LIST"},logical= Logical.OR)
     public Object pageQueryRole(@RequestBody RoleForm roleForm, HttpServletRequest request){
 
         if(roleForm == null){
@@ -219,7 +220,7 @@ public class SassRoleRestController extends AclController {
      * @return
      */
     @RequestMapping(value = "/routes",method = RequestMethod.GET)
-    //@RequiresPermissions("/role/routes")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_QUERY_LIST"},logical= Logical.OR)
     public Object routesAllRole(HttpServletRequest request){
 
         logger.info("--------SassRoleRestController.routesAllRole.Request:{}--------");
@@ -242,7 +243,7 @@ public class SassRoleRestController extends AclController {
      */
     @RequestMapping(value = "/resource/tree",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/role/resource/tree")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_QUERY_LIST"},logical= Logical.OR)
     public Object treeRoleResource(HttpServletRequest request, @Param("roleCode") String roleCode){
 
         logger.info("ResourceController.treeRoleResource,roleCode={}",roleCode);
@@ -286,7 +287,7 @@ public class SassRoleRestController extends AclController {
      * @return
      */
     @RequestMapping(value = "/user/grant",method = RequestMethod.POST)
-    @RequiresPermissions("/role/user/grant")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_GRANT_RESOURCE"},logical= Logical.OR)
     @Transactional(rollbackFor = Exception.class)
     @SysLog("角色授予操作")
     public Object userGrant(@RequestBody RoleAuthorityForm roleAuthorityForm, HttpServletRequest request){
@@ -347,7 +348,7 @@ public class SassRoleRestController extends AclController {
      * @return
      */
     @RequestMapping(value = "/resource/grant",method = RequestMethod.POST)
-    @RequiresPermissions("/role/resource/grant")
+    @RequiresPermissions(value = {"SASS_ROLE_MNG", "SASS_ROLE_GRANT_RESOURCE"},logical= Logical.OR)
     @Transactional(rollbackFor = Exception.class)
     @SysLog("资源授予操作")
     public Object resourceGrant(@RequestBody RoleResourceGrantForm grantForm, HttpServletRequest request){
