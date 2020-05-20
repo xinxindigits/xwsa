@@ -4,6 +4,7 @@ import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.dao.OrganizationMapper;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
+import cn.com.xinxin.sass.repository.model.UserOrgDO;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -84,5 +85,11 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public List<OrganizationDO> findNotRoot(String tenantId) {
         return organizationMapper.findNotRoot(tenantId);
+    }
+
+    @Override
+    public List<OrganizationDO> queryOrgListByOrgIds(List<Long> orgIds) {
+
+        return organizationMapper.queryOrgListByOrgIds(orgIds);
     }
 }

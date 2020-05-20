@@ -23,7 +23,7 @@
         <span>错误码：{{ detail.errorCode }}</span>
       </Cell>
 
-        <p style="margin-left: 12pt">错误原因：{{ detail.errorDesc }}</p>
+      <p style="margin-left: 12pt">错误原因：{{ detail.errorDesc }}</p>
 
       <Divider dashed></Divider>
       <div v-if="detail.taskType == this.MESSAGE_SYNC">

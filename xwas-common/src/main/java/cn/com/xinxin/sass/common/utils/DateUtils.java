@@ -212,6 +212,11 @@ public class DateUtils {
         return diffTime / (24 * 60 * 60 * 1000);
     }
 
+    public static long diffHour(Date begin, Date end) {
+        long diffTime = end.getTime() - begin.getTime();
+        return diffTime / (60 * 60 * 1000);
+    }
+
     /**
      * 查询天数
      *

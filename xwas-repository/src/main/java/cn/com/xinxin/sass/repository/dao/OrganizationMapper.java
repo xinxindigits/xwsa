@@ -79,4 +79,11 @@ public interface OrganizationMapper {
     int deleteByIds(List<Long> ids);
 
     List<OrganizationDO> findNotRoot(@Param("tenantId") String tenantId);
+
+    /**
+     *
+     * @param orgIds
+     * @return
+     */
+    List<OrganizationDO> queryOrgListByOrgIds(@Param("orgIds") List<Long> orgIds);
 }

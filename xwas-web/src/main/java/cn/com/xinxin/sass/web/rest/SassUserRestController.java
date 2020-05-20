@@ -201,30 +201,33 @@ public class SassUserRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
         String userAccount = pwdForm.getAccount();
-
         String userOldPwd = pwdForm.getOldPassword();
         String userNewPwd = pwdForm.getNewPassword();
-
-        String resultMsg = "";
-
-        if(StringUtils.isNotBlank(userOldPwd)&&StringUtils.isNotBlank(userNewPwd)){
-            // 新旧密码都不为空，表示修改密码
-            this.userService.modifyPassword(userAccount,userOldPwd,userNewPwd,sassUserInfo.getAccount());
-            resultMsg = "你的密码已经修改成功，退出来重新登陆即可";
-        }else {
             // 重置密码
-            String randomPwd = RandomPasswordUtils.getPasswordSimple(4,4);
-            String md5Pwd = SecureUtils.getMD5(randomPwd);
-            this.userService.resetPassword(userAccount,md5Pwd,sassUserInfo.getAccount());
-            resultMsg = "你的密码已经重置为:[" + randomPwd +"],登录后请重新修改密码";
-        }
+        String randomPwd = RandomPasswordUtils.getPasswordSimple(4,4);
+        String md5Pwd = SecureUtils.getMD5(randomPwd);
+        this.userService.resetPassword(userAccount,md5Pwd,sassUserInfo.getAccount());
+        String resultMsg = "你的密码已经重置为:[" + randomPwd +"],登录后请重新修改密码";
+        return  resultMsg;
+    }
 
-//        try {
-//            userAclTokenRepository.cleanSassUserTokenCache(userAccount);
-//            userAclTokenRepository.cleanSassUserInfoCache(userAccount);
-//        }catch (Exception ex){
-//            log.warn("restUserPassword clean user cache ex = {}", ex.getMessage());
-//        }
+
+    @SysLog("修改用户密码")
+    @RequestMapping(value = "/password/modify",method = RequestMethod.POST)
+    @ResponseBody
+    public Object modifyUserPassword(HttpServletRequest request, @RequestBody UserPwdForm pwdForm){
+
+        if(null == pwdForm){
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"重置密码参数不能为空","重置密码参数不能为空");
+        }
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+        // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
+        String userAccount = pwdForm.getAccount();
+        String userOldPwd = pwdForm.getOldPassword();
+        String userNewPwd = pwdForm.getNewPassword();
+        // 新旧密码都不为空，表示修改密码
+        this.userService.modifyPassword(userAccount,userOldPwd,userNewPwd,sassUserInfo.getAccount());
+        String resultMsg = "你的密码已经修改成功，退出来重新登陆即可";
 
         return  resultMsg;
     }
@@ -405,9 +408,17 @@ public class SassUserRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
         }
 
-        // FIXME: 删除的时候同时需要清除token等缓存信息
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
+        if(deleteUserForm.getAccounts().contains(sassUserInfo.getAccount())){
+            // 不能删除自己的账户
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"不能删除自己的账号","不能删除自己的账号");
+        }
+
+        // FIXME: 删除的时候同时需要清除token等缓存信息
         this.userService.deleteUserByAccounts(deleteUserForm.getAccounts());
+
+
         deleteUserForm.getAccounts().stream().forEach(account->{
             userAclTokenRepository.cleanSassUserTokenCache(account);
             userAclTokenRepository.cleanSassUserInfoCache(account);

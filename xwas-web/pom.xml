@@ -33,10 +33,7 @@
             <groupId>com.xinxinfinance.xwas</groupId>
             <artifactId>xwas-auth</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.xinxinfinance.oplog</groupId>
-            <artifactId>oplog-client</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>

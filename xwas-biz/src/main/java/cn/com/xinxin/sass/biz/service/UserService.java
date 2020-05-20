@@ -130,4 +130,10 @@ public interface UserService {
      */
     Map<String,  List<UserOrgDO>> queryUserOrgsMapsByAccounts(List<String> accounts);
 
+
+    List<UserOrgDO> queryUserOrgsByOrgCode(String orgCode);
+
+
+    List<UserOrgDO> queryUserOrgsByOrgCodeLists(List<String> orgCodes);
+
 }

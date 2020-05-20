@@ -1,5 +1,5 @@
 <template>
-  <Drawer title="日志详情" width="80" v-model="showDetail" scrollable transfer>
+  <Drawer title="用户详情" width="80" v-model="showDetail" scrollable transfer>
     <List :split="false">
       <ListItem>账号：{{ items.account }}</ListItem>
       <ListItem>ID：{{ items.id }}</ListItem>

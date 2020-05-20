@@ -97,4 +97,19 @@ public interface UserOrgDOMapper {
      * @return
      */
     List<UserOrgDO> queryUserOrgsByAccountList(@Param("accounts") List<String> accounts);
+
+    /**
+     *
+     * @param orgCode
+     * @return
+     */
+    List<UserOrgDO> queryUserOrgsByOrgCode(@Param("orgCode")String orgCode);
+
+
+    /**
+     *
+     * @param orgCodeList
+     * @return
+     */
+    List<UserOrgDO> queryUserOrgsByOrgCodeLists(@Param("orgCodeList")List<String> orgCodeList);
 }
