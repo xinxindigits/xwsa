@@ -122,7 +122,6 @@ export default {
     selectChat(n, opt = { pageIndex: 1, row: 0 }) {
       this.resetPageComp();
       this.current_chat = n;
-      console.log("here", opt.row);
       this.getDetail(opt.pageIndex, opt.row);
     },
     resetPageComp() {
@@ -227,9 +226,6 @@ export default {
     }
   },
   watch: {
-    page(newValue) {
-      console.log(newValue);
-    },
     value(newValue) {
       this.showRecord = newValue;
     },

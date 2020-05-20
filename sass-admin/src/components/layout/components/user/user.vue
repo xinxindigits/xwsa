@@ -38,9 +38,6 @@ export default {
         });
       });
     },
-    message() {
-      console.log("todo:go to message");
-    },
     profile() {
       this.$router.push("/profile");
     },
@@ -48,9 +45,6 @@ export default {
       switch (name) {
         case "logout":
           this.logout();
-          break;
-        case "message":
-          this.message();
           break;
         case "profile":
           this.profile();
