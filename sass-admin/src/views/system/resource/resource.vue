@@ -18,35 +18,42 @@
       <Col span="8">
         <Card>
           <Form
-            ref="form1"
-            :model="form1"
+            ref="form"
+            :model="form"
             label-colon
             :label-width="100"
             :rules="rules"
           >
             <FormItem label="上级ID" prop="parentId">
-              <Input v-model="form1.parentId" disabled></Input>
+              <Input v-model="form.parentId" disabled></Input>
             </FormItem>
             <FormItem label="编号" prop="code">
-              <Input v-model="form1.code" :disabled="isUpdate"></Input>
+              <Input v-model="form.code" :disabled="isUpdate"></Input>
             </FormItem>
             <FormItem label="名称" prop="name">
-              <Input v-model="form1.name"></Input>
+              <Input v-model="form.name"></Input>
             </FormItem>
             <FormItem label="资源权限值" prop="authority">
-              <Input v-model="form1.authority"></Input>
+              <Select v-model="form.authority" filterable>
+                <Option
+                  v-for="(n, index) in allGrantsList"
+                  :value="n.code"
+                  :key="`${n.code}_${index}`"
+                  >{{ n.name }}({{ n.code }})</Option
+                >
+              </Select>
             </FormItem>
             <FormItem label="资源类型" prop="resourceType">
-              <Select v-model="form1.resourceType" disabled>
+              <Select v-model="form.resourceType" disabled>
                 <Option value="menu">菜单</Option>
                 <Option value="function">功能</Option>
               </Select>
             </FormItem>
             <FormItem label="组件URI" prop="url">
-              <Input v-model="form1.url"></Input>
+              <Input v-model="form.url"></Input>
             </FormItem>
             <FormItem label="描述" prop="extension">
-              <Input v-model="form1.extension"></Input>
+              <Input v-model="form.extension"></Input>
             </FormItem>
             <FormItem>
               <Button type="primary" @click="hdlqModifyMenu">{{
@@ -78,13 +85,15 @@
 
 <script>
 import { Operate } from "./components";
+
 import {
+  getGrantList,
   getResourceMenuTree,
   getResourceQueryTree,
   updateResource,
   createResource,
   deleteResource
-} from "@/api/data";
+} from "@/api";
 export default {
   name: "resource-list",
   components: {
@@ -92,6 +101,8 @@ export default {
   },
   data() {
     return {
+      allGrantsList: [],
+
       isUpdate: false,
       modifyButtonText: "新增",
       submit: createResource,
@@ -99,7 +110,7 @@ export default {
       treedata: [],
       selectedTreeData: {},
       tableData: [],
-      form1: {
+      form: {
         id: "",
         parentId: "",
         name: "",
@@ -148,7 +159,7 @@ export default {
       if (arr.length > 1) {
         this.$Message.warning("只能勾选一个父节点进行新增操作");
       } else {
-        this.form1 = {
+        this.form = {
           parentId: arr.length == 1 ? arr[0].id : "0",
           code: "",
           authority: "/",
@@ -163,7 +174,7 @@ export default {
       }
     },
     reset() {
-      this.form1 = {
+      this.form = {
         parentId: "0",
         code: "",
         authority: "/",
@@ -185,7 +196,7 @@ export default {
         title: "确认删除？",
         content: `确定删除当前资源?`,
         onOk() {
-          deleteResource({ id: self.form1.id }).then(() => {
+          deleteResource({ id: self.form.id }).then(() => {
             this.$Message.success("删除成功！");
             self.init().then(() => {
               self.reset();
@@ -219,7 +230,7 @@ export default {
     hdlTreeSelected(i, n) {
       n.extension = n.extension || "";
       n.resourceType = "menu";
-      this.form1 = this._.pick(
+      this.form = this._.pick(
         n,
         "code",
         "parentId",
@@ -235,9 +246,9 @@ export default {
     },
     hdlqModifyMenu() {
       let data = this.selectedTreeData;
-      this.$refs["form1"].validate(valid => {
+      this.$refs["form"].validate(valid => {
         if (valid) {
-          this.submit({ ...this.form1, resourceType: "menu" }).then(res => {
+          this.submit({ ...this.form, resourceType: "menu" }).then(res => {
             this.curValue = false;
             let cbkdata = this.isUpdate ? data : res.data;
             this.$Message.success(this.isUpdate ? "更新成功" : "新增成功");
@@ -299,6 +310,9 @@ export default {
     }
   },
   mounted() {
+    getGrantList().then(({ data }) => {
+      this.allGrantsList = data;
+    });
     this.reset();
     this.init();
   },

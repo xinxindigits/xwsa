@@ -1,5 +1,11 @@
 import axios from "@/libs/api.request";
-
+//读取所有权限值列表
+export const getGrantList = () => {
+  return axios.request({
+    url: "resource/grants/list",
+    method: "get"
+  });
+};
 //获取权限树
 export const getGrantTree = ({ roleCode }) => {
   return axios.request({
