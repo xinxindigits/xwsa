@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Drawer title="任务日志" :closable="false" v-model="showRecord" width="80">
+    <Drawer title="任务日志" v-model="showRecord" width="80">
       <Form :model="formObj" inline label-colon>
         <FormItem>
           <Select v-model="formObj.taskStatus" style="width: 250px">
