@@ -1,6 +1,5 @@
 # 租户以及微信API相关的配置操作
     
-## 企业微信配置
    1. 企业微信管理员登录[企业微信后台](https://work.weixin.qq.com/wework_admin/loginpage_wx?from=myhome)  
       1. 在我的企业菜单中的企业信息模块获取企业ID(cropid)，如下图![如下图](./image/xwas_wechat_cropid.png)
     
