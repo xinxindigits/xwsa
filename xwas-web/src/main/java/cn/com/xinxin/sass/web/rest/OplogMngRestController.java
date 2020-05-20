@@ -13,6 +13,8 @@ import cn.com.xinxin.sass.web.vo.UserInfoVO;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +39,7 @@ public class OplogMngRestController extends AclController {
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
+    @RequiresPermissions(value = {"SASS_USER_OPLOG_MNG"},logical= Logical.OR)
     public Object listOplogs(@RequestBody OplogForm oplogForm, HttpServletRequest request){
 
         if(oplogForm == null){
@@ -58,6 +61,7 @@ public class OplogMngRestController extends AclController {
 
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)
+    @RequiresPermissions(value = {"SASS_USER_OPLOG_MNG"},logical= Logical.OR)
     public Object queryOplogsByAccount(@RequestBody OplogForm oplogForm, HttpServletRequest request){
 
         if(oplogForm == null){
@@ -83,6 +87,7 @@ public class OplogMngRestController extends AclController {
 
 
     @RequestMapping(value = "/detail/{id}",method = RequestMethod.GET)
+    @RequiresPermissions(value = {"SASS_USER_OPLOG_MNG"},logical= Logical.OR)
     public Object deltailOplogs(@PathVariable String id, HttpServletRequest request){
 
         if(id == null){
