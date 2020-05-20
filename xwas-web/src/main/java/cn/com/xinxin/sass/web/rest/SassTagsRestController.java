@@ -58,8 +58,7 @@ public class SassTagsRestController extends AclController {
 
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)
-    //修改权限注解方式
-    //@RequiresPermissions(value = {"SASS_TAG_MNG","SASS_TAG_QUERY_LIST"},logical= Logical.OR)
+    @RequiresPermissions(value = {"SASS_TAG_MNG","SASS_TAG_QUERY_LIST"},logical= Logical.OR)
     public Object queryTags(@RequestBody TagForm tagForm, HttpServletRequest request){
 
         logger.info("SassTagsRestController,query,tagForm ={}",tagForm);
@@ -88,7 +87,7 @@ public class SassTagsRestController extends AclController {
 
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
-    //@RequiresPermissions("/tags/list")
+    @RequiresPermissions(value = {"SASS_TAG_MNG","SASS_TAG_QUERY_LIST"},logical= Logical.OR)
     public Object listTags(@RequestBody TagForm tagForm, HttpServletRequest request){
 
         logger.info("SassTagsRestController,list,tagForm ={}",tagForm);
@@ -115,7 +114,6 @@ public class SassTagsRestController extends AclController {
 
 
     @RequestMapping(value = "/routes",method = RequestMethod.POST)
-    //@RequiresPermissions("/tags/rotes")
     public Object rotesTags(@RequestBody TagForm tagForm, HttpServletRequest request){
 
         logger.info("SassTagsRestController,rotesTags,tagForm ={}",tagForm);
@@ -136,7 +134,7 @@ public class SassTagsRestController extends AclController {
 
     @SysLog("更新标签")
     @RequestMapping(value = "/update",method = RequestMethod.POST)
-    //@RequiresPermissions("/tags/update")
+    @RequiresPermissions(value = {"SASS_TAG_MNG","SASS_TAG_UPDATE"},logical= Logical.OR)
     public Object updateTags(@RequestBody TagForm tagForm, HttpServletRequest request){
 
         logger.info("SassTagsRestController,update,tagForm ={}",tagForm);
@@ -156,7 +154,7 @@ public class SassTagsRestController extends AclController {
 
     @SysLog("删除标签")
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
-    //@RequiresPermissions("/tags/delete")
+    @RequiresPermissions(value = {"SASS_TAG_MNG","SASS_TAG_DELETE"},logical= Logical.OR)
     public Object deleteTags(@RequestParam Long tagId,HttpServletRequest request){
 
         logger.info("SassTagsRestController,deleteTags,tagId ={}",tagId);
@@ -172,7 +170,7 @@ public class SassTagsRestController extends AclController {
 
     @SysLog("新建标签")
     @RequestMapping(value = "/create",method = RequestMethod.POST)
-    //@RequiresPermissions("/tags/create")
+    @RequiresPermissions(value = {"SASS_TAG_MNG","SASS_TAG_ADD"},logical= Logical.OR)
     public Object createTags(@RequestBody TagForm tagForm, HttpServletRequest request){
 
         logger.info("SassTagsRestController,createTags,tagForm ={}",tagForm);
@@ -212,7 +210,7 @@ public class SassTagsRestController extends AclController {
 
     @SysLog("给数据打标签")
     @RequestMapping(value = "/fixdata",method = RequestMethod.POST)
-    //@RequiresPermissions("/tags/fixdata")
+    @RequiresPermissions(value = {"SASS_TAG_MNG","SASS_TAG_FIX_DATA"},logical= Logical.OR)
     public Object fixdataTags(@RequestBody TagRelationForm tagForm, HttpServletRequest request){
 
         logger.info("SassTagsRestController,fixdata,tagForm ={}",tagForm);

@@ -27,6 +27,7 @@ import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,8 @@ public class SassResourceRestController extends AclController {
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/resource/list")
+    @RequiresPermissions(value = {"SASS_RESOURCE_MENU_FUNCTION_MNG",
+            "SASS_RESOURCE_MENU_QUERY_LIST"},logical= Logical.OR)
     public Object ListResource(HttpServletRequest request, @RequestBody ResourceQueryForm resourceQueryForm){
 
         log.info("ResourceController.list,resourceQueryForm={}", resourceQueryForm);
@@ -95,7 +97,6 @@ public class SassResourceRestController extends AclController {
 
     @RequestMapping(value = "/grants/list",method = RequestMethod.GET)
     @ResponseBody
-//    @RequiresPermissions("/grants/list")
     public Object listAllGrantsValues(HttpServletRequest request){
 
         log.info("ResourceController.listAllGrantsValues");
@@ -153,7 +154,6 @@ public class SassResourceRestController extends AclController {
      */
     @RequestMapping(value = "/menu/tree",method = RequestMethod.GET)
     @ResponseBody
-    //@RequiresPermissions("resource/menu/tree")
     public Object treeMenuResource(HttpServletRequest request){
 
         log.info("ResourceController.treeMenuResource,roleCode={}");
@@ -206,7 +206,6 @@ public class SassResourceRestController extends AclController {
      */
     @RequestMapping(value = "/tree",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/resource/tree")
     public Object treeResource(HttpServletRequest request,
                                @Param("roleCode") String roleCode){
 
@@ -258,7 +257,8 @@ public class SassResourceRestController extends AclController {
 
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/resource/create")
+    @RequiresPermissions(value = {"SASS_RESOURCE_MENU_FUNCTION_MNG",
+            "SASS_RESOURCE_MENU_FUNCTION_ADD"},logical= Logical.OR)
     @SysLog("创建资源权限")
     public Object createResource(HttpServletRequest request,
                                    @RequestBody ResourceForm resourceForm){
@@ -309,7 +309,8 @@ public class SassResourceRestController extends AclController {
     @SysLog("更新资源权限")
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/resource/update")
+    @RequiresPermissions(value = {"SASS_RESOURCE_MENU_FUNCTION_MNG",
+            "SASS_RESOURCE_MENU_FUNCTION_UPDATE"},logical= Logical.OR)
     public Object updateResource(HttpServletRequest request,
                              @RequestBody ResourceForm resourceForm){
 
@@ -330,7 +331,8 @@ public class SassResourceRestController extends AclController {
     @SysLog("删除资源权限")
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     @ResponseBody
-    @RequiresPermissions("/resource/delete")
+    @RequiresPermissions(value = {"SASS_RESOURCE_MENU_FUNCTION_MNG",
+            "SASS_RESOURCE_MENU_FUNCTION_REMOVE"},logical= Logical.OR)
     public Object deleteResource(HttpServletRequest request,
                                  @RequestParam String id){
 

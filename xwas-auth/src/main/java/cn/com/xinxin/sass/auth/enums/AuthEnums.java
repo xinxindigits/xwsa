@@ -55,6 +55,8 @@ public enum AuthEnums {
 
     SASS_ROLE_GRANT_RESOURCE("SASS_ROLE_GRANT_RESOURCE","角色授权资源权限","角色授权资源权限"),
 
+    SASS_ROLE_GRANT_USER("SASS_ROLE_GRANT_USER","角色授权用户权限","角色授权用户权限"),
+
 
     /**
      * 标签管理功能
@@ -103,6 +105,13 @@ public enum AuthEnums {
 
     SASS_USER_ROLE_GRANT("SASS_USER_ROLE_GRANT","用户角色授权","用户角色授权"),
 
+    SASS_USER_OPLOG_MNG("SASS_USER_OPLOG_MNG","用户操作日志记录管理","用户操作日志记录管理"),
+
+    SASS_USER_OPLOG_QUERY("SASS_USER_OPLOG_QUERY","用户操作日志记录查询","用户操作日志记录查询"),
+
+    /**
+     * 操作日志管理
+     */
     SASS_USER_PASSWORD_REST("SASS_USER_PASSWORD_REST","重置用户密码","重置用户密码"),
 
     ;

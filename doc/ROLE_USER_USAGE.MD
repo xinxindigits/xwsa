@@ -28,6 +28,7 @@
    | 角色修改权限  | SASS_ROLE_UPDATE  |   |
    | 角色删除权限  | SASS_ROLE_DELETE  |   |
    | 角色授权资源权限  | SASS_ROLE_GRANT_RESOURCE  |   |
+   | 角色授权用户权限  | SASS_ROLE_GRANT_USER  |   |
    | 角色管理权限  | SASS_ROLE_MNG  |   |
    | 标签查询列表权限  | SASS_TAG_QUERY_LIST  |   |
    | 标签新增权限  | SASS_TAG_ADD  |   |
@@ -48,3 +49,5 @@
    | 用户角色授权  | SASS_USER_ROLE_GRANT  |   |
    | 重置用户密码  | SASS_USER_PASSWORD_REST  |   |
    | 用户管理功能  | SASS_USER_MNG  |   |
+   | 用户操作日志记录管理  | SASS_USER_OPLOG_MNG  |   |
+   | 用户操作日志记录查询  | SASS_USER_OPLOG_QUERY  |   |
