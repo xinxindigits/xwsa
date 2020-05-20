@@ -367,6 +367,7 @@ public class SassRoleRestController extends AclController {
         for(RoleResourceForm roleResourceForm : grantResourceList){
 
             RoleResourceDO roleResourceDO = new RoleResourceDO();
+            roleResourceDO.setTenantId(sassUserInfo.getTenantId());
             roleResourceDO.setResourceCode(roleResourceForm.getResourceCode());
             roleResourceDO.setResourceName(roleResourceForm.getResourceName());
             roleResourceDO.setRoleCode(roleCode);
