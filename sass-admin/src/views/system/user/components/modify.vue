@@ -6,15 +6,15 @@
     :mask-closable="false"
   >
     <Form
-      ref="formObj"
-      :model="formObj"
+      ref="form"
+      :model="form"
       label-position="right"
       :label-width="150"
       :rules="rules"
     >
       <FormItem label="账号" prop="account">
         <Input
-          v-model="formObj.account"
+          v-model="form.account"
           style="width: 250px"
           :disabled="type == 'update'"
         ></Input>
@@ -22,7 +22,7 @@
       <FormItem label="所属机构" prop="orgCode">
         <treeselect
           style="width:250px"
-          v-model="formObj.orgCode"
+          v-model="form.orgCode"
           :multiple="false"
           :options="options"
           :defaultExpandLevel="Infinity"
@@ -32,17 +32,17 @@
         />
       </FormItem>
       <FormItem label="角色" prop="roles">
-        <Select multiple v-model="formObj.roles" style="width: 250px">
+        <Select multiple v-model="form.roles" style="width: 250px">
           <Option v-for="item in roles" :value="item.code" :key="item.code">
             {{ item.name }}
           </Option>
         </Select>
       </FormItem>
       <FormItem label="姓名" prop="name">
-        <Input v-model="formObj.name" style="width: 250px"></Input>
+        <Input v-model="form.name" style="width: 250px"></Input>
       </FormItem>
       <FormItem label="性别" prop="gender">
-        <Select v-model="formObj.gender" style="width: 250px">
+        <Select v-model="form.gender" style="width: 250px">
           <Option
             v-for="item in statusEnum"
             :value="item.gender"
@@ -59,7 +59,7 @@
         :rules="checkPass"
       >
         <Input
-          v-model="formObj.password"
+          v-model="form.password"
           style="width: 250px"
           type="password"
           password
@@ -68,7 +68,7 @@
       </FormItem>
       <FormItem label="角色描述" prop="extension">
         <Input
-          v-model="formObj.extension"
+          v-model="form.extension"
           type="textarea"
           style="width: 250px"
           :rows="5"
@@ -83,7 +83,7 @@
         :loading="isReseting"
         >重置密码</Button
       >
-      <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
+      <Button type="primary" @click="hdlSubmit('form')">确认</Button>
       <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
     </div>
   </Modal>
@@ -133,7 +133,7 @@ export default {
       ],
       roles: [],
       orgCode: [],
-      formObj: {
+      form: {
         account: "",
         name: "",
         password: "",
@@ -198,12 +198,12 @@ export default {
       return arr;
     },
     setData(obj) {
-      this.formObj.account = obj.account;
-      this.formObj.name = obj.name;
-      this.formObj.gender = obj.gender;
-      this.formObj.extension = obj.extension;
-      this.formObj.roles = obj.roles;
-      this.formObj.orgCode = obj.orgCode;
+      this.form.account = obj.account;
+      this.form.name = obj.name;
+      this.form.gender = obj.gender;
+      this.form.extension = obj.extension;
+      this.form.roles = obj.roles;
+      this.form.orgCode = obj.orgCode;
     },
     setRoleList(data) {
       this.roles = data;
@@ -212,7 +212,7 @@ export default {
       this.orgCode = data;
     },
     reset() {
-      this.formObj = {
+      this.form = {
         account: "",
         name: "",
         password: "",
@@ -227,10 +227,10 @@ export default {
         if (valid) {
           let params =
             this.type == "create"
-              ? Object.assign({}, this.formObj, {
-                  password: this.$md5(this.formObj.password)
+              ? Object.assign({}, this.form, {
+                  password: this.$md5(this.form.password)
                 })
-              : this.formObj;
+              : this.form;
           _config[this.type].submit(params).then(() => {
             this.curValue = false;
             this.$emit("user-modified", this.type);
@@ -243,7 +243,7 @@ export default {
     },
     resetPwd() {
       resetUserPwd({
-        account: this.formObj.account
+        account: this.form.account
       })
         .then(({ data }) => {
           this.$Modal.success({
@@ -259,7 +259,7 @@ export default {
       let self = this;
       this.$Modal.confirm({
         title: "确认操作",
-        content: `确定重置${this.formObj.account}的密码?`,
+        content: `确定重置${this.form.account}的密码?`,
         onOk() {
           self.$emit("user-pwd-reset");
           self.isReseting = true;

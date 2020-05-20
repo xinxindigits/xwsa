@@ -31,8 +31,7 @@ export default {
     tagNavList: []
   },
   getters: {
-    menuList: (state, getters, rootState) =>
-      getMenuByRouter(routers.concat(state.routers), rootState.user.access)
+    menuList: state => getMenuByRouter(routers.concat(state.routers))
   },
   mutations: {
     setHomeRoute(state, routes) {

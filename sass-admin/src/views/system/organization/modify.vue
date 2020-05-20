@@ -6,27 +6,27 @@
     :mask-closable="false"
   >
     <Form
-      ref="formObj"
-      :model="formObj"
+      ref="form"
+      :model="form"
       label-position="right"
       :label-width="150"
       :rules="rules"
     >
       <FormItem label="机构编号" prop="code">
-        <Input v-model="formObj.code" style="width: 280px"></Input>
+        <Input v-model="form.code" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="机构名称" prop="name">
-        <Input v-model="formObj.name" style="width: 280px"></Input>
+        <Input v-model="form.name" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="上级机构" prop="parentName">
         <Input
-          v-model="formObj.parentName"
+          v-model="form.parentName"
           style="width: 280px"
           :disabled="no_edit_parentName"
         ></Input>
       </FormItem>
       <FormItem label="机构类型" prop="orgType">
-        <Select v-model="formObj.orgType" style="width:280px">
+        <Select v-model="form.orgType" style="width:280px">
           <Option
             v-for="item in orgTypeList"
             :value="item.orgType"
@@ -37,7 +37,7 @@
       </FormItem>
       <FormItem label="机构备注" prop="remark">
         <Input
-          v-model="formObj.remark"
+          v-model="form.remark"
           type="textarea"
           :maxlength="50"
           style="width: 280px"
@@ -48,10 +48,7 @@
     </Form>
     <div slot="footer">
       <Button @click="hdlCancel">取消</Button>
-      <Button
-        style="margin-left: 8px"
-        type="primary"
-        @click="hdlSubmit('formObj')"
+      <Button style="margin-left: 8px" type="primary" @click="hdlSubmit('form')"
         >确认</Button
       >
     </div>
@@ -91,7 +88,7 @@ export default {
     return {
       curValue: false,
       no_edit_parentName: false,
-      formObj: {
+      form: {
         name: "",
         parentId: "",
         parentName: "",
@@ -129,20 +126,20 @@ export default {
   },
   methods: {
     setData(obj) {
-      this.formObj.orgType = obj.orgType;
-      this.formObj.code = obj.code;
-      this.formObj.name = obj.name;
-      this.formObj.parentName = obj.parentName;
-      this.formObj.parentId = obj.parentId;
+      this.form.orgType = obj.orgType;
+      this.form.code = obj.code;
+      this.form.name = obj.name;
+      this.form.parentName = obj.parentName;
+      this.form.parentId = obj.parentId;
       this.no_edit_parentName = obj.no_edit_parentName;
-      this.formObj.remark = obj.remark;
+      this.form.remark = obj.remark;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.formObj).then(() => {
+          _config[this.type].submit(this.form).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.formObj);
+            this.$emit(_config[this.type].success_evt, this.form);
           });
         }
       });

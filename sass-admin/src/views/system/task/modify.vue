@@ -6,22 +6,22 @@
     :mask-closable="false"
   >
     <Form
-      ref="formObj"
-      :model="formObj"
+      ref="form"
+      :model="form"
       label-position="right"
       :label-width="150"
       :rules="rules"
     >
       <FormItem label="租户编号" prop="code" v-if="type == 'update'">
         <Input
-          v-model="formObj.code"
+          v-model="form.code"
           style="width: 280px"
           :disabled="true"
         ></Input>
       </FormItem>
       <FormItem label="任务类型" prop="taskType">
         <Select
-          v-model="formObj.taskType"
+          v-model="form.taskType"
           style="width:280px"
           :disabled="type == 'update'"
         >
@@ -31,15 +31,15 @@
         </Select>
       </FormItem>
       <FormItem label="cron表达式" prop="cronExpression">
-        <Input v-model="formObj.cronExpression" style="width: 280px"></Input>
+        <Input v-model="form.cronExpression" style="width: 280px"></Input>
       </FormItem>
       <FormItem
         label="会话每次提取上限"
         prop="countCeiling"
-        v-if="formObj.taskType == this.MESSAGE_SYNC"
+        v-if="form.taskType == this.MESSAGE_SYNC"
       >
         <Input
-          v-model="formObj.countCeiling"
+          v-model="form.countCeiling"
           number
           placeholder="请输入1-1000范围内的整数"
           style="width: 280px"
@@ -48,24 +48,24 @@
       <FormItem
         label="会话每次提取间隔"
         prop="timeInterval"
-        v-if="formObj.taskType == this.MESSAGE_SYNC"
+        v-if="form.taskType == this.MESSAGE_SYNC"
       >
         <Input
-          v-model="formObj.timeInterval"
+          v-model="form.timeInterval"
           placeholder="请输入大于等于1的整数"
           number
           style="width: 280px"
         ></Input>
       </FormItem>
       <FormItem label="状态" prop="status">
-        <RadioGroup v-model="formObj.status">
+        <RadioGroup v-model="form.status">
           <Radio label="0">启用</Radio>
           <Radio label="1">禁用</Radio>
         </RadioGroup>
       </FormItem>
       <FormItem label="任务描述" prop="remark">
         <Input
-          v-model="formObj.remark"
+          v-model="form.remark"
           type="textarea"
           :maxlength="50"
           style="width: 280px"
@@ -76,10 +76,7 @@
     </Form>
     <div slot="footer">
       <Button @click="hdlCancel">取消</Button>
-      <Button
-        style="margin-left: 8px"
-        type="primary"
-        @click="hdlSubmit('formObj')"
+      <Button style="margin-left: 8px" type="primary" @click="hdlSubmit('form')"
         >确认</Button
       >
     </div>
@@ -122,7 +119,7 @@ export default {
       curValue: false,
       statusEnum: Object.entries(taskType),
       MESSAGE_SYNC: "MESSAGE_SYNC",
-      formObj: {
+      form: {
         id: "",
         code: "",
         taskType: "",
@@ -165,20 +162,20 @@ export default {
   },
   methods: {
     setData(obj) {
-      this.formObj.id = obj.id;
-      this.formObj.code = obj.tenantId;
-      this.formObj.taskType = obj.taskType;
-      this.formObj.cronExpression = obj.cronExpression;
-      this.formObj.countCeiling = obj.countCeiling;
-      this.formObj.timeInterval = obj.timeInterval;
-      this.formObj.status = "" + obj.status;
+      this.form.id = obj.id;
+      this.form.code = obj.tenantId;
+      this.form.taskType = obj.taskType;
+      this.form.cronExpression = obj.cronExpression;
+      this.form.countCeiling = obj.countCeiling;
+      this.form.timeInterval = obj.timeInterval;
+      this.form.status = "" + obj.status;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.formObj).then(() => {
+          _config[this.type].submit(this.form).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.formObj);
+            this.$emit(_config[this.type].success_evt, this.form);
           });
         }
       });

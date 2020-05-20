@@ -1,21 +1,6 @@
 import axios from "axios";
 import store from "@/store";
 import { Message, LoadingBar } from "view-design";
-const addErrorLog = errorInfo => {
-  const {
-    statusText,
-    status,
-    request: { responseURL }
-  } = errorInfo;
-  let info = {
-    type: "ajax",
-    code: status,
-    mes: statusText,
-    url: responseURL
-  };
-  if (!responseURL.includes("save_error_logger"))
-    store.dispatch("addErrorLog", info);
-};
 
 class HttpRequest {
   constructor(baseUrl) {
@@ -64,9 +49,7 @@ class HttpRequest {
             return n.toUpperCase() == "XTOKEN";
           });
           if (res.headers && arr.length > 0) {
-            console.log("refresh");
             store.commit("setToken", res.headers[arr[0]]);
-            console.log("token updated");
           }
           return data;
         } else if (data && data.code != "SUCCESS") {
@@ -82,7 +65,6 @@ class HttpRequest {
       },
       error => {
         this.destroy(url);
-
         let errorInfo = error.response;
         if (!errorInfo) {
           Message.error("服务器繁忙，请稍后再试!");
@@ -110,18 +92,6 @@ class HttpRequest {
           });
           store.commit("setToken", "");
         }
-        if (!errorInfo) {
-          const {
-            request: { statusText, status },
-            config
-          } = JSON.parse(JSON.stringify(error));
-          errorInfo = {
-            statusText,
-            status,
-            request: { responseURL: config.url }
-          };
-        }
-        addErrorLog(errorInfo);
         return Promise.reject(error);
       }
     );

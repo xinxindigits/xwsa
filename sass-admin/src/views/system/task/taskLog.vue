@@ -1,9 +1,9 @@
 <template>
   <div>
     <Drawer title="任务日志" v-model="showRecord" width="80">
-      <Form :model="formObj" inline label-colon>
+      <Form :model="form" inline label-colon>
         <FormItem>
-          <Select v-model="formObj.taskStatus" style="width: 250px">
+          <Select v-model="form.taskStatus" style="width: 250px">
             <Option v-for="item in statusEnum" :value="item[0]" :key="item[0]">
               {{ item[1] }}
             </Option>
@@ -97,7 +97,7 @@ export default {
         }
       },
       detail: "",
-      formObj: {
+      form: {
         taskType: "",
         taskStatus: "",
         startTime: "",
@@ -122,7 +122,7 @@ export default {
   methods: {
     init(taskType) {
       this.taskType = taskType;
-      this.formObj.taskType = taskType;
+      this.form.taskType = taskType;
       this.hdlquery();
     },
     hdlquery() {
@@ -133,7 +133,7 @@ export default {
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
 
-      queryTaskLog({ pageIndex, pageSize, ...this.formObj })
+      queryTaskLog({ pageIndex, pageSize, ...this.form })
         .then(res => {
           let { data } = res;
           this.page = pageIndex;
@@ -152,9 +152,9 @@ export default {
     },
     reset() {
       this.daterange = [];
-      this.formObj.taskStatus = "";
-      this.formObj.startTime = "";
-      this.formObj.endTime = "";
+      this.form.taskStatus = "";
+      this.form.startTime = "";
+      this.form.endTime = "";
       this.hdlquery();
     }
   },
@@ -171,12 +171,12 @@ export default {
         newValue[0] instanceof Date &&
         newValue[0] instanceof Date
       ) {
-        this.formObj.startTime = newValue[0].getTime() + "";
-        this.formObj.endTime =
+        this.form.startTime = newValue[0].getTime() + "";
+        this.form.endTime =
           newValue[1].getTime() + 24 * 60 * 60 * 1000 - 1000 + "";
       } else {
-        this.formObj.startTime = "";
-        this.formObj.endTime = "";
+        this.form.startTime = "";
+        this.form.endTime = "";
       }
     }
   }

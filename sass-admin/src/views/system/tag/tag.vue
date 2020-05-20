@@ -3,7 +3,7 @@
     <Card>
       <query
         ref="query"
-        v-model="formItem"
+        v-model="form"
         @on-tag-query="hdlQuery"
         @on-tag-reset="init"
       ></query>
@@ -90,7 +90,7 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      formItem: {
+      form: {
         name: "",
         tagType: ""
       },
@@ -131,7 +131,7 @@ export default {
       this.changePage(1);
     },
     hdlQuery() {
-      this.curQuery = this.formItem;
+      this.curQuery = this.form;
       this.changePage(1);
     },
     hdlqueryAfterReset() {
