@@ -28,6 +28,7 @@ import com.xinxinfinance.commons.idgen.SnowFakeIdGenerator;
 import com.xinxinfinance.commons.result.BizResultCode;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,7 +68,7 @@ public class SassOrganizationRestController extends AclController {
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/organization/list")
+    @RequiresPermissions(value = {"SASS_ORG_MNG", "SASS_ROLE_QUERY_LIST"},logical= Logical.OR)
     public Object organizationList(HttpServletRequest request, @RequestBody OrgQueryForm orgForm){
 
         if(null == orgForm){
@@ -130,7 +131,6 @@ public class SassOrganizationRestController extends AclController {
      */
     @RequestMapping(value = "/routes",method = RequestMethod.GET)
     @ResponseBody
-    //@RequiresPermissions("/organization/routes")
     public Object OrganizationRoutes(HttpServletRequest request){
 
         loger.info("SassOrganizationRestController,OrganizationRoutes");
@@ -161,7 +161,7 @@ public class SassOrganizationRestController extends AclController {
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/organization/create")
+    @RequiresPermissions(value = {"SASS_ORG_MNG", "SASS_ORG_ADD"},logical= Logical.OR)
     @SysLog("创建组织机构操作")
     public Object createOrganization(HttpServletRequest request,
                                      @RequestBody OrganizationForm orgForm){
@@ -213,7 +213,7 @@ public class SassOrganizationRestController extends AclController {
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/organization/update")
+    @RequiresPermissions(value = {"SASS_ORG_MNG", "SASS_ORG_UPDATE"},logical= Logical.OR)
     @SysLog("更新组织机构操作")
     public Object updateOrganization(HttpServletRequest request,
                                      @RequestBody OrganizationForm orgForm){
@@ -244,7 +244,7 @@ public class SassOrganizationRestController extends AclController {
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/organization/delete")
+    @RequiresPermissions(value = {"SASS_ORG_MNG", "SASS_ORG_DELETE"},logical= Logical.OR)
     @SysLog("删除组织机构操作")
     public Object deleteOrganization(@RequestBody DeleteOrgForm deleteOrgForm, HttpServletRequest request){
 
