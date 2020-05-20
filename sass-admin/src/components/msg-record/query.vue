@@ -1,8 +1,8 @@
 <template>
   <Card class="search">
-    <Form ref="searchForm" :model="formObj">
+    <Form ref="searchForm" :model="form">
       <FormItem prop="keyWord">
-        <Input v-model="formObj.keyWord" placeholder="关键词"></Input>
+        <Input v-model="form.keyWord" placeholder="关键词"></Input>
       </FormItem>
       <FormItem>
         <DatePicker
@@ -29,7 +29,7 @@ export default {
   name: "msg-record-query",
   data() {
     return {
-      formObj: {
+      form: {
         keyWord: "",
         startTime: "",
         endTime: ""
@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     hdlQuery() {
-      this.$emit("on-query", this.formObj);
+      this.$emit("on-query", this.form);
     },
     reset() {
       this.$refs.searchForm.resetFields();
@@ -62,12 +62,12 @@ export default {
         newValue[0] instanceof Date &&
         newValue[0] instanceof Date
       ) {
-        this.formObj.startTime = newValue[0].getTime() + "";
-        this.formObj.endTime =
+        this.form.startTime = newValue[0].getTime() + "";
+        this.form.endTime =
           newValue[1].getTime() + 24 * 60 * 60 * 1000 - 1000 + "";
       } else {
-        this.formObj.startTime = "";
-        this.formObj.endTime = "";
+        this.form.startTime = "";
+        this.form.endTime = "";
       }
     }
   }

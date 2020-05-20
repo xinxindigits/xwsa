@@ -1,7 +1,7 @@
 <template>
-  <Form :model="formItem" inline label-colon>
+  <Form :model="form" inline label-colon>
     <FormItem prop="account">
-      <Input v-model="formItem.account" placeholder="操作账号"></Input>
+      <Input v-model="form.account" placeholder="操作账号"></Input>
     </FormItem>
     <FormItem>
       <Button type="primary" @click="hdlquery">查询</Button>
@@ -25,20 +25,20 @@ export default {
   },
   data() {
     return {
-      formItem: {
+      form: {
         account: ""
       }
     };
   },
   methods: {
     hdlquery() {
-      this.$emit("on-log-query", this.formItem);
+      this.$emit("on-log-query", this.form);
     },
     reset() {
-      this.formItem = {
+      this.form = {
         account: ""
       };
-      this.$emit("on-log-query-reset", this.formItem);
+      this.$emit("on-log-query-reset", this.form);
     }
   },
   watch: {
@@ -46,10 +46,10 @@ export default {
       deep: true,
       immediate: true,
       handler(newValue) {
-        this.formItem = newValue;
+        this.form = newValue;
       }
     },
-    formItem: {
+    form: {
       deep: true,
       immediate: true,
       handler(newValue) {
