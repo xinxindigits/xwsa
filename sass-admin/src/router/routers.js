@@ -43,8 +43,6 @@ export const formatMenu = list => {
       obj.meta.title = item.text;
       if (item.parentId == "0") {
         obj.component = Main;
-      } else {
-        obj.path = item.url.replace("/", "");
       }
       if (hasChild(item)) {
         obj.children = formatMenu(item.children);
