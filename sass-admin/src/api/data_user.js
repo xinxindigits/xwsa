@@ -70,3 +70,11 @@ export const resetUserPwd = ({ account, oldPassword, newPassword }) => {
     data: { account, oldPassword, newPassword }
   });
 };
+//修改个人密码
+export const changeUserPwd = ({ account, oldPassword, newPassword }) => {
+  return axios.request({
+    url: "user/password/modify",
+    method: "post",
+    data: { account, oldPassword, newPassword }
+  });
+};

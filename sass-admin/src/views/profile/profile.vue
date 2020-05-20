@@ -4,8 +4,8 @@
       <Row>
         <Col :span="10"
           ><Form
-            ref="formObj"
-            :model="formObj"
+            ref="form"
+            :model="form"
             label-position="right"
             :label-width="150"
             :rules="rules"
@@ -13,7 +13,7 @@
           >
             <FormItem label="原密码" prop="oldPassword">
               <Input
-                v-model="formObj.oldPassword"
+                v-model="form.oldPassword"
                 placeholder="请输入密码"
                 type="password"
                 maxlength="32"
@@ -23,7 +23,7 @@
 
             <FormItem label="新密码" prop="newPassword">
               <Input
-                v-model="formObj.newPassword"
+                v-model="form.newPassword"
                 placeholder="输入新密码"
                 maxlength="32"
                 type="password"
@@ -32,7 +32,7 @@
             </FormItem>
             <FormItem label="再次新密码" prop="newPasswordCheck">
               <Input
-                v-model="formObj.newPasswordCheck"
+                v-model="form.newPasswordCheck"
                 placeholder="再次输入密码"
                 maxlength="32"
                 type="password"
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { resetUserPwd } from "@/api";
+import { changeUserPwd } from "@/api";
 import { mapActions } from "vuex";
 
 export default {
@@ -63,8 +63,8 @@ export default {
       if (value === "") {
         callback(new Error("密码不能为空！"));
       } else {
-        if (this.formObj.newPasswordCheck !== "") {
-          this.$refs.formObj.validateField("newPasswordCheck");
+        if (this.form.newPasswordCheck !== "") {
+          this.$refs.form.validateField("newPasswordCheck");
         }
         callback();
       }
@@ -72,7 +72,7 @@ export default {
     const validatePassCheck = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("密码不能为空！"));
-      } else if (value !== this.formObj.newPassword) {
+      } else if (value !== this.form.newPassword) {
         callback(new Error("两次密码不一致！"));
       } else {
         callback();
@@ -87,7 +87,7 @@ export default {
           trigger: "blur"
         }
       ],
-      formObj: {
+      form: {
         oldPassword: "",
         newPassword: "",
         newPasswordCheck: ""
@@ -110,12 +110,12 @@ export default {
   methods: {
     ...mapActions(["handleLogOut"]),
     hdlSubmit() {
-      this.$refs.formObj.validate(valid => {
+      this.$refs.form.validate(valid => {
         if (valid) {
-          resetUserPwd({
+          changeUserPwd({
             account: this.$store.state.user.account,
-            oldPassword: this.$md5(this.formObj.oldPassword),
-            newPassword: this.$md5(this.formObj.newPasswordCheck)
+            oldPassword: this.$md5(this.form.oldPassword),
+            newPassword: this.$md5(this.form.newPasswordCheck)
           }).then(() => {
             this.$Message.success("密码重置成功，请重新登录");
             this.handleLogOut().then(() => {
