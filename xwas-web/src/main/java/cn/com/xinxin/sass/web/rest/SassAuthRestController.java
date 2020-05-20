@@ -161,6 +161,7 @@ public class SassAuthRestController {
                 oplog.setHttpMethod(request.getMethod());
                 oplog.setUa(StringUtils.substring(request.getHeader("user-agent"), 0, 256));
                 oplog.setAccount(userAccount);
+                oplog.setTenantId(sassUserInfo.getTenantId());
                 oplog.setGmtCreator(userAccount);
                 oplog.setGmtUpdater(userAccount);
                 //调用service保存SysLog实体类到数据库
