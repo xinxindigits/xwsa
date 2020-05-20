@@ -87,4 +87,23 @@
 
   </select>
 
+  <select id="queryUserOrgsByOrgCode" resultMap="BaseResultMapExt" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from user_org
+    where deleted = 0
+    and org_code = #{orgCode,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryUserOrgsByOrgCodeLists" resultMap="BaseResultMapExt" parameterType="java.util.List">
+    select
+    <include refid="Base_Column_List" />
+    from user_org
+    where deleted = 0
+    and org_code in
+    <foreach collection="orgCodeList" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
 </mapper>
