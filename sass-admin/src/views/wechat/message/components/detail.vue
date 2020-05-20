@@ -98,7 +98,6 @@ export default {
         type: n.roomId ? 1 : 0
       };
       getPageIndex(params).then(({ data }) => {
-        console.log(data);
         this.cur_userId = n.fromUserId;
         this.$refs.record.init(this.cur_userId, {
           ...params,

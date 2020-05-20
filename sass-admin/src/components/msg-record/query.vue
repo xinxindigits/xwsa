@@ -62,7 +62,6 @@ export default {
         newValue[0] instanceof Date &&
         newValue[0] instanceof Date
       ) {
-        console.log(newValue[0].getTime());
         this.formObj.startTime = newValue[0].getTime() + "";
         this.formObj.endTime =
           newValue[1].getTime() + 24 * 60 * 60 * 1000 - 1000 + "";

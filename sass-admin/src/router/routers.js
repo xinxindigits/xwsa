@@ -17,7 +17,6 @@ export const loadMenu = () => {
 // 格式化菜单
 export const formatMenu = list => {
   let res = [];
-  //还要加上code和path的转换
   forEach(list, item => {
     let ROUTES_CONFIG = routes_config[item.url];
     if (!ROUTES_CONFIG) {
