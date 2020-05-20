@@ -55,6 +55,8 @@ public enum AuthEnums {
 
     SASS_ROLE_GRANT_RESOURCE("SASS_ROLE_GRANT_RESOURCE","角色授权资源权限","角色授权资源权限"),
 
+    SASS_ROLE_GRANT_USER("SASS_ROLE_GRANT_USER","角色授权用户权限","角色授权用户权限"),
+
 
     /**
      * 标签管理功能
@@ -103,8 +105,23 @@ public enum AuthEnums {
 
     SASS_USER_ROLE_GRANT("SASS_USER_ROLE_GRANT","用户角色授权","用户角色授权"),
 
+    SASS_USER_OPLOG_MNG("SASS_USER_OPLOG_MNG","用户操作日志记录管理","用户操作日志记录管理"),
+
+    SASS_USER_OPLOG_QUERY("SASS_USER_OPLOG_QUERY","用户操作日志记录查询","用户操作日志记录查询"),
+
     SASS_USER_PASSWORD_REST("SASS_USER_PASSWORD_REST","重置用户密码","重置用户密码"),
 
+
+    /**
+     * 微信部门管理
+     */
+    SASS_WEXIN_DEPT_MNG("SASS_WEXIN_DEPT_MNG","企业微信部门管理权限","企业微信部门管理权限"),
+
+    SASS_WEXIN_STAFF_MNG("SASS_USER_PASSWORD_REST","企业微信员工管理权限","企业微信员工管理权限"),
+
+    SASS_WEXIN_CUSTOMER_MNG("SASS_WEXIN_CUSTOMER_MNG","企业微信客户管理权限","企业微信客户管理权限"),
+
+    SASS_WEXIN_MSG_MNG("SASS_USER_PASSWORD_REST","企业微信消息管理权限","企业微信消息管理权限"),
     ;
 
     private String code;

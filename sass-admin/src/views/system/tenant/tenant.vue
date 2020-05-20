@@ -1,12 +1,12 @@
 <template>
   <div>
     <Card>
-      <Form :model="formItem" inline label-colon>
+      <Form :model="form" inline label-colon>
         <FormItem>
-          <Input v-model="formItem.tenantId" placeholder="租户编码"></Input>
+          <Input v-model="form.tenantId" placeholder="租户编码"></Input>
         </FormItem>
         <FormItem>
-          <Input v-model="formItem.tenantName" placeholder="租户名称"></Input>
+          <Input v-model="form.tenantName" placeholder="租户名称"></Input>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="hdlquery">查询</Button>
@@ -109,7 +109,7 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      formItem: {
+      form: {
         tenantId: "",
         tenantName: "",
         state: ""
@@ -145,9 +145,9 @@ export default {
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
       let data = {
-        code: this.formItem.tenantId,
-        name: this.formItem.tenantName,
-        state: this.formItem.state
+        code: this.form.tenantId,
+        name: this.form.tenantName,
+        state: this.form.state
       };
       getTenantList({ pageIndex, pageSize, ...data })
         .then(res => {
@@ -163,9 +163,9 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.tenantName = "";
-      this.formItem.tenantId = "";
-      this.formItem.state = "";
+      this.form.tenantName = "";
+      this.form.tenantId = "";
+      this.form.state = "";
       this.hdlquery();
     },
     hdlDelete(codes) {

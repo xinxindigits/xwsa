@@ -6,49 +6,49 @@
     :mask-closable="false"
   >
     <Form
-      ref="formObj"
-      :model="formObj"
+      ref="form"
+      :model="form"
       label-position="right"
       :label-width="150"
       :rules="rules"
     >
       <FormItem label="租户编号" prop="code" v-if="type == 'update'">
         <Input
-          v-model="formObj.code"
+          v-model="form.code"
           style="width: 280px"
           :disabled="type == 'update'"
         ></Input>
       </FormItem>
       <FormItem label="租户名称" prop="name">
-        <Input v-model="formObj.name" style="width: 280px"></Input>
+        <Input v-model="form.name" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="企业微信corpId" prop="corpId">
-        <Input v-model="formObj.corpId" style="width: 280px"></Input>
+        <Input v-model="form.corpId" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="私钥" prop="privateKey">
-        <Input v-model="formObj.privateKey" style="width: 280px"></Input>
+        <Input v-model="form.privateKey" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="通讯录应用secret" prop="addressListSecret">
-        <Input v-model="formObj.addressListSecret" style="width: 280px"></Input>
+        <Input v-model="form.addressListSecret" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="联系人应用secret" prop="customerContactSecret">
         <Input
-          v-model="formObj.customerContactSecret"
+          v-model="form.customerContactSecret"
           style="width: 280px"
         ></Input>
       </FormItem>
       <FormItem label="会话应用secret" prop="chatRecordSecret">
-        <Input v-model="formObj.chatRecordSecret" style="width: 280px"></Input>
+        <Input v-model="form.chatRecordSecret" style="width: 280px"></Input>
       </FormItem>
       <FormItem label="状态" prop="state">
-        <RadioGroup v-model="formObj.state">
+        <RadioGroup v-model="form.state">
           <Radio label="Y">启用</Radio>
           <Radio label="N">禁用</Radio>
         </RadioGroup>
       </FormItem>
       <FormItem label="租户描述" prop="remark">
         <Input
-          v-model="formObj.remark"
+          v-model="form.remark"
           type="textarea"
           :maxlength="50"
           style="width: 280px"
@@ -59,10 +59,7 @@
     </Form>
     <div slot="footer">
       <Button @click="hdlCancel">取消</Button>
-      <Button
-        style="margin-left: 8px"
-        type="primary"
-        @click="hdlSubmit('formObj')"
+      <Button style="margin-left: 8px" type="primary" @click="hdlSubmit('form')"
         >确认</Button
       >
     </div>
@@ -109,7 +106,7 @@ export default {
 
     return {
       curValue: false,
-      formObj: {
+      form: {
         name: "",
         code: "",
         privateKey: "",
@@ -134,22 +131,22 @@ export default {
   },
   methods: {
     setData({ obj, remark, state }) {
-      this.formObj.code = obj.tenantId;
-      this.formObj.name = obj.tenantName;
-      this.formObj.remark = remark;
-      this.formObj.state = state;
-      this.formObj.privateKey = obj.privateKey;
-      this.formObj.corpId = obj.corpId;
-      this.formObj.addressListSecret = obj.addressListSecret;
-      this.formObj.customerContactSecret = obj.customerContactSecret;
-      this.formObj.chatRecordSecret = obj.chatRecordSecret;
+      this.form.code = obj.tenantId;
+      this.form.name = obj.tenantName;
+      this.form.remark = remark;
+      this.form.state = state;
+      this.form.privateKey = obj.privateKey;
+      this.form.corpId = obj.corpId;
+      this.form.addressListSecret = obj.addressListSecret;
+      this.form.customerContactSecret = obj.customerContactSecret;
+      this.form.chatRecordSecret = obj.chatRecordSecret;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.formObj).then(() => {
+          _config[this.type].submit(this.form).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.formObj);
+            this.$emit(_config[this.type].success_evt, this.form);
           });
         }
       });

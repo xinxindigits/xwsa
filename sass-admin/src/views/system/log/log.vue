@@ -3,7 +3,7 @@
     <Card>
       <query
         ref="query"
-        v-model="formItem"
+        v-model="form"
         @on-log-query="hdlQuery"
         @on-log-query-reset="init"
       ></query>
@@ -73,7 +73,7 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      formItem: {
+      form: {
         account: ""
       },
       tableData: [],
@@ -107,7 +107,7 @@ export default {
       this.changePage(1);
     },
     hdlQuery() {
-      this.curQuery = this.formItem;
+      this.curQuery = this.form;
       this.changePage(1);
     },
     changePage(pageIndex = 1) {

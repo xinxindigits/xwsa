@@ -73,9 +73,9 @@ export default {
   computed: {
     isSearch() {
       return !(
-        this.formObj.keyWord == "" &&
-        this.formObj.startTime == "" &&
-        this.formObj.endTime == ""
+        this.form.keyWord == "" &&
+        this.form.startTime == "" &&
+        this.form.endTime == ""
       );
     }
   },
@@ -93,7 +93,7 @@ export default {
       list: [],
       msg_list: [],
       current_chat: {},
-      formObj: {
+      form: {
         keyWord: "",
         startTime: "",
         endTime: ""
@@ -104,7 +104,7 @@ export default {
     init(userId, opt = {}) {
       this.$refs.query.reset();
       this.current_chat = {};
-      this.formObj = {
+      this.form = {
         keyWord: "",
         startTime: "",
         endTime: ""
@@ -122,7 +122,6 @@ export default {
     selectChat(n, opt = { pageIndex: 1, row: 0 }) {
       this.resetPageComp();
       this.current_chat = n;
-      console.log("here", opt.row);
       this.getDetail(opt.pageIndex, opt.row);
     },
     resetPageComp() {
@@ -145,7 +144,7 @@ export default {
           userIdTwo: id,
           pageSize: this.pageSize,
           pageIndex: this.page,
-          ...this.formObj
+          ...this.form
         };
       } else if (n.type === 1) {
         id = n.roomId;
@@ -154,11 +153,10 @@ export default {
           roomId: id,
           pageSize: this.pageSize,
           pageIndex: this.page,
-          ...this.formObj
+          ...this.form
         };
       }
       api(params).then(({ data }) => {
-        // debugger;
         this.msg_list = data.items.map((n, i) => {
           return {
             name: n.fromUserName,
@@ -190,11 +188,11 @@ export default {
       this.getDetail();
     },
     hdlQuery(data) {
-      this.formObj = data;
-      this.getMsgList(this.userId, this.formObj);
+      this.form = data;
+      this.getMsgList(this.userId, this.form);
     },
     hdlReset() {
-      this.formObj = {
+      this.form = {
         keyWord: "",
         startTime: "",
         endTime: ""
@@ -210,7 +208,7 @@ export default {
         userId: this.userId,
         userIdTwo: n.userId
       }).then(({ data }) => {
-        this.formObj = {
+        this.form = {
           keyWord: "",
           startTime: "",
           endTime: ""
@@ -227,9 +225,6 @@ export default {
     }
   },
   watch: {
-    page(newValue) {
-      console.log(newValue);
-    },
     value(newValue) {
       this.showRecord = newValue;
     },

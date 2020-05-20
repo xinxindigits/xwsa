@@ -3,7 +3,7 @@
     <Card>
       <role-query
         ref="query"
-        v-model="formItem"
+        v-model="form"
         @on-role-query="hdlQuery"
         @on-role-reset="init"
       ></role-query>
@@ -92,7 +92,7 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      formItem: {
+      form: {
         name: "",
         code: "",
         roleType: ""
@@ -125,7 +125,7 @@ export default {
       this.changePage(1);
     },
     hdlQuery() {
-      this.curQuery = this.formItem;
+      this.curQuery = this.form;
       this.changePage(1);
     },
     hdlqueryAfterReset() {

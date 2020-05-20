@@ -4,7 +4,6 @@ export default {
     account: "",
     userName: "",
     avatarImgPath: "",
-    access: "super_admin",
     token: "",
     hasGetInfo: false
   },
@@ -17,9 +16,6 @@ export default {
     },
     setAccount(state, name) {
       state.account = name;
-    },
-    setAccess(state, access) {
-      state.access = access;
     },
     setToken(state, token) {
       state.token = token;
@@ -72,7 +68,6 @@ export default {
             commit("setUserName", "");
             commit("setHasGetInfo", false);
             commit("setHasGetRouter", false);
-            // commit('setAccess', [])
             resolve();
           })
           .catch(reject);

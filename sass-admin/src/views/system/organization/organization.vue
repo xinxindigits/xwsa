@@ -1,15 +1,15 @@
 <template>
   <div>
     <Card>
-      <Form :model="formItem" inline label-colon>
+      <Form :model="form" inline label-colon>
         <FormItem>
-          <Input v-model="formItem.tenantId" placeholder="租户编码"></Input>
+          <Input v-model="form.tenantId" placeholder="租户编码"></Input>
         </FormItem>
         <FormItem>
-          <Input v-model="formItem.orgId" placeholder="机构编码"></Input>
+          <Input v-model="form.orgId" placeholder="机构编码"></Input>
         </FormItem>
         <FormItem>
-          <Input v-model="formItem.orgName" placeholder="机构名称"></Input>
+          <Input v-model="form.orgName" placeholder="机构名称"></Input>
         </FormItem>
         <FormItem>
           <Button type="primary" @click="hdlquery">查询</Button>
@@ -125,7 +125,7 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      formItem: {
+      form: {
         orgName: "",
         orgId: "",
         tenantId: "",
@@ -162,7 +162,7 @@ export default {
       this.isLoading = true;
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
-      getOrganizationList({ pageIndex, pageSize, ...this.formItem })
+      getOrganizationList({ pageIndex, pageSize, ...this.form })
         .then(res => {
           let { data } = res;
           this.page = pageIndex;
@@ -176,11 +176,11 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.orgName = "";
-      this.formItem.orgId = "";
-      this.formItem.orgType = "";
-      this.formItem.tenantId = "";
-      this.formItem.status = "";
+      this.form.orgName = "";
+      this.form.orgId = "";
+      this.form.orgType = "";
+      this.form.tenantId = "";
+      this.form.status = "";
       this.hdlquery();
     },
     hdlDelete(ids) {

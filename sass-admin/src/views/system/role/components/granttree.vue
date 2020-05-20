@@ -73,7 +73,7 @@ export default {
         if (item.children && item.children.length > 0) {
           obj.children = this.formatData(item.children);
         } else {
-          obj.checked = checked; //有children的节点不需要checked属性
+          obj.checked = checked;
         }
         arr.push(obj);
       });

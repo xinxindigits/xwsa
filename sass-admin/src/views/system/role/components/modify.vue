@@ -6,24 +6,24 @@
     :mask-closable="false"
   >
     <Form
-      ref="formObj"
-      :model="formObj"
+      ref="form"
+      :model="form"
       label-position="right"
       :label-width="150"
       :rules="rules"
     >
       <FormItem label="角色编号" prop="code">
         <Input
-          v-model="formObj.code"
+          v-model="form.code"
           style="width: 250px"
           :disabled="this.type == 'update'"
         ></Input>
       </FormItem>
       <FormItem label="角色名称" prop="name">
-        <Input v-model="formObj.name" style="width: 250px"></Input>
+        <Input v-model="form.name" style="width: 250px"></Input>
       </FormItem>
       <FormItem label="角色类型" prop="roleType">
-        <Select v-model="formObj.roleType" style="width: 250px">
+        <Select v-model="form.roleType" style="width: 250px">
           <Option
             v-for="item in statusEnum"
             :value="item.roleType"
@@ -35,7 +35,7 @@
       </FormItem>
       <FormItem label="角色描述" prop="extension">
         <Input
-          v-model="formObj.extension"
+          v-model="form.extension"
           type="textarea"
           style="width: 250px"
           :rows="5"
@@ -43,7 +43,7 @@
       </FormItem>
     </Form>
     <div slot="footer">
-      <Button type="primary" @click="hdlSubmit('formObj')">确认</Button>
+      <Button type="primary" @click="hdlSubmit('form')">确认</Button>
       <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
     </div>
   </Modal>
@@ -84,7 +84,7 @@ export default {
         { roleType: "admin", extension: "管理员" },
         { roleType: "user", extension: "用户" }
       ],
-      formObj: {
+      form: {
         name: "",
         code: "",
         roleType: "",
@@ -115,16 +115,16 @@ export default {
   },
   methods: {
     setData(obj) {
-      this.formObj.code = obj.code;
-      this.formObj.extension = obj.extension;
-      this.formObj.roleType = obj.roleType;
-      this.formObj.name = obj.name;
+      this.form.code = obj.code;
+      this.form.extension = obj.extension;
+      this.form.roleType = obj.roleType;
+      this.form.name = obj.name;
       this.code_editable = true;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.formObj).then(() => {
+          _config[this.type].submit(this.form).then(() => {
             this.curValue = false;
             this.$emit("role-modified", this.type);
           });

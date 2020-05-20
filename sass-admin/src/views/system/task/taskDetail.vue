@@ -1,5 +1,5 @@
 <template>
-  <Drawer title="详情" :closable="false" v-model="showDetail" width="50">
+  <Drawer title="详情" v-model="showDetail" width="50">
     <CellGroup>
       <Cell>
         <span>id：{{ detail.id }}</span>
@@ -56,6 +56,7 @@ export default {
     return {
       showDetail: false,
       MESSAGE_SYNC: "MESSAGE_SYNC",
+      CONTACT_SYNC: "CONTACT_SYNC",
       pStyle: {
         fontSize: "16px",
         color: "rgba(0,0,0,0.85)",

@@ -58,8 +58,8 @@ public class SassMenuRestController extends AclController {
         List<ResourceDO> userResourceDOList = this.userService.findResourcesByAccount(userAccount);
 
         if(CollectionUtils.isEmpty(userResourceDOList)){
-            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"权限不对，无菜单数据清设置权限"
-                    ,"权限不对，无菜单数据清设置权限");
+            throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"无菜单数据,请设置菜单权限"
+                    ,"无菜单数据,请设置菜单权限");
         }
 
         List<ResourceVO> userResourceVOList  = SassFormConvert.convertResourceDO2VO(userResourceDOList);

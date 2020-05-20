@@ -44,7 +44,8 @@ import {
   updateUser,
   deleteUser,
   grantUserRoles,
-  resetUserPwd
+  resetUserPwd,
+  changeUserPwd
 } from "./data_user";
 import { getOrgList, queryOrgList, queryMemberByDeptId } from "./wc_org";
 import { getMemberDetail, getMemberList, queryMember } from "./wc_mem";
@@ -89,6 +90,7 @@ export {
   updateUser,
   deleteUser,
   resetUserPwd,
+  changeUserPwd,
   grantUserRoles,
   getOrgList,
   queryOrgList,

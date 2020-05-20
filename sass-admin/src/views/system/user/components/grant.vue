@@ -1,8 +1,8 @@
 <template>
   <Modal v-model="curValue" :title="title" :loading="true">
     <Form
-      ref="formObj"
-      :model="formObj"
+      ref="form"
+      :model="form"
       label-position="right"
       :label-width="150"
       :rules="rules"
@@ -21,7 +21,7 @@
       </FormItem>
     </Form>
     <div slot="footer">
-      <Button type="primary" @click="hdlSubmit('formObj')">确认 </Button>
+      <Button type="primary" @click="hdlSubmit('form')">确认 </Button>
       <Button style="margin-left: 8px" @click="hdlCancel">返回</Button>
     </div>
   </Modal>
@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       curValue: false,
-      formObj: {
+      form: {
         userRoles: []
       },
       cur_roles: [],
@@ -72,16 +72,16 @@ export default {
   methods: {
     setData(data) {
       this.cur_roles = data.userRoles;
-      this.formObj.userAccount = data.userAccount;
-      this.formObj.userName = data.userName;
+      this.form.userAccount = data.userAccount;
+      this.form.userName = data.userName;
     },
 
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config.submit(this.formObj).then(() => {
+          _config.submit(this.form).then(() => {
             this.curValue = false;
-            this.$emit(_config.success_evt, this.formObj);
+            this.$emit(_config.success_evt, this.form);
           });
         }
       });
@@ -91,7 +91,7 @@ export default {
       this.$emit("on-cancel");
     },
     reset() {
-      this.formObj = {
+      this.form = {
         userRoles: [],
         userAccount: "",
         userName: ""
@@ -110,7 +110,7 @@ export default {
       !newValue && this.reset();
     },
     cur_roles(newValue) {
-      this.formObj.userRoles = this.roleList
+      this.form.userRoles = this.roleList
         .filter(n => {
           return newValue.includes(n.code);
         })

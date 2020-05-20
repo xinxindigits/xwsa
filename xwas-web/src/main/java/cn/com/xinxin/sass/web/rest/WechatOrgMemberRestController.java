@@ -14,6 +14,8 @@ import cn.com.xinxin.sass.web.vo.MemberVO;
 import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,7 @@ public class WechatOrgMemberRestController extends AclController {
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_STAFF_MNG"},logical= Logical.OR)
     public Object listWechatMembers(HttpServletRequest request,
                                     @RequestBody WechatmemberQueryForm queryForm){
 
@@ -85,6 +88,7 @@ public class WechatOrgMemberRestController extends AclController {
 
     @RequestMapping(value = "/detail/{memberId}",method = RequestMethod.GET)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_STAFF_MNG"},logical= Logical.OR)
     public Object queryWechatMemberDetail(HttpServletRequest request,
                                           @PathVariable String memberId){
 
@@ -125,6 +129,7 @@ public class WechatOrgMemberRestController extends AclController {
 
     @RequestMapping(value = "/dept/query",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_STAFF_MNG"},logical= Logical.OR)
     public Object listWechatMembersByDeptId(HttpServletRequest request,
                                     @RequestBody WechatmemberQueryForm queryForm){
 
@@ -162,6 +167,7 @@ public class WechatOrgMemberRestController extends AclController {
 
     @RequestMapping(value = "/query",method = RequestMethod.POST)
     @ResponseBody
+    @RequiresPermissions(value = {"SASS_WEXIN_STAFF_MNG"},logical= Logical.OR)
     public Object queryMembers(HttpServletRequest request,
                                             @RequestBody WechatmemberQueryForm queryForm){
 

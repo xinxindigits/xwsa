@@ -6,37 +6,31 @@
     :mask-closable="false"
   >
     <Form
-      ref="formObj"
-      :model="formObj"
+      ref="form"
+      :model="form"
       label-position="right"
       :label-width="150"
       :rules="rules"
     >
       <FormItem label="资源编码" prop="code">
         <Input
-          v-model="formObj.code"
+          v-model="form.code"
           style="width: 250px"
           :disabled="type == 'update'"
         ></Input>
       </FormItem>
       <FormItem label="资源权限" prop="authority">
-        <Input v-model="formObj.authority" style="width: 250px"></Input>
+        <Input v-model="form.authority" style="width: 250px"></Input>
       </FormItem>
-      <!-- <FormItem label="资源类型" prop="resourceType">
-        <Select v-model="formObj.resourceType" style="width: 250px">
-          <Option value="menu">菜单</Option>
-          <Option value="function">功能</Option>
-        </Select>
-      </FormItem> -->
       <FormItem label="名称" prop="name">
-        <Input v-model="formObj.name" style="width: 250px"></Input>
+        <Input v-model="form.name" style="width: 250px"></Input>
       </FormItem>
       <FormItem label="组件URI" prop="url">
-        <Input v-model="formObj.url" style="width: 250px"></Input>
+        <Input v-model="form.url" style="width: 250px"></Input>
       </FormItem>
       <FormItem label="描述" prop="extension">
         <Input
-          v-model="formObj.extension"
+          v-model="form.extension"
           type="textarea"
           style="width: 250px"
           :rows="5"
@@ -45,10 +39,7 @@
     </Form>
     <div slot="footer">
       <Button @click="hdlCancel">取消</Button>
-      <Button
-        style="margin-left: 8px"
-        type="primary"
-        @click="hdlSubmit('formObj')"
+      <Button style="margin-left: 8px" type="primary" @click="hdlSubmit('form')"
         >确认</Button
       >
     </div>
@@ -86,7 +77,7 @@ export default {
     return {
       code_editable: false,
       curValue: false,
-      formObj: {
+      form: {
         authority: "",
         name: "",
         code: "",
@@ -129,20 +120,20 @@ export default {
   },
   methods: {
     setData(obj) {
-      this.formObj.authority = obj.authority;
-      this.formObj.code = obj.code;
-      this.formObj.extension = obj.extension;
-      this.formObj.name = obj.name;
-      this.formObj.parentId = obj.parentId;
-      this.formObj.resourceType = obj.resourceType;
-      this.formObj.url = obj.url;
-      this.formObj.root = false;
-      this.formObj.id = obj.id;
+      this.form.authority = obj.authority;
+      this.form.code = obj.code;
+      this.form.extension = obj.extension;
+      this.form.name = obj.name;
+      this.form.parentId = obj.parentId;
+      this.form.resourceType = obj.resourceType;
+      this.form.url = obj.url;
+      this.form.root = false;
+      this.form.id = obj.id;
     },
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.formObj).then(() => {
+          _config[this.type].submit(this.form).then(() => {
             this.curValue = false;
             this.$emit("resource-modified", this.type);
           });
