@@ -3,7 +3,7 @@
     <Card>
       <user-query
         ref="query"
-        v-model="formItem"
+        v-model="form"
         @on-user-query="hdlQuery"
         @on-user-reset="init"
       ></user-query>
@@ -130,7 +130,7 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      formItem: {
+      form: {
         account: "",
         name: "",
         code: "",
@@ -182,7 +182,7 @@ export default {
       this.changePage(1);
     },
     hdlQuery() {
-      this.curQuery = this.formItem;
+      this.curQuery = this.form;
       this.changePage(1);
     },
     changePage(pageIndex = 1) {

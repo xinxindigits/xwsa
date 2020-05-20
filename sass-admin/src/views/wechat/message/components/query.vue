@@ -1,8 +1,8 @@
 <template>
-  <Form :model="formItem" inline label-colon>
+  <Form :model="form" inline label-colon>
     <FormItem>
       <Select
-        v-model="formItem.userId"
+        v-model="form.userId"
         filterable
         remote
         :remote-method="remoteMethod1"
@@ -30,7 +30,7 @@
       ></DatePicker>
     </FormItem>
     <FormItem>
-      <Input v-model="formItem.keyWord" placeholder="内容"></Input>
+      <Input v-model="form.keyWord" placeholder="内容"></Input>
     </FormItem>
     <FormItem>
       <Button type="primary" @click="hdlquery">查询</Button>
@@ -69,7 +69,7 @@ export default {
           return date && date.valueOf() > Date.now();
         }
       },
-      formItem: {
+      form: {
         tenantId: "",
         userId: "",
         startTime: "",
@@ -101,12 +101,12 @@ export default {
     },
 
     hdlquery() {
-      this.$emit("on-wc-msg-query", this.formItem);
+      this.$emit("on-wc-msg-query", this.form);
     },
     reset() {
-      this.formItem.userId = "";
-      this.formItem.startTime = "";
-      this.formItem.endTime = "";
+      this.form.userId = "";
+      this.form.startTime = "";
+      this.form.endTime = "";
       this.$emit("on-wc-msg-reset");
     }
   },
@@ -116,10 +116,10 @@ export default {
       deep: true,
       immediate: true,
       handler(newValue) {
-        this.formItem = newValue;
+        this.form = newValue;
       }
     },
-    formItem: {
+    form: {
       deep: true,
       immediate: true,
       handler(newValue) {
@@ -132,12 +132,12 @@ export default {
         newValue[0] instanceof Date &&
         newValue[0] instanceof Date
       ) {
-        this.formItem.startTime = newValue[0].getTime() + "";
-        this.formItem.endTime =
+        this.form.startTime = newValue[0].getTime() + "";
+        this.form.endTime =
           newValue[1].getTime() + 24 * 60 * 60 * 1000 - 1000 + "";
       } else {
-        this.formItem.startTime = "";
-        this.formItem.endTime = "";
+        this.form.startTime = "";
+        this.form.endTime = "";
       }
     }
   }

@@ -5,7 +5,7 @@
         <Card>
           <Query
             ref="query"
-            v-model="formItem"
+            v-model="form"
             @on-customer-query="hdlQuery"
             @on-customer-reset="reset"
           ></Query>
@@ -104,7 +104,7 @@ export default {
       cur_userId: "",
       showRecord: false,
 
-      formItem: {
+      form: {
         startTime: "",
         endTime: "",
         memberUserIds: [],
@@ -144,7 +144,7 @@ export default {
       });
     },
     hdlQuery() {
-      this.curQuery = this.formItem;
+      this.curQuery = this.form;
       this.changePage(1);
     },
     reset() {

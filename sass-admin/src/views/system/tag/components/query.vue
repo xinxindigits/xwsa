@@ -1,7 +1,7 @@
 <template>
-  <Form :model="formItem" inline label-colon @submit.native.prevent>
+  <Form :model="form" inline label-colon @submit.native.prevent>
     <FormItem>
-      <Input v-model="formItem.name" placeholder="标签名"></Input>
+      <Input v-model="form.name" placeholder="标签名"></Input>
     </FormItem>
     <FormItem>
       <Button type="primary" @click="hdlquery">查询</Button>
@@ -25,17 +25,17 @@ export default {
   },
   data() {
     return {
-      formItem: {
+      form: {
         name: ""
       }
     };
   },
   methods: {
     hdlquery() {
-      this.$emit("on-tag-query", this.formItem);
+      this.$emit("on-tag-query", this.form);
     },
     reset() {
-      this.formItem.name = "";
+      this.form.name = "";
       this.$emit("on-tag-reset");
     }
   },
@@ -44,10 +44,10 @@ export default {
       deep: true,
       immediate: true,
       handler(newValue) {
-        this.formItem = newValue;
+        this.form = newValue;
       }
     },
-    formItem: {
+    form: {
       deep: true,
       immediate: true,
       handler(newValue) {
