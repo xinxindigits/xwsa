@@ -1,5 +1,15 @@
 import { regist, login, getUserInfo, getMenuInfo, logout } from "./user";
 import {
+  getGrantList,
+  getGrantTree,
+  getResourceList,
+  getResourceMenuTree,
+  getResourceQueryTree,
+  deleteResource,
+  createResource,
+  updateResource
+} from "./sys_res";
+import {
   getRoleList,
   addRole,
   updateRole,
@@ -68,6 +78,14 @@ export {
   getUserInfo,
   getMenuInfo,
   logout,
+  getGrantList,
+  getGrantTree,
+  getResourceList,
+  getResourceMenuTree,
+  getResourceQueryTree,
+  deleteResource,
+  createResource,
+  updateResource,
   getAllRoles,
   getRoleList,
   addRole,
