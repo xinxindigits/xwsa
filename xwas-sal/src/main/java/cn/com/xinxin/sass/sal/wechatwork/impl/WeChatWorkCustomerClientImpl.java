@@ -66,8 +66,15 @@ public class WeChatWorkCustomerClientImpl implements WeChatWorkCustomerClient {
             LOGGER.info("该成员没有外部客户");
             return new ArrayList<>();
         }
-        weChatWorkInteractionClient.checkResponseStatus(responseBO.getErrorCode(), responseBO.getErrorMessage(),
-                "向企业微信查询客户userId列表失败");
+
+        try {
+            weChatWorkInteractionClient.checkResponseStatus(responseBO.getErrorCode(), responseBO.getErrorMessage(),
+                    "向企业微信查询客户userId列表失败");
+        } catch (Exception e) {
+            LOGGER.error("向企业微信查询客户userId列表失败, memberuserid[{}]", userId);
+            throw e;
+        }
+
 
         return responseBO.getCustomerUserIdS();
     }
@@ -100,8 +107,14 @@ public class WeChatWorkCustomerClientImpl implements WeChatWorkCustomerClient {
                 WeChatWorkCustomerDetailQueryResponseBO.class);
 
         //检查查询是否成功
-        weChatWorkInteractionClient.checkResponseStatus(responseBO.getErrorCode(), responseBO.getErrorMessage(),
-                "向企业微信查询客户详细信息失败");
+        try {
+            weChatWorkInteractionClient.checkResponseStatus(responseBO.getErrorCode(), responseBO.getErrorMessage(),
+                    "向企业微信查询客户详细信息失败");
+        } catch (Exception e) {
+            LOGGER.error("向企业微信查询客户详细信息失败, userid[{}]", customerUserId);
+            throw e;
+        }
+
 
         return responseBO.getWeChatWorkCustomerBO();
     }
