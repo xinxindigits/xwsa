@@ -4,7 +4,7 @@
       <Card>
         <query
           ref="query"
-          v-model="formItem"
+          v-model="form"
           @on-wc-msg-query="hdlQuery"
           @on-wc-msg-reset="reset"
         ></query>
@@ -73,7 +73,7 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      formItem: {
+      form: {
         userId: "",
         startTime: "",
         endTime: ""
@@ -114,7 +114,7 @@ export default {
   },
   methods: {
     hdlQuery() {
-      this.curQuery = this.formItem;
+      this.curQuery = this.form;
       this.changePage(1);
     },
     reset() {

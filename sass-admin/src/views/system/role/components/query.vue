@@ -1,14 +1,14 @@
 <template>
-  <Form ref="form" :model="formItem" inline label-colon>
+  <Form ref="form" :model="form" inline label-colon>
     <FormItem prop="code">
-      <Input v-model="formItem.code" placeholder="角色编号"></Input>
+      <Input v-model="form.code" placeholder="角色编号"></Input>
     </FormItem>
     <FormItem prop="name">
-      <Input v-model="formItem.name" placeholder="角色名称"></Input>
+      <Input v-model="form.name" placeholder="角色名称"></Input>
     </FormItem>
     <FormItem prop="roleType">
       <Select
-        v-model="formItem.roleType"
+        v-model="form.roleType"
         placeholder="角色类型"
         style="width:160px"
         filterable
@@ -41,7 +41,7 @@ export default {
   },
   data() {
     return {
-      formItem: {
+      form: {
         name: "",
         code: "",
         roleType: ""
@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     hdlquery() {
-      this.$emit("on-role-query", this.formItem);
+      this.$emit("on-role-query", this.form);
     },
     reset() {
       this.$refs.form.resetFields();
@@ -62,10 +62,10 @@ export default {
       deep: true,
       immediate: true,
       handler(newValue) {
-        this.formItem = newValue;
+        this.form = newValue;
       }
     },
-    formItem: {
+    form: {
       deep: true,
       immediate: true,
       handler(newValue) {

@@ -3,12 +3,12 @@
     <Row :gutter="10">
       <Col span="24">
         <Card>
-          <Form :model="formItem" inline label-colon>
+          <Form :model="form" inline label-colon>
             <FormItem>
-              <Input v-model="formItem.memberName" placeholder="姓名"></Input>
+              <Input v-model="form.memberName" placeholder="姓名"></Input>
             </FormItem>
             <FormItem>
-              <Input v-model="formItem.mobile" placeholder="手机号"></Input>
+              <Input v-model="form.mobile" placeholder="手机号"></Input>
             </FormItem>
             <FormItem>
               <Button type="primary" @click="hdlQuery">查询</Button>
@@ -83,7 +83,7 @@ export default {
   },
   data() {
     return {
-      formItem: {
+      form: {
         memberName: "",
         mobile: ""
       },
@@ -124,13 +124,13 @@ export default {
   },
   methods: {
     hdlQuery() {
-      this.curQuery = this.formItem;
+      this.curQuery = this.form;
       this.changePage(1);
     },
     reset() {
       this.curQuery = {};
-      this.formItem.memberName = "";
-      this.formItem.mobile = "";
+      this.form.memberName = "";
+      this.form.mobile = "";
       this.changePage(1);
     },
     hdlShowRecord(userId) {

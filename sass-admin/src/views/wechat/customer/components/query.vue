@@ -1,7 +1,7 @@
 <template>
-  <Form ref="form" :model="formItem" inline label-colon>
+  <Form ref="form" :model="form" inline label-colon>
     <FormItem>
-      <Input v-model.trim="formItem.customerName" placeholder="姓名"></Input>
+      <Input v-model.trim="form.customerName" placeholder="姓名"></Input>
     </FormItem>
     <FormItem>
       <DatePicker
@@ -46,7 +46,7 @@ export default {
           return date && date.valueOf() > Date.now();
         }
       },
-      formItem: {
+      form: {
         startTime: "",
         endTime: "",
         memberUserIds: [],
@@ -56,7 +56,7 @@ export default {
   },
   methods: {
     hdlquery() {
-      this.$emit("on-customer-query", this.formItem);
+      this.$emit("on-customer-query", this.form);
     },
     reset() {
       this.daterange = [];
@@ -75,10 +75,10 @@ export default {
       deep: true,
       immediate: true,
       handler(newValue) {
-        this.formItem = newValue;
+        this.form = newValue;
       }
     },
-    formItem: {
+    form: {
       deep: true,
       immediate: true,
       handler(newValue) {
@@ -91,12 +91,12 @@ export default {
         newValue[0] instanceof Date &&
         newValue[0] instanceof Date
       ) {
-        this.formItem.startTime = newValue[0].getTime() + "";
-        this.formItem.endTime =
+        this.form.startTime = newValue[0].getTime() + "";
+        this.form.endTime =
           newValue[1].getTime() + 24 * 60 * 60 * 1000 - 1000 + "";
       } else {
-        this.formItem.startTime = "";
-        this.formItem.endTime = "";
+        this.form.startTime = "";
+        this.form.endTime = "";
       }
     }
   }

@@ -95,7 +95,7 @@ export default {
       pageSize: 10,
       total: 0,
       page: 1,
-      formItem: {
+      form: {
         tenantId: "",
         tenantName: "",
         state: ""
@@ -131,7 +131,7 @@ export default {
       this.isLoading = true;
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
-      queryTenantConfig({ pageIndex, pageSize, ...this.formItem })
+      queryTenantConfig({ pageIndex, pageSize, ...this.form })
         .then(res => {
           let { data } = res;
           this.reset();
@@ -145,9 +145,9 @@ export default {
       this.changePage(1);
     },
     reset() {
-      this.formItem.tenantName = "";
-      this.formItem.tenantId = "";
-      this.formItem.state = "";
+      this.form.tenantName = "";
+      this.form.tenantId = "";
+      this.form.state = "";
     },
     hdlSingleCreate() {
       let d = {
