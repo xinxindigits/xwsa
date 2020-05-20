@@ -35,4 +35,6 @@ public class CommonConstants {
     public static final int ONE_HUNDRED = 100;
 
     public static final String CONTENT = "content";
+
+    public static final long THREE = 3L;
 }
