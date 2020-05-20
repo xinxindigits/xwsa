@@ -408,9 +408,17 @@ public class SassUserRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"删除用户参数不能为空","删除用户参数不能为空");
         }
 
-        // FIXME: 删除的时候同时需要清除token等缓存信息
+        SassUserInfo sassUserInfo = this.getSassUser(request);
 
+        if(deleteUserForm.getAccounts().contains(sassUserInfo.getAccount())){
+            // 不能删除自己的账户
+            throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"不能删除自己的账号","不能删除自己的账号");
+        }
+
+        // FIXME: 删除的时候同时需要清除token等缓存信息
         this.userService.deleteUserByAccounts(deleteUserForm.getAccounts());
+
+
         deleteUserForm.getAccounts().stream().forEach(account->{
             userAclTokenRepository.cleanSassUserTokenCache(account);
             userAclTokenRepository.cleanSassUserInfoCache(account);
