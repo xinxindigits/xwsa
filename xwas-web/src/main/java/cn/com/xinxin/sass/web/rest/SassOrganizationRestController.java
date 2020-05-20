@@ -5,11 +5,13 @@ import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
+import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.OrgTypeEnum;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
+import cn.com.xinxin.sass.repository.model.UserOrgDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
 import cn.com.xinxin.sass.web.form.OrgQueryForm;
@@ -54,8 +56,13 @@ public class SassOrganizationRestController extends AclController {
 
     private final OrganizationService organizationService;
 
-    public SassOrganizationRestController(OrganizationService organizationService) {
+    private final UserService userService;
+
+    public SassOrganizationRestController(OrganizationService organizationService,
+                                          UserService userService) {
         this.organizationService = organizationService;
+        this.userService = userService;
+
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -253,6 +260,16 @@ public class SassOrganizationRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.NOT_PERMIT_DELETE);
         }
 
+        List<OrganizationDO> organizationDOList = this.organizationService.queryOrgListByOrgIds(deleteOrgForm.getIds());
+
+        List<String> orgCodes = organizationDOList.stream()
+                .map(OrganizationDO::getCode).distinct().collect(Collectors.toList());
+
+        List<UserOrgDO> userOrgDOList = userService.queryUserOrgsByOrgCodeLists(orgCodes);
+
+        if(!CollectionUtils.isEmpty(userOrgDOList)) {
+            throw new BusinessException(SassBizResultCodeEnum.NOT_PERMIT_DELETE);
+        }
 
         int result = this.organizationService.deleteByIds(deleteOrgForm.getIds());
         if(result > 0){
