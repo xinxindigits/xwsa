@@ -51,3 +51,7 @@
    | 用户管理功能  | SASS_USER_MNG  |   |
    | 用户操作日志记录管理  | SASS_USER_OPLOG_MNG  |   |
    | 用户操作日志记录查询  | SASS_USER_OPLOG_QUERY  |   |
+   | 企业微信部门管理权限  | SASS_WEXIN_DEPT_MNG  |   |
+   | 企业微信员工管理权限  | SASS_WEXIN_STAFF_MNG  |   |
+   | 企业微信客户管理权限  | SASS_WEXIN_CUSTOMER_MNG  |   |
+   | 企业微信消息管理权限  | SASS_WEXIN_MSG_MNG  |   |
