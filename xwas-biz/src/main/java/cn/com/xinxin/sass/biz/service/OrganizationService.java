@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.biz.service;
 
 import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.OrganizationDO;
+import cn.com.xinxin.sass.repository.model.UserOrgDO;
 
 import java.util.Date;
 import java.util.List;
@@ -34,5 +35,7 @@ public interface OrganizationService {
 
     List<OrganizationDO> findNotRoot(String tenantId);
 
+
+    List<OrganizationDO> queryOrgListByOrgIds(List<Long> orgIds);
 
 }

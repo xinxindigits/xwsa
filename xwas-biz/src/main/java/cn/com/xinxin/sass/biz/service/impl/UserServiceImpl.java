@@ -388,4 +388,19 @@ public class UserServiceImpl implements UserService {
 
         return resultMaps;
     }
+
+    @Override
+    public List<UserOrgDO> queryUserOrgsByOrgCode(String orgCode) {
+
+        List<UserOrgDO> userOrgDOList = this.userOrgDOMapper.queryUserOrgsByOrgCode(orgCode);
+
+        return userOrgDOList;
+    }
+
+    @Override
+    public List<UserOrgDO> queryUserOrgsByOrgCodeLists(List<String> orgCodes) {
+
+        List<UserOrgDO> userOrgDOList = this.userOrgDOMapper.queryUserOrgsByOrgCodeLists(orgCodes);
+        return userOrgDOList;
+    }
 }

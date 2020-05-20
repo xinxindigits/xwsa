@@ -149,5 +149,15 @@
     and parent_id != 0 and deleted = 0;
   </select>
 
+  <select id="queryOrgListByOrgIds" resultMap="BaseResultMapExt">
+    select   <include refid="Base_Column_List_Ext" />
+    from organization
+    where id in
+    <foreach collection="orgIds" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+    and deleted = 0;
+  </select>
+
 
 </mapper>
