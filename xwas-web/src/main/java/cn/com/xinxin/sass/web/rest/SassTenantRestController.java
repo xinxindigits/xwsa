@@ -151,25 +151,26 @@ public class SassTenantRestController extends AclController {
         }
 
         loger.info("SassTenantRestController,createTenant, tenantForm:{}",JSONObject.toJSONString(tenantForm));
-
         SassUserInfo sassUserInfo = this.getSassUser(request);
+        String tenantId = sassUserInfo.getTenantId();
+        if(StringUtils.isEmpty(tenantId)){
+            StringBuilder code = new StringBuilder();
+            code.append(OG);
+            try {
+                code.append(SnowFakeIdGenerator.getInstance().generateLongId());
+            }catch (Exception e){
+                loger.error("雪花算法生成id失败");
+                throw new BusinessException(SassBizResultCodeEnum.GENERATE_ID_ERROR);
+            }
+            tenantId = code.toString();
+            sassUserInfo.setTenantId(tenantId);
+        }
         // 参数转换设置
         TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
-        StringBuilder code = new StringBuilder();
-        Date now = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOSIGN);
-        code.append(OG).append(sdf.format(now)).append(PADDING);
-        try {
-            code.append(SnowFakeIdGenerator.getInstance().generateLongId());
-        }catch (Exception e){
-            loger.error("雪花算法生成id失败");
-            throw new BusinessException(SassBizResultCodeEnum.GENERATE_ID_ERROR);
-        }
-        tenantBaseInfoDO.setTenantId(code.toString());
+        tenantBaseInfoDO.setTenantId(tenantId);
         tenantBaseInfoDO.setTenantName(tenantForm.getName());
         tenantBaseInfoDO.setGmtCreator(sassUserInfo.getAccount());
         tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
-
 
         try {
 
