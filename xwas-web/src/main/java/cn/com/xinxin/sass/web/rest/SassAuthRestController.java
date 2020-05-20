@@ -6,8 +6,11 @@ import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
 import cn.com.xinxin.sass.biz.log.SysLog;
+import cn.com.xinxin.sass.biz.service.OplogService;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
+import cn.com.xinxin.sass.common.utils.CommonHttpRequestUtil;
+import cn.com.xinxin.sass.repository.model.OplogDOWithBLOBs;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
@@ -18,9 +21,11 @@ import cn.com.xinxin.sass.biz.util.PasswordUtils;
 import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.web.utils.KaptchaUtils;
 import cn.com.xinxin.sass.web.vo.UserTokenVO;
+import com.alibaba.fastjson.JSONObject;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -52,6 +58,10 @@ public class SassAuthRestController {
     private UserAclTokenRepository userAclTokenRepository;
 
 
+    @Autowired
+    private OplogService oplogService;
+
+
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     @ResponseBody
     public Object register(HttpServletRequest request, @RequestBody UserForm userForm){
@@ -66,7 +76,7 @@ public class SassAuthRestController {
 
     }
 
-    @SysLog("用户登录操作")
+    //@SysLog("用户登录操作")
     @RequestMapping(value = "/auth",method = RequestMethod.POST)
     public Object login(HttpServletRequest request,
                         HttpServletResponse response,
@@ -133,6 +143,29 @@ public class SassAuthRestController {
             response.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
             response.setHeader("Access-Control-Allow-Headers", request.getHeader("Access-Control-Request-Headers"));
             response.setHeader("access-control-expose-headers", "XToken");
+
+
+
+            // 记录登陆日志
+            //保存日志
+            OplogDOWithBLOBs oplog = new OplogDOWithBLOBs();
+            if (request != null) {
+                //获取用户ip地址
+                oplog.setOperation("用户登录操作");
+                oplog.setExtension("cn.com.xinxin.sass.web.rest.SassAuthRestController.login");
+                oplog.setMethod("cn.com.xinxin.sass.web.rest.SassAuthRestController.login");
+                oplog.setParams(JSONObject.toJSONString(userLoginForm));
+                oplog.setIp(CommonHttpRequestUtil.getIpAddress(request));
+                oplog.setUa(CommonHttpRequestUtil.getRequestDevice(request));
+                oplog.setUri(CommonHttpRequestUtil.getPath(request.getRequestURI()));
+                oplog.setHttpMethod(request.getMethod());
+                oplog.setUa(StringUtils.substring(request.getHeader("user-agent"), 0, 256));
+                oplog.setAccount(userAccount);
+                oplog.setGmtCreator(userAccount);
+                oplog.setGmtUpdater(userAccount);
+                //调用service保存SysLog实体类到数据库
+                oplogService.createOplog(oplog);
+            }
 
             // 设置基本的content
             return userTokenVO;
