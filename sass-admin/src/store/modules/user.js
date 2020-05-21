@@ -40,7 +40,7 @@ export default {
             commit("setAccount", data.account);
             commit("setHasGetRouter", false);
             localStorage.removeItem("route");
-            localStorage.removeItem("tagNaveList");
+            localStorage.removeItem("tagNavList");
             resolve();
           })
           .catch(reject);

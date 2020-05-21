@@ -8,7 +8,7 @@ import {
   getTagNavListFromLocalstorage,
   getRouteTitleHandled,
   routeHasExist
-} from "@/libs/util";
+} from "@/libs/tools";
 import { formatMenu } from "@/router/routers";
 import { getMenuInfo } from "@/api";
 import router from "@/router";

@@ -95,7 +95,7 @@ import {
   deleteResource
 } from "@/api";
 export default {
-  name: "resource-list",
+  name: "sys-resource",
   components: {
     Operate
   },
