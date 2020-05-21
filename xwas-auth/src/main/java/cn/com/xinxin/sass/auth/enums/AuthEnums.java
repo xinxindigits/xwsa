@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.auth.enums;
 
+
 import org.apache.commons.lang3.EnumUtils;
 
 import java.util.List;
