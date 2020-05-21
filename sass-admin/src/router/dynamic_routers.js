@@ -1,3 +1,4 @@
+// dynamicRouters中key值和path要和后台的资源URI一致,name属性和对应vue文件name属性也要保持一致
 let dynamicRouters = {
   ["/system"]: {
     path: "/system",
