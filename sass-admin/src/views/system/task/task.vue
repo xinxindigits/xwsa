@@ -71,7 +71,7 @@ import { queryTenantConfig, executeJob } from "@/api";
 import TaskUpdate from "./modify";
 import TaskLog from "./taskLog";
 export default {
-  name: "task",
+  name: "sys-task",
   props: {
     value: Boolean,
     type: {

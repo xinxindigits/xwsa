@@ -67,8 +67,7 @@
 </template>
 
 <script>
-import { showTitle, routeEqual } from "@/libs/util";
-import beforeClose from "@/router/before-close";
+import { showTitle, routeEqual } from "@/libs/tools";
 export default {
   name: "TagsNav",
   props: {
@@ -116,9 +115,7 @@ export default {
         this.tagBodyLeft = Math.min(0, this.tagBodyLeft + offset);
       } else {
         if (outerWidth < bodyWidth) {
-          if (this.tagBodyLeft < -(bodyWidth - outerWidth)) {
-            // this.tagBodyLeft = this.tagBodyLeft;
-          } else {
+          if (this.tagBodyLeft >= -(bodyWidth - outerWidth)) {
             this.tagBodyLeft = Math.max(
               this.tagBodyLeft + offset,
               outerWidth - bodyWidth
@@ -148,19 +145,7 @@ export default {
       }
     },
     handleClose(current) {
-      if (
-        current.meta &&
-        current.meta.beforeCloseName &&
-        current.meta.beforeCloseName in beforeClose
-      ) {
-        new Promise(beforeClose[current.meta.beforeCloseName]).then(close => {
-          if (close) {
-            this.close(current);
-          }
-        });
-      } else {
-        this.close(current);
-      }
+      this.close(current);
     },
     close(route) {
       let res = this.list.filter(item => !routeEqual(route, item));

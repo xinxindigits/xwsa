@@ -13,7 +13,7 @@
   </div>
 </template>
 <script>
-import { showTitle } from "@/libs/util";
+import { showTitle } from "@/libs/tools";
 import CommonIcon from "@/components/common-icon";
 import "./custom-bread-crumb.less";
 export default {

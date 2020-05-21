@@ -82,7 +82,7 @@ import {
 import MsgRecord from "@/components/msg-record/msg-record";
 import { Query, CustomerDetail } from "./components";
 export default {
-  name: "staff-list",
+  name: "wc-customer",
   components: {
     Query,
     CustomerDetail,
@@ -195,6 +195,12 @@ export default {
   },
   mounted() {
     this.init();
+  },
+  updated() {
+    console.log(123);
+  },
+  activated() {
+    console.log(222);
   }
 };
 </script>

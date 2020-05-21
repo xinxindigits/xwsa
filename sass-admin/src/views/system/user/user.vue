@@ -105,7 +105,7 @@ import {
   UserDetail
 } from "./components";
 export default {
-  name: "user-list",
+  name: "sys-user",
   components: { UserGrant, UserModify, UserOperation, UserQuery, UserDetail },
   computed: {
     selectedAccounts() {

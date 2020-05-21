@@ -1,4 +1,4 @@
-import axios from "@/libs/api.request";
+import axios from "@/libs/http";
 //读取所有权限值列表
 export const getGrantList = () => {
   return axios.request({
