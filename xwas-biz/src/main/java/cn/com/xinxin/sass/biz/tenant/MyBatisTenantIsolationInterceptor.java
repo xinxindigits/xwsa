@@ -1,23 +1,19 @@
 package cn.com.xinxin.sass.biz.tenant;
 
-import com.baomidou.mybatisplus.core.parser.ISqlParser;
+
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
-import com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
-import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
-import com.google.common.collect.Lists;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.StringValue;
 import org.apache.ibatis.executor.statement.StatementHandler;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
-import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
-import java.lang.reflect.Field;
+
 import java.sql.Connection;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.reflection.DefaultReflectorFactory;
+
+import java.lang.reflect.Field;
 import java.util.Properties;
 
 /**
@@ -28,8 +24,9 @@ import java.util.Properties;
  */
 
 @Intercepts({@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class, Integer.class})})
-public class TenantIsolationInterceptor extends AbstractSqlParserHandler implements Interceptor {
+public class MyBatisTenantIsolationInterceptor extends AbstractSqlParserHandler implements Interceptor {
 
+    
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
 
@@ -59,50 +56,23 @@ public class TenantIsolationInterceptor extends AbstractSqlParserHandler impleme
         field.setAccessible(true);
         field.set(boundSql, mSql);
 
-
         return invocation.proceed();
+
     }
+
+
+
 
     @Override
     public Object plugin(Object target) {
-        return Plugin.wrap(target, this);
+        if (target instanceof StatementHandler) {
+            return Plugin.wrap(target, this);
+        }
+        return target;
     }
-
 
     @Override
     public void setProperties(Properties properties) {
-        //此处可以接收到配置文件的property参数
         System.out.println(properties.getProperty("name"));
     }
-
-
-
-//    PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
-//
-//    public TenantIsolationInterceptor() {
-//
-//        List<ISqlParser> sqlParserList = Lists.newArrayList();
-//        TenantSqlParser tenantSqlParser = new TenantSqlParser();
-//        tenantSqlParser.setTenantHandler(new TenantHandler() {
-//
-//            @Override
-//            public Expression getTenantId(boolean where) {
-//                return singleTenantIdCondition();
-//            }
-//            private Expression singleTenantIdCondition() {
-//                return new StringValue(TenantIdContext.get());
-//            }
-//            @Override
-//            public String getTenantIdColumn() {
-//                return "tenant_id";
-//            }
-//            @Override
-//            public boolean doTableFilter(String tableName) {
-//                return !"user".equalsIgnoreCase(tableName);
-//            }
-//        });
-//        sqlParserList.add(tenantSqlParser);
-//        paginationInterceptor.setSqlParserList(sqlParserList);
-//    }
-
 }

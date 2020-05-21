@@ -8,7 +8,10 @@
             <property name="rowBoundsWithCount" value="false"/>
         </plugin>
 
-        <!--<plugin interceptor="cn.com.xinxin.sass.biz.tenant.TenantIsolationInterceptor">-->
+
+        <!--<plugin interceptor="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor">-->
+            <!--<property name="sqlParserList" value="sqlParserList"/>-->
         <!--</plugin>-->
+
     </plugins>
 </configuration>

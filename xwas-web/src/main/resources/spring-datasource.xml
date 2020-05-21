@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
-           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/tx    http://www.springframework.org/schema/tx/spring-tx.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+           ">
 
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <property name="initialSize" value="${jdbc.pool.initialSize}" />
@@ -30,6 +35,22 @@
     </bean>
 
 
+    <!--<bean id="sassTenantHandler" class="cn.com.xinxin.sass.biz.tenant.SassTenantHandler"/>-->
+
+    <!--<bean id="tenantSqlParser" class="com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser">-->
+        <!--<property name="tenantHandler" ref="sassTenantHandler"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="tenantPlugin" class="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor">-->
+        <!--<property name="sqlParserList">-->
+            <!--<util:list>-->
+                <!--<ref bean="tenantSqlParser"/>-->
+            <!--</util:list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+
+
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations">
@@ -40,7 +61,10 @@
         <property name="typeAliasesPackage" value="cn.com.xinxin.sass.repository.dao"/>
         <property name="typeHandlersPackage" value="cn.com.xinxin.sass.repository.handler"/>
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!--<property name="plugins" ref="tenantPlugin"/>-->
     </bean>
+
+
     <bean id="dataScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="cn.com.xinxin.sass.repository.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
