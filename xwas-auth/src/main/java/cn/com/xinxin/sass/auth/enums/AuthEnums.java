@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.auth.enums;
 
+
 import org.apache.commons.lang3.EnumUtils;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public enum AuthEnums {
 
     SASS_ORG_DELETE("SASS_ORG_DELETE","组织机构删除权限","组织机构删除权限"),
 
-    SASS_ORG_MNG("SASS_ORG_ADD","组织机构管理","组织机构管理"),
+    SASS_ORG_MNG("SASS_ORG_MNG","组织机构管理","组织机构管理"),
 
 
     /**
@@ -83,7 +84,7 @@ public enum AuthEnums {
 
     SASS_TENANT_UPDATE("SASS_TENANT_UPDATE","租户修改权限","租户修改权限"),
 
-    SASS_TENANT_DELETE("SASS_TAG_DELETE","租户删除权限","租户权限删除"),
+    SASS_TENANT_DELETE("SASS_TENANT_DELETE","租户删除权限","租户权限删除"),
 
     SASS_TENANT_MNG("SASS_TENANT_MNG","租户管理权限","租户管理"),
 
@@ -117,11 +118,11 @@ public enum AuthEnums {
      */
     SASS_WEXIN_DEPT_MNG("SASS_WEXIN_DEPT_MNG","企业微信部门管理权限","企业微信部门管理权限"),
 
-    SASS_WEXIN_STAFF_MNG("SASS_USER_PASSWORD_REST","企业微信员工管理权限","企业微信员工管理权限"),
+    SASS_WEXIN_STAFF_MNG("SASS_WEXIN_STAFF_MNG","企业微信员工管理权限","企业微信员工管理权限"),
 
     SASS_WEXIN_CUSTOMER_MNG("SASS_WEXIN_CUSTOMER_MNG","企业微信客户管理权限","企业微信客户管理权限"),
 
-    SASS_WEXIN_MSG_MNG("SASS_USER_PASSWORD_REST","企业微信消息管理权限","企业微信消息管理权限"),
+    SASS_WEXIN_MSG_MNG("SASS_WEXIN_MSG_MNG","企业微信消息管理权限","企业微信消息管理权限"),
     ;
 
     private String code;
