@@ -1,8 +1,7 @@
 import Main from "../components/layout";
 import { localRead, hasChild } from "@/libs/util";
-import { forEach } from "@/libs/tools";
-import routes_config from "@/config/routes";
-
+import { forEach } from "@/libs/util";
+import dynamicRouters from "./dynamic_routers";
 // 加载菜单
 export const loadMenu = () => {
   let list = [];
@@ -18,8 +17,8 @@ export const loadMenu = () => {
 export const formatMenu = list => {
   let res = [];
   forEach(list, item => {
-    let ROUTES_CONFIG = routes_config[item.url];
-    if (!ROUTES_CONFIG) {
+    let dyRouters = dynamicRouters[item.url];
+    if (!dyRouters) {
       console.warn("no route config", item.url);
       let obj = {
         name: "not_found_" + item.code,
@@ -38,7 +37,7 @@ export const formatMenu = list => {
       res.push(obj);
     } else {
       let obj = {
-        ...ROUTES_CONFIG
+        ...dyRouters
       };
       obj.meta.title = item.text;
       if (item.parentId == "0") {

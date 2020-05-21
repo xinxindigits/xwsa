@@ -1,4 +1,4 @@
-import axios from "@/libs/api.request";
+import axios from "@/libs/http";
 export const getUserList = data => {
   return axios.request({
     url: "user/list",

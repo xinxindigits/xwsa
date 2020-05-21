@@ -19,8 +19,15 @@
           :disabled="type == 'update'"
         ></Input>
       </FormItem>
-      <FormItem label="资源权限" prop="authority">
-        <Input v-model="form.authority" style="width: 250px"></Input>
+      <FormItem label="资源权限值" prop="authority">
+        <Select v-model="form.authority" filterable style="width: 250px">
+          <Option
+            v-for="(n, index) in allGrantsList"
+            :value="n.code"
+            :key="`${n.code}_${index}`"
+            >{{ n.name }}({{ n.code }})</Option
+          >
+        </Select>
       </FormItem>
       <FormItem label="名称" prop="name">
         <Input v-model="form.name" style="width: 250px"></Input>
@@ -47,7 +54,7 @@
 </template>
 
 <script>
-import { createResource, updateResource } from "@/api/data";
+import { createResource, updateResource, getGrantList } from "@/api";
 const _config = {
   create: {
     title: "新增",
@@ -73,10 +80,12 @@ export default {
       return _config[this.type].title;
     }
   },
+
   data() {
     return {
       code_editable: false,
       curValue: false,
+      allGrantsList: [],
       form: {
         authority: "",
         name: "",
@@ -149,6 +158,11 @@ export default {
     value: {
       handler(newValue) {
         this.curValue = newValue;
+        if (newValue) {
+          getGrantList().then(({ data }) => {
+            this.allGrantsList = data;
+          });
+        }
       },
       immediate: true
     },

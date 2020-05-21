@@ -1,4 +1,4 @@
-import axios from "@/libs/api.request";
+import axios from "@/libs/http";
 
 export const getOrganizationList = data => {
   return axios.request({

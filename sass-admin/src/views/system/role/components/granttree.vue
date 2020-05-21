@@ -11,7 +11,7 @@
   </Modal>
 </template>
 <script>
-import { getGrantTree } from "@/api/data";
+import { getGrantTree } from "@/api";
 import { grantRole } from "@/api";
 export default {
   name: "grant-tree",

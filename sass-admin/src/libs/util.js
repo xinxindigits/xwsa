@@ -1,133 +1,11 @@
-import config from "@/config";
-import { forEach, objEqual } from "@/libs/tools";
-const { title } = config;
-
-export const hasChild = item => {
-  return item.children && item.children.length !== 0;
-};
-
-/**
- * @param {Array} list 通过路由列表得到菜单列表
- * @returns {Array}
- */
-export const getMenuByRouter = list => {
-  let res = [];
-  forEach(list, item => {
-    if (!item.meta || (item.meta && !item.meta.hideInMenu)) {
-      let obj = {
-        icon: (item.meta && item.meta.icon) || "",
-        name: item.name,
-        meta: item.meta
-      };
-      if (hasChild(item) || (item.meta && item.meta.showAlways)) {
-        obj.children = getMenuByRouter(item.children);
-      }
-      if (item.meta && item.meta.href) obj.href = item.meta.href;
-      res.push(obj);
-    }
-  });
-  return res;
-};
-
-/**
- * @param {Array} route 当前路由对象
- * @returns {Array}
- */
-export const getBreadCrumbList = (route, homeRoute) => {
-  let homeItem = { ...homeRoute, icon: homeRoute.meta.icon };
-  let routeMatched = route.matched;
-  if (routeMatched.some(item => item.name === homeRoute.name))
-    return [homeItem];
-  let res = routeMatched
-    .filter(item => {
-      return item.meta === undefined || !item.meta.hideInBread;
-    })
-    .map(item => {
-      let meta = { ...item.meta };
-      if (meta.title && typeof meta.title === "function") {
-        meta.__titleIsFunction__ = true;
-        meta.title = meta.title(route);
-      }
-      let obj = {
-        icon: (item.meta && item.meta.icon) || "",
-        name: item.name,
-        meta: meta
-      };
-      return obj;
-    });
-  res = res.filter(item => {
-    return !item.meta.hideInMenu;
-  });
-  return [{ ...homeItem, to: homeRoute.path }, ...res];
-};
-
-export const getRouteTitleHandled = route => {
-  let router = { ...route };
-  let meta = { ...route.meta };
-  let title = "";
-  if (meta.title) {
-    if (typeof meta.title === "function") {
-      meta.__titleIsFunction__ = true;
-      title = meta.title(router);
-    } else title = meta.title;
-  }
-  meta.title = title;
-  router.meta = meta;
-  return router;
-};
-
-export const showTitle = item => {
-  let { title } = item.meta;
-  if (!title) return;
-  title = (item.meta && item.meta.title) || item.name;
-  return title;
-};
-
-/**
- * @description 本地存储和获取标签导航列表
- */
-export const setTagNavListInLocalstorage = list => {
-  localStorage.tagNaveList = JSON.stringify(list);
-};
-/**
- * @returns {Array} 其中的每个元素只包含路由原信息中的name, path, meta三项
- */
-export const getTagNavListFromLocalstorage = () => {
-  const list = localStorage.tagNaveList;
-  return list ? JSON.parse(list) : [];
-};
-
-/**
- * @param {Array} routers 路由列表数组
- * @description 用于找到路由列表中name为home的对象
- */
-export const getHomeRoute = (routers, homeName = "home") => {
+export const forEach = (arr, fn) => {
+  if (!arr.length || !fn) return;
   let i = -1;
-  let len = routers.length;
-  let homeRoute = {};
+  let len = arr.length;
   while (++i < len) {
-    let item = routers[i];
-    if (item.children && item.children.length) {
-      let res = getHomeRoute(item.children, homeName);
-      if (res.name) return res;
-    } else {
-      if (item.name === homeName) homeRoute = item;
-    }
+    let item = arr[i];
+    fn(item, i, arr);
   }
-  return homeRoute;
-};
-
-/**
- * @param {*} list 现有标签导航列表
- * @param {*} newRoute 新添加的路由原信息对象
- * @description 如果该newRoute已经存在则不再添加
- */
-export const getNewTagList = (list, newRoute) => {
-  const { name, path, meta } = newRoute;
-  let newList = [...list];
-  if (newList.findIndex(item => item.name === name) >= 0) return newList;
-  else newList.push({ name, path, meta });
-  return newList;
 };
 
 /**
@@ -142,22 +20,6 @@ export const getParams = url => {
     paramObj[keyValue[0]] = keyValue[1];
   });
   return paramObj;
-};
-
-/**
- * @param {Array} list 标签列表
- * @param {String} name 当前关闭的标签的name
- */
-export const getNextRoute = (list, route) => {
-  let res = {};
-  if (list.length === 2) {
-    res = getHomeRoute(list);
-  } else {
-    const index = list.findIndex(item => routeEqual(item, route));
-    if (index === list.length - 1) res = list[list.length - 2];
-    else res = list[index + 1];
-  }
-  return res;
 };
 
 /**
@@ -209,35 +71,6 @@ export const findNodeDownward = (ele, tag) => {
   }
 };
 
-/**
- * @description 根据name/params/query判断两个路由对象是否相等
- * @param {*} route1 路由对象
- * @param {*} route2 路由对象
- */
-export const routeEqual = (route1, route2) => {
-  const params1 = route1.params || {};
-  const params2 = route2.params || {};
-  const query1 = route1.query || {};
-  const query2 = route2.query || {};
-  return (
-    route1.name === route2.name &&
-    objEqual(params1, params2) &&
-    objEqual(query1, query2)
-  );
-};
-
-/**
- * 判断打开的标签列表里是否已存在这个新添加的路由对象
- */
-export const routeHasExist = (tagNavList, routeItem) => {
-  let len = tagNavList.length;
-  let res = false;
-  doCustomTimes(len, index => {
-    if (routeEqual(tagNavList[index], routeItem)) res = true;
-  });
-  return res;
-};
-
 export const localSave = (key, value) => {
   localStorage.setItem(key, value);
 };
@@ -282,13 +115,104 @@ export const scrollTop = (el, from = 0, to, duration = 500, endCallback) => {
 };
 
 /**
- * @description 根据当前跳转的路由设置显示在浏览器标签的title
- * @param {Object} routeItem 路由对象
- * @param {Object} vm Vue实例
+ * @param {Array} arr1
+ * @param {Array} arr2
+ * @description 得到两个数组的并集, 两个数组的元素为数值或字符串
  */
-export const setTitle = (routeItem, vm) => {
-  const handledRoute = getRouteTitleHandled(routeItem);
-  const pageTitle = showTitle(handledRoute, vm);
-  const resTitle = pageTitle ? `${title} - ${pageTitle}` : title;
-  window.document.title = resTitle;
+export const getUnion = (arr1, arr2) => {
+  return Array.from(new Set([...arr1, ...arr2]));
+};
+
+/**
+ * @param {Array} target 目标数组
+ * @param {Array} arr 需要查询的数组
+ * @description 判断要查询的数组是否至少有一个元素包含在目标数组中
+ */
+export const hasOneOf = (targetarr, arr) => {
+  return targetarr.some(_ => arr.indexOf(_) > -1);
+};
+
+/**
+ * @param {String|Number} value 要验证的字符串或数值
+ * @param {*} validList 用来验证的列表
+ */
+export function oneOf(value, validList) {
+  for (let i = 0; i < validList.length; i++) {
+    if (value === validList[i]) {
+      return true;
+    }
+  }
+  return false;
+}
+
+export const getDateFormat = (timeStamp, fmt) => {
+  if (!timeStamp) {
+    return "";
+  }
+  let date = new Date(timeStamp);
+  let o = {
+    "M+": date.getMonth() + 1, //月份
+    "d+": date.getDate(), //日
+    "h+": date.getHours(), //小时
+    "m+": date.getMinutes(), //分
+    "s+": date.getSeconds(), //秒
+    "q+": Math.floor((date.getMonth() + 3) / 3), //季度
+    S: date.getMilliseconds() //毫秒
+  };
+  if (/(y+)/.test(fmt))
+    fmt = fmt.replace(
+      RegExp.$1,
+      (date.getFullYear() + "").substr(4 - RegExp.$1.length)
+    );
+  for (var k in o)
+    if (new RegExp("(" + k + ")").test(fmt))
+      fmt = fmt.replace(
+        RegExp.$1,
+        RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length)
+      );
+  return fmt;
+};
+
+/**
+ * @returns {String} 当前浏览器名称
+ */
+export const getExplorer = () => {
+  const ua = window.navigator.userAgent;
+  const isExplorer = exp => {
+    return ua.indexOf(exp) > -1;
+  };
+  if (isExplorer("MSIE")) return "IE";
+  else if (isExplorer("Firefox")) return "Firefox";
+  else if (isExplorer("Chrome")) return "Chrome";
+  else if (isExplorer("Opera")) return "Opera";
+  else if (isExplorer("Safari")) return "Safari";
+};
+
+/**
+ * 判断一个对象是否存在key，如果传入第二个参数key，则是判断这个obj对象是否存在key这个属性
+ * 如果没有传入key这个参数，则判断obj对象是否有键值对
+ */
+export const hasKey = (obj, key) => {
+  if (key) return key in obj;
+  else {
+    let keysArr = Object.keys(obj);
+    return keysArr.length;
+  }
+};
+
+/**
+ * @param {*} obj1 对象
+ * @param {*} obj2 对象
+ * @description 判断两个对象是否相等，这两个对象的值只能是数字或字符串
+ */
+export const objEqual = (obj1, obj2) => {
+  const keysArr1 = Object.keys(obj1);
+  const keysArr2 = Object.keys(obj2);
+  if (keysArr1.length !== keysArr2.length) return false;
+  else if (keysArr1.length === 0 && keysArr2.length === 0) return true;
+  /* eslint-disable-next-line */ else
+        return !keysArr1.some(key => obj1[key] != obj2[key]);
+};
+export const hasChild = item => {
+  return item.children && item.children.length !== 0;
 };

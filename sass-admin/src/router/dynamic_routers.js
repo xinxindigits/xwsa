@@ -1,4 +1,5 @@
-let routes_config = {
+// dynamicRouters中key值和path要和后台的资源URI一致,name属性和对应vue文件name属性也要保持一致
+let dynamicRouters = {
   ["/system"]: {
     path: "/system",
     name: "system",
@@ -10,65 +11,73 @@ let routes_config = {
   },
   ["/user/list"]: {
     path: "user/list",
-    name: "user_list",
+    name: "sys-user",
     meta: {
-      title: "用户查询功能"
+      title: "用户查询功能",
+      notCache: true
     },
     component: () => import("@/views/system/user/user.vue")
   },
   ["/role/list"]: {
     path: "role/list",
-    name: "role_list",
+    name: "sys-role",
     meta: {
-      title: "角色管理"
+      title: "角色管理",
+      notCache: true
     },
     component: () => import("@/views/system/role/role.vue")
   },
   ["/resource/list"]: {
     path: "resource/list",
-    name: "resource_list",
+    name: "sys-resource",
     meta: {
-      title: "权限资源管理"
+      title: "权限资源管理",
+      notCache: true
     },
     component: () => import("@/views/system/resource/resource.vue")
   },
   ["/tenant/list"]: {
     path: "tenant/list",
-    name: "tenant_list",
+    name: "sys-tenant",
     meta: {
-      title: "租户管理"
+      title: "租户管理",
+      notCache: true
     },
     component: () => import("@/views/system/tenant/tenant.vue")
   },
   ["/organization/list"]: {
     path: "organization/list",
-    name: "organization",
+    name: "sys-organization",
     meta: {
-      title: "租户管理"
+      title: "租户管理",
+      notCache: true
     },
     component: () => import("@/views/system/organization/organization.vue")
   },
   ["/tags/list"]: {
     path: "tags/list",
-    name: "tag_list",
+    name: "sys-tag",
     meta: {
-      title: "标签管理"
+      title: "标签管理",
+      notCache: true
     },
     component: () => import("@/views/system/tag/tag.vue")
   },
   ["/ops/log/list"]: {
     path: "ops/log/list",
-    name: "oplog_list",
+    name: "sys-log",
     meta: {
-      title: "操作日志管理"
+      title: "操作日志管理",
+      notCache: true
     },
     component: () => import("@/views/system/log/log.vue")
   },
   ["/tenant/queryConfig"]: {
     path: "tenant/queryConfig",
-    name: "task_config",
+    name: "sys-task",
     meta: {
-      title: "任务配置管理"
+      title: "任务配置管理",
+      notCache: true
     },
     component: () => import("@/views/system/task/task.vue")
   },
@@ -78,40 +87,45 @@ let routes_config = {
     meta: {
       icon: "ios-hammer",
       title: "企业微信管理",
-      showAlways: true
+      showAlways: true,
+      notCache: true
     }
   },
   ["/wechat/dept/list"]: {
     path: "/wechat/dept/list",
-    name: "org_list",
+    name: "wc-org",
     meta: {
-      title: "部门管理"
+      title: "部门管理",
+      notCache: true
     },
     component: () => import("@/views/wechat/org/org.vue")
   },
   ["/wechat/staff/list"]: {
     path: "/wechat/staff/list",
-    name: "wc_staff",
+    name: "wc-staff",
     meta: {
-      title: "员工管理"
+      title: "员工管理",
+      notCache: true
     },
     component: () => import("@/views/wechat/staff/staff.vue")
   },
   ["/wechat/customer/list"]: {
     path: "/wechat/customer/list",
-    name: "wc_customer",
+    name: "wc-customer",
     meta: {
-      title: "客户管理"
+      title: "客户管理",
+      notCache: true
     },
     component: () => import("@/views/wechat/customer/customer.vue")
   },
   ["/wechat/message/list"]: {
     path: "/wechat/message/list",
-    name: "message_list",
+    name: "wc-message",
     meta: {
-      title: "数据管理"
+      title: "数据管理",
+      notCache: true
     },
     component: () => import("@/views/wechat/message/message.vue")
   }
 };
-export default routes_config;
+export default dynamicRouters;

@@ -70,7 +70,7 @@
 import { getRoleList, delRole } from "@/api";
 import { RoleGrant, RoleUpdate, RoleQuery, RoleOperation } from "./components";
 export default {
-  name: "role-list",
+  name: "sys-role",
   components: {
     RoleUpdate,
     RoleGrant,

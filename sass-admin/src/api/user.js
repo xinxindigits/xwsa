@@ -1,4 +1,4 @@
-import axios from "@/libs/api.request";
+import axios from "@/libs/http";
 import md5 from "md5";
 export const regist = ({ account, name, gender, password, extension }) => {
   return axios.request({

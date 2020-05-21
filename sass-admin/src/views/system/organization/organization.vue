@@ -107,7 +107,7 @@
 import { getOrganizationList, delOrganization } from "@/api";
 import OrganizationUpdate from "./modify";
 export default {
-  name: "organization",
+  name: "sys-organization",
   components: {
     OrganizationUpdate
   },

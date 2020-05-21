@@ -76,7 +76,7 @@ import { getMemberList, getMemberDetail, queryMember } from "@/api";
 import { StaffDetail } from "./components";
 import MsgRecord from "@/components/msg-record/msg-record";
 export default {
-  name: "staff-list",
+  name: "wc-staff",
   components: {
     StaffDetail,
     MsgRecord

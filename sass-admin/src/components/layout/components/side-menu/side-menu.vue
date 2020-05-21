@@ -84,7 +84,7 @@
 <script>
 import SideMenuItem from "./side-menu-item.vue";
 import CollapsedMenu from "./collapsed-menu.vue";
-import { getUnion } from "@/libs/tools";
+import { getUnion } from "@/libs/util";
 import mixin from "./mixin";
 
 export default {
@@ -133,7 +133,7 @@ export default {
   },
   methods: {
     handleSelect(name) {
-      this.$emit("on-select", name);
+      this.$emit("on-select", name, 123);
     },
     getOpenedNamesByActiveName(name) {
       return this.$route.matched

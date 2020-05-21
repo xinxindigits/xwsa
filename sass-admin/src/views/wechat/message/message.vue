@@ -62,7 +62,7 @@
 import { queryMsgList, getMsgByMsgId } from "@/api";
 import { Query, MsgDetail } from "./components";
 export default {
-  name: "message-list",
+  name: "wc-message",
   components: {
     Query,
     MsgDetail
@@ -101,6 +101,13 @@ export default {
           align: "center",
           slot: "msgAction",
           width: 100
+        },
+        {
+          title: "内容",
+          key: "content",
+          align: "center",
+          width: 150,
+          ellipsis: true
         },
         {
           title: "操作",
