@@ -126,7 +126,9 @@ public class UserAclTokenRepository {
 
             // 获取用户的信息重新生成token
             SassUserInfo sassUserInfo = this.getSassUserByUserAccount(account);
-            String newToken = JWTUtil.sign(sassUserInfo.getAccount(),sassUserInfo.getPassword());
+            String newToken = JWTUtil.sign(sassUserInfo.getAccount(),
+                    sassUserInfo.getTenantId(),
+                    sassUserInfo.getPassword());
             // 更新缓存中的token
             this.setSassUserTokenCache(account,newToken);
             // 设置响应头

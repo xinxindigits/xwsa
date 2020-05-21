@@ -42,13 +42,16 @@ public class JWTUtil {
      * @param secret   用户的密码
      * @return 加密的token
      */
-    public static String sign(String username, String secret) {
+    public static String sign(String username,
+                              String secret,
+                              String tenantId) {
         try {
             Date date = new Date(System.currentTimeMillis() + TOKEN_EXPIRE_TIME);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // 附带username信息
             return JWT.create()
                     .withClaim("username", username)
+                    .withClaim("tenantId", tenantId)
                     .withExpiresAt(date)
                     .sign(algorithm);
 
@@ -65,11 +68,15 @@ public class JWTUtil {
      * @param secret 用户的密码
      * @return 是否正确
      */
-    public static boolean verify(String token, String username, String secret) {
+    public static boolean verify(String token,
+                                 String username,
+                                 String tenantId,
+                                 String secret) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("username", username)
+                    .withClaim("tenantId", tenantId)
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             return true;
@@ -95,6 +102,22 @@ public class JWTUtil {
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
         }
     }
+
+    /**
+     * 获得token中的信息无需secret解密也能获得
+     * @return token中包含的用户名
+     */
+    public static String getUserTeantId(String token) {
+
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getClaim("tenantId").asString();
+        }catch (Exception ex){
+            log.info("token 解密失败  ex = {}", ex.getMessage());
+            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
+        }
+    }
+
 
 
     /**
