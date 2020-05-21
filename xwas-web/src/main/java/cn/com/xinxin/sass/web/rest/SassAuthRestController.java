@@ -109,9 +109,9 @@ public class SassAuthRestController {
                         @RequestBody UserLoginForm userLoginForm){
 
 
-        if (!KaptchaUtils.checkVerifyCode(request)) {
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
-        }
+//        if (!KaptchaUtils.checkVerifyCode(request)) {
+//            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
+//        }
 
         String userAccount = userLoginForm.getAccount();
 
@@ -132,7 +132,7 @@ public class SassAuthRestController {
         if(ecnryptPassword.equals(userDO.getPassword())){
             // 登录成功, 返回token
             // TODO: 登录成功之后需要将用户的信息缓存起来，方便查询读写
-            String token = getToken(userAccount, userDO.getPassword());
+            String token = getToken(userAccount, userDO.getPassword(),userDO.getTenantId());
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
             userTokenVO.setToken(token);
@@ -204,9 +204,9 @@ public class SassAuthRestController {
     }
 
 
-    private String  getToken(String userName, String userPasswd){
+    private String  getToken(String userName, String userPasswd, String tenantId){
          //TODO: 缓存设置tokent
-         return JWTUtil.sign(userName,userPasswd);
+         return JWTUtil.sign(userName, userPasswd, tenantId);
     }
 
 
