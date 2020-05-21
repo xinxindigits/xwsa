@@ -82,7 +82,7 @@ import {
 import { StaffDetail } from "@/views/wechat/staff/components";
 import MsgRecord from "@/components/msg-record/msg-record";
 export default {
-  name: "org-list",
+  name: "wc-org",
   components: {
     StaffDetail,
     MsgRecord

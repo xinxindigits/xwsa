@@ -1,4 +1,4 @@
-import axios from "@/libs/api.request";
+import axios from "@/libs/http";
 export const queryMsgList = ({
   userId,
   startTime,

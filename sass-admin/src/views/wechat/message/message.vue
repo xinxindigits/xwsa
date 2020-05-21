@@ -62,7 +62,7 @@
 import { queryMsgList, getMsgByMsgId } from "@/api";
 import { Query, MsgDetail } from "./components";
 export default {
-  name: "message-list",
+  name: "wc-message",
   components: {
     Query,
     MsgDetail
