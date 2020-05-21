@@ -8,7 +8,7 @@
             <property name="rowBoundsWithCount" value="false"/>
         </plugin>
 
-        <plugin interceptor="cn.com.xinxin.sass.biz.tenant.TenantIsolationInterceptor">
-        </plugin>
+        <!--<plugin interceptor="cn.com.xinxin.sass.biz.tenant.TenantIsolationInterceptor">-->
+        <!--</plugin>-->
     </plugins>
 </configuration>
