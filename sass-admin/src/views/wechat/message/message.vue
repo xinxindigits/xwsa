@@ -103,6 +103,13 @@ export default {
           width: 100
         },
         {
+          title: "内容",
+          key: "content",
+          align: "center",
+          width: 150,
+          ellipsis: true
+        },
+        {
           title: "操作",
           slot: "action",
           width: 100,
