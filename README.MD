@@ -96,6 +96,13 @@
    1. 设置好数据库之后，请执行数据新建表的sql,具体脚本在/sql/xwsass_init_database_DDL.sql。
    2. 执行第一步之后请执行数据初始化脚本sql,具体在/sql/xwsass_init_database_DML.sql。
    3. 初始化后的数据登陆管理员账号即可: admin001/admin001
+   4. **特别说明：由于quartz的自带特性，数据初始化后，需要调整mysql的配置，让其忽略大小写敏感**
+   
+   ``
+      1. 用ROOT登录，修改/etc/my.cnf
+   　　2. 在[mysqld]下加入一行：lower_case_table_names=1
+   　　3. 重新启动数据库即可
+   ``
   
     
 ## 操作界面说明
