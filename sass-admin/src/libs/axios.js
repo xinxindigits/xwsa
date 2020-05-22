@@ -83,11 +83,7 @@ class HttpRequest {
             content: "登录信息失效",
             duration: 3,
             onClose() {
-              store.dispatch("handleLogout").then(() => {
-                this.$router.push({
-                  name: "login"
-                });
-              });
+              store.dispatch("handleLogOut");
             }
           });
           store.commit("setToken", "");

@@ -1,17 +1,7 @@
 import Main from "../components/layout";
-import { localRead, hasChild } from "@/libs/util";
+import { hasChild } from "@/libs/util";
 import { forEach } from "@/libs/util";
 import dynamicRouters from "./dynamic_routers";
-// 加载菜单
-export const loadMenu = () => {
-  let list = [];
-  let data = localRead("route");
-  if (!data) {
-    return list;
-  }
-  list = formatMenu(JSON.parse(data));
-  return list;
-};
 
 // 格式化菜单
 export const formatMenu = list => {
@@ -51,7 +41,7 @@ export const formatMenu = list => {
   });
   return res;
 };
-
+//基础路由
 export default [
   {
     path: "/login",
@@ -84,15 +74,15 @@ export default [
         component: () => import("@/views/home")
       },
       {
-        path: "/profile",
-        name: "profile",
+        path: "/resetPwd",
+        name: "resetPwd",
         meta: {
           hideInMenu: true,
-          title: "个人信息",
+          title: "修改密码",
           notCache: true,
           icon: "md-person"
         },
-        component: () => import("@/views/profile/profile.vue")
+        component: () => import("@/views/profile/resetPwd.vue")
       }
     ]
   }
