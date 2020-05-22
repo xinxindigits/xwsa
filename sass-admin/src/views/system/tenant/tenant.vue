@@ -9,7 +9,7 @@
           <Input v-model="form.tenantName" placeholder="租户名称"></Input>
         </FormItem>
         <FormItem>
-          <Button type="primary" @click="hdlquery">查询</Button>
+          <Button type="primary" @click="hdlQuery">查询</Button>
           <Button style="margin-left: 8px" @click="reset">重置</Button>
         </FormItem>
       </Form>
@@ -70,30 +70,25 @@
           transfer
         ></Page>
       </div>
-      <organization-update
-        type="create"
-        ref="createModal"
-        v-model="showAddModal"
-        @on-cancel="showAddModal = false"
-        @on-add-organization="hdlquery"
-      ></organization-update>
-      <organization-update
-        type="update"
-        v-model="showUpdateModal"
-        @on-update-organization="hdlquery"
-        ref="updateModal"
-      ></organization-update>
+
+      <tenant-modify
+        :type="modifyType"
+        ref="modifyModal"
+        v-model="showModifyModal"
+        @on-cancel="showModifyModal = false"
+        @tenant-modified="hdlModified"
+      ></tenant-modify>
     </Card>
   </div>
 </template>
 
 <script>
 import { getTenantList, delTenant, queryTenant } from "@/api";
-import OrganizationUpdate from "./modify";
+import { tenantModify } from "./components";
 export default {
   name: "sys-tenant",
   components: {
-    OrganizationUpdate
+    tenantModify
   },
   computed: {
     deleteOrgCodes() {
@@ -102,9 +97,8 @@ export default {
   },
   data() {
     return {
-      showAddModal: false,
-      showGrantModal: false,
-      showUpdateModal: false,
+      modifyType: "create",
+      showModifyModal: false,
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -137,7 +131,7 @@ export default {
     };
   },
   methods: {
-    hdlquery() {
+    hdlQuery() {
       this.changePage(1);
     },
     changePage(pageNum) {
@@ -166,7 +160,7 @@ export default {
       this.form.tenantName = "";
       this.form.tenantId = "";
       this.form.state = "";
-      this.hdlquery();
+      this.hdlQuery();
     },
     hdlDelete(codes) {
       let self = this;
@@ -177,7 +171,7 @@ export default {
           onOk() {
             delTenant({ codes }).then(() => {
               this.$Message.success("删除成功！");
-              self.hdlquery();
+              self.hdlQuery();
             });
           }
         });
@@ -186,25 +180,31 @@ export default {
       }
     },
     hdlSingleCreate() {
-      this.$refs.createModal.setData({
+      this.modifyType = "create";
+      this.$refs.modifyModal.setData({
         obj: {},
         remark: "",
         state: ""
       });
-      this.showAddModal = true;
+      this.showModifyModal = true;
     },
     hdlSingleModified(data) {
       queryTenant({ code: data.tenantId }).then(res => {
-        this.$refs.updateModal.setData({
+        this.modifyType = "update";
+        this.$refs.modifyModal.setData({
           obj: res.data,
           remark: data.remark,
           state: data.state
         });
-        this.showUpdateModal = true;
+        this.showModifyModal = true;
       });
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;
+    },
+    hdlModified(type) {
+      this.$Message.success(`${type == "create" ? "新增" : "修改"}成功！`);
+      this.hdlQuery();
     }
   },
   mounted() {

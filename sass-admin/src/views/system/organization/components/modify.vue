@@ -60,17 +60,15 @@ import { addOrganization, updateOrganization } from "@/api";
 const _config = {
   create: {
     title: "新增机构",
-    success_evt: "on-add-organization",
     submit: addOrganization
   },
   update: {
     title: "更新机构",
-    success_evt: "on-update-organization",
     submit: updateOrganization
   }
 };
 export default {
-  name: "organization-update",
+  name: "organization-modify",
   props: {
     value: Boolean,
     type: {
@@ -139,7 +137,7 @@ export default {
         if (valid) {
           _config[this.type].submit(this.form).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.form);
+            this.$emit("organization-modified", this.type);
           });
         }
       });
