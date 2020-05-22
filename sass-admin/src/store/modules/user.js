@@ -68,6 +68,8 @@ export default {
             commit("setUserName", "");
             commit("setHasGetInfo", false);
             commit("setHasGetRouter", false);
+            commit("setTagNavList", [], { root: true });
+            location.reload();
             resolve();
           })
           .catch(reject);
