@@ -7,6 +7,7 @@ import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
 import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.OplogService;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.common.utils.CommonHttpRequestUtil;
@@ -100,6 +101,9 @@ public class SassAuthRestController {
 
         }
 
+        //设置租户ID
+        TenantIdContext.set(userDO.getTenantId());
+
         String ecnryptPassword = PasswordUtils.encryptPassword(userDO.getAccount(),
                 userDO.getSalt(), password);
 
@@ -169,6 +173,8 @@ public class SassAuthRestController {
             }
 
             // 设置基本的content
+            // 完成请求移除设置
+            TenantIdContext.remove();
             return userTokenVO;
 
         }else{

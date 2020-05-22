@@ -1,8 +1,11 @@
 package cn.com.xinxin.sass.biz.tenant;
 
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
+import com.google.common.collect.Lists;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.StringValue;
+
+import java.util.List;
 
 /**
  * @author: zhouyang
@@ -12,6 +15,8 @@ import net.sf.jsqlparser.expression.StringValue;
  */
 public class SassTenantHandler implements TenantHandler {
 
+
+    private static final List<String> IGNORE_TENANT_TABLES = Lists.newArrayList("user","tenant_sync_config");
 
     @Override
     public Expression getTenantId(boolean where) {
@@ -25,6 +30,8 @@ public class SassTenantHandler implements TenantHandler {
 
     @Override
     public boolean doTableFilter(String tableName) {
-        return !"user".equalsIgnoreCase(tableName);
+        Boolean match =  IGNORE_TENANT_TABLES.stream().anyMatch((e) -> e.equalsIgnoreCase(tableName));
+        return match;
     }
+
 }
