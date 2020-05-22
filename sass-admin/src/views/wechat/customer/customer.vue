@@ -195,12 +195,6 @@ export default {
   },
   mounted() {
     this.init();
-  },
-  updated() {
-    console.log(123);
-  },
-  activated() {
-    console.log(222);
   }
 };
 </script>
