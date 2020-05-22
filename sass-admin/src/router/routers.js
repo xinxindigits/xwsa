@@ -27,7 +27,7 @@
 import Main from "../components/layout";
 import { hasChild } from "@/libs/util";
 import { forEach } from "@/libs/util";
-import dynamicRouters from "./dynamic_routers";
+import dynamicRouters from "./dynamic-routers";
 
 // 格式化菜单
 export const formatMenu = list => {

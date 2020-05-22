@@ -76,7 +76,11 @@
     </Form>
     <div slot="footer">
       <Button @click="hdlCancel">取消</Button>
-      <Button style="margin-left: 8px" type="primary" @click="hdlSubmit('form')"
+      <Button
+        style="margin-left: 8px"
+        type="primary"
+        @click="hdlSubmit('form')"
+        :loading="isLoading"
         >确认</Button
       >
     </div>
@@ -89,18 +93,16 @@ import { taskType } from "@/libs/dic";
 const _config = {
   create: {
     title: "新增任务",
-    success_evt: "on-add-task",
     submit: createTenantTask
   },
   update: {
     title: "更新任务",
-    success_evt: "on-update-task",
     submit: updateTenantTask
   }
 };
 
 export default {
-  name: "organization-task",
+  name: "task-modify",
   props: {
     value: Boolean,
     type: {
@@ -116,6 +118,7 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       curValue: false,
       statusEnum: Object.entries(taskType),
       MESSAGE_SYNC: "MESSAGE_SYNC",
@@ -173,10 +176,16 @@ export default {
     hdlSubmit(name) {
       this.$refs[name].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.form).then(() => {
-            this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.form);
-          });
+          this.isLoading = true;
+          _config[this.type]
+            .submit(this.form)
+            .then(() => {
+              this.curValue = false;
+              this.$emit("task-modified", this.type);
+            })
+            .finally(() => {
+              this.isLoading = false;
+            });
         }
       });
     },
