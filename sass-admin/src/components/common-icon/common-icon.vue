@@ -14,7 +14,6 @@ export default {
   components: { Icons },
   props: {
     type: {
-      // type: String,
       required: true
     },
     color: String,
