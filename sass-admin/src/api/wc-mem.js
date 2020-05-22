@@ -10,7 +10,7 @@ export const getMemberList = ({ pageIndex, pageSize }) => {
 //员工详情
 export const getMemberDetail = ({ id }) => {
   return axios.request({
-    url: "/wechat/member/detail/" + id,
+    url: "wechat/member/detail/" + id,
     method: "get"
   });
 };
