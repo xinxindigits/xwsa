@@ -79,7 +79,6 @@ export const localRead = key => {
   return localStorage.getItem(key) || "";
 };
 
-// scrollTop animation
 export const scrollTop = (el, from = 0, to, duration = 500, endCallback) => {
   if (!window.requestAnimationFrame) {
     window.requestAnimationFrame =

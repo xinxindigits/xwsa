@@ -60,6 +60,7 @@ export default {
         tagList.unshift(homeTag);
       }
       state.tagNavList = tagList;
+
       setTagNavListInLocalstorage([...tagList]);
     },
     closeTag(state, route) {

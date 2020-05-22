@@ -1,5 +1,5 @@
 <template>
-  <div class="profile">
+  <div class="resetPwd">
     <Card>
       <Row>
         <Col :span="10"
@@ -57,7 +57,7 @@ import { changeUserPwd } from "@/api";
 import { mapActions } from "vuex";
 
 export default {
-  name: "Profile",
+  name: "resetPwd",
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -118,11 +118,7 @@ export default {
             newPassword: this.$md5(this.form.newPasswordCheck)
           }).then(() => {
             this.$Message.success("密码重置成功，请重新登录");
-            this.handleLogOut().then(() => {
-              this.$router.push({
-                name: "login"
-              });
-            });
+            this.handleLogOut();
           });
         }
       });
