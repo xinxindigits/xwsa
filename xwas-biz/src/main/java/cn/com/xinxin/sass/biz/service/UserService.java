@@ -75,6 +75,8 @@ public interface UserService {
 
     UserDO findByUserAccount(String account);
 
+    UserDO findByUserAccountAndTenantId(String account, String tenantId);
+
     List<RoleDO> findRolesByAccount(String account);
 
     List<ResourceDO> findResourcesByAccount(String account);
@@ -87,7 +89,9 @@ public interface UserService {
 
     List<ResourceDO> findFunctionsByAccount(String account);
 
-    PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO);
+    PageResultVO<UserDO> findByConditionPageAndTenantId(PageResultVO page,
+                                             QueryUserConditionVO queryUserConditionVO,
+                                             String tenantId);
 
     boolean updateUser(UserDO userDO);
 

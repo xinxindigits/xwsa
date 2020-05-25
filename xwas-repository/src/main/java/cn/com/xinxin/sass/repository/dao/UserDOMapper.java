@@ -88,6 +88,15 @@ public interface UserDOMapper {
      */
     UserDO selectByAccount(@Param("account")String account);
 
+    /**
+     *
+     * @param account
+     * @param tenantId
+     * @return
+     */
+    UserDO selectByAccountAndTenentId(@Param("account")String account,
+                                      @Param("tenantId")String tenantId);
+
     List<UserDO> selectByAccounts(@Param("accounts")List<String> accounts);
 
 
@@ -97,5 +106,16 @@ public interface UserDOMapper {
      */
     void deleteByAccounts(@Param("accounts")List<String> accounts);
 
-    List<UserDO> findByCondition(@Param("userDO") UserDO userDO, @Param("startTime") Date startTime, @Param("endTime") Date endTime);
+    /**
+     *
+     * @param userDO
+     * @param startTime
+     * @param endTime
+     * @param tenantId
+     * @return
+     */
+    List<UserDO> findByConditionAndTenantId(@Param("userDO") UserDO userDO,
+                                            @Param("startTime") Date startTime,
+                                            @Param("endTime") Date endTime,
+                                            @Param("tenantId")String tenantId);
 }
