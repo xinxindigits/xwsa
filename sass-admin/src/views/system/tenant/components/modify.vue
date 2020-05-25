@@ -71,17 +71,15 @@ import { addTenant, updateTenant } from "@/api";
 const _config = {
   create: {
     title: "新增租户",
-    success_evt: "on-add-organization",
     submit: addTenant
   },
   update: {
     title: "更新租户",
-    success_evt: "on-update-organization",
     submit: updateTenant
   }
 };
 export default {
-  name: "organization-update",
+  name: "tenant-modify",
   props: {
     value: Boolean,
     type: {
@@ -96,14 +94,6 @@ export default {
     }
   },
   data() {
-    const validateCode = (rule, value, callback) => {
-      if (value === "" && !this.addFlowFlag) {
-        callback(new Error("租户编号不能为空"));
-      } else {
-        callback();
-      }
-    };
-
     return {
       curValue: false,
       form: {
@@ -118,7 +108,9 @@ export default {
         remark: ""
       },
       rules: {
-        code: [{ validator: validateCode, trigger: "blur" }],
+        code: [
+          { required: true, message: "租户编号不能为空", trigger: "blur" }
+        ],
         name: [
           { required: true, message: "租户名称不能为空", trigger: "blur" }
         ],
@@ -146,7 +138,7 @@ export default {
         if (valid) {
           _config[this.type].submit(this.form).then(() => {
             this.curValue = false;
-            this.$emit(_config[this.type].success_evt, this.form);
+            this.$emit("tenant-modified", this.type);
           });
         }
       });

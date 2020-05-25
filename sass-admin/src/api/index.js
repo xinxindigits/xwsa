@@ -34,7 +34,7 @@ import {
   deleteResource,
   createResource,
   updateResource
-} from "./sys_res";
+} from "./sys-res";
 import {
   getRoleList,
   addRole,
@@ -42,7 +42,7 @@ import {
   delRole,
   grantRole,
   getAllRoles
-} from "./sys_role";
+} from "./sys-role";
 import {
   getTagList,
   queryTagList,
@@ -51,7 +51,7 @@ import {
   deleteTag,
   setTagByKeyId,
   getAllTags
-} from "./sys_tag";
+} from "./sys-tag";
 import {
   getOrganizationList,
   queryOrganization,
@@ -59,7 +59,7 @@ import {
   addOrganization,
   updateOrganization,
   getAllOrganizationTree
-} from "./sys_organization";
+} from "./sys-organization";
 import {
   getTenantList,
   queryTenant,
@@ -71,8 +71,8 @@ import {
   executeJob,
   updateTenantTask,
   queryTaskLog
-} from "./sys_tenant";
-import { getLogList, queryLogList, getLogDetail } from "./sys_log";
+} from "./sys-tenant";
+import { getLogList, queryLogList, getLogDetail } from "./sys-log";
 import {
   getUserList,
   getUserDetail,
@@ -82,9 +82,9 @@ import {
   grantUserRoles,
   resetUserPwd,
   changeUserPwd
-} from "./sys_user";
-import { getOrgList, queryOrgList, queryMemberByDeptId } from "./wc_org";
-import { getMemberDetail, getMemberList, queryMember } from "./wc_mem";
+} from "./sys-user";
+import { getOrgList, queryOrgList, queryMemberByDeptId } from "./wc-org";
+import { getMemberDetail, getMemberList, queryMember } from "./wc-mem";
 import {
   queryMsgList,
   getMsgByMsgId,
@@ -92,12 +92,12 @@ import {
   getMsgDetailByUserId,
   getMsgDetailByRoomId,
   getPageIndex
-} from "./wc_msg";
+} from "./wc-msg";
 import {
   getCustomerList,
   queryCustomerList,
   getCustomerDetail
-} from "./wc_cus";
+} from "./wc-cus";
 export {
   regist,
   login,

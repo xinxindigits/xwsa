@@ -12,7 +12,7 @@
           <Input v-model="form.orgName" placeholder="机构名称"></Input>
         </FormItem>
         <FormItem>
-          <Button type="primary" @click="hdlquery">查询</Button>
+          <Button type="primary" @click="hdlQuery">查询</Button>
           <Button style="margin-left: 8px" @click="reset">重置</Button>
         </FormItem>
       </Form>
@@ -86,30 +86,24 @@
           transfer
         ></Page>
       </div>
-      <organization-update
-        type="create"
-        ref="createModal"
-        v-model="showAddModal"
-        @on-cancel="showAddModal = false"
-        @on-add-organization="hdlquery"
-      ></organization-update>
-      <organization-update
-        type="update"
-        v-model="showUpdateModal"
-        @on-update-organization="hdlquery"
-        ref="updateModal"
-      ></organization-update>
+      <organization-modify
+        :type="modifyType"
+        ref="modifyModal"
+        v-model="showModifyModal"
+        @on-cancel="showModifyModal = false"
+        @organization-modified="hdlModified"
+      ></organization-modify>
     </Card>
   </div>
 </template>
 
 <script>
 import { getOrganizationList, delOrganization } from "@/api";
-import OrganizationUpdate from "./modify";
+import { OrganizationModify } from "./components";
 export default {
   name: "sys-organization",
   components: {
-    OrganizationUpdate
+    OrganizationModify
   },
   computed: {
     deleteOrgCodes() {
@@ -118,9 +112,8 @@ export default {
   },
   data() {
     return {
-      showAddModal: false,
-      showGrantModal: false,
-      showUpdateModal: false,
+      modifyType: "create",
+      showModifyModal: false,
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -155,7 +148,7 @@ export default {
     };
   },
   methods: {
-    hdlquery() {
+    hdlQuery() {
       this.changePage(1);
     },
     changePage(pageNum) {
@@ -181,7 +174,7 @@ export default {
       this.form.orgType = "";
       this.form.tenantId = "";
       this.form.status = "";
-      this.hdlquery();
+      this.hdlQuery();
     },
     hdlDelete(ids) {
       let self = this;
@@ -192,7 +185,7 @@ export default {
           onOk() {
             delOrganization({ ids }).then(() => {
               this.$Message.success("删除成功！");
-              self.hdlquery();
+              self.hdlQuery();
             });
           }
         });
@@ -201,24 +194,27 @@ export default {
       }
     },
     hdlSingleCreate() {
+      this.modifyType = "create";
       let d = {
         no_edit_parentName: true,
         parentName: "0",
         parentId: "0"
       };
-      this.$refs.createModal.setData(d);
-      this.showAddModal = true;
+      this.$refs.modifyModal.setData(d);
+      this.showModifyModal = true;
     },
     hdlSingleCreateChild(data) {
+      this.modifyType = "create";
       let d = {
         parentName: data.orgName,
         parentId: data.orgId,
         no_edit_parentName: true
       };
-      this.$refs.createModal.setData(d);
-      this.showAddModal = true;
+      this.$refs.modifyModal.setData(d);
+      this.showModifyModal = true;
     },
     hdlSingleModified(data) {
+      this.modifyType = "update";
       let d = {
         orgType: data.orgType,
         code: data.code,
@@ -227,15 +223,19 @@ export default {
         name: data.orgName,
         no_edit_parentName: true
       };
-      this.$refs.updateModal.setData(d);
-      this.showUpdateModal = true;
+      this.$refs.modifyModal.setData(d);
+      this.showModifyModal = true;
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;
+    },
+    hdlModified(type) {
+      this.$Message.success(`${type == "create" ? "新增" : "修改"}成功！`);
+      this.hdlQuery();
     }
   },
   mounted() {
-    this.hdlquery();
+    this.hdlQuery();
   }
 };
 </script>
