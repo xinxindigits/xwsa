@@ -61,14 +61,16 @@
       
       1. clone代码到本地,修改必要的配置，如mysql数据库配置, Redis配置, Zookeeper配置等.具体位置在xwas-web的resources目录下面
       ![xwas-config](./doc/image/xwas_web_config.jpg)
-      2. 执行编译打包。可以用下面的命令(mvn clean install -U -Pprod -X -Dmaven.skip.test=true)绕过单元测试执行打包，也可以导入到编辑工具如IDEA等打包即可.
-      3. xwas-web target目录下生成的war包拷贝到已经配置好的tomcat服务器对应的webapp目录下启动即可
-      4. 如果有需要修改tomcat的配置，如context配置，路径等可以参考tomcat官网相关的说明.
-      5. **特别说明: 在启动应用之前需要初始化相关的数据信息以及配置好企业微信的SDK**。
-      6. 新心内部公共技术包(common-lib)放在doc目录下(xinxin-com-lib.zip)。如果在本地执行编译，或者二次开发的时候，需要将该公共包解压放到自己的maven类库里面。如下图路径等
+      2. 新心内部公共技术包(common-lib)放在doc目录下(xinxin-com-lib.zip)。如果在本地执行编译，或者二次开发的时候，需要将该公共包解压放到自己的maven类库里面。如下图路径等
          ![common-lib](./doc/image/common-lib.jpg)
-      7. 前端部署参见下面的前端部署内容
-      8. **特别说明:在部署应用之前请执行数据初始化任务，详情参见数据初始化部分**
+      3. 执行编译打包。可以用下面的命令(mvn clean install -U -Pprod -X -Dmaven.skip.test=true)绕过单元测试执行打包，也可以导入到编辑工具如IDEA等打包即可.
+      4. xwas-web target目录下生成的war包拷贝到已经配置好的tomcat服务器对应的webapp目录下启动即可
+      5. 如果有需要修改tomcat的配置，如context配置，路径等可以参考tomcat官网相关的说明.
+      6. **特别说明: 在启动应用之前需要初始化相关的数据信息以及配置好企业微信的SDK**。
+      7. 如果使用tomcat。可以配置一下具体的工程路径，让访问路径不加apname. 如下图:
+         ![tomcat](./doc/image/tomcat.jpg)
+      8. 前端部署参见下面的前端部署内容
+      9. **特别说明:在部署应用之前请执行数据初始化任务，详情参见数据初始化部分**
       
    2. 前端项目部署
    
