@@ -297,6 +297,8 @@ public class SassUserRestController extends AclController {
 
         userCreateDO.setGender(Byte.valueOf(String.valueOf(userForm.getGender())));
 
+        userCreateDO.setTenantId(sassUserInfo.getTenantId());
+
         if(StringUtils.isEmpty(userCreateDO.getTenantId())){
             // FIXME: 先默认设置为xinxin租户
             userCreateDO.setTenantId("xinxin");
