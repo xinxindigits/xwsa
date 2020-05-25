@@ -33,6 +33,7 @@ import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
 import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.OplogService;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.common.utils.CommonHttpRequestUtil;
@@ -109,9 +110,9 @@ public class SassAuthRestController {
                         @RequestBody UserLoginForm userLoginForm){
 
 
-        if (!KaptchaUtils.checkVerifyCode(request)) {
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
-        }
+//        if (!KaptchaUtils.checkVerifyCode(request)) {
+//            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
+//        }
 
         String userAccount = userLoginForm.getAccount();
 
@@ -126,13 +127,16 @@ public class SassAuthRestController {
 
         }
 
+        //设置租户ID
+        TenantIdContext.set(userDO.getTenantId());
+
         String ecnryptPassword = PasswordUtils.encryptPassword(userDO.getAccount(),
                 userDO.getSalt(), password);
 
         if(ecnryptPassword.equals(userDO.getPassword())){
             // 登录成功, 返回token
             // TODO: 登录成功之后需要将用户的信息缓存起来，方便查询读写
-            String token = getToken(userAccount, userDO.getPassword());
+            String token = getToken(userAccount, userDO.getPassword(),userDO.getTenantId());
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
             userTokenVO.setToken(token);
@@ -195,6 +199,8 @@ public class SassAuthRestController {
             }
 
             // 设置基本的content
+            // 完成请求移除设置
+            TenantIdContext.remove();
             return userTokenVO;
 
         }else{
@@ -204,9 +210,9 @@ public class SassAuthRestController {
     }
 
 
-    private String  getToken(String userName, String userPasswd){
+    private String  getToken(String userName, String userPasswd, String tenantId){
          //TODO: 缓存设置tokent
-         return JWTUtil.sign(userName,userPasswd);
+         return JWTUtil.sign(userName, userPasswd, tenantId);
     }
 
 

@@ -33,5 +33,11 @@
             <property name="offsetAsPageNum" value="false"/>
             <property name="rowBoundsWithCount" value="false"/>
         </plugin>
+
+
+        <!--<plugin interceptor="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor">-->
+            <!--<property name="sqlParserList" value="sqlParserList"/>-->
+        <!--</plugin>-->
+
     </plugins>
 </configuration>
