@@ -169,6 +169,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
     public UserDO findByUserAccount(String account) {
         return userDOMapper.selectByAccount(account);
     }
