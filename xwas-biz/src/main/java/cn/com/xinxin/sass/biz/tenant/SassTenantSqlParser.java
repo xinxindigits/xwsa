@@ -53,5 +53,5 @@ import java.util.List;
  */
 public class SassTenantSqlParser extends TenantSqlParser {
 
-   
+
 }
