@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
-           http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.springframework.org/schema/tx    http://www.springframework.org/schema/tx/spring-tx.xsd">
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+           ">
 
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
         <property name="initialSize" value="${jdbc.pool.initialSize}" />
@@ -30,6 +61,22 @@
     </bean>
 
 
+    <bean id="sassTenantHandler" class="cn.com.xinxin.sass.biz.tenant.SassTenantHandler"/>
+
+    <bean id="tenantSqlParser" class="com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser">
+        <property name="tenantHandler" ref="sassTenantHandler"/>
+    </bean>
+
+    <bean id="tenantPlugin" class="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor">
+        <property name="sqlParserList">
+            <util:list>
+                <ref bean="tenantSqlParser"/>
+            </util:list>
+        </property>
+    </bean>
+
+
+
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="mapperLocations">
@@ -40,7 +87,10 @@
         <property name="typeAliasesPackage" value="cn.com.xinxin.sass.repository.dao"/>
         <property name="typeHandlersPackage" value="cn.com.xinxin.sass.repository.handler"/>
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="plugins" ref="tenantPlugin"/>
     </bean>
+
+
     <bean id="dataScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="cn.com.xinxin.sass.repository.dao"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>

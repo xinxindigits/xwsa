@@ -48,19 +48,12 @@
           </Button>
         </template>
       </Table>
-      <task-update
-        type="create"
-        ref="createModal"
-        v-model="showAddModal"
-        @on-cancel="showAddModal = false"
-        @on-add-task="hdlquery"
-      ></task-update>
-      <task-update
-        type="update"
-        v-model="showUpdateModal"
-        @on-update-task="hdlquery"
-        ref="updateModal"
-      ></task-update>
+      <task-modify
+        :type="modifyType"
+        v-model="showModifyModal"
+        @task-modified="hdlModified"
+        ref="modifyModal"
+      ></task-modify>
       <task-log v-model="showRecord" ref="record"></task-log>
     </Card>
   </div>
@@ -68,29 +61,19 @@
 
 <script>
 import { queryTenantConfig, executeJob } from "@/api";
-import TaskUpdate from "./modify";
-import TaskLog from "./taskLog";
+import { TaskModify, TaskLog } from "./components";
 export default {
-  name: "task",
-  props: {
-    value: Boolean,
-    type: {
-      validator: function(value) {
-        return ["create", "update"].indexOf(value) !== -1;
-      }
-    }
-  },
+  name: "sys-task",
   components: {
-    TaskUpdate,
+    TaskModify,
     TaskLog
   },
   computed: {},
   data() {
     return {
+      modifyType: "create",
+      showModifyModal: false,
       showRecord: false,
-      showAddModal: false,
-      showGrantModal: false,
-      showUpdateModal: false,
       isLoading: false,
       pageSize: 10,
       total: 0,
@@ -124,7 +107,7 @@ export default {
     };
   },
   methods: {
-    hdlquery() {
+    hdlQuery() {
       this.changePage(1);
     },
     changePage(pageNum) {
@@ -150,15 +133,17 @@ export default {
       this.form.state = "";
     },
     hdlSingleCreate() {
+      this.modifyType = "create";
       let d = {
         tenantId: "",
         countCeiling: 1000,
         timeInterval: 3
       };
-      this.$refs.createModal.setData(d);
-      this.showAddModal = true;
+      this.$refs.modifyModal.setData(d);
+      this.showModifyModal = true;
     },
     hdlSingleModified(data) {
+      this.modifyType = "update";
       let d = {
         id: data.id,
         tenantId: data.tenantId,
@@ -168,18 +153,22 @@ export default {
         timeInterval: data.timeInterval,
         status: data.status
       };
-      this.$refs.updateModal.setData(d);
-      this.showUpdateModal = true;
+      this.$refs.modifyModal.setData(d);
+      this.showModifyModal = true;
     },
     hdlSingleExecuteJob(taskType) {
       executeJob({ taskType }).then(() => {
         this.$Message.success("执行成功！");
       });
-      this.hdlquery();
+      this.hdlQuery();
     },
     hdlShowRecord(taskType) {
       this.$refs.record.init(taskType);
       this.showRecord = true;
+    },
+    hdlModified(type) {
+      this.$Message.success(`${type == "create" ? "新增" : "修改"}成功！`);
+      this.hdlQuery();
     }
   },
   mounted() {

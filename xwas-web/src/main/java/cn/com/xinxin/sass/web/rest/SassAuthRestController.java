@@ -1,12 +1,39 @@
 package cn.com.xinxin.sass.web.rest;
 
 
+/*
+ *
+ * Copyright 2020 www.xinxindigits.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"),to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice
+ * shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+ * was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior written permission.
+ *
+ */
+
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
 import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.OplogService;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.common.utils.CommonHttpRequestUtil;
@@ -83,9 +110,9 @@ public class SassAuthRestController {
                         @RequestBody UserLoginForm userLoginForm){
 
 
-        if (!KaptchaUtils.checkVerifyCode(request)) {
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
-        }
+//        if (!KaptchaUtils.checkVerifyCode(request)) {
+//            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
+//        }
 
         String userAccount = userLoginForm.getAccount();
 
@@ -100,13 +127,16 @@ public class SassAuthRestController {
 
         }
 
+        //设置租户ID
+        TenantIdContext.set(userDO.getTenantId());
+
         String ecnryptPassword = PasswordUtils.encryptPassword(userDO.getAccount(),
                 userDO.getSalt(), password);
 
         if(ecnryptPassword.equals(userDO.getPassword())){
             // 登录成功, 返回token
             // TODO: 登录成功之后需要将用户的信息缓存起来，方便查询读写
-            String token = getToken(userAccount, userDO.getPassword());
+            String token = getToken(userAccount, userDO.getPassword(),userDO.getTenantId());
             UserTokenVO userTokenVO = new UserTokenVO();
             userTokenVO.setAccount(userAccount);
             userTokenVO.setToken(token);
@@ -169,6 +199,8 @@ public class SassAuthRestController {
             }
 
             // 设置基本的content
+            // 完成请求移除设置
+            TenantIdContext.remove();
             return userTokenVO;
 
         }else{
@@ -178,9 +210,9 @@ public class SassAuthRestController {
     }
 
 
-    private String  getToken(String userName, String userPasswd){
+    private String  getToken(String userName, String userPasswd, String tenantId){
          //TODO: 缓存设置tokent
-         return JWTUtil.sign(userName,userPasswd);
+         return JWTUtil.sign(userName, userPasswd, tenantId);
     }
 
 

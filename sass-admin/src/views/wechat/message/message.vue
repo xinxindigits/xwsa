@@ -62,7 +62,7 @@
 import { queryMsgList, getMsgByMsgId } from "@/api";
 import { Query, MsgDetail } from "./components";
 export default {
-  name: "message-list",
+  name: "wc-message",
   components: {
     Query,
     MsgDetail
@@ -80,9 +80,14 @@ export default {
       },
       tableData: [],
       columns: [
-        { title: "消息id", key: "msgId", align: "center" },
-        { title: "发送方", key: "fromUserName", align: "center" },
         { title: "发送时间", key: "msgTime", align: "center", slot: "msgTime" },
+        { title: "发送方", key: "fromUserName", align: "center" },
+        {
+          title: "接收方",
+          key: "toChatPartyName",
+          align: "center",
+          ellipsis: true
+        },
         {
           title: "类型",
           key: "msgType",
@@ -96,6 +101,13 @@ export default {
           align: "center",
           slot: "msgAction",
           width: 100
+        },
+        {
+          title: "内容",
+          key: "content",
+          align: "center",
+          width: 150,
+          ellipsis: true
         },
         {
           title: "操作",

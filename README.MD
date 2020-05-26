@@ -61,14 +61,16 @@
       
       1. clone代码到本地,修改必要的配置，如mysql数据库配置, Redis配置, Zookeeper配置等.具体位置在xwas-web的resources目录下面
       ![xwas-config](./doc/image/xwas_web_config.jpg)
-      2. 执行编译打包。可以用下面的命令(mvn clean install -U -Pprod -X -Dmaven.skip.test=true)绕过单元测试执行打包，也可以导入到编辑工具如IDEA等打包即可.
-      3. xwas-web target目录下生成的war包拷贝到已经配置好的tomcat服务器对应的webapp目录下启动即可
-      4. 如果有需要修改tomcat的配置，如context配置，路径等可以参考tomcat官网相关的说明.
-      5. **特别说明: 在启动应用之前需要初始化相关的数据信息以及配置好企业微信的SDK**。
-      6. 新心内部公共技术包(common-lib)放在doc目录下(xinxin-com-lib.zip)。如果在本地执行编译，或者二次开发的时候，需要将该公共包解压放到自己的maven类库里面。如下图路径等
+      2. 新心内部公共技术包(common-lib)放在doc目录下(xinxin-com-lib.zip)。如果在本地执行编译，或者二次开发的时候，需要将该公共包解压放到自己的maven类库里面。如下图路径等
          ![common-lib](./doc/image/common-lib.jpg)
-      7. 前端部署参见下面的前端部署内容
-      8. **特别说明:在部署应用之前请执行数据初始化任务，详情参见数据初始化部分**
+      3. 执行编译打包。可以用下面的命令(mvn clean install -U -Pprod -X -Dmaven.skip.test=true)绕过单元测试执行打包，也可以导入到编辑工具如IDEA等打包即可.
+      4. xwas-web target目录下生成的war包拷贝到已经配置好的tomcat服务器对应的webapp目录下启动即可
+      5. 如果有需要修改tomcat的配置，如context配置，路径等可以参考tomcat官网相关的说明.
+      6. **特别说明: 在启动应用之前需要初始化相关的数据信息以及配置好企业微信的SDK**。
+      7. 如果使用tomcat。可以配置一下具体的工程路径，让访问路径不加apname. 如下图:
+         ![tomcat](./doc/image/tomcat.jpg)
+      8. 前端部署参见下面的前端部署内容
+      9. **特别说明:在部署应用之前请执行数据初始化任务，详情参见数据初始化部分**
       
    2. 前端项目部署
    
@@ -96,6 +98,13 @@
    1. 设置好数据库之后，请执行数据新建表的sql,具体脚本在/sql/xwsass_init_database_DDL.sql。
    2. 执行第一步之后请执行数据初始化脚本sql,具体在/sql/xwsass_init_database_DML.sql。
    3. 初始化后的数据登陆管理员账号即可: admin001/admin001
+   4. **特别说明：由于quartz的自带特性，数据初始化后，需要调整mysql的配置，让其忽略大小写敏感**
+   
+   ``
+      1. 用ROOT登录，修改/etc/my.cnf
+   　　2. 在[mysqld]下加入一行：lower_case_table_names=1
+   　　3. 重新启动数据库即可
+   ``
   
     
 ## 操作界面说明
@@ -133,3 +142,14 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+## 额外补充协议
+Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits was obtained.
+Neither the name of the xinxin digits; nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+
+## 联系方式
+
+如在安装，二次开发中遇到相关的问题，可以扫描下面的二维码询问:
+![qrcode](/doc/image/caontact-qrcode.jpg)

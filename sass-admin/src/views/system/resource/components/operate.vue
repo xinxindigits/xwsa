@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { deleteResource } from "@/api/data";
+import { deleteResource } from "@/api";
 import ResourceFuncModify from "./modify";
 export default {
   name: "resource-operation",

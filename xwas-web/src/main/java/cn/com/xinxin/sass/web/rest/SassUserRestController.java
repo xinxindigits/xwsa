@@ -1,6 +1,32 @@
 package cn.com.xinxin.sass.web.rest;
 
 
+/*
+ *
+ * Copyright 2020 www.xinxindigits.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"),to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice
+ * shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+ * was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior written permission.
+ *
+ */
+
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.biz.log.SysLog;
@@ -80,12 +106,15 @@ public class SassUserRestController extends AclController {
         }
         log.info("--------SassUserRestController.pageQueryUser.Request:{}--------",JSONObject.toJSONString(userForm));
 
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
         PageResultVO page = new PageResultVO();
         page.setPageNumber((userForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : userForm.getPageIndex());
         page.setPageSize((userForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : userForm.getPageSize());
         QueryUserConditionVO queryUserConditionVO = BaseConvert.convert(userForm, QueryUserConditionVO.class);
 
-        PageResultVO<UserDO> pageUser = userService.findByConditionPage(page, queryUserConditionVO);
+        PageResultVO<UserDO> pageUser = userService.findByConditionPageAndTenantId(page,
+                queryUserConditionVO, sassUserInfo.getTenantId());
 
         PageResultVO<UserInfoVO> resultVO = BaseConvert.convert(pageUser, PageResultVO.class);
 
@@ -118,7 +147,9 @@ public class SassUserRestController extends AclController {
 
         log.info("queryUserByAccount, account = {}",account);
 
-        UserDO userDO = this.userService.findByUserAccount(account);
+        SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        UserDO userDO = this.userService.findByUserAccountAndTenantId(account,sassUserInfo.getTenantId());
 
         UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
         userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
@@ -158,7 +189,8 @@ public class SassUserRestController extends AclController {
 
         log.info("queryUserByAccount, account = {}",sassUserInfo.getAccount());
 
-        UserDO userDO = this.userService.findByUserAccount(sassUserInfo.getAccount());
+        UserDO userDO = this.userService.findByUserAccountAndTenantId(sassUserInfo.getAccount(),
+                sassUserInfo.getTenantId());
 
         UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
         userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
@@ -255,7 +287,7 @@ public class SassUserRestController extends AclController {
         }
 
         // 查询已经存在的用户信息
-        UserDO existUserDO = this.userService.findByUserAccount(userAccount);
+        UserDO existUserDO = this.userService.findByUserAccountAndTenantId(userAccount, sassUserInfo.getTenantId());
 
         if(null != existUserDO){
             throw new BusinessException(SassBizResultCodeEnum.DATA_ALREADY_EXIST,"用户账号信息已经存在","用户账号信息已经存在");
@@ -264,6 +296,8 @@ public class SassUserRestController extends AclController {
         UserDO userCreateDO = SassFormConvert.convertUserForm2UserDO(userForm);
 
         userCreateDO.setGender(Byte.valueOf(String.valueOf(userForm.getGender())));
+
+        userCreateDO.setTenantId(sassUserInfo.getTenantId());
 
         if(StringUtils.isEmpty(userCreateDO.getTenantId())){
             // FIXME: 先默认设置为xinxin租户
@@ -335,7 +369,7 @@ public class SassUserRestController extends AclController {
         // 更新用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
         String userAccount = userForm.getAccount();
         // 查询已经存在的用户信息
-        UserDO userDO = this.userService.findByUserAccount(userAccount);
+        UserDO userDO = this.userService.findByUserAccountAndTenantId(userAccount,sassUserInfo.getTenantId());
 
         if(StringUtils.isNotEmpty(userForm.getName())){
             userDO.setName(userForm.getName());

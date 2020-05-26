@@ -69,7 +69,7 @@ import minLogo from "@/assets/images/logo-min.png";
 import { mapMutations } from "vuex";
 import routers from "@/router/routers";
 import bread_crumb from "./components/custom-bread-crumb/mixin";
-import { getNewTagList, routeEqual } from "@/libs/util";
+import { getNewTagList, routeEqual } from "@/libs/tools";
 import "./main.less";
 export default {
   name: "Main",
@@ -163,7 +163,6 @@ export default {
     this.addTag({
       route: { name, params, query, meta }
     });
-    // 如果当前打开页面不在标签栏中，跳到homeName页
     if (!this.tagNavList.find(item => item.name === this.$route.name)) {
       this.$router.push({
         name: this.$config.homeName
@@ -178,11 +177,8 @@ export default {
         type: "push"
       });
       this.setTagNavList(getNewTagList(this.tagNavList, newRoute));
-
       this.$refs.sideMenu.updateOpenName(newRoute.name);
     }
   }
 };
 </script>
-
-<style lang="less" scoped></style>

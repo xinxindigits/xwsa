@@ -1,4 +1,40 @@
+/*
+ *
+ * Copyright 2020 www.xinxindigits.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"),to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice
+ * shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+ * was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior written permission.
+ *
+ */
+
 import { regist, login, getUserInfo, getMenuInfo, logout } from "./user";
+import {
+  getGrantList,
+  getGrantTree,
+  getResourceList,
+  getResourceMenuTree,
+  getResourceQueryTree,
+  deleteResource,
+  createResource,
+  updateResource
+} from "./sys-res";
 import {
   getRoleList,
   addRole,
@@ -6,7 +42,7 @@ import {
   delRole,
   grantRole,
   getAllRoles
-} from "./sys_role";
+} from "./sys-role";
 import {
   getTagList,
   queryTagList,
@@ -15,7 +51,7 @@ import {
   deleteTag,
   setTagByKeyId,
   getAllTags
-} from "./sys_tag";
+} from "./sys-tag";
 import {
   getOrganizationList,
   queryOrganization,
@@ -23,7 +59,7 @@ import {
   addOrganization,
   updateOrganization,
   getAllOrganizationTree
-} from "./sys_organization";
+} from "./sys-organization";
 import {
   getTenantList,
   queryTenant,
@@ -35,8 +71,8 @@ import {
   executeJob,
   updateTenantTask,
   queryTaskLog
-} from "./sys_tenant";
-import { getLogList, queryLogList, getLogDetail } from "./sys_log";
+} from "./sys-tenant";
+import { getLogList, queryLogList, getLogDetail } from "./sys-log";
 import {
   getUserList,
   getUserDetail,
@@ -46,9 +82,9 @@ import {
   grantUserRoles,
   resetUserPwd,
   changeUserPwd
-} from "./data_user";
-import { getOrgList, queryOrgList, queryMemberByDeptId } from "./wc_org";
-import { getMemberDetail, getMemberList, queryMember } from "./wc_mem";
+} from "./sys-user";
+import { getOrgList, queryOrgList, queryMemberByDeptId } from "./wc-org";
+import { getMemberDetail, getMemberList, queryMember } from "./wc-mem";
 import {
   queryMsgList,
   getMsgByMsgId,
@@ -56,18 +92,26 @@ import {
   getMsgDetailByUserId,
   getMsgDetailByRoomId,
   getPageIndex
-} from "./wc_msg";
+} from "./wc-msg";
 import {
   getCustomerList,
   queryCustomerList,
   getCustomerDetail
-} from "./wc_cus";
+} from "./wc-cus";
 export {
   regist,
   login,
   getUserInfo,
   getMenuInfo,
   logout,
+  getGrantList,
+  getGrantTree,
+  getResourceList,
+  getResourceMenuTree,
+  getResourceQueryTree,
+  deleteResource,
+  createResource,
+  updateResource,
   getAllRoles,
   getRoleList,
   addRole,

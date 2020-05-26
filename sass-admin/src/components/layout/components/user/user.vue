@@ -5,7 +5,7 @@
       <span class="user-name">{{ account }}</span>
       <Icon :size="18" type="md-arrow-dropdown" color="transparent"></Icon>
       <DropdownMenu slot="list">
-        <DropdownItem name="profile">
+        <DropdownItem name="resetPwd">
           修改密码
         </DropdownItem>
         <DropdownItem name="logout">退出登录</DropdownItem>
@@ -32,22 +32,18 @@ export default {
   methods: {
     ...mapActions(["handleLogOut"]),
     logout() {
-      this.handleLogOut().then(() => {
-        this.$router.push({
-          name: "login"
-        });
-      });
+      this.handleLogOut();
     },
-    profile() {
-      this.$router.push("/profile");
+    resetPwd() {
+      this.$router.push("/resetPwd");
     },
     handleClick(name) {
       switch (name) {
         case "logout":
           this.logout();
           break;
-        case "profile":
-          this.profile();
+        case "resetPwd":
+          this.resetPwd();
           break;
       }
     }

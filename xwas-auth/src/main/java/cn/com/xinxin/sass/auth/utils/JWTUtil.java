@@ -1,5 +1,31 @@
 package cn.com.xinxin.sass.auth.utils;
 
+/*
+ *
+ * Copyright 2020 www.xinxindigits.com
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+ * and associated documentation files (the "Software"),to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice
+ * shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+ * was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior written permission.
+ *
+ */
+
 import cn.com.xinxin.sass.auth.protocol.SessionBizResultCodeEnum;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -42,13 +68,16 @@ public class JWTUtil {
      * @param secret   用户的密码
      * @return 加密的token
      */
-    public static String sign(String username, String secret) {
+    public static String sign(String username,
+                              String secret,
+                              String tenantId) {
         try {
             Date date = new Date(System.currentTimeMillis() + TOKEN_EXPIRE_TIME);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             // 附带username信息
             return JWT.create()
                     .withClaim("username", username)
+                    .withClaim("tenantId", tenantId)
                     .withExpiresAt(date)
                     .sign(algorithm);
 
@@ -65,11 +94,15 @@ public class JWTUtil {
      * @param secret 用户的密码
      * @return 是否正确
      */
-    public static boolean verify(String token, String username, String secret) {
+    public static boolean verify(String token,
+                                 String username,
+                                 String tenantId,
+                                 String secret) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             JWTVerifier verifier = JWT.require(algorithm)
                     .withClaim("username", username)
+                    .withClaim("tenantId", tenantId)
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             return true;
@@ -95,6 +128,22 @@ public class JWTUtil {
             throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
         }
     }
+
+    /**
+     * 获得token中的信息无需secret解密也能获得
+     * @return token中包含的用户名
+     */
+    public static String getUserTeantId(String token) {
+
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            return jwt.getClaim("tenantId").asString();
+        }catch (Exception ex){
+            log.info("token 解密失败  ex = {}", ex.getMessage());
+            throw new BusinessException(SessionBizResultCodeEnum.INVALID_TOKEN);
+        }
+    }
+
 
 
     /**
