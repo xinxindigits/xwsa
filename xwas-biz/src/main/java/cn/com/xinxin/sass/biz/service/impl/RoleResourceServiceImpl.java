@@ -66,6 +66,7 @@ public class RoleResourceServiceImpl implements RoleResourceService {
         if(!CollectionUtils.isEmpty(resourceDOList)){
             List<RoleResourceDO> roleResourceDOList = resourceDOList.stream().map(resourceDO -> {
                 RoleResourceDO roleResourceDO = new RoleResourceDO();
+                roleResourceDO.setTenantId(roleDO.getTenantId());
                 roleResourceDO.setRoleCode(roleDO.getCode());
                 roleResourceDO.setRoleName(roleDO.getName());
                 roleResourceDO.setResourceCode(resourceDO.getCode());

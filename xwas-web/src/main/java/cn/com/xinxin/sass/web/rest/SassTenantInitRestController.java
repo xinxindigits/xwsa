@@ -31,8 +31,15 @@ import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.*;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 
-import cn.com.xinxin.sass.repository.model.AuthsDO;
+import cn.com.xinxin.sass.repository.model.*;
+import cn.com.xinxin.sass.web.utils.TreeResultUtil;
+import cn.com.xinxin.sass.web.vo.MenuTreeVO;
+import cn.com.xinxin.sass.web.vo.ResourceVO;
+import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
 import org.slf4j.Logger;
@@ -42,6 +49,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 
 /**
@@ -90,7 +99,7 @@ public class SassTenantInitRestController extends AclController {
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
-        if(StringUtils.isNotEmpty(tenantId)){
+        if(StringUtils.isEmpty(tenantId)){
             tenantId = sassUserInfo.getTenantId();
         }
         // 参数转换设置
@@ -99,11 +108,138 @@ public class SassTenantInitRestController extends AclController {
         }
         // 初始化之前,务必先添加租户信息。初始化数据只能初始化admin的类型账号
         // 1.初始化权限资源
-        // 2.初始化角色信息
-        // 3.初始化用户信息
-        // 4.初始化组织机构
-        List<AuthsDO> authsDOList = this.authsService.selectAllAuths();
 
+        List<AuthsDO> authsDOList = this.authsService.selectAllAuths();
+        // 组装必要的参数, 将权限值组装成一个完整的树结构插入数据
+        List<MenuTreeVO> authsResourceVOList = Lists.newArrayList();
+        authsDOList.stream().forEach(
+                authsDO -> {
+                    MenuTreeVO menuTreeVO = new MenuTreeVO();
+                    menuTreeVO.setText(authsDO.getName());
+                    menuTreeVO.setParentId(String.valueOf(authsDO.getParentId()));
+                    menuTreeVO.setId(String.valueOf(authsDO.getId()));
+                    menuTreeVO.setCode(authsDO.getCode());
+                    menuTreeVO.setUrl(authsDO.getUrl());
+                    menuTreeVO.setAuthority(authsDO.getAuthority());
+                    menuTreeVO.setOrder(0);
+                    menuTreeVO.setType(authsDO.getResourceType());
+                    authsResourceVOList.add(menuTreeVO);
+                }
+        );
+        List<MenuTreeVO> authsTrees = TreeResultUtil.build(authsResourceVOList);
+
+        List<String> rsCodes = Lists.newArrayList();
+
+        for(MenuTreeVO treeVO: authsTrees){
+
+            ResourceDO resourceDO = new ResourceDO();
+            resourceDO.setParentId(Long.valueOf(treeVO.getParentId()));
+            String treesCode = sassUserInfo.getTenantId().toUpperCase() + treeVO.getCode();
+            rsCodes.add(treesCode);
+            resourceDO.setCode(treesCode);
+            resourceDO.setTenantId(tenantId);
+            resourceDO.setResourceType(treeVO.getType());
+            resourceDO.setName(treeVO.getText());
+            resourceDO.setAuthority(treeVO.getAuthority());
+            resourceDO.setUrl(treeVO.getUrl());
+            resourceDO.setExtension(treeVO.getText());
+            resourceDO.setGmtCreator(sassUserInfo.getAccount());
+            resourceDO.setGmtUpdater(sassUserInfo.getAccount());
+            // 如果parent=0,那么则是根节点
+            resourceDO.setRoot(treeVO.getParentId().equals("0"));
+            this.resourceService.createResource(resourceDO);
+            ResourceDO inserted = this.resourceService.findByResourceCode(treesCode);
+            Long insertId = inserted.getId();
+            //int insertId = 100;
+
+            if(CollectionUtils.isNotEmpty(treeVO.getChildren())){
+                //处理子节点数据
+                List<MenuTreeVO> childrens = treeVO.getChildren();
+                for(MenuTreeVO childrenVO: childrens){
+                    ResourceDO childresourceDO = new ResourceDO();
+                    childresourceDO.setParentId(Long.valueOf(insertId));
+                    childresourceDO.setTenantId(tenantId);
+                    String childrsCode = sassUserInfo.getTenantId().toUpperCase() + childrenVO.getCode();
+                    rsCodes.add(childrsCode);
+                    childresourceDO.setCode(childrsCode);
+                    childresourceDO.setResourceType(childrenVO.getType());
+                    childresourceDO.setName(childrenVO.getText());
+                    childresourceDO.setAuthority(childrenVO.getAuthority());
+                    childresourceDO.setUrl(childrenVO.getUrl());
+                    childresourceDO.setExtension(childrenVO.getText());
+                    // 如果parent=0,那么则是根节点
+                    childresourceDO.setRoot(childrenVO.getParentId().equals("0"));
+                    childresourceDO.setGmtCreator(sassUserInfo.getAccount());
+                    childresourceDO.setGmtUpdater(sassUserInfo.getAccount());
+                    this.resourceService.createResource(childresourceDO);
+                    ResourceDO childinserted = this.resourceService.findByResourceCode(childrsCode);
+                    Long childId = childinserted.getId();
+                    if(CollectionUtils.isNotEmpty(childrenVO.getChildren())){
+                        //处理子节点数据
+                        List<MenuTreeVO> subchildrens = childrenVO.getChildren();
+                        for(MenuTreeVO subchildrenVO: subchildrens){
+                            ResourceDO subchildresourceDO = new ResourceDO();
+                            subchildresourceDO.setTenantId(tenantId);
+                            subchildresourceDO.setParentId(Long.valueOf(childId));
+                            String subrsCode = sassUserInfo.getTenantId().toUpperCase() + subchildrenVO.getCode();
+                            subchildresourceDO.setCode(subrsCode);
+                            rsCodes.add(subrsCode);
+                            subchildresourceDO.setResourceType(subchildrenVO.getType());
+                            subchildresourceDO.setName(subchildrenVO.getText());
+                            subchildresourceDO.setAuthority(subchildrenVO.getAuthority());
+                            subchildresourceDO.setUrl(subchildrenVO.getUrl());
+                            subchildresourceDO.setExtension(subchildrenVO.getText());
+                            // 如果parent=0,那么则是根节点
+                            subchildresourceDO.setRoot(subchildrenVO.getParentId().equals("0"));
+                            subchildresourceDO.setGmtCreator(sassUserInfo.getAccount());
+                            subchildresourceDO.setGmtUpdater(sassUserInfo.getAccount());
+                            int subchildId = this.resourceService.createResource(subchildresourceDO);
+
+                        }
+
+                    }
+                }
+            }
+
+        }
+
+        // 2.初始化角色信息
+        RoleDO roleDO = new RoleDO();
+        roleDO.setTenantId(tenantId);
+        String roleCode = tenantId.toUpperCase()+"RO"+ RandomStringUtils.randomNumeric(6);
+        roleDO.setCode(roleCode);
+        roleDO.setName("租户管理员角色");
+        roleDO.setRoleType("admin");
+        roleDO.setExtension("租户管理员角色");
+        roleDO.setGmtCreator(sassUserInfo.getAccount());
+        roleDO.setGmtUpdater(sassUserInfo.getAccount());
+        this.roleService.createRole(roleDO,rsCodes);
+
+        // 3.初始化用户信息
+        UserRoleDO userRoleDO = new UserRoleDO();
+        userRoleDO.setTenantId(tenantId);
+        userRoleDO.setRoleName(roleDO.getName());
+        userRoleDO.setRoleCode(roleDO.getCode());
+        userRoleDO.setUserName(sassUserInfo.getName());
+        userRoleDO.setUserAccount(sassUserInfo.getAccount());
+        userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
+        userRoleDO.setGmtCreator(sassUserInfo.getAccount());
+        this.userRoleService.createUserRole(userRoleDO);
+
+        // 4.初始化组织机构
+        TenantBaseInfoDO tenantBaseInfoDO = this.tenantBaseInfoService.selectByTenantId(tenantId);
+        OrganizationDO organizationDO = new OrganizationDO();
+        String orgCode = tenantId.toUpperCase()+"ORG"+ RandomStringUtils.randomNumeric(6);
+        organizationDO.setCode(orgCode);
+        organizationDO.setTenantId(tenantId);
+        organizationDO.setIsLeaf(false);
+        organizationDO.setOrgType("COMP");
+        organizationDO.setParentId(0L);
+        organizationDO.setName(tenantBaseInfoDO.getTenantName());
+        organizationDO.setGmtUpdater(sassUserInfo.getAccount());
+        organizationDO.setGmtCreator(sassUserInfo.getAccount());
+        organizationDO.setState("Y");
+        this.organizationService.createOrganization(organizationDO);
 
         return null;
     }

@@ -44,6 +44,8 @@ public class MenuTreeVO {
      */
     private String text;
 
+    private String type;
+
     /**
      * 节点的子节点
      */
@@ -51,7 +53,6 @@ public class MenuTreeVO {
 
 
     private List<ResourceVO> functions = new ArrayList<>();
-
 
     /**
      * 父节点id
@@ -185,5 +186,13 @@ public class MenuTreeVO {
 
     public void setExtension(String extension) {
         this.extension = extension;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
