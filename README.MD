@@ -147,3 +147,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## 额外补充协议
 Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits was obtained.
 Neither the name of the xinxin digits; nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+
+## 联系方式
+
+如在安装，二次开发中遇到相关的问题，可以扫描下面的二维码询问:
+![qrcode](/doc/image/caontact-qrcode.jpg)
