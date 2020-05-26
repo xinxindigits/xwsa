@@ -26,6 +26,7 @@ package cn.com.xinxin.sass.web.utils;
  *
  */
 
+import cn.com.xinxin.sass.repository.model.AuthsDO;
 import cn.com.xinxin.sass.web.vo.DeptTreeVO;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.OrgTreeVO;
@@ -103,6 +104,8 @@ public class TreeResultUtil {
         return root;
     }
 
+
+
     public static List<MenuTreeVO> build2(List<MenuTreeVO> nodes){
         if (nodes == null){
             return null;
@@ -125,6 +128,8 @@ public class TreeResultUtil {
 
         return root;
     }
+
+
 
     private static void buildChildren(List<MenuTreeVO> parents, List<MenuTreeVO> nodes){
         for (MenuTreeVO parent : parents){

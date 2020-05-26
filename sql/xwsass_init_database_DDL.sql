@@ -888,3 +888,25 @@ CREATE TABLE `user_role`
   DEFAULT CHARSET = utf8 COMMENT ='用户与角色';
 
 
+CREATE TABLE `auths` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `code` varchar(32) DEFAULT NULL COMMENT '资源编码',
+  `parent_id` bigint(20) NOT NULL COMMENT '父级资源id',
+  `resource_type` varchar(16) DEFAULT NULL COMMENT 'menu:菜单,function:功能',
+  `name` varchar(128) NOT NULL COMMENT '资源名称',
+  `authority` varchar(128) NOT NULL DEFAULT '' COMMENT '对应的权限值,用于权限判断',
+  `url` varchar(128) NOT NULL DEFAULT '' COMMENT '资源路径',
+  `root` tinyint(1) unsigned zerofill NOT NULL COMMENT '是否根目录',
+  `gmt_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `gmt_creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建人',
+  `gmt_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_updater` varchar(64) NOT NULL DEFAULT '' COMMENT '更新人',
+  `extension` varchar(4000) NOT NULL DEFAULT '' COMMENT '扩展字段',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '软删除标志,0表示不删除；1表示删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_code` (`code`),
+  KEY `uk_url` (`url`),
+  KEY `uk_auth` (`authority`)
+) ENGINE=InnoDB AUTO_INCREMENT=500 DEFAULT CHARSET=utf8 COMMENT='资源';
+
+

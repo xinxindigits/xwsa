@@ -2004,3 +2004,60 @@ VALUES
 
 
 
+
+
+
+      INSERT INTO `auths` (`id`, `code`, `parent_id`, `resource_type`, `name`, `authority`, `url`, `root`, `gmt_updated`, `gmt_creator`, `gmt_created`, `gmt_updater`, `extension`, `deleted`)
+      VALUES
+      (270, 'RS10000', 0, 'menu', '系统管理', 'SYSTEM', '/system', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin002', '系统管理', 0),
+      (271, 'RS10002', 287, 'function', '组织机构创建', 'SASS_ORG_ADD', '/organization/create', 0, '2020-05-22 16:25:32', 'admin', '2020-04-17 11:51:24', 'admin001', '', 0),
+      (272, 'RS10001', 277, 'function', '用户查询功能', 'SASS_USER_QUERY_LIST', '/user/query', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin001', '用户查询功能', 0),
+      (273, 'RS10003', 276, 'function', '角色新增权限', 'SASS_ROLE_ADD', '/role/create', 0, '2020-05-22 16:25:32', 'admin', '2020-04-20 17:12:22', 'admin001', '角色新增权限', 0),
+      (274, 'RS10004', 276, 'function', '角色查询', 'SASS_ROLE_QUERY_LIST', '/role/query', 0, '2020-05-22 16:25:32', 'admin', '2020-04-20 17:12:22', 'admin001', '角色查询', 0),
+      (275, 'RS10005', 270, 'menu', '权限资源管理', 'SASS_RESOURCE_MENU_FUNCTION_MNG', '/resource/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin003', '', 0),
+      (276, 'RS10006', 270, 'menu', '角色资源管理', 'SASS_ROLE_MNG', '/role/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin001', '角色资源管理', 0),
+      (277, 'RS10007', 270, 'menu', '用户信息管理', 'SASS_USER_MNG', '/user/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin001', '用户管理管理', 0),
+      (279, 'RS10008', 275, 'function', '新增资源权限', 'SASS_RESOURCE_MENU_FUNCTION_ADD', '/resource/create', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin004', 'balabala', 0),
+      (280, 'RS10009', 275, 'function', '更新资源权限', 'SASS_RESOURCE_MENU_FUNCTION_UPDATE', '/resource/update', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin', '', 0),
+      (281, 'RS10010', 275, 'function', '删除资源权限', 'SASS_RESOURCE_MENU_FUNCTION_REMOVE', '/resource/delete', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin', '', 0),
+      (282, 'RS10011', 0, 'menu', '企业微信管理', 'WECHAT_MNG', '/wechat', 1, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin', '', 0),
+      (283, 'RS10012', 282, 'menu', '部门管理', 'SASS_WEXIN_DEPT_MNG', '/wechat/dept/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin002', '部门管理', 0),
+      (284, 'RS10013', 282, 'menu', '员工管理', 'SASS_WEXIN_STAFF_MNG', '/wechat/staff/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin002', '员工管理', 0),
+      (285, 'RS10014', 282, 'menu', '数据管理', 'SASS_WEXIN_MSG_MNG', '/wechat/message/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin002', '数据管理', 0),
+      (286, 'RS10015', 276, 'function', '角色用户授权', 'SASS_ROLE_GRANT_USER', '/role/user/grant', 0, '2020-05-22 16:25:32', 'admin', '2020-04-20 17:12:22', 'admin001', '角色用户授权', 0),
+      (287, 'RS10016', 270, 'menu', '组织机构管理', 'SASS_ORG_MNG', '/organization/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-20 17:12:22', 'admin001', '组织机构管理', 0),
+      (288, 'RS10017', 275, 'function', '读取权限值列表', 'SASS_RESOURCE_MENU_QUERY_LIST', '/resource/tree', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin001', '读取权限值列表', 0),
+      (289, 'RS10018', 277, 'function', '用户重置密码功能', 'SASS_USER_PASSWORD_REST', '/user/restpwd', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin001', '', 0),
+      (290, 'RS10019', 277, 'function', '用户重置删除功能', 'SASS_USER_DELETE', '/user/delete', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin001', '', 0),
+      (291, 'RS10020', 276, 'function', '角色修改权限', 'SASS_ROLE_UPDATE', '/role/update', 0, '2020-05-22 16:25:32', 'admin', '2020-04-20 17:12:22', 'admin001', '角色修改权限', 0),
+      (292, 'RS10021', 277, 'function', '用户角色授权操作', 'SASS_USER_ROLE_GRANT', '/user/grant', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin001', '用户角色授权操作', 0),
+      (293, 'RS10022', 276, 'function', '角色删除权限', 'SASS_ROLE_DELETE', '/role/delete', 0, '2020-05-22 16:25:32', 'admin', '2020-04-20 17:12:22', 'admin001', '角色删除权限', 0),
+      (294, 'RS10023', 276, 'function', '角色权限资源授权操作', 'SASS_ROLE_GRANT_RESOURCE', '/role/resource/grant', 0, '2020-05-22 16:25:32', 'admin', '2020-04-20 17:12:22', 'admin001', '角色权限资源授权操作', 0),
+      (295, 'RS10024', 287, 'function', '组织机构查询', 'SASS_ORG_QUERY_LIST', '/organization/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-17 11:51:24', 'admin001', '', 0),
+      (298, 'RS10025', 287, 'Function', '组织机构更新', 'SASS_ORG_UPDATE', '/organization/update', 0, '2020-05-22 16:25:32', 'admin004', '2020-04-26 15:45:01', 'admin001', '', 0),
+      (305, 'RS10026', 287, 'function', '组织机构删除', 'SASS_ORG_DELETE', '/organization/delete', 0, '2020-05-22 16:25:32', 'admin004', '2020-04-26 19:30:31', 'admin001', 'laborum dolore in irure', 0),
+      (310, 'RS10027', 277, 'function', '用户新增功能', 'SASS_USER_ADD', '/user/create', 0, '2020-05-22 16:25:32', 'admin002', '2020-04-27 11:49:10', 'admin001', '用户新增功能', 0),
+      (311, 'RS10028', 270, 'menu', '日志记录管理', 'SASS_USER_OPLOG_MNG', '/ops/log/list', 0, '2020-05-22 16:25:32', 'admin004', '2020-04-26 19:30:31', 'admin001', '日志记录管理', 0),
+      (313, 'RS10029', 311, 'function', '日志查询功能', 'SASS_USER_OPLOG_QUERY', '/ops/log/query', 0, '2020-05-22 16:25:32', 'admin001', '2020-04-27 12:45:54', 'admin001', '日志查询功能', 0),
+      (314, 'RS10030', 277, 'function', '用户更新', 'SASS_USER_UPDATE', '/user/update', 0, '2020-05-22 16:25:32', 'admin002', '2020-04-27 15:30:39', 'admin001', '用户更新', 0),
+      (315, 'RS10031', 282, 'menu', '客户管理', 'SASS_WEXIN_CUSTOMER_MNG', '/wechat/customer/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-16 15:01:04', 'admin002', '客户管理', 0),
+      (320, 'RS10042', 287, 'Function', '组织机构更新', 'SASS_ORG_UPDATE', '/organization/update/create', 0, '2020-05-22 16:25:32', 'admin001', '2020-04-29 16:29:09', 'admin001', '', 0),
+      (335, 'RS10034', 270, 'menu', '租户机构管理', 'SASS_TENANT_MNG', '/tenant/list', 0, '2020-05-22 16:25:32', 'admin', '2020-04-20 17:12:22', 'admin001', '租户机构管理', 0),
+      (336, 'RC10038', 270, 'menu', '标签功能管理', 'SASS_TAG_MNG_LIST', '/tags/list', 0, '2020-05-22 16:25:32', 'admin001', '2020-05-06 12:29:56', 'admin001', '标签功能管理', 0),
+      (337, 'RC10039', 336, 'function', '标签新增', 'SASS_TAG_ADD', '/tags/create', 0, '2020-05-22 16:25:32', 'admin001', '2020-05-06 12:30:34', 'admin001', '标签新增', 0),
+      (338, 'RS10035', 335, 'function', '租户查询功能', 'SASS_TENANT_QUERY_LIST', '/tenant/query', 0, '2020-05-22 16:25:32', 'admin004', '2020-05-06 16:58:48', 'admin001', '租户查询功能', 0),
+      (339, 'RS10036', 335, 'function', '租户创建功能', 'SASS_TENANT_ADD', '/tenant/create', 0, '2020-05-22 16:25:32', 'admin004', '2020-05-06 16:59:52', 'admin001', '租户创建功能', 0),
+      (340, 'RS10037', 335, 'function', '租户删除功能', 'SASS_TENANT_DELETE', '/tenant/delete', 0, '2020-05-22 16:25:32', 'admin004', '2020-05-06 17:00:35', 'admin001', '租户删除功能', 0),
+      (341, 'RS10038', 335, 'function', '租户更新功能', 'SASS_TENANT_UPDATE', '/tenant/update', 0, '2020-05-22 16:25:32', 'admin004', '2020-05-06 17:01:14', 'admin001', '租户更新功能', 0),
+      (346, 'RS10039', 335, 'function', '定时任务配置', 'SASS_TENANT_TASK_CONFIG_MNG', '/tenant/queryConfig', 0, '2020-05-22 16:25:32', 'admin004', '2020-05-12 16:57:51', 'admin001', '', 0),
+      (392, 'RS10040', 270, 'menu', '任务配置管理', 'SASS_TENANT_TASK_CONFIG_MNG', '/tenant/queryConfig', 0, '2020-05-22 16:25:32', 'admin004', '2020-05-13 10:13:44', 'admin001', '任务配置管理', 0),
+      (394, 'RS10041', 335, 'function', '租户手动执行任务功能', 'SASS_TENANT_TASK_CONFIG_MNG', '/tenant/executeJob', 0, '2020-05-22 16:25:32', 'admin003', '2020-05-13 15:25:04', 'admin001', '', 0),
+      (398, 'RS10043', 336, 'function', '标签修改权限', 'SASS_TAG_UPDATE', '/tags/update', 0, '2020-05-22 16:25:32', 'admin001', '2020-05-20 16:07:54', 'admin001', '标签修改权限', 0),
+      (399, 'RS10044', 336, 'function', '标签删除功能权限', 'SASS_TAG_DELETE', '/tags/delete', 0, '2020-05-22 16:25:32', 'admin001', '2020-05-20 16:08:33', 'admin001', '标签删除功能权限', 0),
+      (400, 'RS10045', 336, 'function', '标签列表查询权限', 'SASS_TAG_QUERY_LIST', '/tags/query', 0, '2020-05-22 16:25:32', 'admin001', '2020-05-20 16:09:34', 'admin001', '标签列表查询权限', 0),
+      (401, 'RS10046', 336, 'function', '标签管理功能', 'SASS_TAG_MNG', '/tags/list', 0, '2020-05-22 16:25:32', 'admin001', '2020-05-20 16:12:41', 'admin001', '标签管理功能', 0),
+      (402, 'RS10047', 336, 'function', '给数据上标签权限', 'SASS_TAG_FIX_DATA', '/tags/fixdata', 0, '2020-05-22 16:25:32', 'admin001', '2020-05-20 16:15:42', 'admin001', '给数据上标签权限', 0);
+
+
+
+
