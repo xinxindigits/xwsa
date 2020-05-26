@@ -30,13 +30,11 @@ import cn.com.xinxin.sass.auth.enums.AuthEnums;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.log.SysLog;
-import cn.com.xinxin.sass.biz.service.ResourceService;
-import cn.com.xinxin.sass.biz.service.RoleResourceService;
-import cn.com.xinxin.sass.biz.service.RoleService;
-import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.biz.service.*;
 import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
+import cn.com.xinxin.sass.repository.model.AuthsDO;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleResourceDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
@@ -90,6 +88,9 @@ public class SassResourceRestController extends AclController {
     @Autowired
     private RoleResourceService roleResourceService;
 
+    @Autowired
+    private AuthsService authsService;
+
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
@@ -126,16 +127,28 @@ public class SassResourceRestController extends AclController {
     public Object listAllGrantsValues(HttpServletRequest request){
 
         log.info("ResourceController.listAllGrantsValues");
-        List<AuthEnums> authEnumsList = AuthEnums.toLists();
-        List<GrantsVO> allGrants = Lists.newArrayList();
-        authEnumsList.stream().forEach(authEnums -> {
-            GrantsVO grantsVO = new GrantsVO();
-            grantsVO.setCode(authEnums.getCode());
-            grantsVO.setName(authEnums.getName());
-            grantsVO.setDesc(authEnums.getDesc());
-            allGrants.add(grantsVO);
 
+//        List<AuthEnums> authEnumsList = AuthEnums.toLists();
+//        List<GrantsVO> allGrants = Lists.newArrayList();
+//        authEnumsList.stream().forEach(authEnums -> {
+//            GrantsVO grantsVO = new GrantsVO();
+//            grantsVO.setCode(authEnums.getCode());
+//            grantsVO.setName(authEnums.getName());
+//            grantsVO.setDesc(authEnums.getDesc());
+//            allGrants.add(grantsVO);
+//
+//        });
+
+        List<AuthsDO> authsDOList = this.authsService.selectAllAuths();
+        List<GrantsVO> allGrants = Lists.newArrayList();
+        authsDOList.stream().forEach(authsDO -> {
+            GrantsVO grantsVO = new GrantsVO();
+            grantsVO.setCode(authsDO.getCode());
+            grantsVO.setName(authsDO.getName());
+            grantsVO.setDesc(authsDO.getName());
+            allGrants.add(grantsVO);
         });
+
         return allGrants;
     }
 

@@ -41,7 +41,7 @@
 
         <!-- !!!! Database Configurations !!!! -->
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://10.0.50.71:3306/xwsass"
+                        connectionURL="jdbc:mysql://10.0.50.71:3306/xwas"
                         userId="root" password="root">
             <property name="useInformationSchema" value="true"/>
         </jdbcConnection>
@@ -132,6 +132,9 @@
         <!--enableUpdateByExample="false"/>-->
         <!--<table tableName="group_chat" domainObjectName="GroupChatDO" enableCountByExample="false"
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"/>-->
+
+        <!--<table tableName="auths" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false"-->
+        <!--enableUpdateByExample="false"/>-->
 
     </context>
 </generatorConfiguration>
