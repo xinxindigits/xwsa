@@ -159,21 +159,24 @@ public class SassOpsTenantSqlParser extends AbstractJsqlParser {
      * @param plainSelect ignore
      * @param addColumn   是否添加租户列,insert into select语句中需要
      */
-   
     protected void processPlainSelect(PlainSelect plainSelect, boolean addColumn) {
+
+        // 针对运营端不做任何处理
         FromItem fromItem = plainSelect.getFromItem();
-        if (fromItem instanceof Table) {
-            Table fromTable = (Table) fromItem;
-            if (!tenantHandler.doTableFilter(fromTable.getName())) {
-                //#1186 github
-                plainSelect.setWhere(builderExpression(plainSelect.getWhere(), fromTable));
-                if (addColumn) {
-                    plainSelect.getSelectItems().add(new SelectExpressionItem(new Column(tenantHandler.getTenantIdColumn())));
-                }
-            }
-        } else {
-            processFromItem(fromItem);
-        }
+//        if (fromItem instanceof Table) {
+//            Table fromTable = (Table) fromItem;
+//            if (!tenantHandler.doTableFilter(fromTable.getName())) {
+//                //#1186 github
+//                plainSelect.setWhere(builderExpression(plainSelect.getWhere(), fromTable));
+//                if (addColumn) {
+//                    plainSelect.getSelectItems().add(new SelectExpressionItem(new Column(tenantHandler.getTenantIdColumn())));
+//                }
+//            }
+//        } else {
+//            processFromItem(fromItem);
+//        }
+
+        processFromItem(fromItem);
         List<Join> joins = plainSelect.getJoins();
         if (joins != null && joins.size() > 0) {
             joins.forEach(j -> {
