@@ -97,7 +97,7 @@
   
    1. 设置好数据库之后，请执行数据新建表的sql,具体脚本在/sql/xwsass_init_database_DDL.sql。
    2. 执行第一步之后请执行数据初始化脚本sql,具体在/sql/xwsass_init_database_DML.sql。
-   3. 初始化后的数据登陆管理员账号即可: admin001/admin001
+   3. 初始化后的数据登陆管理员账号即可: admin001/admin001, 另外一个租户: alibabauser01/alibabauser01
    4. **特别说明：由于quartz的自带特性，数据初始化后，需要调整mysql的配置，让其忽略大小写敏感**
    
    ``
@@ -115,6 +115,34 @@
 
 ## 二次开发说明
 
+   1. 开发技术规范说明:
+      
+      - 开发代码遵循Java开发的规范
+      - 数据库使用MySQL, Mybatis生产的mapper文件以及XML文件分为mapper以及ext目录下面的扩展mapper，ext目录主要为开发人员自己编写的相关sql
+      - SOA调用使用Dubbo。并且已经将Dubbo的接口调用做了相应的封装，返回结构包含SingleResult等内容，具体参见API下面的内容实现等
+      - 日志等统一配置在logback.xml文件下面。可以根据具体的需要做相应的调整。
+      - 另外针对业务异常错误的封装: 在异常情况下统一抛出BusinessException。并且设置对应的错误编码即可。aop拦截器回自动拦截这个异常，作出相应的处理。
+      - 获取到登陆用户，只需要在继承AclController，调用getSassUserInfo方法即可。可以参见具体已经实现的rest接口里面的方法
+      - JWT Token中已经带了用户的账号以及租户信息，可以直接在token解码之后拿到。同时前后端在http head里面统一使用"XToken"作为token字段
+      
+   2. 权限菜单功能开发说明:
+      
+      - 如果要新增权限资源菜单等功能。需要在全局权限表(auths)注册对应的权限值，才可以在资源权限管理的菜单下面找到对应的权限
+      - 如果要设置某个接口要求某个权限，可以使用RequiresPermissions注解即可。如果不需要权限验证，忽略即可
+      - 返回结果的封装。针对与rest接口已经做了数据格式的封装，因此无需特别处理。具体格式如下:
+      
+      ``
+       {
+              "code":"SUCCESS",
+              "message":"成功",
+              "data":{}
+       }
+      ``
+      
+   3. Rest接口开发说明:
+   
+      1. Rest接口通常统一返回Object对象。AOP返回结构拦截器自动封装为必要的格式。接收POST请求里面的参数基本都Form表单对象的方式接收。
+      2. 基本路径设置等遵循Rest命名规则。
 
 ## 界面展示
 
