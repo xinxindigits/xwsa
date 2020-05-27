@@ -61,19 +61,19 @@
     </bean>
 
 
-    <!--<bean id="sassTenantHandler" class="cn.com.xinxin.sass.biz.tenant.SassTenantHandler"/>-->
+    <bean id="sassTenantHandler" class="cn.com.xinxin.sass.biz.tenant.SassTenantHandler"/>
 
-    <!--<bean id="tenantSqlParser" class="com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser">-->
-        <!--<property name="tenantHandler" ref="sassTenantHandler"/>-->
-    <!--</bean>-->
+    <bean id="tenantSqlParser" class="cn.com.xinxin.sass.biz.tenant.SassOpsTenantSqlParser">
+        <property name="tenantHandler" ref="sassTenantHandler"/>
+    </bean>
 
-    <!--<bean id="tenantPlugin" class="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor">-->
-        <!--<property name="sqlParserList">-->
-            <!--<util:list>-->
-                <!--<ref bean="tenantSqlParser"/>-->
-            <!--</util:list>-->
-        <!--</property>-->
-    <!--</bean>-->
+    <bean id="tenantPlugin" class="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor">
+        <property name="sqlParserList">
+            <util:list>
+                <ref bean="tenantSqlParser"/>
+            </util:list>
+        </property>
+    </bean>
 
 
 
@@ -87,7 +87,7 @@
         <property name="typeAliasesPackage" value="cn.com.xinxin.sass.repository.dao"/>
         <property name="typeHandlersPackage" value="cn.com.xinxin.sass.repository.handler"/>
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
-        <!--<property name="plugins" ref="tenantPlugin"/>-->
+        <property name="plugins" ref="tenantPlugin"/>
     </bean>
 
 

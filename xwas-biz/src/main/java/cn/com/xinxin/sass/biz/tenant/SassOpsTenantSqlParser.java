@@ -57,6 +57,14 @@ public class SassOpsTenantSqlParser extends AbstractJsqlParser {
 
     private TenantHandler tenantHandler;
 
+    public TenantHandler getTenantHandler() {
+        return tenantHandler;
+    }
+
+    public void setTenantHandler(TenantHandler tenantHandler) {
+        this.tenantHandler = tenantHandler;
+    }
+
     /**
      * select 语句处理
      */
@@ -119,6 +127,7 @@ public class SassOpsTenantSqlParser extends AbstractJsqlParser {
      */
     @Override
     public void processDelete(Delete delete) {
+        //return;
         if (tenantHandler.doTableFilter(delete.getTable().getName())) {
             // 过滤退出执行
             return;
