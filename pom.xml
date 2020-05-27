@@ -48,6 +48,7 @@
         <module>xwas-web</module>
         <module>xwas-common</module>
         <module>xwas-auth</module>
+        <module>xwas-webops</module>
     </modules>
 
     <properties>
