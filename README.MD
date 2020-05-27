@@ -126,7 +126,7 @@
    6. 租户机构管理![tenant_mng](./doc/image/xwas_tenant_mng.jpg)
    7. 标签功能![tag_mng](./doc/image/xwas_index_tag_mng.jpg)
    8. 定时任务配置![task_mng](./doc/image/xwas_index_task_mng.jpg)
-   9. 企业微信部门信息查看![weixin_dept_mng](./doc/image/xwas_index_weixin_dept_mng.jpg)
+   9. 企业微信部门信息查看![weixin_dept_mng](./doc/image/wechat-dept-mng.jpg)
    11. 企业微信员工查看![weixin_staff_mng](./doc/image/xwas_index_wexin_staff_mng.jpg)
    12. 企业微信客户信息查看![weixin_cust_mng](./doc/image/xwas_index_weixin_cust_mng.jpg)
    13. 企业微信消息内容查看![weixin_msg_mng](./doc/image/xwas_wexin_msg_mng.jpg)
