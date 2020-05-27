@@ -129,7 +129,7 @@ public class SassOpsTenantSqlParser extends AbstractJsqlParser {
     /**
      * delete update 语句 where 处理
      */
-    @Override
+
     protected BinaryExpression andExpression(Table table, Expression where) {
         //获得where条件表达式
         EqualsTo equalsTo = new EqualsTo();
@@ -148,7 +148,7 @@ public class SassOpsTenantSqlParser extends AbstractJsqlParser {
     /**
      * 处理 PlainSelect
      */
-    @Override
+
     protected void processPlainSelect(PlainSelect plainSelect) {
         processPlainSelect(plainSelect, false);
     }
@@ -159,7 +159,7 @@ public class SassOpsTenantSqlParser extends AbstractJsqlParser {
      * @param plainSelect ignore
      * @param addColumn   是否添加租户列,insert into select语句中需要
      */
-    @Override
+   
     protected void processPlainSelect(PlainSelect plainSelect, boolean addColumn) {
         FromItem fromItem = plainSelect.getFromItem();
         if (fromItem instanceof Table) {
