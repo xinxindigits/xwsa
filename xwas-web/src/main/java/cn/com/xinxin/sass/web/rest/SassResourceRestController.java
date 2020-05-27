@@ -143,7 +143,7 @@ public class SassResourceRestController extends AclController {
         List<GrantsVO> allGrants = Lists.newArrayList();
         authsDOList.stream().forEach(authsDO -> {
             GrantsVO grantsVO = new GrantsVO();
-            grantsVO.setCode(authsDO.getCode());
+            grantsVO.setCode(authsDO.getAuthority());
             grantsVO.setName(authsDO.getName());
             grantsVO.setDesc(authsDO.getName());
             allGrants.add(grantsVO);
