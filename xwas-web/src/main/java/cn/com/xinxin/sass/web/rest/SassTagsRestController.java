@@ -2,6 +2,7 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.*;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
@@ -130,7 +131,7 @@ public class SassTagsRestController extends AclController {
 
     }
 
-
+    @SysLog("更新标签")
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     //@RequiresPermissions("/tags/update")
     public Object updateTags(@RequestBody TagForm tagForm, HttpServletRequest request){
@@ -150,7 +151,7 @@ public class SassTagsRestController extends AclController {
 
     }
 
-
+    @SysLog("删除标签")
     @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     //@RequiresPermissions("/tags/delete")
     public Object deleteTags(@RequestParam Long tagId,HttpServletRequest request){
@@ -166,7 +167,7 @@ public class SassTagsRestController extends AclController {
 
     }
 
-
+    @SysLog("新建标签")
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     //@RequiresPermissions("/tags/create")
     public Object createTags(@RequestBody TagForm tagForm, HttpServletRequest request){
@@ -206,7 +207,7 @@ public class SassTagsRestController extends AclController {
         }
     }
 
-
+    @SysLog("给数据打标签")
     @RequestMapping(value = "/fixdata",method = RequestMethod.POST)
     //@RequiresPermissions("/tags/fixdata")
     public Object fixdataTags(@RequestBody TagRelationForm tagForm, HttpServletRequest request){

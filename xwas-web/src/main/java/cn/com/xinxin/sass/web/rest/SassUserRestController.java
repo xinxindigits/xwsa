@@ -3,6 +3,7 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
+import cn.com.xinxin.sass.biz.log.SysLog;
 import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
@@ -186,7 +187,7 @@ public class SassUserRestController extends AclController {
 
     }
 
-
+    @SysLog("重置用户密码")
     @RequestMapping(value = "/restpwd",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/restpwd")
@@ -224,6 +225,7 @@ public class SassUserRestController extends AclController {
     }
 
 
+    @SysLog("创建用户信息")
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/create")
@@ -308,7 +310,7 @@ public class SassUserRestController extends AclController {
     }
 
 
-
+    @SysLog("更新用户信息")
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/update")
@@ -384,6 +386,7 @@ public class SassUserRestController extends AclController {
     }
 
 
+    @SysLog("删除用户信息")
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/delete")
@@ -422,6 +425,7 @@ public class SassUserRestController extends AclController {
      * @param grantForm
      * @return
      */
+    @SysLog("用户角色授权信息")
     @RequestMapping(value = "/grant",method = RequestMethod.POST)
     @ResponseBody
     @RequiresPermissions("/user/grant")
