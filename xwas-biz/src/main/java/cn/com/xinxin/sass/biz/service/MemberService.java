@@ -1,5 +1,6 @@
 package cn.com.xinxin.sass.biz.service;
 
+import cn.com.xinxin.sass.common.model.PageResultVO;
 import cn.com.xinxin.sass.repository.model.MemberDO;
 
 import java.util.List;
@@ -32,4 +33,16 @@ public interface MemberService {
      * @return 更新成功数量
      */
     int updateBatchById(List<MemberDO> memberDOS);
+
+
+    /**
+     * 查询某个部门下的member
+     * @param deptId
+     * @return
+     */
+    PageResultVO<MemberDO> queryByDeptId(String deptId, PageResultVO page);
+
+
+
+
 }
