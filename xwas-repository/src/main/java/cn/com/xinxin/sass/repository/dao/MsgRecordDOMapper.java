@@ -3,7 +3,6 @@ package cn.com.xinxin.sass.repository.dao;
 import cn.com.xinxin.sass.repository.model.MsgRecordDO;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Date;
 import java.util.List;
 
 public interface MsgRecordDOMapper {
@@ -70,6 +69,7 @@ public interface MsgRecordDOMapper {
      * @param index 消息记录起始
      * @param pageSize 页大小
      * @param tenantId 机构id
+     * @param keyWord 关键字
      * @return 消息记录
      */
     List<MsgRecordDO> selectPageByOrgIdAndUserIdAndTime(@Param(value = "userId") String userId,
@@ -77,7 +77,8 @@ public interface MsgRecordDOMapper {
                                                     @Param(value = "endTime") String endTime,
                                                     @Param(value = "index") Long index,
                                                     @Param(value = "pageSize") Integer pageSize,
-                                                    @Param(value = "tenantId") String tenantId);
+                                                    @Param(value = "tenantId") String tenantId,
+                                                    @Param(value = "keyWord") String keyWord);
 
     /**
      * 通过机构id，userid，消息发送时间范围查询记录总数
@@ -85,12 +86,14 @@ public interface MsgRecordDOMapper {
      * @param startTime 消息发送时间范围之起始时间
      * @param endTime 消息发送时间范围之终止时间
      * @param tenantId 机构id
+     * @param keyWord 关键字
      * @return 消息记录总数
      */
     Long selectCountByOrgIdAndUserIdAndTime(@Param(value = "userId") String userId,
                                                     @Param(value = "startTime") String startTime,
                                                     @Param(value = "endTime") String endTime,
-                                                    @Param(value = "tenantId") String tenantId);
+                                                    @Param(value = "tenantId") String tenantId,
+                                                    @Param(value = "keyWord") String keyWord);
 
     /**
      * 查询两个用户之间的会话记录
@@ -111,11 +114,21 @@ public interface MsgRecordDOMapper {
     List<MsgRecordDO> selectRoomMsgRecord(@Param("tenantId") String tenantId,@Param("roomId") String roomId,
                                           @Param("startTime") String startTime, @Param("endTime") String endTime, @Param("keyWord") String keyWord);
 
+    Integer selectRowNumberById(@Param("id") Long id,@Param("tenantId") String tenantId, @Param("roomId") String roomId,
+                             @Param("userIdOne") String userIdOne, @Param("userIdTwo") String userIdTwo);
+
     /**
      * 通过租户id和成员userid查询会话记录
      * @param tenantId 租户id
      * @param userId 成员userid
+     * @param keyWord 关键字
+     * @param startTime 消息发送时间范围之起始时间
+     * @param endTime 消息发送时间范围之终止时间
      * @return 会话记录
      */
-    List<MsgRecordDO> selectByMemberUserId(@Param("tenantId") String tenantId, @Param(value = "userId") String userId);
+    List<MsgRecordDO> selectByMemberUserIdAndKeyWordAndTime(@Param("tenantId") String tenantId,
+                                             @Param(value = "userId") String userId,
+                                           @Param(value = "keyWord") String keyWord,
+                                           @Param(value = "startTime") String startTime,
+                                           @Param(value = "endTime") String endTime);
 }

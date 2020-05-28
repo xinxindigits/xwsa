@@ -11,6 +11,12 @@ import cn.com.xinxin.sass.api.base.ToString;
 public class WeChatMessageQueryForm extends ToString {
 
     private static final long serialVersionUID = -5377565182974958749L;
+
+    /**
+     * id
+     */
+    private Long id;
+
     /**
      * 机构id
      */
@@ -40,11 +46,6 @@ public class WeChatMessageQueryForm extends ToString {
     private String endTime;
 
     /**
-     * 关键字
-     */
-    private String keyWord;
-
-    /**
      * 页码
      */
     private Integer pageIndex;
@@ -54,12 +55,17 @@ public class WeChatMessageQueryForm extends ToString {
      */
     private Integer pageSize;
 
-    public String getKeyWord() {
-        return keyWord;
+    /**
+     * 关键字
+     */
+    private String keyWord;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setKeyWord(String keyWord) {
-        this.keyWord = keyWord;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTenantId() {
@@ -125,4 +131,14 @@ public class WeChatMessageQueryForm extends ToString {
     public void setRoomId(String roomId) {
         this.roomId = roomId;
     }
+
+    public String getKeyWord() {
+        return keyWord;
+    }
+
+    public void setKeyWord(String keyWord) {
+        this.keyWord = keyWord;
+    }
+
+
 }

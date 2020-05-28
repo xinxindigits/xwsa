@@ -52,7 +52,14 @@ public interface MsgRecordService {
      * 通过租户id和成员userid查询聊天方
      * @param tenantId 租户id
      * @param userId 成员userid
-     * @return 聊天方
+     * @param keyWord 关键字
+     * @param startTime 消息发送时间范围之起始时间
+     * @param endTime 消息发送时间范围之终止时间
+     * @return 会话记录
      */
-    List<ChatPartyBO> selectByMemberUserId(String tenantId, String userId);
+    List<ChatPartyBO> selectByMemberUserIdAndKeyWordAndTime(String tenantId,
+                                                            String userId,
+                                                            String keyWord,
+                                                            String startTime,
+                                                            String endTime);
 }
