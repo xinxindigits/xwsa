@@ -20,6 +20,14 @@ public class WeChatMessageQueryForm extends ToString {
      * 成员userid或客户userid
      */
     private String userId;
+    /**
+     * 成员userid或客户userid
+     */
+    private String userIdTwo;
+    /**
+     * 会话id
+     */
+    private String roomId;
 
     /**
      * 客户的创建时间应大于startTime
@@ -87,5 +95,21 @@ public class WeChatMessageQueryForm extends ToString {
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public String getUserIdTwo() {
+        return userIdTwo;
+    }
+
+    public void setUserIdTwo(String userIdTwo) {
+        this.userIdTwo = userIdTwo;
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 }
