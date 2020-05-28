@@ -3,7 +3,7 @@
 <mapper namespace="cn.com.xinxin.sass.repository.dao.MsgRecordDOMapper">
   <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.MsgRecordDO">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="org_id" jdbcType="VARCHAR" property="tenantId" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
     <result column="seq_id" jdbcType="BIGINT" property="seqId" />
     <result column="msg_id" jdbcType="VARCHAR" property="msgId" />
     <result column="action" jdbcType="VARCHAR" property="action" />
@@ -22,11 +22,11 @@
     <result column="deleted" jdbcType="TINYINT" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List_Ext">
-    id, org_id, seq_id, msg_id, action, from_user_id, room_id, msg_time, msg_type, task_id, 
+    id, tenant_id, seq_id, msg_id, action, from_user_id, room_id, msg_time, msg_type, task_id, 
     extension, gmt_created, gmt_creator, gmt_updated, gmt_updater, deleted,to_user_id, content
   </sql>
   <insert id="insertBatch" parameterType="java.util.List">
-    insert into msg_record (id, org_id, seq_id,
+    insert into msg_record (id, tenant_id, seq_id,
       msg_id, action, from_user_id,
       room_id, msg_time, msg_type,
       task_id, extension, gmt_created,
@@ -48,7 +48,7 @@
     select <include refid="Base_Column_List_Ext"/>
     from msg_record
     <where>
-      org_id = #{tenantId} and deleted = 0
+      tenant_id = #{tenantId} and deleted = 0
       <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userId)">
         and (from_user_id = #{userId} or to_user_id like concat('%', #{userId}, '%'))
       </if>
@@ -66,7 +66,7 @@
     select count(id)
     from msg_record
     <where>
-      org_id = #{tenantId} and deleted = 0
+      tenant_id = #{tenantId} and deleted = 0
       <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userId)">
         and (from_user_id = #{userId} or to_user_id like concat('%', #{userId}, '%'))
       </if>
