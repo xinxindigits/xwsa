@@ -12,6 +12,9 @@ import java.util.List;
  */
 public class PageResultVO<T> extends ToString{
 
+    public final static Integer DEFAULT_PAGE_SIZE = 20;
+
+    public final static Integer DEFAULT_PAGE_NUM = 1;
 
     private Integer pageSize;
 

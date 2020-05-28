@@ -2,6 +2,8 @@ package cn.com.xinxin.sass.web.vo;
 
 import cn.com.xinxin.sass.api.base.ToString;
 
+import java.util.Date;
+
 /**
  * @author: zhouyang
  * @created: 21/04/2020.
@@ -12,19 +14,31 @@ public class RoleVO extends ToString {
 
     private static final long serialVersionUID = 9038508462834612482L;
 
+    /**
+     * 角色Id
+     */
     private Long id;
-
+    /**
+     * 角色名称
+     */
     private String name;
-
-
-    private String code;
-
+    /**
+     * 角色类型
+     */
     private String roleType;
+    /**
+     * 角色编码
+     */
+    private String code;
+    /**
+     * 创建时间
+     */
+    private Date gmtCreated;
 
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
+    /**
+     * 扩展
+     */
+    private String extension;
 
     public Long getId() {
         return id;
@@ -42,6 +56,14 @@ public class RoleVO extends ToString {
         this.name = name;
     }
 
+    public String getRoleType() {
+        return roleType;
+    }
+
+    public void setRoleType(String roleType) {
+        this.roleType = roleType;
+    }
+
     public String getCode() {
         return code;
     }
@@ -50,11 +72,19 @@ public class RoleVO extends ToString {
         this.code = code;
     }
 
-    public String getRoleType() {
-        return roleType;
+    public Date getGmtCreated() {
+        return gmtCreated;
     }
 
-    public void setRoleType(String roleType) {
-        this.roleType = roleType;
+    public void setGmtCreated(Date gmtCreated) {
+        this.gmtCreated = gmtCreated;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 }
