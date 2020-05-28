@@ -9,6 +9,7 @@ import cn.com.xinxin.sass.repository.model.TagsDO;
 import cn.com.xinxin.sass.repository.model.TagsMapDO;
 import cn.com.xinxin.sass.repository.model.TagsRelationsDO;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -113,6 +114,10 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public List<TagsDO> selectTagsByKeyIdLists(List<String> keyIds) {
 
+        if(CollectionUtils.isEmpty(keyIds)){
+
+            return Lists.newArrayList();
+        }
 
         List<TagsDO> tagsDOList = this.tagsRelationsDOMapper.selectTagsByKeyIdLists(keyIds);
 
@@ -122,6 +127,11 @@ public class TagsServiceImpl implements TagsService {
     @Override
     public Map<String, List<TagsDO>> selectTagsMapsByKeyIdLists(List<String> keyIds) {
 
+
+        if(CollectionUtils.isEmpty(keyIds)){
+
+            return Maps.newHashMap();
+        }
 
         List<TagsMapDO> tagsMapDOList = this.tagsRelationsDOMapper.selectTagsMapsByKeyIds(keyIds);
 
