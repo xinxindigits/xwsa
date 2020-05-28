@@ -290,7 +290,7 @@ public class SassTenantRestController extends AclController {
         tenantDataSyncConfigDO.setCountCeiling(queryForm.getCountCeiling());
         tenantDataSyncConfigDO.setTimeInterval(queryForm.getTimeInterval());
         tenantDataSyncConfigDO.setGmtCreator(tenantId);
-        tenantDataSyncConfigDO.setDeleted(queryForm.getStatus());
+        tenantDataSyncConfigDO.setStatus(queryForm.getStatus());
 
         TenantDataSyncConfigDO dataSyncConfigDO = tenantDataSyncConfigService.selectByOrgIdAndTaskType(tenantId, queryForm.getTaskType());
         if(dataSyncConfigDO != null){
@@ -352,7 +352,7 @@ public class SassTenantRestController extends AclController {
         tenantDataSyncConfigDO.setCountCeiling(queryForm.getCountCeiling());
         tenantDataSyncConfigDO.setTimeInterval(queryForm.getTimeInterval());
         tenantDataSyncConfigDO.setGmtUpdater(tenantId);
-        tenantDataSyncConfigDO.setDeleted(queryForm.getStatus());
+        tenantDataSyncConfigDO.setStatus(queryForm.getStatus());
         tenantDataSyncConfigService.updateById(tenantDataSyncConfigDO);
 
         quartzJobService.stopJob(tenantId, queryForm.getTaskType());

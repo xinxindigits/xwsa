@@ -38,7 +38,10 @@ public class MessageConvert {
         msgRecordVO.setMsgTime(msgRecordDO.getMsgTime());
         msgRecordVO.setMsgType(msgRecordDO.getMsgType());
         msgRecordVO.setToUserId(msgRecordDO.getToUserId());
-        msgRecordVO.setContent((String)JSONObject.parseObject(msgRecordDO.getContent()).get(CommonConstants.CONTENT));
+        JSONObject jsonObject = JSONObject.parseObject(msgRecordDO.getContent());
+        if (null != jsonObject) {
+            msgRecordVO.setContent((String)JSONObject.parseObject(msgRecordDO.getContent()).get(CommonConstants.CONTENT));
+        }
         return msgRecordVO;
     }
 
