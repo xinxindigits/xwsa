@@ -151,7 +151,9 @@ export default {
     },
     hdlSingleCreate() {
       let d = {
-        tenantId: ""
+        tenantId: "",
+        countCeiling: 1000,
+        timeInterval: 3
       };
       this.$refs.createModal.setData(d);
       this.showAddModal = true;

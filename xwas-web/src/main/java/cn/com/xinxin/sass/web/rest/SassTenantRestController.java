@@ -28,6 +28,7 @@ import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.idgen.SnowFakeIdGenerator;
 import com.xinxinfinance.commons.util.BaseConvert;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +92,7 @@ public class SassTenantRestController extends AclController {
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
     @ResponseBody
-    @RequiresPermissions("/tenant/list")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_QUERY_LIST"},logical= Logical.OR)
     public Object tenantList(HttpServletRequest request, @RequestBody TenantForm tenantForm){
 
         if(null == tenantForm){
@@ -118,7 +119,7 @@ public class SassTenantRestController extends AclController {
 
     @RequestMapping(value = "/query/{code}",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/tenant/query")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_QUERY_LIST"},logical= Logical.OR)
     public Object queryTenantDetail(HttpServletRequest request, @PathVariable(value = "code")String code){
 
         if(StringUtils.isEmpty(code)){
@@ -142,7 +143,7 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/tenant/create")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_ADD"},logical= Logical.OR)
     @SysLog("创建租户操作")
     public Object createTenant(HttpServletRequest request, @RequestBody TenantForm tenantForm){
 
@@ -151,25 +152,26 @@ public class SassTenantRestController extends AclController {
         }
 
         loger.info("SassTenantRestController,createTenant, tenantForm:{}",JSONObject.toJSONString(tenantForm));
-
         SassUserInfo sassUserInfo = this.getSassUser(request);
+        String tenantId = sassUserInfo.getTenantId();
+        if(StringUtils.isEmpty(tenantId)){
+            StringBuilder code = new StringBuilder();
+            code.append(OG);
+            try {
+                code.append(SnowFakeIdGenerator.getInstance().generateLongId());
+            }catch (Exception e){
+                loger.error("雪花算法生成id失败");
+                throw new BusinessException(SassBizResultCodeEnum.GENERATE_ID_ERROR);
+            }
+            tenantId = code.toString();
+            sassUserInfo.setTenantId(tenantId);
+        }
         // 参数转换设置
         TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
-        StringBuilder code = new StringBuilder();
-        Date now = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOSIGN);
-        code.append(OG).append(sdf.format(now)).append(PADDING);
-        try {
-            code.append(SnowFakeIdGenerator.getInstance().generateLongId());
-        }catch (Exception e){
-            loger.error("雪花算法生成id失败");
-            throw new BusinessException(SassBizResultCodeEnum.GENERATE_ID_ERROR);
-        }
-        tenantBaseInfoDO.setTenantId(code.toString());
+        tenantBaseInfoDO.setTenantId(tenantId);
         tenantBaseInfoDO.setTenantName(tenantForm.getName());
         tenantBaseInfoDO.setGmtCreator(sassUserInfo.getAccount());
         tenantBaseInfoDO.setGmtUpdater(sassUserInfo.getAccount());
-
 
         try {
 
@@ -193,7 +195,7 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/tenant/update")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_UPDATE"},logical= Logical.OR)
     @SysLog("更新租户操作")
     public Object updateTenant(HttpServletRequest request,
                                      @RequestBody TenantForm tenantForm){
@@ -223,7 +225,7 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/tenant/delete")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_DELETE"},logical= Logical.OR)
     @SysLog("删除租户操作")
     public Object deleteTenant(@RequestBody DeleteOrgForm deleteOrgForm, HttpServletRequest request){
 
@@ -245,7 +247,7 @@ public class SassTenantRestController extends AclController {
 
     @RequestMapping(value = "/queryConfig",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/tenant/queryConfig")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_TASK_CONFIG_MNG"},logical= Logical.OR)
     public Object queryTenantConfig(@RequestParam(required = false) String tenantId, HttpServletRequest request){
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
@@ -259,8 +261,8 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/tenantConfig/create",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/tenant/create")
-    @SysLog("新增租户配置操作")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_TASK_CONFIG_MNG"},logical= Logical.OR)
+    @SysLog("新增任务配置操作")
     public Object insertTenantConfig(@RequestBody TenantConfigForm queryForm, HttpServletRequest request) {
 
         if (StringUtils.isBlank(queryForm.getTaskType())) {
@@ -310,8 +312,8 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/tenantConfig/update",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/tenant/update")
-    @SysLog("更新租户配置操作")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_TASK_CONFIG_MNG"},logical= Logical.OR)
+    @SysLog("更新任务配置操作")
     public Object updateTenantConfig(@RequestBody TenantConfigForm queryForm, HttpServletRequest request) {
 
         if (null == queryForm.getId()) {
@@ -367,7 +369,7 @@ public class SassTenantRestController extends AclController {
 
     @RequestMapping(value = "/executeJob",method = RequestMethod.GET)
     @ResponseBody
-    @RequiresPermissions("/tenant/executeJob")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_TASK_CONFIG_MNG"},logical= Logical.OR)
     @SysLog("手动执行租户任务操作")
     public Object executeJob(@RequestParam String taskType, HttpServletRequest request){
 
@@ -389,7 +391,7 @@ public class SassTenantRestController extends AclController {
     @RequestMapping(value = "/jobLog/query",method = RequestMethod.POST)
     @ResponseBody
     @Transactional(rollbackFor = Exception.class)
-    @RequiresPermissions("/tenant/query")
+    @RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_TASK_CONFIG_MNG"},logical= Logical.OR)
     public Object queryTenantJobLog(@RequestBody TenantJobLogQueryForm queryForm, HttpServletRequest request) {
         if (null == queryForm) {
             loger.error("查询租户job日志，TenantJobLogQueryForm不能为空");
