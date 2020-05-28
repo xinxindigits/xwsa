@@ -101,7 +101,10 @@ public class WeChatWorkChatRecordSyncServiceImpl implements WeChatWorkSyncServic
             //机构任务配置信息
             TenantDataSyncConfigDO tenantDataSyncConfigDO = tenantDataSyncConfigService.selectByOrgIdAndTaskType(
                     tenantBaseInfoDO.getTenantId(), TaskTypeEnum.MESSAGE_SYNC.getType());
-
+            if (null == tenantDataSyncConfigDO) {
+                LOGGER.error("无法通过机构id[{}]找到机构同步[{}]任务配置信息", tenantId, TaskTypeEnum.MESSAGE_SYNC);
+                throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST, "找不到机构同步任务配置信息");
+            }
             //初始化sdk
             long sdk = ChattingRecordsUtils.initSdk(tenantBaseInfoDO.getCorpId(), tenantBaseInfoDO.getChatRecordSecret());
 

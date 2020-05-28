@@ -37,11 +37,11 @@
         :loading="isLoading"
         @on-selection-change="hdlSelectionChange"
       >
-        <template slot-scope="{ row }" slot="state">
-          <span>{{ $mapd("organizationState", row.state) }}</span>
+        <template slot-scope="{ row }" slot="taskType">
+          <span>{{ $mapd("taskType", row.taskType) }}</span>
         </template>
-        <template slot-scope="{ row }" slot="create_time">
-          <span>{{ row.gmtCreated | timeFilter }}</span>
+        <template slot-scope="{ row }" slot="deleted">
+          <span>{{ $mapd("taskState", row.deleted) }}</span>
         </template>
         <template slot-scope="{ row }" slot="action">
           <Button
@@ -50,11 +50,18 @@
             style="margin-right: 5px"
             @click="hdlSingleModified(row)"
           >
-            详情
+            更新
           </Button>
-          <Button type="error" size="small" @click="hdlDelete([row.tenantId])">
+          <Button type="error" size="small" style="margin-right: 5px" @click="hdlDelete([row.tenantId])">
             删除
           </Button>
+          <Button type="info" size="small" style="margin-right: 5px" @click="hdlDelete([row.tenantId])">
+            日志
+          </Button>
+          <Button type="warning" size="small"  @click="hdlDelete([row.tenantId])">
+            触发
+          </Button>
+
         </template>
       </Table>
       <div style="margin: auto; text-align: right;padding-top:10px">
@@ -88,10 +95,18 @@
 </template>
 
 <script>
-import { getTenantList, delTenant, queryTenant } from "@/api";
+import { delTenant,queryTenantConfig } from "@/api";
 import OrganizationUpdate from "./modify";
 export default {
   name: "organization",
+  props: {
+      value: Boolean,
+      type: {
+          validator: function(value) {
+              return ["create", "update"].indexOf(value) !== -1;
+          }
+      }
+  },
   components: {
     OrganizationUpdate
   },
@@ -102,6 +117,7 @@ export default {
   },
   data() {
     return {
+      showTaskModal: false,
       showAddModal: false,
       showGrantModal: false,
       showUpdateModal: false,
@@ -121,16 +137,23 @@ export default {
           align: "center"
         },
         { title: "租户编码", key: "tenantId", align: "center" },
-        { title: "租户名称", key: "tenantName", align: "center" },
-        { title: "备注", key: "remark", align: "center" },
-        { title: "状态", slot: "state", align: "center" },
+        { title: "任务类型", slot: "taskType", align: "center" },
         {
-          title: "创建时间",
-          key: "gmtCreated",
-          align: "center",
-          slot: "create_time"
+          title: "cron表达式",
+          width: 180,
+          key: "cronExpression",
+          align: "center"
         },
-        { title: "操作", slot: "action", align: "center", width: 150 }
+        { title: "当前消息序号", key: "fetchedSeqNo", align: "center" },
+        { title: "会话每次提取上限", key: "countCeiling", align: "center" },
+        { title: "会话每次提取间隔(秒)", key: "timeInterval", align: "center" },
+        {
+          title: "状态",
+          key: "deleted",
+          align: "center",
+          slot: "deleted"
+        },
+        { title: "操作", slot: "action", align: "center", width: 250 }
       ],
       tableData: [],
       tbSelection: []
@@ -144,16 +167,11 @@ export default {
       this.isLoading = true;
       let pageSize = this.pageSize;
       let pageIndex = pageNum;
-      let data = {
-          code:this.formItem.tenantId,
-          name:this.formItem.tenantName,
-          state:this.formItem.state,
-      }
-      getTenantList({ pageIndex, pageSize, ...data })
+      queryTenantConfig({ pageIndex, pageSize, ...this.formItem })
         .then(res => {
           let { data } = res;
           this.reset();
-          this.tableData = data.items;
+          this.tableData = data;
           this.total = Number(data.total);
         })
         .finally(() => (this.isLoading = false));
@@ -185,22 +203,18 @@ export default {
       }
     },
     hdlSingleCreate() {
-      this.$refs.createModal.setData({
-        obj: {},
-        remark: "",
-        state: ""
-      });
+      let d = {
+          tenantId:""
+      };
+      this.$refs.createModal.setData(d);
       this.showAddModal = true;
     },
     hdlSingleModified(data) {
-      queryTenant({ code: data.tenantId }).then(res => {
-        this.$refs.updateModal.setData({
-          obj: res.data,
-          remark: data.remark,
-          state: data.state
-        });
+        let d = {
+            tenantId:data.tenantId,
+        };
+        this.$refs.updateModal.setData(d);
         this.showUpdateModal = true;
-      });
     },
     hdlSelectionChange(selection) {
       this.tbSelection = selection;

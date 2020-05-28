@@ -30,7 +30,8 @@ import {
   delTenant,
   addTenant,
   updateTenant,
-  queryTenantConfig
+  queryTenantConfig,
+  createTenantTask
 } from "./sys_tenant";
 import { getLogList, queryLogList, getLogDetail } from "./sys_log";
 import {
@@ -110,5 +111,6 @@ export {
   delTenant,
   addTenant,
   updateTenant,
-  queryTenantConfig
+  queryTenantConfig,
+  createTenantTask
 };

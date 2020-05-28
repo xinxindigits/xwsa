@@ -23,6 +23,7 @@ import cn.com.xinxin.sass.web.form.TenantForm;
 import cn.com.xinxin.sass.web.form.TenantJobLogQueryForm;
 import cn.com.xinxin.sass.web.vo.*;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.idgen.SnowFakeIdGenerator;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -96,7 +97,7 @@ public class SassTenantRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"租户查询参数不能为空","租户查询参数不能为空");
         }
 
-        loger.info("SassTenantRestController,tenantList, tenantForm = {}",tenantForm.getName());
+        loger.info("SassTenantRestController,tenantList, tenantForm = {}", JSONObject.toJSONString(tenantForm));
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
@@ -106,6 +107,8 @@ public class SassTenantRestController extends AclController {
         page.setPageNumber(tenantForm.getPageIndex());
 
         TenantBaseInfoDO condition = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
+        condition.setTenantName(tenantForm.getName());
+        condition.setTenantId(tenantForm.getCode());
         PageResultVO<TenantBaseInfoDO> result = tenantBaseInfoService.findByCondition(page, condition);
         PageResultVO<TenantInfoVO> resultVO = BaseConvert.convert(result,PageResultVO.class);
         resultVO.setItems(BaseConvert.convertList(result.getItems(),TenantInfoVO.class));
@@ -269,6 +272,7 @@ public class SassTenantRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
         String tenantId = sassUserInfo.getTenantId();
 
+
         TenantDataSyncConfigDO tenantDataSyncConfigDO = new TenantDataSyncConfigDO();
         tenantDataSyncConfigDO.setTenantId(tenantId);
         tenantDataSyncConfigDO.setTaskType(queryForm.getTaskType());
@@ -277,6 +281,12 @@ public class SassTenantRestController extends AclController {
         tenantDataSyncConfigDO.setTimeInterval(queryForm.getTimeInterval());
         tenantDataSyncConfigDO.setGmtCreator(tenantId);
         tenantDataSyncConfigDO.setDeleted(queryForm.getStatus());
+
+        TenantDataSyncConfigDO dataSyncConfigDO = tenantDataSyncConfigService.selectByOrgIdAndTaskType(tenantId, queryForm.getTaskType());
+        if(dataSyncConfigDO != null){
+            throw new BusinessException(SassBizResultCodeEnum.DATA_ALREADY_EXIST,"该租户存在相同类型的任务");
+        }
+
         tenantDataSyncConfigService.insert(tenantDataSyncConfigDO);
 
         if (0 == queryForm.getStatus()) {
