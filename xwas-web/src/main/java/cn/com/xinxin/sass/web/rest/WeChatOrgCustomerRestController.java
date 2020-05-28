@@ -196,9 +196,9 @@ public class WeChatOrgCustomerRestController extends AclController {
 
         CustomerVO customerVO = CustomerConvert.convert2CustomerVO(customerDO);
 
-        String memberId = customerVO.getMemberUserId();
+        String userId = customerVO.getMemberUserId();
 
-        MemberDO memberDO = this.memberService.queryMemberDetailById(memberId);
+        MemberDO memberDO = this.memberService.queryMemberDetailByUserId(userId);
 
         customerVO.setMemberName(memberDO.getMemberName());
 
