@@ -1,4 +1,11 @@
 import {
+  getTagList,
+  queryTagList,
+  createTag,
+  updateTag,
+  deleteTag
+} from "./sys_tag";
+import {
   getUserList,
   getUserDetail,
   addUser,
@@ -15,6 +22,11 @@ import {
   getCustomerDetail
 } from "./wc_cus";
 export {
+  getTagList,
+  queryTagList,
+  createTag,
+  updateTag,
+  deleteTag,
   getUserList,
   getUserDetail,
   addUser,

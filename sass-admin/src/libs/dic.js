@@ -3,6 +3,10 @@ const gender = {
   [1]: "男",
   [2]: "女"
 };
+const tagType = {
+  ["COMMON"]: "普通标签",
+  ["OTHER"]: "其他标签"
+};
 const msgType = {
   agree: "同意会话聊天内容",
   card: "名片",
@@ -55,4 +59,4 @@ const mapDic = function(key, val) {
     return dic[key][val] || val;
   } else return "";
 };
-export { mapDic, gender };
+export { mapDic, gender, tagType };
