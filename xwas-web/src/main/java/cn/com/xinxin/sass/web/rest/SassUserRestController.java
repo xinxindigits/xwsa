@@ -312,7 +312,7 @@ public class SassUserRestController extends AclController {
         Map<String, Object> result = new HashMap<String, Object>();
 
         result.put("systempath",systempath);
-       result.put("sdk",sdk);
+        result.put("sdk",sdk);
 
         return result;
 
