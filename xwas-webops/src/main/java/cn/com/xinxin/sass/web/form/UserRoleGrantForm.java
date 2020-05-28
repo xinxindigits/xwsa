@@ -54,6 +54,8 @@ public class UserRoleGrantForm extends ToString {
      */
     private List<UserRoleForm> userRoles;
 
+    private String tenantId;
+
     public String getUserAccount() {
         return userAccount;
     }
@@ -84,5 +86,13 @@ public class UserRoleGrantForm extends ToString {
 
     public void setUserRoles(List<UserRoleForm> userRoles) {
         this.userRoles = userRoles;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

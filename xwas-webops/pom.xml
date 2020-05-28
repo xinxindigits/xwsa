@@ -141,7 +141,7 @@
     </dependencies>
 
     <build>
-        <finalName>opsass</finalName>
+        <finalName>opss</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -174,7 +174,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <build>
-                <finalName>opsass</finalName>
+                <finalName>opss</finalName>
                 <resources>
                     <resource>
                         <directory>src/main/resources</directory>

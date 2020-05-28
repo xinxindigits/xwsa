@@ -341,7 +341,7 @@ public class SassUserRestController extends AclController {
             // 如果组织机构编码不为空，则需要创建组装与用户的关系
             OrganizationDO organizationDO = this.organizationService.findByCode(userOrgCode);
             UserOrgDO userOrgDO = new UserOrgDO();
-            userOrgDO.setTenantId(sassUserInfo.getTenantId());
+            userOrgDO.setTenantId(userForm.getTenantId());
             userOrgDO.setUserAccount(userCreateDO.getAccount());
             userOrgDO.setUserName(userCreateDO.getName());
             userOrgDO.setOrgCode(organizationDO.getCode());
@@ -396,6 +396,7 @@ public class SassUserRestController extends AclController {
             for(RoleDO roleDO : roleDOList){
                 UserRoleDO userRoleDO = new UserRoleDO();
                 userRoleDO.setUserAccount(userDO.getAccount());
+                userRoleDO.setTenantId(userForm.getTenantId());
                 userRoleDO.setUserName(userDO.getName());
                 userRoleDO.setRoleCode(roleDO.getCode());
                 userRoleDO.setRoleName(roleDO.getName());
@@ -416,7 +417,7 @@ public class SassUserRestController extends AclController {
             int deleted = this.userService.removeUserOrgRelationByAccount(userDO.getAccount());
             OrganizationDO organizationDO = this.organizationService.findByCode(userOrgCode);
             UserOrgDO userOrgDO = new UserOrgDO();
-            userOrgDO.setTenantId(sassUserInfo.getTenantId());
+            userOrgDO.setTenantId(userForm.getTenantId());
             userOrgDO.setUserAccount(userDO.getAccount());
             userOrgDO.setUserName(userDO.getName());
             userOrgDO.setOrgCode(organizationDO.getCode());
@@ -506,7 +507,7 @@ public class SassUserRestController extends AclController {
 
         for(UserRoleForm userRoleForm : userRoleForms){
             UserRoleDO userRoleDO = new UserRoleDO();
-            userRoleDO.setTenantId(sassUserInfo.getTenantId());
+            userRoleDO.setTenantId(grantForm.getTenantId());
             userRoleDO.setRoleCode(userRoleForm.getRoleCode());
             userRoleDO.setRoleName(userRoleForm.getRoleName());
             userRoleDO.setUserAccount(grantedUserAccount);
