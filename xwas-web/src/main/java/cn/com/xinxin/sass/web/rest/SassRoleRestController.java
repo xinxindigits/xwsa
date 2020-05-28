@@ -17,6 +17,7 @@ import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.repository.model.UserRoleDO;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.*;
+import cn.com.xinxin.sass.web.utils.RegexUtils;
 import cn.com.xinxin.sass.web.utils.TreeResultUtil;
 import cn.com.xinxin.sass.web.vo.MenuTreeVO;
 import cn.com.xinxin.sass.web.vo.ResourceVO;
@@ -88,6 +89,12 @@ public class SassRoleRestController extends AclController {
 
         logger.info("--------SassRoleRestController.createRole.Request:{}--------",JSONObject.toJSONString(createRoleForm));
         String roleCode = createRoleForm.getCode();
+
+        if(!RegexUtils.isDataCode(roleCode)){
+            // 如果匹配不是useraccount格式
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"不能包含特殊字符或者长度超过16","不能包含特殊字符或者长度超过16");
+        }
+
         RoleDO existedRole = roleService.findByRoleCode(roleCode);
         if(existedRole != null){
             throw new BusinessException(SassBizResultCodeEnum.DATA_ALREADY_EXIST,"角色信息已经存在","角色信息已经存在");
