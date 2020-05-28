@@ -132,7 +132,7 @@ public class WeChatWorkDepartmentSyncServiceImpl implements WeChatWorkDepartment
     private void fetchInsertDepartment(DepartmentReceivedDO departmentReceivedDO, String taskId,
                                        List<DepartmentDO> insertRecord) {
         DepartmentDO insertDepartmentDO = new DepartmentDO();
-        insertDepartmentDO.setOrgId(departmentReceivedDO.getOrgId());
+        insertDepartmentDO.setTenantId(departmentReceivedDO.getTenantId());
         insertDepartmentDO.setDepartmentId(departmentReceivedDO.getDepartmentId());
         insertDepartmentDO.setDepartmentName(departmentReceivedDO.getDepartmentName());
         insertDepartmentDO.setEnglishName(departmentReceivedDO.getEnglishName());
