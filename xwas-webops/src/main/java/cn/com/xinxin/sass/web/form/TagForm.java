@@ -65,6 +65,8 @@ public class TagForm extends ToString {
      */
     private Integer pageIndex;
 
+    private String tenantId;
+
     public Long getId() {
         return id;
     }
@@ -143,5 +145,13 @@ public class TagForm extends ToString {
 
     public void setPageIndex(Integer pageIndex) {
         this.pageIndex = pageIndex;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

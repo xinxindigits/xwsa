@@ -47,6 +47,8 @@ public class RoleAuthorityForm extends ToString {
      */
     private List<String> userList;
 
+    private String tenantId;
+
     public String getRoleCode() {
         return roleCode;
     }
@@ -61,5 +63,13 @@ public class RoleAuthorityForm extends ToString {
 
     public void setUserList(List<String> userList) {
         this.userList = userList;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

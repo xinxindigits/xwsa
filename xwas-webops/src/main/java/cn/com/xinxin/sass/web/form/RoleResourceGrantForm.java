@@ -49,6 +49,8 @@ public class RoleResourceGrantForm extends ToString {
 
     private String extension;
 
+    private String tenantId;
+
     public String getExtension() {
         return extension;
     }
@@ -80,5 +82,13 @@ public class RoleResourceGrantForm extends ToString {
 
     public void setResources(List<RoleResourceForm> resources) {
         this.resources = resources;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

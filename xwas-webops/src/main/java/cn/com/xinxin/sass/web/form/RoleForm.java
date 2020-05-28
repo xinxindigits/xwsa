@@ -70,6 +70,9 @@ public class RoleForm extends ToString {
     private Integer pageIndex;
 
 
+    private String tenantId;
+
+
     public String getId() {
         return id;
     }
@@ -128,5 +131,13 @@ public class RoleForm extends ToString {
 
     public void setPageIndex(Integer pageIndex) {
         this.pageIndex = pageIndex;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

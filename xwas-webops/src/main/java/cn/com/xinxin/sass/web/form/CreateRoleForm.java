@@ -59,6 +59,8 @@ public class CreateRoleForm extends ToString {
      */
     private List<String> resourceList;
 
+    private String tenantId;
+
     public String getName() {
         return name;
     }
@@ -98,5 +100,13 @@ public class CreateRoleForm extends ToString {
 
     public void setResourceList(List<String> resourceList) {
         this.resourceList = resourceList;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

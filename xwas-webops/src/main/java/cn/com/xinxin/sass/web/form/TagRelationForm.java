@@ -51,6 +51,8 @@ public class TagRelationForm extends ToString {
 
     private String description;
 
+    private String tenantId;
+
     public Long getId() {
         return id;
     }
@@ -90,5 +92,13 @@ public class TagRelationForm extends ToString {
 
     public void setKeyName(String keyName) {
         this.keyName = keyName;
+    }
+
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
     }
 }

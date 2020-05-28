@@ -322,6 +322,7 @@ public class SassUserRestController extends AclController {
             for(RoleDO roleDO : roleDOList){
 
                 UserRoleDO userRoleDO = new UserRoleDO();
+                userRoleDO.setTenantId(userForm.getTenantId());
                 userRoleDO.setUserAccount(userCreateDO.getAccount());
                 userRoleDO.setUserName(userCreateDO.getName());
                 userRoleDO.setRoleCode(roleDO.getCode());
