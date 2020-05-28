@@ -28,18 +28,20 @@ public class CustomerConvert {
         CustomerReceivedDO customerReceivedDO = new CustomerReceivedDO();
         customerReceivedDO.setMemberUserId(memberUserId);
         customerReceivedDO.setTaskId(taskId);
-        customerReceivedDO.setOrgId(orgId);
-        customerReceivedDO.setUserId(weChatWorkCustomerBO.getExternalUserId());
-        customerReceivedDO.setCustomerName(weChatWorkCustomerBO.getName());
-        customerReceivedDO.setAvatar(weChatWorkCustomerBO.getAvatar());
-        customerReceivedDO.setCustomerType(weChatWorkCustomerBO.getType());
-        customerReceivedDO.setGender(weChatWorkCustomerBO.getGender());
-        customerReceivedDO.setUnionId(weChatWorkCustomerBO.getUnionId());
-        customerReceivedDO.setCustomerPosition(weChatWorkCustomerBO.getPosition());
-        customerReceivedDO.setCorpName(weChatWorkCustomerBO.getCorporationName());
-        customerReceivedDO.setCorpFullName(weChatWorkCustomerBO.getCorporationFullName());
-        customerReceivedDO.setExternalProfile(weChatWorkCustomerBO.getExternalProfile());
-        customerReceivedDO.setFollowUser(weChatWorkCustomerBO.getFollowUser());
+        customerReceivedDO.setTenantId(orgId);
+        if (null != weChatWorkCustomerBO) {
+            customerReceivedDO.setUserId(weChatWorkCustomerBO.getExternalUserId());
+            customerReceivedDO.setCustomerName(weChatWorkCustomerBO.getName());
+            customerReceivedDO.setAvatar(weChatWorkCustomerBO.getAvatar());
+            customerReceivedDO.setCustomerType(weChatWorkCustomerBO.getType());
+            customerReceivedDO.setGender(weChatWorkCustomerBO.getGender());
+            customerReceivedDO.setUnionId(weChatWorkCustomerBO.getUnionId());
+            customerReceivedDO.setCustomerPosition(weChatWorkCustomerBO.getPosition());
+            customerReceivedDO.setCorpName(weChatWorkCustomerBO.getCorporationName());
+            customerReceivedDO.setCorpFullName(weChatWorkCustomerBO.getCorporationFullName());
+            customerReceivedDO.setExternalProfile(weChatWorkCustomerBO.getExternalProfile());
+            customerReceivedDO.setFollowUser(weChatWorkCustomerBO.getFollowUser());
+        }
         customerReceivedDO.setGmtCreator(CommonConstants.GMT_CREATOR_SYSTEM);
         return customerReceivedDO;
     }

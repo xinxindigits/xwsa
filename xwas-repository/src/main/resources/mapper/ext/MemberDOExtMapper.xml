@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.com.xinxin.sass.repository.dao.MemberDOMapper">
   <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.MemberDO">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="member_name" jdbcType="VARCHAR" property="memberName" />
     <result column="mobile" jdbcType="VARCHAR" property="mobile" />
@@ -37,7 +63,7 @@
     <result column="deleted" jdbcType="TINYINT" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List_Ext">
-    id, org_id, user_id, member_name, mobile, department_id_list, order_list, member_position, 
+    id, tenant_id, user_id, member_name, mobile, department_id_list, order_list, member_position,
     gender, mail, is_leader_in_dept, avatar, thumb_avatar, telephone, alias, status, 
     ext_attr, qr_code, external_profile, external_position, address, hide_mobile, english_name, 
     open_userid, main_department, member_status, task_id, extension, gmt_created, gmt_creator, 
@@ -47,7 +73,7 @@
   <select id="queryByOrgIdAndUserId" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from member
-    where org_id = #{orgId} and user_id in
+    where tenant_id = #{tenantId} and user_id in
     <foreach collection="userIdS" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
@@ -55,7 +81,7 @@
   </select>
 
   <insert id="insertBatch" parameterType="java.util.List">
-    insert into member (id, org_id, user_id,
+    insert into member (id, tenant_id, user_id,
       member_name, mobile, department_id_list,
       order_list, member_position, gender,
       mail, is_leader_in_dept, avatar,
@@ -65,11 +91,11 @@
       hide_mobile, english_name, open_userid,
       main_department, member_status, task_id,
       extension, gmt_created, gmt_creator,
-      gmt_updated, gmt_updater, deleted
+      gmt_updated, gmt_updater
       )
     values
     <foreach collection="memberDOS" item="item" index="index" separator=",">
-      (#{item.id,jdbcType=BIGINT}, #{item.orgId,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR},
+      (#{item.id,jdbcType=BIGINT}, #{item.tenantId,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR},
       #{item.memberName,jdbcType=VARCHAR}, #{item.mobile,jdbcType=VARCHAR}, #{item.departmentIdList,jdbcType=VARCHAR},
       #{item.orderList,jdbcType=VARCHAR}, #{item.memberPosition,jdbcType=VARCHAR}, #{item.gender,jdbcType=INTEGER},
       #{item.mail,jdbcType=VARCHAR}, #{item.isLeaderInDept,jdbcType=VARCHAR}, #{item.avatar,jdbcType=VARCHAR},
@@ -79,17 +105,17 @@
       #{item.hideMobile,jdbcType=INTEGER}, #{item.englishName,jdbcType=VARCHAR}, #{item.openUserid,jdbcType=VARCHAR},
       #{item.mainDepartment,jdbcType=BIGINT}, #{item.memberStatus,jdbcType=VARCHAR}, #{item.taskId,jdbcType=VARCHAR},
       #{item.extension,jdbcType=VARCHAR}, #{item.gmtCreated,jdbcType=TIMESTAMP}, #{item.gmtCreator,jdbcType=VARCHAR},
-      #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR}, #{item.deleted,jdbcType=TINYINT}
+      #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR}
       )
     </foreach>
   </insert>
 
   <update id="updateBatchById" parameterType="java.util.List">
-    <foreach collection="memberDOS" item="item" index="index" separator=",">
+    <foreach collection="memberDOS" item="item" index="index" separator=";">
     update member
     <set>
-      <if test="item.orgId != null">
-        org_id = #{item.orgId,jdbcType=VARCHAR},
+      <if test="item.tenantId != null">
+        tenant_id = #{item.tenantId,jdbcType=VARCHAR},
       </if>
       <if test="item.userId != null">
         user_id = #{item.userId,jdbcType=VARCHAR},
@@ -188,5 +214,75 @@
     where id = #{item.id,jdbcType=BIGINT}
     </foreach>
   </update>
+
+  <select id="queryDeptId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where main_department = #{deptId,jdbcType=VARCHAR}
+    and deleted = 0
+
+  </select>
+
+  <select id="queryAllMembersByPage" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where deleted = 0
+
+  </select>
+
+  <select id="queryByNameAndMobile" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where  deleted = 0
+    <if test="memberName != null and memberName != ''">
+      and member_name like concat('%',#{memberName,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="mobile != null and mobile != ''">
+      and mobile = #{mobile,jdbcType=VARCHAR}
+    </if>
+
+  </select>
+
+
+  <select id="queryDeptIdList" parameterType="java.util.List" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where deleted = 0
+    and main_department in
+    <foreach collection="deptIds" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <update id="updateInactiveStatus" parameterType="java.lang.String">
+    update member
+    SET member_status = 'INACTIVE'
+     where tenant_id = #{tenantId} and user_id not in
+     (SELECT user_id from member_received where task_id = #{taskId});
+  </update>
+
+
+  <select id="queryByUserId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+
+    select <include refid="Base_Column_List_Ext"/>
+    from member
+    where user_id = #{userId,jdbcType=VARCHAR}
+    and deleted = 0
+
+  </select>
+
+  <select id="queryMemberNameByTenantIdAndUserIdS" resultMap="BaseResultMapExt">
+    select member_name, user_id
+    from member
+    where tenant_id = #{tenantId} and user_id in
+    <foreach collection="userIdS" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+    and deleted = 0
+  </select>
 
 </mapper>
