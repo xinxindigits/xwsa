@@ -3,7 +3,7 @@
 <mapper namespace="cn.com.xinxin.sass.repository.dao.CustomerDOMapper">
   <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.CustomerDO">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
     <result column="member_user_id" jdbcType="VARCHAR" property="memberUserId" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="customer_name" jdbcType="VARCHAR" property="customerName" />
@@ -26,7 +26,7 @@
     <result column="deleted" jdbcType="TINYINT" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List_Ext">
-    id, org_id, member_user_id, user_id, customer_name, avatar, customer_type, gender, union_id, customer_position,
+    id, tenant_id, member_user_id, user_id, customer_name, avatar, customer_type, gender, union_id, customer_position,
     corp_name, corp_full_name, external_profile, follow_user, status, task_id, extension, 
     gmt_created, gmt_creator, gmt_updated, gmt_updater, deleted
   </sql>
@@ -34,7 +34,7 @@
   <select id="selectByOrgIdAndUserId" resultMap="BaseResultMapExt">
     select <include refid="Base_Column_List_Ext"/>
     from customer
-    where org_id = #{orgId} and user_id in
+    where tenant_id = #{tenantId} and user_id in
     <foreach collection="userIdS" item="item" index="index" open="(" close=")" separator=",">
       #{item}
     </foreach>
@@ -42,7 +42,7 @@
   </select>
 
   <insert id="insertBatch" parameterType="java.util.List">
-    insert into customer (org_id, member_user_id, user_id,
+    insert into customer (tenant_id, member_user_id, user_id,
       customer_name, avatar, customer_type,
       gender, union_id, customer_position,
       corp_name, corp_full_name, external_profile,
@@ -52,7 +52,7 @@
       )
     values
     <foreach collection="customerDOS" item="item" index="index" separator=",">
-      (#{item.orgId,jdbcType=VARCHAR},#{item.memberUserId,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR},
+      (#{item.tenantId,jdbcType=VARCHAR},#{item.memberUserId,jdbcType=VARCHAR}, #{item.userId,jdbcType=VARCHAR},
       #{item.customerName,jdbcType=VARCHAR}, #{item.avatar,jdbcType=VARCHAR}, #{item.customerType,jdbcType=INTEGER},
       #{item.gender,jdbcType=INTEGER}, #{item.unionId,jdbcType=VARCHAR}, #{item.customerPosition,jdbcType=VARCHAR},
       #{item.corpName,jdbcType=VARCHAR}, #{item.corpFullName,jdbcType=VARCHAR}, #{item.externalProfile,jdbcType=LONGVARCHAR},
@@ -67,8 +67,8 @@
     <foreach collection="customerDOS" item="item" index="index" separator=",">
       update customer
       <set>
-        <if test="item.orgId != null">
-          org_id = #{item.orgId,jdbcType=VARCHAR},
+        <if test="item.tenantId != null">
+          tenant_id = #{item.tenantId,jdbcType=VARCHAR},
         </if>
         <if test="item.memberUserId != null">
           member_user_id = #{item.memberUserId,jdbcType=VARCHAR},
@@ -139,7 +139,7 @@
     select id, customer_name, corp_name, corp_full_name
     from customer
     <where>
-      deleted = 0 and org_id = #{orgId}
+      deleted = 0 and tenant_id = #{tenantId}
       <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(memberUserIdS)">
         and member_user_id in
         <foreach collection="memberUserIdS" item="item" index="index" open="(" close=")" separator=",">
@@ -163,7 +163,7 @@
     select count(id)
     from customer
     <where>
-      deleted = 0 and org_id = #{orgId}
+      deleted = 0 and tenant_id = #{tenantId}
       <if test="@org.apache.commons.collections4.CollectionUtils@isNotEmpty(memberUserIdS)">
         and member_user_id in
         <foreach collection="memberUserIdS" item="item" index="index" open="(" close=")" separator=",">

@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.DepartmentReceivedDO">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="task_id" jdbcType="VARCHAR" property="taskId"/>
-        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="org_id" jdbcType="VARCHAR" property="tenantId"/>
         <result column="department_id" jdbcType="BIGINT" property="departmentId"/>
         <result column="department_name" jdbcType="VARCHAR" property="departmentName"/>
         <result column="english_name" jdbcType="VARCHAR" property="englishName"/>
@@ -29,7 +29,7 @@
         gmt_creator)
         values
         <foreach collection="departmentReceivedDOS" item="item" index="index" separator=",">
-            (#{item.taskId,jdbcType=VARCHAR}, #{item.orgId,jdbcType=VARCHAR},
+            (#{item.taskId,jdbcType=VARCHAR}, #{item.tenantId,jdbcType=VARCHAR},
             #{item.departmentId,jdbcType=BIGINT}, #{item.departmentName,jdbcType=VARCHAR},
             #{item.englishName,jdbcType=VARCHAR},
             #{item.parentId,jdbcType=BIGINT}, #{item.departmentOrder,jdbcType=BIGINT},
@@ -40,6 +40,6 @@
     <select id="selectByTaskIdAndOrgId" resultMap="BaseResultMapExt">
         select <include refid="Base_Column_List_Ext"/>
         from department_received
-        where task_id = #{taskId} and org_id =#{orgId} and deleted = 0
+        where task_id = #{taskId} and org_id =#{tenantId} and deleted = 0
     </select>
 </mapper>
