@@ -50,6 +50,7 @@ import cn.com.xinxin.sass.web.form.TenantJobLogQueryForm;
 import cn.com.xinxin.sass.web.vo.*;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonObjectFormatVisitor;
+import com.google.common.collect.Lists;
 import com.xinxinfinance.commons.exception.BusinessException;
 import com.xinxinfinance.commons.idgen.SnowFakeIdGenerator;
 import com.xinxinfinance.commons.util.BaseConvert;
@@ -454,5 +455,20 @@ public class SassTenantRestController extends AclController {
         pageResultVO.setItems(TenantDataSyncLogConvert.convert2TenantDataSyncLogVOList(pageResultDO.getItems()));
 
         return pageResultVO;
+    }
+
+
+
+    @RequestMapping(value = "/routes",method = RequestMethod.GET)
+    @ResponseBody
+    @RequiresRoles(value = {"sass_admin","admin","sass_mng"},logical= Logical.OR)
+    public  Object queryAllTenants(HttpServletRequest request){
+
+
+        List<TenantBaseInfoDO> tenantBaseInfoDOList = this.tenantBaseInfoService.queryAllTenants();
+
+        List<TenantInfoVO> tenantInfoVOS = BaseConvert.convertList(tenantBaseInfoDOList,TenantInfoVO.class);
+
+        return tenantInfoVOS;
     }
 }

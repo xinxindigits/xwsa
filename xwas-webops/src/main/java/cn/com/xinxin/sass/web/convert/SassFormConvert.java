@@ -123,6 +123,13 @@ public class SassFormConvert {
     }
 
 
+    public static List<ResourceVO> convertAuthsDO2VO(List<AuthsDO> resourceDOS){
+        List<ResourceVO> resourceVOList = BaseConvert.convertList(resourceDOS,ResourceVO.class);
+        return resourceVOList;
+    }
+
+
+
     public static List<RoleVO> convertRoleDO2VOs(List<RoleDO> roleDOS){
 
         List<RoleVO> roleVOS = BaseConvert.convertList(roleDOS,RoleVO.class);

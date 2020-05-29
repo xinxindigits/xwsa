@@ -1,4 +1,7 @@
-package cn.com.xinxin.sass.biz.service;
+package cn.com.xinxin.sass.biz.tenant.ops;
+
+
+
 
 /*
  *
@@ -26,42 +29,45 @@ package cn.com.xinxin.sass.biz.service;
  *
  */
 
-import cn.com.xinxin.sass.common.model.PageResultVO;
-import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
+import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
+import com.google.common.collect.Lists;
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.expression.StringValue;
 
 import java.util.List;
 
 /**
- * @author: liuhangzhou
- * @created: 2020/4/21.
+ * @author: zhouyang
+ * @created: 21/05/2020.
  * @updater:
- * @description: 机构基础信息配置
+ * @description: 运营端后台租户隔离的实现
  */
-public interface TenantBaseInfoService {
+public class SassOpsTenantHandler implements TenantHandler {
+
 
     /**
-     * 通过机构id查询
-     * @param tenantId 机构id
-     * @return 机构基础信息
+     * 不需要租户隔离的全局表
      */
-    TenantBaseInfoDO selectByTenantId(String tenantId);
+    private static final List<String> IGNORE_TENANT_TABLES = Lists.newArrayList("user",
+            "tenant_sync_config","qrtz_blob_triggers","qrtz_calendars","qrtz_cron_triggers","qrtz_fired_triggers",
+            "qrtz_job_details","qrtz_locks","qrtz_paused_trigger_grps","qrtz_scheduler_state","qrtz_simple_triggers",
+            "qrtz_simprop_triggers","qrtz_triggers","auths","tenant");
 
-    boolean createOrgBaseInfo(TenantBaseInfoDO tenantBaseInfoDO);
+    @Override
+    public Expression getTenantId(boolean where) {
+        return new StringValue(TenantIdContext.get());
+    }
 
-    boolean updateByOrgId(TenantBaseInfoDO tenantBaseInfoDO);
+    @Override
+    public String getTenantIdColumn() {
+        return "tenant";
+    }
 
-    int deleteByCodes(List<String> codes);
-
-    /**
-     *
-     * @return
-     */
-    PageResultVO<TenantBaseInfoDO> findByCondition(PageResultVO page, TenantBaseInfoDO condition);
-
-    /**
-     *
-     * @return
-     */
-    List<TenantBaseInfoDO> queryAllTenants();
+    @Override
+    public boolean doTableFilter(String tableName) {
+        Boolean match =  IGNORE_TENANT_TABLES.stream().anyMatch((e) -> e.equalsIgnoreCase(tableName));
+        return match;
+    }
 
 }

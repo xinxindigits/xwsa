@@ -60,7 +60,7 @@
             <mvc:exclude-mapping path="/static/**"/>
             <mvc:exclude-mapping path="/check-service.html"/>
             <mvc:exclude-mapping path="/"/>
-            <bean class="cn.com.xinxin.sass.biz.tenant.TenantIdHandlerInterceptor"/>
+            <bean class="cn.com.xinxin.sass.biz.tenant.ops.OpsTenantIdHandlerInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 

@@ -40,6 +40,8 @@ public class HttpRequestUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestUtil.class);
 
+    private static final String OPS_TENANT_ID = "OpsTenantId";
+
     /**
      * 1. Windows
      * 2. Mac OS
@@ -72,6 +74,14 @@ public class HttpRequestUtil {
         String token = request.getHeader(JWTUtil.TOKEN_NAME);
         return token;
     }
+
+
+    public static String getOpsTenantId(HttpServletRequest request){
+        // 重请求信息中获取token
+        String tenantId = request.getHeader(OPS_TENANT_ID);
+        return tenantId;
+    }
+
 
 
 

@@ -61,9 +61,9 @@
     </bean>
 
 
-    <bean id="sassTenantHandler" class="cn.com.xinxin.sass.biz.tenant.SassTenantHandler"/>
+    <bean id="sassTenantHandler" class="cn.com.xinxin.sass.biz.tenant.ops.SassOpsTenantHandler"/>
 
-    <bean id="tenantSqlParser" class="cn.com.xinxin.sass.biz.tenant.SassOpsTenantSqlParser">
+    <bean id="tenantSqlParser" class="cn.com.xinxin.sass.biz.tenant.ops.SassOpsTenantSqlParser">
         <property name="tenantHandler" ref="sassTenantHandler"/>
     </bean>
 
