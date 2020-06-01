@@ -301,6 +301,12 @@ public class SassUserRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"用户创建信息不能为空","用户信息不能为空");
         }
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
         // 创建用户信息不能更新用户密码以及账号信息，如果需要更新密码，走密码重置的方法即可
@@ -312,7 +318,7 @@ public class SassUserRestController extends AclController {
         }
 
         // 查询已经存在的用户信息
-        UserDO existUserDO = this.userService.findByUserAccountAndTenantId(userAccount, sassUserInfo.getTenantId());
+        UserDO existUserDO = this.userService.findByUserAccountAndTenantId(userAccount, opsTenantId);
 
         if(null != existUserDO){
             throw new BusinessException(SassBizResultCodeEnum.DATA_ALREADY_EXIST,"用户账号信息已经存在","用户账号信息已经存在");
@@ -322,7 +328,7 @@ public class SassUserRestController extends AclController {
 
         userCreateDO.setGender(Byte.valueOf(String.valueOf(userForm.getGender())));
 
-        userCreateDO.setTenantId(sassUserInfo.getTenantId());
+        userCreateDO.setTenantId(opsTenantId);
 
         if(StringUtils.isEmpty(userCreateDO.getTenantId())){
             // FIXME: 先默认设置为xinxin租户
