@@ -201,10 +201,6 @@ public class SassTenantRestController extends AclController {
             }
             tenantId = code.toString();
         }
-
-        //设置租户ID
-        TenantIdContext.set(sassUserInfo.getTenantId());
-
         // 参数转换设置
         TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
         tenantBaseInfoDO.setTenantId(tenantId);
@@ -216,7 +212,6 @@ public class SassTenantRestController extends AclController {
 
             boolean result = tenantBaseInfoService.createOrgBaseInfo(tenantBaseInfoDO);
             // 移除操作租户
-            TenantIdContext.remove();
             if(result){
                 return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
             }else {
@@ -225,6 +220,7 @@ public class SassTenantRestController extends AclController {
         }catch (DuplicateKeyException dex){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "编码不能重复","编码不能重复");
         }catch (Exception ex){
+            loger.error("createTenant", ex.getMessage());
             throw new BusinessException(SassBizResultCodeEnum.FAIL, "处理异常，请稍后重试","处理异常，请稍后重试");
         }
 
