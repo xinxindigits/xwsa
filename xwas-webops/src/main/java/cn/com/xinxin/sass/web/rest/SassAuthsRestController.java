@@ -105,6 +105,7 @@ public class SassAuthsRestController extends AclController {
                 resourceVO -> {
                     MenuTreeVO menuTreeVO = new MenuTreeVO();
                     menuTreeVO.setText(resourceVO.getName());
+                    menuTreeVO.setType(resourceVO.getResourceType());
                     menuTreeVO.setParentId(String.valueOf(resourceVO.getParentId()));
                     menuTreeVO.setId(String.valueOf(resourceVO.getId()));
                     menuTreeVO.setCode(resourceVO.getCode());
@@ -125,7 +126,7 @@ public class SassAuthsRestController extends AclController {
 
 
     @SysLog("增加全局资源权限")
-    @RequestMapping(value = "/auth/create",method = RequestMethod.POST)
+    @RequestMapping(value = "/create",method = RequestMethod.POST)
     @ResponseBody
     @RequiresRoles(value = {"sass_admin","admin","sass_mng"},logical= Logical.OR)
     public Object createGlobalAuth(HttpServletRequest request, @RequestBody ResourceForm resourceForm){
@@ -153,7 +154,7 @@ public class SassAuthsRestController extends AclController {
     }
 
     @SysLog("修改全局资源权限")
-    @RequestMapping(value = "/auth/update",method = RequestMethod.POST)
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
     @ResponseBody
     @RequiresRoles(value = {"sass_admin","admin","sass_mng"},logical= Logical.OR)
     public Object updateGlobalAuth(HttpServletRequest request, @RequestBody ResourceForm resourceForm){
@@ -180,7 +181,7 @@ public class SassAuthsRestController extends AclController {
 
 
     @SysLog("删除全局资源权限")
-    @RequestMapping(value = "/auth/delete",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/delete",method = RequestMethod.DELETE)
     @ResponseBody
     @RequiresRoles(value = {"sass_admin","admin","sass_mng"},logical= Logical.OR)
     public Object deleteGlobalAuth(HttpServletRequest request,  @RequestParam String id){
