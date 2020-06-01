@@ -40,7 +40,10 @@ public class HttpRequestUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpRequestUtil.class);
 
-    private static final String OPS_TENANT_ID = "OpsTenantId";
+    /**
+     * 运营端租户ID，放在head里面
+     */
+    private static final String OPS_TENANT_ID = "XTenant";
 
     /**
      * 1. Windows
