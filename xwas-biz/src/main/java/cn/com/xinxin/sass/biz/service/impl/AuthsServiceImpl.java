@@ -66,7 +66,7 @@ public class AuthsServiceImpl implements AuthsService {
     @Override
     public int updateAuths(AuthsDO authsDO) {
 
-        int result = this.authsDOMapper.updateByPrimaryKey(authsDO);
+        int result = this.authsDOMapper.updateByPrimaryKeySelective(authsDO);
         return result;
     }
 

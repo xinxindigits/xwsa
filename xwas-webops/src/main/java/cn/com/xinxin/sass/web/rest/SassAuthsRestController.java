@@ -105,6 +105,7 @@ public class SassAuthsRestController extends AclController {
                 resourceVO -> {
                     MenuTreeVO menuTreeVO = new MenuTreeVO();
                     menuTreeVO.setText(resourceVO.getName());
+                    menuTreeVO.setName(resourceVO.getName());
                     menuTreeVO.setType(resourceVO.getResourceType());
                     menuTreeVO.setParentId(String.valueOf(resourceVO.getParentId()));
                     menuTreeVO.setId(String.valueOf(resourceVO.getId()));
@@ -170,7 +171,6 @@ public class SassAuthsRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
         String userAccount = sassUserInfo.getAccount();
-
         authsDO.setGmtUpdater(userAccount);
 
         int result = this.authsService.updateAuths(authsDO);

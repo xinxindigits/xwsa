@@ -44,6 +44,8 @@ public class MenuTreeVO {
      */
     private String text;
 
+    private String name;
+
     private String type;
 
     /**
@@ -194,5 +196,14 @@ public class MenuTreeVO {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
