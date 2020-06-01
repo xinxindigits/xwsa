@@ -31,6 +31,7 @@ import cn.com.xinxin.sass.biz.SpringContextHolder;
 import cn.com.xinxin.sass.biz.schedule.service.impl.QuartzJobServiceImpl;
 
 import cn.com.xinxin.sass.biz.service.impl.TenantDataSyncConfigServiceImpl;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
@@ -62,10 +63,16 @@ public class QuartzJobInitialization {
         if (CollectionUtils.isNotEmpty(tenantDataSyncConfigDOS)) {
             for (TenantDataSyncConfigDO tenantDataSyncConfigDO : tenantDataSyncConfigDOS) {
                 try {
+                    // 启动任务之前设置租户ID
+                    TenantIdContext.set(tenantDataSyncConfigDO.getTenantId());
                     SpringContextHolder.getBean(QuartzJobServiceImpl.class)
                             .startJob(tenantDataSyncConfigDO.getTenantId(), tenantDataSyncConfigDO.getTaskType(),
                             tenantDataSyncConfigDO.getCronExpression());
+                    // 完成任务移除租户ID
+                    TenantIdContext.remove();
                 } catch (Exception e) {
+                    // 异常任务移除租户ID
+                    TenantIdContext.remove();
                     LOGGER.info("Quartz job initialization -- failed to start scheduler, tenantId[{}], taskType[{}]",
                             tenantDataSyncConfigDO.getTenantId(), tenantDataSyncConfigDO.getTaskType());
                 }

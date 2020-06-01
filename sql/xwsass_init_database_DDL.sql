@@ -4,6 +4,7 @@
 CREATE TABLE `customer`
 (
   `id`                bigint(20)                     NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `tenant_id`         varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
   `member_user_id`    varchar(64)                    NOT NULL COMMENT '成员user_id',
   `user_id`           varchar(64) CHARACTER SET utf8 NOT NULL COMMENT '企业微信外部成员UserID',
@@ -39,6 +40,7 @@ CREATE TABLE `customer_received`
   `id`                bigint(20)  NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `task_id`           varchar(64) NOT NULL COMMENT '同任务执行流水号',
   `tenant_id`         varchar(64) NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `member_user_id`    varchar(64) NOT NULL COMMENT '成员user_id',
   `user_id`           varchar(64) NOT NULL COMMENT '企业微信外部成员UserID',
   `customer_name`     varchar(64) NOT NULL COMMENT '客户名称',
@@ -71,6 +73,7 @@ CREATE TABLE `department`
 (
   `id`               bigint(20)                      NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `tenant_id`        varchar(64) CHARACTER SET utf8  NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `department_id`    bigint(20)                      NOT NULL COMMENT '企业微信部门id',
   `department_name`  varchar(256) CHARACTER SET utf8 NOT NULL COMMENT '部门名称',
   `english_name`     varchar(256) CHARACTER SET utf8          DEFAULT NULL COMMENT '部门英文名称',
@@ -99,6 +102,7 @@ CREATE TABLE `department_received`
   `id`               bigint(20)                      NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `task_id`          varchar(64) CHARACTER SET utf8  NOT NULL COMMENT '同任务执行流水号',
   `tenant_id`        varchar(64) CHARACTER SET utf8  NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `department_id`    bigint(20)                      NOT NULL COMMENT '企业微信部门id',
   `department_name`  varchar(256) CHARACTER SET utf8 NOT NULL COMMENT '部门名称',
   `english_name`     varchar(256) CHARACTER SET utf8          DEFAULT NULL COMMENT '部门英文名称',
@@ -124,6 +128,7 @@ CREATE TABLE `group_chat`
 (
   `id`          bigint(20)  NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `tenant_id`   varchar(64) NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `chat_name`   varchar(255)         DEFAULT NULL COMMENT '群聊名称',
   `chat_id`     varchar(64) NOT NULL COMMENT '群聊id',
   `owner`       varchar(64) NOT NULL COMMENT '群主',
@@ -152,6 +157,7 @@ CREATE TABLE `member`
 (
   `id`                 bigint(20)                      NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `tenant_id`          varchar(64) CHARACTER SET utf8  NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `user_id`            varchar(64) CHARACTER SET utf8  NOT NULL COMMENT '企业微信成员UserID',
   `member_name`        varchar(64)                     NOT NULL COMMENT '成员名称',
   `mobile`             varchar(32) CHARACTER SET utf8           DEFAULT NULL COMMENT '手机号码',
@@ -198,6 +204,7 @@ CREATE TABLE `member_received`
   `id`                 bigint(20)   NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `task_id`            varchar(64)  NOT NULL COMMENT '同任务执行流水号',
   `tenant_id`          varchar(64)  NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `user_id`            varchar(64)  NOT NULL COMMENT '企业微信成员UserID',
   `member_name`        varchar(64)  NOT NULL COMMENT '成员名称',
   `mobile`             varchar(32)           DEFAULT NULL COMMENT '手机号码',
@@ -241,6 +248,7 @@ CREATE TABLE `msg_record`
 (
   `id`           bigint(20)   NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `tenant_id`    varchar(64)  NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `seq_id`       bigint(20)   NOT NULL COMMENT '对应获取消息时，每条消息顺序号',
   `msg_id`       varchar(64)  NOT NULL COMMENT '消息的唯一标识，企业可以使用此字段进行消息去重',
   `action`       varchar(32)  NOT NULL COMMENT '消息动作，目前有send(发送消息)/recall(撤回消息)/switch(切换企业日志)三种类型。',
@@ -273,6 +281,7 @@ CREATE TABLE `oplog`
 (
   `id`          bigint(20) NOT NULL AUTO_INCREMENT,
   `tenant_id`   varchar(32)         DEFAULT '',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `ip`          varchar(64)         DEFAULT '' COMMENT '操作对应的IP地址',
   `operation`   varchar(1024)       DEFAULT '' COMMENT '操作对应的类型：CREATE/DELETE/QUERY/UPDATE',
   `account`     varchar(128)        DEFAULT '' COMMENT '操作账号',
@@ -302,6 +311,7 @@ CREATE TABLE `organization`
   `id`          bigint(20)    NOT NULL AUTO_INCREMENT COMMENT '组织机构id',
   `code`        varchar(64)   NOT NULL COMMENT '组织机构编号',
   `tenant_id`   varchar(64)            DEFAULT NULL COMMENT '租户编码',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `parent_id`   bigint(20)             DEFAULT '0' COMMENT '父级组织机构id',
   `name`        varchar(128)  NOT NULL COMMENT '组织机构名字',
   `org_type`    varchar(16)   NOT NULL COMMENT '组织结构类型',
@@ -559,6 +569,7 @@ CREATE TABLE `resource`
 (
   `id`            bigint(20)                   NOT NULL AUTO_INCREMENT,
   `tenant_id`     varchar(32)                           DEFAULT NULL COMMENT '租户编码',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `code`          varchar(32)                           DEFAULT NULL COMMENT '资源编码',
   `parent_id`     bigint(20)                   NOT NULL COMMENT '父级资源id',
   `resource_type` varchar(16)                           DEFAULT NULL COMMENT 'menu:菜单,function:功能',
@@ -588,6 +599,7 @@ CREATE TABLE `role`
 (
   `id`          bigint(20)   NOT NULL AUTO_INCREMENT,
   `tenant_id`   varchar(32)           DEFAULT NULL COMMENT '租户编码',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `code`        varchar(32)           DEFAULT NULL COMMENT '角色编码',
   `name`        varchar(128) NOT NULL COMMENT '角色名称',
   `role_type`   varchar(64)  NOT NULL COMMENT '角色类型',
@@ -611,6 +623,7 @@ CREATE TABLE `role_resource`
 (
   `id`            bigint(20)    NOT NULL AUTO_INCREMENT,
   `tenant_id`     varchar(32)            DEFAULT '' COMMENT '租户编码',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `role_code`     varchar(32)   NOT NULL COMMENT '角色编码',
   `role_name`     varchar(128)  NOT NULL COMMENT '角色名称',
   `resource_code` varchar(32)   NOT NULL COMMENT '资源编码',
@@ -634,6 +647,7 @@ CREATE TABLE `tags`
 (
   `id`          bigint(20)   NOT NULL AUTO_INCREMENT,
   `tenant_id`   varchar(32)  NOT NULL,
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `code`        varchar(32)           DEFAULT NULL COMMENT '标签编码',
   `name`        varchar(128) NOT NULL COMMENT '标签名称',
   `description` varchar(512)          DEFAULT '' COMMENT '标签描述',
@@ -658,6 +672,7 @@ CREATE TABLE `tags_relations`
 (
   `id`          bigint(20)   NOT NULL AUTO_INCREMENT,
   `tenant_id`   varchar(32)           DEFAULT NULL COMMENT '对应的租户ID',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `tag_id`      varchar(32)           DEFAULT NULL COMMENT '标签ID',
   `key_id`      varchar(128) NOT NULL COMMENT '标签对应的关系key_id',
   `key_name`    varchar(512) NOT NULL DEFAULT '' COMMENT '标签对应的关系key_name，customer: 对应客户\\nmsg:对应消息\\nother:其他',
@@ -682,6 +697,7 @@ CREATE TABLE `tenant`
 (
   `id`                      bigint(20)   NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `tenant_id`               varchar(64)  NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `tenant_name`             varchar(256) NOT NULL DEFAULT '' COMMENT '机构名称',
   `corp_id`                 varchar(256) NOT NULL COMMENT '企业微信用户corpid， 加密保存',
   `address_list_secret`     varchar(256)          DEFAULT NULL COMMENT '企业微信通讯录secret， 加密保存',
@@ -710,6 +726,7 @@ CREATE TABLE `tenant_sync_config`
 (
   `id`              bigint(20)  NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `tenant_id`       varchar(64) NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `task_type`       varchar(32) NOT NULL COMMENT '任务类型',
   `cron_expression` varchar(64) NOT NULL,
   `fetched_seq_no`  bigint(20)  NOT NULL DEFAULT '0' COMMENT '对应企业微信消息序号seq，每次获取时递增；初始为0，每次获取时从此顺序号+1开始；',
@@ -740,6 +757,7 @@ CREATE TABLE `tenant_sync_excp`
   `excp_id`            varchar(64) NOT NULL COMMENT '异常流水号',
   `task_id`            varchar(64) NOT NULL COMMENT '同任务执行流水号',
   `tenant_id`          varchar(64) NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `task_type`          varchar(32) NOT NULL COMMENT '任务类型 CONTACT_SYNC – 通讯录同步； MESSAGE_SYNC  - 会话同步；',
   `excp_step`          varchar(32) NOT NULL COMMENT 'RECEIVE_STEP – 获取数据步骤 IMPORT_STEP  - 导入步骤',
   `excp_msg_start_seq` bigint(20)           DEFAULT '0' COMMENT '消息异常开始顺序号',
@@ -769,6 +787,7 @@ CREATE TABLE `tenant_sync_log`
   `id`               bigint(20)  NOT NULL AUTO_INCREMENT COMMENT '数据库主键',
   `task_id`          varchar(64) NOT NULL COMMENT '自动生成的唯一任务流水号，32位流水号‘TK’+数字流水号；',
   `tenant_id`        varchar(64) NOT NULL DEFAULT '' COMMENT '为机构自动生成的唯一编码，32位流水号‘OG’+数字流水号',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `task_type`        varchar(32) NOT NULL COMMENT '任务类型 　CONTACT_SYNC – 通讯录同步；MESSAGE_SYNC  - 会话同步；',
   `task_date`        varchar(10) NOT NULL COMMENT '任务日期yyyyMMdd',
   `task_time`        varchar(32) NOT NULL COMMENT '任务运行时间yyyyMMdd hh:mm:ss',
@@ -800,6 +819,7 @@ CREATE TABLE `user`
 (
   `id`          bigint(20)    NOT NULL AUTO_INCREMENT,
   `tenant_id`   varchar(64)            DEFAULT NULL COMMENT '租户编码',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `account`     varchar(64)   NOT NULL,
   `name`        varchar(64)   NOT NULL COMMENT '用户名字',
   `gender`      tinyint(2)    NOT NULL COMMENT '性别 0-男 1-女',
@@ -827,6 +847,7 @@ CREATE TABLE `user_org`
 (
   `id`           bigint(20)   NOT NULL AUTO_INCREMENT,
   `tenant_id`    varchar(32)  NOT NULL DEFAULT '' COMMENT '租户ID',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `org_code`     varchar(32)  NOT NULL DEFAULT '' COMMENT '组织code',
   `org_name`     varchar(128) NOT NULL DEFAULT '' COMMENT '角色名称',
   `user_account` varchar(16)  NOT NULL DEFAULT '' COMMENT '用户account',
@@ -851,6 +872,7 @@ CREATE TABLE `user_role`
 (
   `id`           bigint(20)   NOT NULL AUTO_INCREMENT,
   `tenant_id`    varchar(32)           DEFAULT '' COMMENT '租户编码',
+  `tenant` varchar(32) DEFAULT NULL COMMENT '租户编码',
   `role_code`    varchar(32)  NOT NULL COMMENT '角色id',
   `role_name`    varchar(128) NOT NULL COMMENT '角色名称',
   `user_account` varchar(16)  NOT NULL DEFAULT '' COMMENT '用户id',
@@ -864,5 +886,27 @@ CREATE TABLE `user_role`
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8 COMMENT ='用户与角色';
+
+
+CREATE TABLE `auths` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `code` varchar(32) DEFAULT NULL COMMENT '资源编码',
+  `parent_id` bigint(20) NOT NULL COMMENT '父级资源id',
+  `resource_type` varchar(16) DEFAULT NULL COMMENT 'menu:菜单,function:功能',
+  `name` varchar(128) NOT NULL COMMENT '资源名称',
+  `authority` varchar(128) NOT NULL DEFAULT '' COMMENT '对应的权限值,用于权限判断',
+  `url` varchar(128) NOT NULL DEFAULT '' COMMENT '资源路径',
+  `root` tinyint(1) unsigned zerofill NOT NULL COMMENT '是否根目录',
+  `gmt_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `gmt_creator` varchar(64) NOT NULL DEFAULT '' COMMENT '创建人',
+  `gmt_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `gmt_updater` varchar(64) NOT NULL DEFAULT '' COMMENT '更新人',
+  `extension` varchar(4000) NOT NULL DEFAULT '' COMMENT '扩展字段',
+  `deleted` tinyint(1) NOT NULL DEFAULT '0' COMMENT '软删除标志,0表示不删除；1表示删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_code` (`code`),
+  KEY `uk_url` (`url`),
+  KEY `uk_auth` (`authority`)
+) ENGINE=InnoDB AUTO_INCREMENT=500 DEFAULT CHARSET=utf8 COMMENT='资源';
 
 

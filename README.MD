@@ -61,14 +61,16 @@
       
       1. clone代码到本地,修改必要的配置，如mysql数据库配置, Redis配置, Zookeeper配置等.具体位置在xwas-web的resources目录下面
       ![xwas-config](./doc/image/xwas_web_config.jpg)
-      2. 执行编译打包。可以用下面的命令(mvn clean install -U -Pprod -X -Dmaven.skip.test=true)绕过单元测试执行打包，也可以导入到编辑工具如IDEA等打包即可.
-      3. xwas-web target目录下生成的war包拷贝到已经配置好的tomcat服务器对应的webapp目录下启动即可
-      4. 如果有需要修改tomcat的配置，如context配置，路径等可以参考tomcat官网相关的说明.
-      5. **特别说明: 在启动应用之前需要初始化相关的数据信息以及配置好企业微信的SDK**。
-      6. 新心内部公共技术包(common-lib)放在doc目录下(xinxin-com-lib.zip)。如果在本地执行编译，或者二次开发的时候，需要将该公共包解压放到自己的maven类库里面。如下图路径等
+      2. 新心内部公共技术包(common-lib)放在doc目录下(xinxin-com-lib.zip)。如果在本地执行编译，或者二次开发的时候，需要将该公共包解压放到自己的maven类库里面。如下图路径等
          ![common-lib](./doc/image/common-lib.jpg)
-      7. 前端部署参见下面的前端部署内容
-      8. **特别说明:在部署应用之前请执行数据初始化任务，详情参见数据初始化部分**
+      3. 执行编译打包。可以用下面的命令(mvn clean install -U -Pprod -X -Dmaven.skip.test=true)绕过单元测试执行打包，也可以导入到编辑工具如IDEA等打包即可.
+      4. xwas-web target目录下生成的war包拷贝到已经配置好的tomcat服务器对应的webapp目录下启动即可
+      5. 如果有需要修改tomcat的配置，如context配置，路径等可以参考tomcat官网相关的说明.
+      6. **特别说明: 在启动应用之前需要初始化相关的数据信息以及配置好企业微信的SDK**。
+      7. 如果使用tomcat。可以配置一下具体的工程路径，让访问路径不加apname. 如下图:
+         ![tomcat](./doc/image/tomcat.jpg)
+      8. 前端部署参见下面的前端部署内容
+      9. **特别说明:在部署应用之前请执行数据初始化任务，详情参见数据初始化部分**
       
    2. 前端项目部署
    
@@ -95,7 +97,7 @@
   
    1. 设置好数据库之后，请执行数据新建表的sql,具体脚本在/sql/xwsass_init_database_DDL.sql。
    2. 执行第一步之后请执行数据初始化脚本sql,具体在/sql/xwsass_init_database_DML.sql。
-   3. 初始化后的数据登陆管理员账号即可: admin001/admin001
+   3. 初始化后的数据登陆管理员账号即可: admin001/admin001, 另外一个租户: alibabauser01/alibabauser01
    4. **特别说明：由于quartz的自带特性，数据初始化后，需要调整mysql的配置，让其忽略大小写敏感**
    
    ``
@@ -113,6 +115,34 @@
 
 ## 二次开发说明
 
+   1. 开发技术规范说明:
+      
+      - 开发代码遵循Java开发的规范
+      - 数据库使用MySQL, Mybatis生产的mapper文件以及XML文件分为mapper以及ext目录下面的扩展mapper，ext目录主要为开发人员自己编写的相关sql
+      - SOA调用使用Dubbo。并且已经将Dubbo的接口调用做了相应的封装，返回结构包含SingleResult等内容，具体参见API下面的内容实现等
+      - 日志等统一配置在logback.xml文件下面。可以根据具体的需要做相应的调整。
+      - 另外针对业务异常错误的封装: 在异常情况下统一抛出BusinessException。并且设置对应的错误编码即可。aop拦截器回自动拦截这个异常，作出相应的处理。
+      - 获取到登陆用户，只需要在继承AclController，调用getSassUserInfo方法即可。可以参见具体已经实现的rest接口里面的方法
+      - JWT Token中已经带了用户的账号以及租户信息，可以直接在token解码之后拿到。同时前后端在http head里面统一使用"XToken"作为token字段
+      
+   2. 权限菜单功能开发说明:
+      
+      - 如果要新增权限资源菜单等功能。需要在全局权限表(auths)注册对应的权限值，才可以在资源权限管理的菜单下面找到对应的权限
+      - 如果要设置某个接口要求某个权限，可以使用RequiresPermissions注解即可。如果不需要权限验证，忽略即可
+      - 返回结果的封装。针对与rest接口已经做了数据格式的封装，因此无需特别处理。具体格式如下:
+      
+      ``
+       {
+              "code":"SUCCESS",
+              "message":"成功",
+              "data":{}
+       }
+      ``
+      
+   3. Rest接口开发说明:
+   
+      1. Rest接口通常统一返回Object对象。AOP返回结构拦截器自动封装为必要的格式。接收POST请求里面的参数基本都Form表单对象的方式接收。
+      2. 基本路径设置等遵循Rest命名规则。
 
 ## 界面展示
 
@@ -124,7 +154,7 @@
    6. 租户机构管理![tenant_mng](./doc/image/xwas_tenant_mng.jpg)
    7. 标签功能![tag_mng](./doc/image/xwas_index_tag_mng.jpg)
    8. 定时任务配置![task_mng](./doc/image/xwas_index_task_mng.jpg)
-   9. 企业微信部门信息查看![weixin_dept_mng](./doc/image/xwas_index_weixin_dept_mng.jpg)
+   9. 企业微信部门信息查看![weixin_dept_mng](./doc/image/wechat-dept-mng.jpg)
    11. 企业微信员工查看![weixin_staff_mng](./doc/image/xwas_index_wexin_staff_mng.jpg)
    12. 企业微信客户信息查看![weixin_cust_mng](./doc/image/xwas_index_weixin_cust_mng.jpg)
    13. 企业微信消息内容查看![weixin_msg_mng](./doc/image/xwas_wexin_msg_mng.jpg)
@@ -145,3 +175,9 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ## 额外补充协议
 Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits was obtained.
 Neither the name of the xinxin digits; nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+
+## 联系方式
+
+如在安装，二次开发中遇到相关的问题，可以扫描下面的二维码询问:
+![qrcode](/doc/image/caontact-qrcode.jpg)

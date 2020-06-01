@@ -164,12 +164,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDO findByUserAccountAndTenantId(String account, String tenantId) {
+        return userDOMapper.selectByAccountAndTenentId(account,tenantId);
+    }
+
+
+    @Override
     public UserDO findByUserAccount(String account) {
         return userDOMapper.selectByAccount(account);
     }
 
     @Override
     public List<RoleDO> findRolesByAccount(String account) {
+
         UserDO userDO = findByUserAccount(account);
 
         if (userDO != null){
@@ -254,7 +261,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public PageResultVO<UserDO> findByConditionPage(PageResultVO page, QueryUserConditionVO queryUserConditionVO) {
+    public PageResultVO<UserDO> findByConditionPageAndTenantId(PageResultVO page,
+                                                               QueryUserConditionVO queryUserConditionVO,
+                                                               String tenantId) {
         LOGGER.info("QueryUserConditionVO:{}",JSONObject.toJSONString(queryUserConditionVO));
         com.github.pagehelper.Page doPage = PageHelper.startPage(page.getPageNumber(),page.getPageSize());
 
@@ -265,7 +274,10 @@ public class UserServiceImpl implements UserService {
         if(queryUserConditionVO.getStatus() != null){
             userDO.setStatus(queryUserConditionVO.getStatus().byteValue());
         }
-        List<UserDO> userDOS = userDOMapper.findByCondition(userDO, queryUserConditionVO.getStartTime(), queryUserConditionVO.getEndTime());
+        List<UserDO> userDOS = userDOMapper.findByConditionAndTenantId(userDO,
+                queryUserConditionVO.getStartTime(),
+                queryUserConditionVO.getEndTime(),
+                tenantId);
 
         PageResultVO<UserDO> result = new PageResultVO<>();
         result.setPageNumber(page.getPageNumber());
