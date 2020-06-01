@@ -57,6 +57,7 @@
             <mvc:exclude-mapping path="/hello"/>
             <mvc:exclude-mapping path="/register"/>
             <mvc:exclude-mapping path="/unauthorized"/>
+            <mvc:exclude-mapping path="/tenant/create"/>
             <mvc:exclude-mapping path="/static/**"/>
             <mvc:exclude-mapping path="/check-service.html"/>
             <mvc:exclude-mapping path="/"/>

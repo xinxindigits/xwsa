@@ -34,6 +34,7 @@ import cn.com.xinxin.sass.biz.service.OrganizationService;
 import cn.com.xinxin.sass.biz.service.RoleService;
 import cn.com.xinxin.sass.biz.service.UserRoleService;
 import cn.com.xinxin.sass.biz.service.UserService;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.biz.vo.QueryUserConditionVO;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
@@ -102,6 +103,7 @@ public class SassUserRestController extends AclController {
     @ResponseBody
     @RequiresRoles(value = {"sass_admin","admin","sass_mng"},logical= Logical.OR)
     public Object pageQueryUser(@RequestBody UserForm userForm, HttpServletRequest request){
+
         if(userForm == null){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "参数不能为空");
         }
@@ -109,13 +111,19 @@ public class SassUserRestController extends AclController {
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         PageResultVO page = new PageResultVO();
         page.setPageNumber((userForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : userForm.getPageIndex());
         page.setPageSize((userForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : userForm.getPageSize());
         QueryUserConditionVO queryUserConditionVO = BaseConvert.convert(userForm, QueryUserConditionVO.class);
 
         PageResultVO<UserDO> pageUser = userService.findByConditionPageAndTenantId(page,
-                queryUserConditionVO, sassUserInfo.getTenantId());
+                queryUserConditionVO, opsTenantId);
 
         PageResultVO<UserInfoVO> resultVO = BaseConvert.convert(pageUser, PageResultVO.class);
 
@@ -150,7 +158,14 @@ public class SassUserRestController extends AclController {
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
-        UserDO userDO = this.userService.findByUserAccountAndTenantId(account,sassUserInfo.getTenantId());
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
+
+        UserDO userDO = this.userService.findByUserAccountAndTenantId(account,opsTenantId);
 
         UserInfoVO userInfoVO = BaseConvert.convert(userDO, UserInfoVO.class);
         userInfoVO.setGender(userDO.getGender() == null ? null : userDO.getGender().intValue());
@@ -186,9 +201,16 @@ public class SassUserRestController extends AclController {
     @ResponseBody
     public Object queryLoginUserByMe(HttpServletRequest request){
 
+
+        /**
+         * 用户查询自身信息，需要将租户ID设置为自己的
+         */
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
         log.info("queryUserByAccount, account = {}",sassUserInfo.getAccount());
+
+        //设置租户ID
+        TenantIdContext.set(sassUserInfo.getTenantId());
 
         UserDO userDO = this.userService.findByUserAccountAndTenantId(sassUserInfo.getAccount(),
                 sassUserInfo.getTenantId());
@@ -219,6 +241,8 @@ public class SassUserRestController extends AclController {
         List<OrgSimpleVO> userOrgVOList = SassFormConvert.convertOrgDO2VOList(userOrgDOList);
         userInfoVO.setOrgs(userOrgVOList);
 
+        // 移除租户操作ID
+        TenantIdContext.remove();
         return userInfoVO;
 
     }

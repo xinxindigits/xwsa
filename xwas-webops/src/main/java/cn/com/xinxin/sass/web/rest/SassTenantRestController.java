@@ -34,6 +34,7 @@ import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncLogService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.enums.TaskTypeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;
@@ -96,7 +97,7 @@ public class SassTenantRestController extends AclController {
 
     private final TenantDataSyncLogService tenantDataSyncLogService;
 
-    private static final String OG = "OG";
+    private static final String OG = "TD";
 
     private static final String DATE_FORMAT_NOSIGN = "yyyyMMdd";
 
@@ -132,13 +133,21 @@ public class SassTenantRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         PageResultVO page = new PageResultVO();
         page.setPageSize(tenantForm.getPageSize());
         page.setPageNumber(tenantForm.getPageIndex());
 
         TenantBaseInfoDO condition = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
         condition.setTenantName(tenantForm.getName());
-        condition.setTenantId(tenantForm.getCode());
+        // 设置操作的租户编码
+        //condition.setTenantId(tenantForm.getCode());
+        condition.setTenantId(opsTenantId);
         PageResultVO<TenantBaseInfoDO> result = tenantBaseInfoService.findByCondition(page, condition);
         PageResultVO<TenantInfoVO> resultVO = BaseConvert.convert(result,PageResultVO.class);
         resultVO.setItems(BaseConvert.convertList(result.getItems(),TenantInfoVO.class));
@@ -178,22 +187,24 @@ public class SassTenantRestController extends AclController {
         if(null == tenantForm){
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"创建租户参数不能为空","创建租户参数不能为空");
         }
-
         loger.info("SassTenantRestController,createTenant, tenantForm:{}",JSONObject.toJSONString(tenantForm));
         SassUserInfo sassUserInfo = this.getSassUser(request);
-        String tenantId = sassUserInfo.getTenantId();
+        String tenantId =  "";
         if(StringUtils.isEmpty(tenantId)){
             StringBuilder code = new StringBuilder();
             code.append(OG);
             try {
                 code.append(SnowFakeIdGenerator.getInstance().generateLongId());
             }catch (Exception e){
-                loger.error("雪花算法生成id失败");
+                loger.error("生成id失败");
                 throw new BusinessException(SassBizResultCodeEnum.GENERATE_ID_ERROR);
             }
             tenantId = code.toString();
-            sassUserInfo.setTenantId(tenantId);
         }
+
+        //设置租户ID
+        TenantIdContext.set(sassUserInfo.getTenantId());
+
         // 参数转换设置
         TenantBaseInfoDO tenantBaseInfoDO = BaseConvert.convert(tenantForm, TenantBaseInfoDO.class);
         tenantBaseInfoDO.setTenantId(tenantId);
@@ -204,13 +215,13 @@ public class SassTenantRestController extends AclController {
         try {
 
             boolean result = tenantBaseInfoService.createOrgBaseInfo(tenantBaseInfoDO);
-
+            // 移除操作租户
+            TenantIdContext.remove();
             if(result){
                 return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
             }else {
                 return SassBizResultCodeEnum.FAIL.getAlertMessage();
             }
-
         }catch (DuplicateKeyException dex){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "编码不能重复","编码不能重复");
         }catch (Exception ex){
@@ -247,7 +258,6 @@ public class SassTenantRestController extends AclController {
         }else {
             return SassBizResultCodeEnum.FAIL.getAlertMessage();
         }
-
     }
 
     @RequestMapping(value = "/delete",method = RequestMethod.POST)
