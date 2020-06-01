@@ -27,7 +27,6 @@
 import {
   getBreadCrumbList,
   getHomeRoute,
-  getMenuByRouter,
   getNextRoute,
   routeEqual,
   setTagNavListInLocalstorage,
@@ -35,11 +34,21 @@ import {
   getRouteTitleHandled,
   routeHasExist
 } from "@/libs/tools";
-import { formatMenu } from "@/router/routers";
+import VueRouter from "vue-router";
+// Vue.use(VueRouter);
+import { formatMenu, mngRouters } from "@/router/routers";
+import routes from "@/router/routers";
 import { getMenuInfo } from "@/api";
 import router from "@/router";
-import routers from "@/router/routers";
 import config from "@/config";
+const NOT_FOUND_ROUTER = {
+  path: "*",
+  name: "error_404",
+  meta: {
+    hideInMenu: true
+  },
+  component: () => import("@/views/error-page/404.vue")
+};
 const { homeName } = config;
 const closePage = (state, route) => {
   const nextRoute = getNextRoute(state.tagNavList, route);
@@ -51,18 +60,21 @@ const closePage = (state, route) => {
 export default {
   state: {
     xTenant: "",
+    hasRefreshXTenant: false,
     homeRoute: {},
     breadCrumbList: [],
     hasGetRouter: false,
     routers: [],
     tagNavList: []
   },
-  getters: {
-    menuList: state => getMenuByRouter(routers.concat(state.routers))
-  },
   mutations: {
     setXTenant(state, tenant) {
       state.xTenant = tenant;
+      console.log("setXTenant", tenant);
+    },
+    setHasRefreshXTenant(state, status = false) {
+      console.log("setHasRefreshXTenant", status);
+      state.hasRefreshXTenant = status;
     },
     setHomeRoute(state, routes) {
       state.homeRoute = getHomeRoute(routes, homeName);
@@ -112,16 +124,41 @@ export default {
     }
   },
   actions: {
-    getMenuInfo({ commit }) {
+    upateXtenant({ commit, dispatch }, val) {
       return new Promise((resolve, reject) => {
-        getMenuInfo()
-          .then(res => {
-            let routers = formatMenu(res.data);
-            commit("setRouters", routers);
-            commit("setHasGetRouter", true);
-            resolve(routers);
+        commit("setHasRefreshXTenant", false);
+        commit("setXTenant", val);
+        dispatch("getMenuInfo")
+          .then(routers => {
+            const newRouter = new VueRouter({
+              routes,
+              mode: config.routerModel
+            });
+            router.matcher = newRouter.matcher;
+            router.addRoutes(routers.concat([NOT_FOUND_ROUTER]));
+            commit("setHasRefreshXTenant", true);
+
+            resolve();
           })
           .catch(reject);
+      });
+    },
+    getMenuInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        if (state.xTenant) {
+          getMenuInfo()
+            .then(res => {
+              let routers = formatMenu(res.data);
+              commit("setRouters", routers);
+              commit("setHasGetRouter", true);
+              resolve(routers);
+            })
+            .catch(reject);
+        } else {
+          commit("setRouters", mngRouters);
+          commit("setHasGetRouter", true);
+          resolve(mngRouters);
+        }
       });
     }
   }

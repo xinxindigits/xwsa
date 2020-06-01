@@ -1,9 +1,30 @@
 <template>
-  <div class="home"></div>
+  <div class="home">
+    <mng-home v-if="!showXTenant"></mng-home>
+  </div>
 </template>
 
 <script>
+import mngHome from "@/views/manage/manage";
+import { mapGetters } from "vuex";
 export default {
-  name: "Home"
+  name: "Home",
+  components: {
+    mngHome
+  },
+  computed: {
+    ...mapGetters(["hasRefreshXTenant", "xTenant"]),
+    showXTenant() {
+      return this.hasRefreshXTenant && !!this.xTenant;
+    }
+  },
+  watch: {
+    hasRefreshXTenant(val) {
+      console.log("home hasRefreshXTenant", val);
+    },
+    xTenant(val) {
+      console.log("home xTenant", val);
+    }
+  }
 };
 </script>

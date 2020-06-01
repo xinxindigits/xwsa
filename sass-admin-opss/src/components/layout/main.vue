@@ -35,6 +35,7 @@
             :list="breadCrumbList"
             slot="nav"
           />
+          <toggle-manage></toggle-manage>
           <user :user-avatar="userAvatar" :account="account"></user>
         </header-bar>
       </Header>
@@ -64,10 +65,13 @@ import HeaderBar from "./components/header-bar";
 import TagsNav from "./components/tags-nav";
 import User from "./components/user";
 import SideMenu from "./components/side-menu";
+import ToggleManage from "./components/manage/toggle";
 import maxLogo from "@/assets/images/logo-bg.png";
 import minLogo from "@/assets/images/logo-min.png";
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import routers from "@/router/routers";
+// import { mngRouters } from "@/router/routers";
+
 import bread_crumb from "./components/custom-bread-crumb/mixin";
 import { getNewTagList, routeEqual } from "@/libs/tools";
 import "./main.less";
@@ -78,11 +82,20 @@ export default {
     HeaderBar,
     TagsNav,
     User,
-    SideMenu
+    SideMenu,
+    ToggleManage
   },
   computed: {
+    ...mapGetters(["hasRefreshXTenant", "xTenant"]),
+    showToggleXTenant() {
+      return this.hasRefreshXTenant && this.xTenant;
+    },
     menuList() {
+      // if (this.xTenant) {
       return this.$store.getters.menuList;
+      // } else {
+      //   return mngRouters;
+      // }
     },
     tagNavList() {
       return this.$store.state.app.tagNavList;

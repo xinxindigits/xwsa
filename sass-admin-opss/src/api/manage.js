@@ -25,7 +25,20 @@
  */
 
 import axios from "@/libs/http";
-
+//获取全局权限资源列表树状结构接口
+export const mngGetAuthsTree = () => {
+  return axios.request({
+    url: "/auths/tree",
+    method: "get"
+  });
+};
+export const mngDelAuth = ({ id }) => {
+  return axios.request({
+    url: "/auths/delete",
+    method: "delete",
+    params: { id }
+  });
+};
 export const mngCreateAuth = ({
   code,
   parentId,
@@ -42,7 +55,8 @@ export const mngCreateAuth = ({
     name,
     authority,
     url,
-    extension
+    extension,
+    root: false
   };
   return axios.request({
     url: "auths/create",
@@ -68,19 +82,13 @@ export const mngUpdateAuth = ({
     name,
     authority,
     url,
-    extension
+    extension,
+    root: false
   };
   return axios.request({
     url: "auths/update",
     method: "post",
     data
-  });
-};
-//获取全局权限资源列表树状结构接口
-export const mngGetuthsTree = () => {
-  return axios.request({
-    url: "auths/tree",
-    method: "get"
   });
 };
 //获取所有租户信息列表，用于选择对应的租户

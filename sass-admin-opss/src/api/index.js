@@ -24,10 +24,11 @@
  *
  */
 import {
-  mngGetuthsTree,
+  mngGetAuthsTree,
   mngGetTenantRoutes,
   mngCreateAuth,
-  mngUpdateAuth
+  mngUpdateAuth,
+  mngDelAuth
 } from "./manage";
 import { regist, login, getUserInfo, getMenuInfo, logout } from "./user";
 import {
@@ -172,8 +173,9 @@ export {
   executeJob,
   updateTenantTask,
   queryTaskLog,
-  mngGetuthsTree,
+  mngGetAuthsTree,
   mngGetTenantRoutes,
   mngCreateAuth,
-  mngUpdateAuth
+  mngUpdateAuth,
+  mngDelAuth
 };

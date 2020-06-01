@@ -23,12 +23,5 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import { getMenuByRouter } from "@/libs/tools";
-import routers from "@/router/routers";
-export default {
-  token: state => state.user.token,
-  xTenant: state => state.app.xTenant,
-  hasRefreshXTenant: state => state.app.hasRefreshXTenant,
-  breadCrumbList: state => state.app.breadCrumbList,
-  menuList: state => getMenuByRouter(routers.concat(state.app.routers))
-};
+import Modify from "./modify";
+export { Modify };
