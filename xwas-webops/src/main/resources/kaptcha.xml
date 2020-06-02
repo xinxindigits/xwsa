@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- 生成kaptcha的bean-->
+    <bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+        <property name="config">
+            <bean class="com.google.code.kaptcha.util.Config">
+                <constructor-arg type="java.util.Properties">
+                    <!--设置kaptcha属性 -->
+                    <props>
+                        <prop key = "kaptcha.border ">yes</prop>
+                        <prop key="kaptcha.border.color">105,179,90</prop>
+                        <prop key="kaptcha.textproducer.font.color">blue</prop>
+                        <prop key="kaptcha.image.width">100</prop>
+                        <prop key="kaptcha.image.height">50</prop>
+                        <prop key="kaptcha.textproducer.font.size">27</prop>
+                        <prop key="kaptcha.session.key">code</prop>
+                        <prop key="kaptcha.textproducer.char.length">4</prop>
+                        <prop key="kaptcha.textproducer.font.names">宋体,楷体,微软雅黑</prop>
+                        <prop key="kaptcha.textproducer.char.string">0123456789ABCEFGHIJKLMNOPQRSTUVWXYZ</prop>
+                        <prop key="kaptcha.obscurificator.impl">com.google.code.kaptcha.impl.WaterRipple</prop>
+                        <prop key="kaptcha.noise.color">black</prop>
+                        <prop key="kaptcha.noise.impl">com.google.code.kaptcha.impl.DefaultNoise</prop>
+                        <prop key="kaptcha.background.clear.from">185,56,213</prop>
+                        <prop key="kaptcha.background.clear.to">white</prop>
+                        <prop key="kaptcha.textproducer.char.space">3</prop>
+                    </props>
+                </constructor-arg>
+            </bean>
+        </property>
+    </bean>
+</beans>
