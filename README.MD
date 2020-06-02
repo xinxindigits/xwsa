@@ -42,6 +42,7 @@
             + xwas-repository 主要包括mybatis的数据库访问层对象，逻辑代码等
             + xwas-sal 主要为对外API调用层代码实现。
             + xwas-web 主要为前端web接口，各种controller以及数据封装等业务代码
+            + xwas-webops 主要为运营端前端web接口，各种controller以及数据封装等业务代码
    
    
    2. 工具技术说明。主要使用的技术:
@@ -72,7 +73,7 @@
       8. 前端部署参见下面的前端部署内容
       9. **特别说明:在部署应用之前请执行数据初始化任务，详情参见数据初始化部分**
       
-   2. 前端项目部署
+   2. 前端项目部署参见后段部署![backops](./sass-admin/README.md)
    
    3. 如有需要配置nginx相关的代理
    
@@ -90,6 +91,10 @@
     
    5. 访问首页即可, 参见下面的截图.![index](./doc/image/xwas_index.jpg)
    
+   6. 运营端部署。同样在打包之后在webops目录下面。找到对应的包(opss.war)。放入到tomcat的目录下.
+   
+   7. 运营后台的前端项目部署. sass-admin-ops(运营后台前端代码)与sass-admin部署方式一样。
+   
    
    
     
@@ -97,8 +102,9 @@
   
    1. 设置好数据库之后，请执行数据新建表的sql,具体脚本在/sql/xwsass_init_database_DDL.sql。
    2. 执行第一步之后请执行数据初始化脚本sql,具体在/sql/xwsass_init_database_DML.sql。
-   3. 初始化后的数据登陆管理员账号即可: admin001/admin001, 另外一个租户: alibabauser01/alibabauser01
-   4. **特别说明：由于quartz的自带特性，数据初始化后，需要调整mysql的配置，让其忽略大小写敏感**
+   3. 初始化后的数据登陆管理员账号即可: admin001/admin001, 另外一个租户: alibabauser01/alibabauser01。
+   4. 运营后台的角色默认包含三类:sass_admin,admin,sass_mng。初始化的数据sassadmin管理账号:sassadmin/sassadmin
+   5. **特别说明：由于quartz的自带特性，数据初始化后，需要调整mysql的配置，让其忽略大小写敏感**
    
    ``
       1. 用ROOT登录，修改/etc/my.cnf
@@ -127,7 +133,7 @@
       
    2. 权限菜单功能开发说明:
       
-      - 如果要新增权限资源菜单等功能。需要在全局权限表(auths)注册对应的权限值，才可以在资源权限管理的菜单下面找到对应的权限
+      - 如果要新增权限资源菜单等功能。需要在全局权限表(auths)注册对应的权限值，在运营端后台添加注册即可.才可以在资源权限管理的菜单下面找到对应的权限
       - 如果要设置某个接口要求某个权限，可以使用RequiresPermissions注解即可。如果不需要权限验证，忽略即可
       - 返回结果的封装。针对与rest接口已经做了数据格式的封装，因此无需特别处理。具体格式如下:
       
@@ -158,6 +164,8 @@
    11. 企业微信员工查看![weixin_staff_mng](./doc/image/xwas_index_wexin_staff_mng.jpg)
    12. 企业微信客户信息查看![weixin_cust_mng](./doc/image/xwas_index_weixin_cust_mng.jpg)
    13. 企业微信消息内容查看![weixin_msg_mng](./doc/image/xwas_wexin_msg_mng.jpg)
+   14. 运营端租户管理界面:![ops_tenant_mng](./doc/image/ops_tenant_mng.jpg)
+   15. 运营端后台全局权限管理:![ops_global_auths_mng](./doc/image/ops_global_auths_mng.jpg)
 
 ## 开源协议
 
