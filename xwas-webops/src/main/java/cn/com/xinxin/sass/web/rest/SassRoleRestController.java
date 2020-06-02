@@ -112,6 +112,12 @@ public class SassRoleRestController extends AclController {
     @SysLog("创建角色操作")
     public Object createRole(@RequestBody CreateRoleForm createRoleForm, HttpServletRequest request){
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(org.apache.commons.lang3.StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         if(createRoleForm == null){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"创建角色参数不能为空");
         }
@@ -134,7 +140,7 @@ public class SassRoleRestController extends AclController {
         SassUserInfo sassUserInfo = this.getSassUser(request);
         roleDO.setGmtCreator(sassUserInfo.getAccount());
         roleDO.setGmtUpdater(sassUserInfo.getAccount());
-        roleDO.setTenantId(sassUserInfo.getTenantId());
+        roleDO.setTenantId(opsTenantId);
 
         try {
             roleService.createRole(roleDO, createRoleForm.getResourceList());
@@ -252,9 +258,15 @@ public class SassRoleRestController extends AclController {
 
         logger.info("--------SassRoleRestController.routesAllRole.Request:{}--------");
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(org.apache.commons.lang3.StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
-        List<RoleDO> roleDOList = roleService.queryAllRolesByTenantId(sassUserInfo.getTenantId());
+        List<RoleDO> roleDOList = roleService.queryAllRolesByTenantId(opsTenantId);
 
         List<RoleVO> roleVOS = BaseConvert.convertList(roleDOList, RoleVO.class);
 
@@ -324,6 +336,12 @@ public class SassRoleRestController extends AclController {
         }
         logger.info("--------SassRoleRestController.grant.Request:{}--------",JSONObject.toJSONString(roleAuthorityForm));
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(org.apache.commons.lang3.StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         RoleDO roleDO = roleService.findByRoleCode(roleAuthorityForm.getRoleCode());
         if(roleDO == null){
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"不存在该角色");
@@ -352,6 +370,7 @@ public class SassRoleRestController extends AclController {
             List<UserRoleDO> userRoleDOList = userDOList.stream().map(user -> {
                 UserRoleDO userRoleDO = new UserRoleDO();
                 userRoleDO.setUserAccount(user.getAccount());
+                userRoleDO.setTenantId(opsTenantId);
                 userRoleDO.setUserName(user.getName());
                 userRoleDO.setRoleName(roleDO.getName());
                 userRoleDO.setRoleCode(roleDO.getCode());
@@ -380,6 +399,12 @@ public class SassRoleRestController extends AclController {
     @SysLog("资源授予操作")
     public Object resourceGrant(@RequestBody RoleResourceGrantForm grantForm, HttpServletRequest request){
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(org.apache.commons.lang3.StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         if(grantForm == null){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "角色资源授权参数不能为空");
         }
@@ -395,7 +420,7 @@ public class SassRoleRestController extends AclController {
         for(RoleResourceForm roleResourceForm : grantResourceList){
 
             RoleResourceDO roleResourceDO = new RoleResourceDO();
-            roleResourceDO.setTenantId(sassUserInfo.getTenantId());
+            roleResourceDO.setTenantId(opsTenantId);
             roleResourceDO.setResourceCode(roleResourceForm.getResourceCode());
             roleResourceDO.setResourceName(roleResourceForm.getResourceName());
             roleResourceDO.setRoleCode(roleCode);

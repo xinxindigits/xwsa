@@ -350,6 +350,7 @@ public class SassRoleRestController extends AclController {
             SassUserInfo sassUserInfo = this.getSassUser(request);
             List<UserRoleDO> userRoleDOList = userDOList.stream().map(user -> {
                 UserRoleDO userRoleDO = new UserRoleDO();
+                userRoleDO.setTenantId(sassUserInfo.getTenantId());
                 userRoleDO.setUserAccount(user.getAccount());
                 userRoleDO.setUserName(user.getName());
                 userRoleDO.setRoleName(roleDO.getName());

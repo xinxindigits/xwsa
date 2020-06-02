@@ -349,9 +349,10 @@ public class SassTenantRestController extends AclController {
 
         tenantDataSyncConfigService.insert(tenantDataSyncConfigDO);
 
-        if (0 == queryForm.getStatus()) {
-            quartzJobService.startJob(tenantId, queryForm.getTaskType(), queryForm.getCronExpression());
-        }
+        // 暂时不执行
+//        if (0 == queryForm.getStatus()) {
+//            quartzJobService.startJob(tenantId, queryForm.getTaskType(), queryForm.getCronExpression());
+//        }
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
@@ -410,9 +411,9 @@ public class SassTenantRestController extends AclController {
 
         quartzJobService.stopJob(opsTenantId, queryForm.getTaskType());
 
-        if (0 == queryForm.getStatus()) {
-            quartzJobService.startJob(opsTenantId, queryForm.getTaskType(), queryForm.getCronExpression());
-        }
+//        if (0 == queryForm.getStatus()) {
+//            quartzJobService.startJob(opsTenantId, queryForm.getTaskType(), queryForm.getCronExpression());
+//        }
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
     }
