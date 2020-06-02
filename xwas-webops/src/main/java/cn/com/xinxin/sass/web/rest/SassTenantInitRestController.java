@@ -127,9 +127,12 @@ public class SassTenantInitRestController extends AclController {
 
         List<UserDO> userDOS = this.userService.findByUserTenantId(tenantId);
 
-        if(CollectionUtils.isNotEmpty(userDOS)){
+        List<ResourceDO> resourceDOS = this.resourceService.findAllResources();
+
+        if(CollectionUtils.isNotEmpty(userDOS)||CollectionUtils.isNotEmpty(resourceDOS)){
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户已经初始化，请在用户管理界面进行权限管理");
         }
+
 
         List<AuthsDO> authsDOList = this.authsService.selectAllAuths();
         // 组装必要的参数, 将权限值组装成一个完整的树结构插入数据
