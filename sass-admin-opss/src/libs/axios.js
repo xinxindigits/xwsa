@@ -59,7 +59,9 @@ class HttpRequest {
         }
         this.queue[url] = true;
         config.headers.XToken = store.state.user.token;
-        config.headers.XTenant = store.state.app.xTenant;
+        config.headers.XTenant = store.state.app.xTenant
+          ? store.state.app.xTenant
+          : store.state.user.userTenant;
         return config;
       },
       error => {
