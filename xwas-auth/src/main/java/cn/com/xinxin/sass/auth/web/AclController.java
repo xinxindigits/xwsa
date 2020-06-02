@@ -80,6 +80,11 @@ public abstract class AclController {
 
     }
 
+    protected String getOpsTenantId(HttpServletRequest request){
+        String tenantId = HttpRequestUtil.getOpsTenantId(request);
+        return tenantId;
+    }
+
     protected Long getUserId(HttpServletRequest request) {
 
         SassUserInfo sassUserInfo = this.getSassUser(request);

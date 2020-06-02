@@ -54,4 +54,27 @@ public class AuthsServiceImpl implements AuthsService {
         List<AuthsDO> authsDOS = this.authsDOMapper.selectAllAuths();
         return authsDOS;
     }
+
+    @Override
+    public int createAuths(AuthsDO authsDO) {
+
+        int result = this.authsDOMapper.insertSelective(authsDO);
+
+        return result;
+    }
+
+    @Override
+    public int updateAuths(AuthsDO authsDO) {
+
+        int result = this.authsDOMapper.updateByPrimaryKeySelective(authsDO);
+        return result;
+    }
+
+    @Override
+    public int deleteById(Long id) {
+
+        int result = this.authsDOMapper.deleteByPrimaryKey(id);
+
+        return result;
+    }
 }

@@ -187,6 +187,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<UserDO> findByUserTenantId(String tenantId) {
+
+        List<UserDO> userDOS = this.userDOMapper.selectByTenantIdLimit5(tenantId);
+
+        return userDOS;
+    }
+
+    @Override
     public List<ResourceDO> findResourcesByAccount(String account) {
 
         List<RoleDO> roleDOS = userRoleService.findRoleByUserAccount(account);
