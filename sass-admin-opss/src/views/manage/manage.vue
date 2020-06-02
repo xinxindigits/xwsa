@@ -110,7 +110,6 @@ export default {
       this.isLoading = true;
       mngGetTenantRoutes()
         .then(({ data }) => {
-          console.log(data);
           this.tableData = data;
         })
         .finally(() => (this.isLoading = false));

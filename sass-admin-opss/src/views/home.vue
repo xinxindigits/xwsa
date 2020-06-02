@@ -17,14 +17,6 @@ export default {
     showXTenant() {
       return this.hasRefreshXTenant && !!this.xTenant;
     }
-  },
-  watch: {
-    hasRefreshXTenant(val) {
-      console.log("home hasRefreshXTenant", val);
-    },
-    xTenant(val) {
-      console.log("home xTenant", val);
-    }
   }
 };
 </script>

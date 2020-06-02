@@ -81,7 +81,6 @@ const initRouters = store => {
   }
 };
 router.beforeEach((to, from, next) => {
-  console.log(to.name);
   ViewUI.LoadingBar.start();
   const { token, xTenant } = store.getters;
   if (!token && to.name !== loginName) {
@@ -92,7 +91,7 @@ router.beforeEach((to, from, next) => {
     next();
   } else if (!xTenant && to.name === loginName) {
     next({
-      name: "manage-tenant"
+      name: homeName
     });
   } else if (token && to.name === loginName) {
     next({

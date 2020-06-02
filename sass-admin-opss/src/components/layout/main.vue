@@ -70,7 +70,6 @@ import maxLogo from "@/assets/images/logo-bg.png";
 import minLogo from "@/assets/images/logo-min.png";
 import { mapMutations, mapGetters } from "vuex";
 import routers from "@/router/routers";
-// import { mngRouters } from "@/router/routers";
 
 import bread_crumb from "./components/custom-bread-crumb/mixin";
 import { getNewTagList, routeEqual } from "@/libs/tools";
@@ -91,11 +90,7 @@ export default {
       return this.hasRefreshXTenant && this.xTenant;
     },
     menuList() {
-      // if (this.xTenant) {
       return this.$store.getters.menuList;
-      // } else {
-      //   return mngRouters;
-      // }
     },
     tagNavList() {
       return this.$store.state.app.tagNavList;

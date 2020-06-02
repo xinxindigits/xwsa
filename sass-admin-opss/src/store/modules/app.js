@@ -70,10 +70,8 @@ export default {
   mutations: {
     setXTenant(state, tenant) {
       state.xTenant = tenant;
-      console.log("setXTenant", tenant);
     },
     setHasRefreshXTenant(state, status = false) {
-      console.log("setHasRefreshXTenant", status);
       state.hasRefreshXTenant = status;
     },
     setHomeRoute(state, routes) {
