@@ -33,6 +33,7 @@ import cn.com.xinxin.sass.biz.schedule.service.QuartzJobService;
 import cn.com.xinxin.sass.biz.service.TenantBaseInfoService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncLogService;
+import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
@@ -42,6 +43,7 @@ import cn.com.xinxin.sass.common.utils.DateUtils;
 import cn.com.xinxin.sass.repository.model.TenantBaseInfoDO;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO;
+import cn.com.xinxin.sass.repository.model.UserDO;
 import cn.com.xinxin.sass.repository.model.bo.TenantDataSyncLogBO;
 import cn.com.xinxin.sass.web.convert.TenantDataSyncLogConvert;
 import cn.com.xinxin.sass.web.form.DeleteOrgForm;
@@ -61,6 +63,7 @@ import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,6 +100,8 @@ public class SassTenantRestController extends AclController {
 
     private final TenantDataSyncLogService tenantDataSyncLogService;
 
+    private final UserService userService;
+
     private static final String OG = "TD";
 
     private static final String DATE_FORMAT_NOSIGN = "yyyyMMdd";
@@ -110,13 +115,15 @@ public class SassTenantRestController extends AclController {
                                     final WeChatWorkSyncService weChatWorkAddressListSyncServiceImpl,
                                     @Qualifier(value = "weChatWorkChatRecordSyncServiceImpl")
                                     final WeChatWorkSyncService weChatWorkChatRecordSyncServiceImpl,
-                                    final TenantDataSyncLogService tenantDataSyncLogService) {
+                                    final TenantDataSyncLogService tenantDataSyncLogService,
+                                    final UserService userService) {
         this.tenantBaseInfoService = tenantBaseInfoService;
         this.tenantDataSyncConfigService = tenantDataSyncConfigService;
         this.quartzJobService = quartzJobService;
         this.weChatWorkAddressListSyncServiceImpl = weChatWorkAddressListSyncServiceImpl;
         this.weChatWorkChatRecordSyncServiceImpl = weChatWorkChatRecordSyncServiceImpl;
         this.tenantDataSyncLogService = tenantDataSyncLogService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/list",method = RequestMethod.POST)
@@ -268,10 +275,17 @@ public class SassTenantRestController extends AclController {
         }
 
         if(CollectionUtils.isEmpty(deleteOrgForm.getCodes())){
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"组织机构列表不能为空");
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"租户机构列表不能为空");
+        }
+
+        List<UserDO> userDOS = this.userService.findByUserTenantId(deleteOrgForm.getCodes().get(0));
+
+        if(org.apache.commons.collections4.CollectionUtils.isNotEmpty(userDOS)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "无法删除已经使用的租户");
         }
 
         int result = this.tenantBaseInfoService.deleteByCodes(deleteOrgForm.getCodes());
+
         if(result > 0){
             return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
         }else {
