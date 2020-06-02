@@ -31,7 +31,8 @@ export default {
     userName: "",
     avatarImgPath: "",
     token: "",
-    hasGetInfo: false
+    hasGetInfo: false,
+    userTenant: ""
   },
   mutations: {
     setAvatar(state, avatarPath) {
@@ -48,6 +49,9 @@ export default {
     },
     setHasGetInfo(state, status) {
       state.hasGetInfo = status;
+    },
+    setUserTenant(state, tenant) {
+      state.userTenant = tenant;
     }
   },
   actions: {
@@ -80,6 +84,7 @@ export default {
             const data = res.data;
             commit("setUserName", data.name || "");
             commit("setHasGetInfo", true);
+            commit("setUserTenant", data.tenantId);
             resolve(data);
           })
           .catch(reject);
