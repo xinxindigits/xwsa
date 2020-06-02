@@ -29,6 +29,7 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.*;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 
 import cn.com.xinxin.sass.repository.model.*;
@@ -121,6 +122,8 @@ public class SassTenantInitRestController extends AclController {
 //        }
         // 初始化之前,务必先添加租户信息。初始化数据只能初始化admin的类型账号
         // 1.初始化权限资源
+
+        TenantIdContext.set(tenantId);
 
         List<UserDO> userDOS = this.userService.findByUserTenantId(tenantId);
 
@@ -262,6 +265,7 @@ public class SassTenantInitRestController extends AclController {
         organizationDO.setState("Y");
         this.organizationService.createOrganization(organizationDO);
 
+        TenantIdContext.remove();
         return "Success";
     }
 
