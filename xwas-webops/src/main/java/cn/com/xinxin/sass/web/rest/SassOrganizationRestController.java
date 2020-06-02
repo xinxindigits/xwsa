@@ -105,19 +105,20 @@ public class SassOrganizationRestController extends AclController {
         loger.info("SassOrganizationRestController,createOrganization,request:{}",JSONObject.toJSONString(orgForm));
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
-        // 参数转换设置
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+        // 参数转换设置
         PageResultVO page = new PageResultVO();
         page.setPageSize(orgForm.getPageSize());
         page.setPageNumber(orgForm.getPageIndex());
 
         OrganizationDO condition = BaseConvert.convert(orgForm,OrganizationDO.class);
         condition.setCode(orgForm.getOrgId());
-        if(StringUtils.isEmpty(orgForm.getTenantId())){
-            condition.setTenantId(sassUserInfo.getTenantId());
-        }else{
-            condition.setTenantId(orgForm.getTenantId());
-        }
+        condition.setTenantId(opsTenantId);
         condition.setName(orgForm.getOrgName());
         condition.setParentId(0L);
         PageResultVO<OrganizationDO> result = organizationService.findByCondition(page, condition);
@@ -162,9 +163,15 @@ public class SassOrganizationRestController extends AclController {
 
         loger.info("SassOrganizationRestController,OrganizationRoutes");
         SassUserInfo sassUserInfo = this.getSassUser(request);
+
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         // 参数转换设置
-        List<OrganizationDO> organizationDOList =
-                this.organizationService.queryOrgListByTenantId(sassUserInfo.getTenantId());
+        List<OrganizationDO> organizationDOList = this.organizationService.queryOrgListByTenantId(opsTenantId);
 
         List<OrgTreeVO> orgTreeVOS = Lists.newArrayList();
         organizationDOList.stream().forEach(organizationDO -> {
@@ -199,12 +206,18 @@ public class SassOrganizationRestController extends AclController {
 
         loger.info("SassOrganizationRestController,createOrganization,request:{}",JSONObject.toJSONString(orgForm));
 
+
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         if(!RegexUtils.isDataCode(orgForm.getCode())){
             // 如果匹配不是useraccount格式
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,
                     "编码不能包含特殊字符或者长度超过16","编码不能包含特殊字符或者长度超过16");
         }
-
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
         // 参数转换设置
@@ -212,7 +225,7 @@ public class SassOrganizationRestController extends AclController {
         organizationDO.setGmtCreator(sassUserInfo.getAccount());
         organizationDO.setGmtUpdater(sassUserInfo.getAccount());
         if(StringUtils.isBlank(orgForm.getTenantId())){
-            organizationDO.setTenantId(sassUserInfo.getTenantId());
+            organizationDO.setTenantId(opsTenantId);
         }
         // 创建对象
         try {

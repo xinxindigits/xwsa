@@ -228,16 +228,18 @@ public class SassTenantInitRestController extends AclController {
         roleDO.setGmtUpdater(sassUserInfo.getAccount());
         this.roleService.createRole(roleDO,rsCodes);
 
-        // 3.初始化用户信息
-        UserRoleDO userRoleDO = new UserRoleDO();
-        userRoleDO.setTenantId(tenantId);
-        userRoleDO.setRoleName(roleDO.getName());
-        userRoleDO.setRoleCode(roleDO.getCode());
-        userRoleDO.setUserName(account);
-        userRoleDO.setUserAccount(account);
-        userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
-        userRoleDO.setGmtCreator(sassUserInfo.getAccount());
-        this.userRoleService.createUserRole(userRoleDO);
+        if(StringUtils.isNotBlank(account)){
+            // 3.初始化用户信息
+            UserRoleDO userRoleDO = new UserRoleDO();
+            userRoleDO.setTenantId(tenantId);
+            userRoleDO.setRoleName(roleDO.getName());
+            userRoleDO.setRoleCode(roleDO.getCode());
+            userRoleDO.setUserName(account);
+            userRoleDO.setUserAccount(account);
+            userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
+            userRoleDO.setGmtCreator(sassUserInfo.getAccount());
+            this.userRoleService.createUserRole(userRoleDO);
+        }
 
         // 4.初始化组织机构
         TenantBaseInfoDO tenantBaseInfoDO = this.tenantBaseInfoService.selectByTenantId(tenantId);
@@ -254,7 +256,7 @@ public class SassTenantInitRestController extends AclController {
         organizationDO.setState("Y");
         this.organizationService.createOrganization(organizationDO);
 
-        return null;
+        return "Success";
     }
 
 }

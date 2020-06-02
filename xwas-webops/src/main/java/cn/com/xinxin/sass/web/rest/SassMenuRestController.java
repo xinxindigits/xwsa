@@ -28,6 +28,7 @@ package cn.com.xinxin.sass.web.rest;
 
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
+import cn.com.xinxin.sass.biz.service.ResourceService;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.common.enums.ResourceTypeEnums;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
@@ -66,9 +67,12 @@ public class SassMenuRestController extends AclController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ResourceService resourceService;
+
 
     /**
-     * 用户可以看到的菜单列表
+     * 运营后台读取所有租户的菜单用户可以看到的菜单列表
      * @param request
      * @return
      */
@@ -80,8 +84,7 @@ public class SassMenuRestController extends AclController {
 
         String userAccount = sassUserInfo.getAccount();
 
-
-        List<ResourceDO> userResourceDOList = this.userService.findResourcesByAccount(userAccount);
+        List<ResourceDO> userResourceDOList = this.resourceService.findAllResources();
 
         if(CollectionUtils.isEmpty(userResourceDOList)){
             throw new BusinessException(SassBizResultCodeEnum.DATA_NOT_EXIST,"无菜单数据,请设置菜单权限"
@@ -112,6 +115,8 @@ public class SassMenuRestController extends AclController {
 
                     MenuTreeVO menuTreeVO = new MenuTreeVO();
                     menuTreeVO.setText(resourceDO.getName());
+                    menuTreeVO.setName(resourceDO.getName());
+                    menuTreeVO.setType(resourceDO.getResourceType());
                     menuTreeVO.setParentId(String.valueOf(resourceDO.getParentId()));
                     menuTreeVO.setId(String.valueOf(resourceDO.getId()));
                     menuTreeVO.setCode(resourceDO.getCode());

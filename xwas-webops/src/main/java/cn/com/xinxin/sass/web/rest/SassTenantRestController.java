@@ -285,9 +285,17 @@ public class SassTenantRestController extends AclController {
     public Object queryTenantConfig(@RequestParam(required = false) String tenantId, HttpServletRequest request){
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
-        if(StringUtils.isEmpty(tenantId)){
-            tenantId = sassUserInfo.getTenantId();
+
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
         }
+
+        if(StringUtils.isEmpty(tenantId)){
+            tenantId = opsTenantId;
+        }
+
         List<TenantDataSyncConfigDO> tenantDataSyncConfigDOS = tenantDataSyncConfigService.selectByTenantId(tenantId);
         return tenantDataSyncConfigDOS;
     }
@@ -315,8 +323,14 @@ public class SassTenantRestController extends AclController {
                     "插入配置, Status不能为空");
         }
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         SassUserInfo sassUserInfo = this.getSassUser(request);
-        String tenantId = sassUserInfo.getTenantId();
+        String tenantId = opsTenantId;
 
 
         TenantDataSyncConfigDO tenantDataSyncConfigDO = new TenantDataSyncConfigDO();
@@ -371,8 +385,11 @@ public class SassTenantRestController extends AclController {
                     "更新配置, Status不能为空");
         }
 
-        SassUserInfo sassUserInfo = this.getSassUser(request);
-        String tenantId = sassUserInfo.getTenantId();
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
 
         TenantDataSyncConfigDO originRecord = tenantDataSyncConfigService.selectById(queryForm.getId());
 
@@ -387,14 +404,14 @@ public class SassTenantRestController extends AclController {
         tenantDataSyncConfigDO.setCronExpression(queryForm.getCronExpression());
         tenantDataSyncConfigDO.setCountCeiling(queryForm.getCountCeiling());
         tenantDataSyncConfigDO.setTimeInterval(queryForm.getTimeInterval());
-        tenantDataSyncConfigDO.setGmtUpdater(tenantId);
+        tenantDataSyncConfigDO.setGmtUpdater(opsTenantId);
         tenantDataSyncConfigDO.setStatus(queryForm.getStatus());
         tenantDataSyncConfigService.updateById(tenantDataSyncConfigDO);
 
-        quartzJobService.stopJob(tenantId, queryForm.getTaskType());
+        quartzJobService.stopJob(opsTenantId, queryForm.getTaskType());
 
         if (0 == queryForm.getStatus()) {
-            quartzJobService.startJob(tenantId, queryForm.getTaskType(), queryForm.getCronExpression());
+            quartzJobService.startJob(opsTenantId, queryForm.getTaskType(), queryForm.getCronExpression());
         }
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
@@ -408,15 +425,20 @@ public class SassTenantRestController extends AclController {
     public Object executeJob(@RequestParam String taskType, HttpServletRequest request){
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
-        String tenantId = sassUserInfo.getTenantId();
+
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
 
         if (StringUtils.equals(taskType, TaskTypeEnum.MESSAGE_SYNC.getType())) {
-            weChatWorkChatRecordSyncServiceImpl.sync(tenantId);
+            weChatWorkChatRecordSyncServiceImpl.sync(opsTenantId);
         } else if (StringUtils.equals(taskType, TaskTypeEnum.CONTACT_SYNC.getType())) {
-            weChatWorkAddressListSyncServiceImpl.sync(tenantId);
+            weChatWorkAddressListSyncServiceImpl.sync(opsTenantId);
         } else {
-            loger.error("手动执行任务，任务类型错误, tenantid[{}], taskType[{}]", tenantId, taskType);
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "手动执行任务，任务类型错误");
+            loger.error("手动执行任务，任务类型错误, tenantid[{}], taskType[{}]", opsTenantId, taskType);
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "手动执行任务，任务类型失败");
         }
 
         return SassBizResultCodeEnum.SUCCESS.getAlertMessage();
@@ -434,6 +456,12 @@ public class SassTenantRestController extends AclController {
         }
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         PageResultVO page = new PageResultVO();
         page.setPageNumber((queryForm.getPageIndex() == null) ? PageResultVO.DEFAULT_PAGE_NUM : queryForm.getPageIndex());
         page.setPageSize((queryForm.getPageSize() == null) ? PageResultVO.DEFAULT_PAGE_SIZE : queryForm.getPageSize());
@@ -445,7 +473,7 @@ public class SassTenantRestController extends AclController {
                 : DateUtils.formatTime(new Long(queryForm.getEndTime()), DateUtils.DATE_FORMAT_TIME);
 
         TenantDataSyncLogBO tenantDataSyncLogBO = new TenantDataSyncLogBO();
-        tenantDataSyncLogBO.setTenantId(sassUserInfo.getTenantId());
+        tenantDataSyncLogBO.setTenantId(opsTenantId);
         tenantDataSyncLogBO.setTaskType(queryForm.getTaskType());
         tenantDataSyncLogBO.setTaskDate(queryForm.getTaskDate());
         tenantDataSyncLogBO.setTaskStatus(queryForm.getTaskStatus());
