@@ -104,15 +104,15 @@ public class SassTenantInitRestController extends AclController {
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
-
-        String opsTenantId = this.getOpsTenantId(request);
-
-        if(StringUtils.isBlank(opsTenantId)){
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
-        }
+//
+//        String opsTenantId = this.getOpsTenantId(request);
+//
+//        if(StringUtils.isBlank(opsTenantId)){
+//            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+//        }
 
         if(StringUtils.isEmpty(tenantId)){
-            tenantId = opsTenantId;
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
         }
 
         // 参数转换设置

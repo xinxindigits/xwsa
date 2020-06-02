@@ -53,7 +53,7 @@ public class SassOpsTenantHandler implements TenantHandler {
             "tenant_sync_config","qrtz_blob_triggers","qrtz_calendars","qrtz_cron_triggers","qrtz_fired_triggers",
             "qrtz_job_details","qrtz_locks","qrtz_paused_trigger_grps","qrtz_scheduler_state","qrtz_simple_triggers",
             "qrtz_simprop_triggers","qrtz_triggers","auths","tenant");
-    
+
 
     @Override
     public Expression getTenantId(boolean where) {
