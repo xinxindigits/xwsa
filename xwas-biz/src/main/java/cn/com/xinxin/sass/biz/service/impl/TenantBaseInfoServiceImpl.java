@@ -111,4 +111,13 @@ public class TenantBaseInfoServiceImpl implements TenantBaseInfoService {
         return result;
 
     }
+
+
+    @Override
+    public List<TenantBaseInfoDO> queryAllTenants() {
+
+        List<TenantBaseInfoDO> tenantBaseInfoDOList = this.tenantBaseInfoDOMapper.listAlltenants();
+
+        return tenantBaseInfoDOList;
+    }
 }

@@ -32,6 +32,7 @@ import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.biz.service.OplogService;
 import cn.com.xinxin.sass.auth.context.SassBaseContextHolder;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.utils.CommonHttpRequestUtil;
 import cn.com.xinxin.sass.repository.model.OplogDOWithBLOBs;
 import com.alibaba.fastjson.JSONObject;
@@ -166,7 +167,11 @@ public class SysLogAspect {
             // 无token的接口，则使用默认的记录
             account = JWTUtil.getUserAccount(token);
             SassUserInfo sassUserInfo = userAclTokenRepository.getSassUserByUserAccount(account);
-            oplog.setTenantId(sassUserInfo.getTenantId());
+            String tenantId = sassUserInfo.getTenantId();
+            if(StringUtils.isBlank(tenantId)){
+                tenantId = TenantIdContext.get();
+            }
+            oplog.setTenantId(tenantId);
         }else{
             account = "NOTNEEDLOGIN";
             oplog.setTenantId("NOTNEEDLOGIN");

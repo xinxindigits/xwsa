@@ -42,5 +42,14 @@ public interface AuthsService {
     List<AuthsDO> selectAllAuths();
 
 
+    int createAuths(AuthsDO authsDO);
+
+
+    int updateAuths(AuthsDO authsDO);
+
+
+    int deleteById(Long id);
+
+
 
 }

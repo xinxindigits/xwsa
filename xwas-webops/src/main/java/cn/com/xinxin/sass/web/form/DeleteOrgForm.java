@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.biz.tenant;
+package cn.com.xinxin.sass.web.form;
 
 /*
  *
@@ -26,32 +26,41 @@ package cn.com.xinxin.sass.biz.tenant;
  *
  */
 
-import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
-import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
-import net.sf.jsqlparser.expression.BinaryExpression;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.Parenthesis;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
-import net.sf.jsqlparser.expression.operators.relational.*;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.*;
-import net.sf.jsqlparser.statement.update.Update;
+import cn.com.xinxin.sass.api.base.ToString;
 
 import java.util.List;
 
 /**
- * @author: zhouyang
- * @created: 25/05/2020.
+ * @author: yanghaoxian
+ * @created: 2020/4/27.
  * @updater:
- * @description:
+ * @description:删除租户/组织表单
  */
-public class SassTenantSqlParser extends TenantSqlParser {
+public class DeleteOrgForm extends ToString {
 
+    /**
+     * 租户编码列表
+     */
+    private List<String> codes;
 
+    /**
+     * 组织机构id列表
+     */
+    private List<Long> ids;
+
+    public List<String> getCodes() {
+        return codes;
+    }
+
+    public void setCodes(List<String> codes) {
+        this.codes = codes;
+    }
+
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Long> ids) {
+        this.ids = ids;
+    }
 }

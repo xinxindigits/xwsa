@@ -95,6 +95,16 @@
 
   </select>
 
+
+  <select id="selectByTenantIdLimit5"  parameterType="java.lang.String" resultMap="BaseResultMapExt">
+    select
+    <include refid="Base_Column_List" />
+    from user
+    where tenant_id = #{tenantId,jdbcType=VARCHAR}
+    and deleted=0
+    limit 5
+  </select>
+
   <delete id="deleteByAccounts"  parameterType="java.util.List">
 
     delete from user
