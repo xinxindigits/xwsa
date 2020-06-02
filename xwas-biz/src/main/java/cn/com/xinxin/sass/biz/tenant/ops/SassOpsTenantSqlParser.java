@@ -90,10 +90,10 @@ public class SassOpsTenantSqlParser extends AbstractJsqlParser {
      */
     @Override
     public void processInsert(Insert insert) {
-//        if (tenantHandler.doTableFilter(insert.getTable().getName())) {
-//            // 过滤退出执行
-//            return;
-//        }
+        if (tenantHandler.doTableFilter(insert.getTable().getName())) {
+            // 过滤退出执行
+            return;
+        }
         insert.getColumns().add(new Column(tenantHandler.getTenantIdColumn()));
         if (insert.getSelect() != null) {
             processPlainSelect((PlainSelect) insert.getSelect().getSelectBody(), true);
@@ -115,10 +115,10 @@ public class SassOpsTenantSqlParser extends AbstractJsqlParser {
     @Override
     public void processUpdate(Update update) {
         final Table table = update.getTable();
-//        if (tenantHandler.doTableFilter(table.getName())) {
-//            // 过滤退出执行
-//            return;
-//        }
+        if (tenantHandler.doTableFilter(table.getName())) {
+            // 过滤退出执行
+            return;
+        }
         update.setWhere(this.andExpression(table, update.getWhere()));
     }
 
