@@ -77,6 +77,8 @@ public interface UserService {
 
     UserDO findByUserAccountAndTenantId(String account, String tenantId);
 
+    List<UserDO> findByUserTenantId(String tenantId);
+
     List<RoleDO> findRolesByAccount(String account);
 
     List<ResourceDO> findResourcesByAccount(String account);

@@ -58,4 +58,10 @@ public interface TenantBaseInfoService {
      */
     PageResultVO<TenantBaseInfoDO> findByCondition(PageResultVO page, TenantBaseInfoDO condition);
 
+    /**
+     *
+     * @return
+     */
+    List<TenantBaseInfoDO> queryAllTenants();
+
 }

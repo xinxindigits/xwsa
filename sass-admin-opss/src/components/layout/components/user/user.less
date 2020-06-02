@@ -1,5 +1,3 @@
-package cn.com.xinxin.sass.biz.tenant;
-
 /*
  *
  * Copyright 2020 www.xinxindigits.com
@@ -26,32 +24,19 @@ package cn.com.xinxin.sass.biz.tenant;
  *
  */
 
-import com.baomidou.mybatisplus.core.toolkit.ExceptionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
-import com.baomidou.mybatisplus.extension.plugins.tenant.TenantSqlParser;
-import net.sf.jsqlparser.expression.BinaryExpression;
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.Parenthesis;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.conditional.OrExpression;
-import net.sf.jsqlparser.expression.operators.relational.*;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.schema.Table;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.*;
-import net.sf.jsqlparser.statement.update.Update;
-
-import java.util.List;
-
-/**
- * @author: zhouyang
- * @created: 25/05/2020.
- * @updater:
- * @description:
- */
-public class SassTenantSqlParser extends TenantSqlParser {
-
-
+.user {
+  &-avatar-dropdown {
+    cursor: pointer;
+    display: inline-block;
+    // height: 64px;
+    vertical-align: middle;
+    // line-height: 64px;
+    .ivu-badge-dot {
+      top: 16px;
+    }
+  }
+  &-name {
+    font-size: 14px;
+    margin-left: 5px;
+  }
 }

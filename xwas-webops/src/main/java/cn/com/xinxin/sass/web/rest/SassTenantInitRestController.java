@@ -29,6 +29,7 @@ package cn.com.xinxin.sass.web.rest;
 import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.web.AclController;
 import cn.com.xinxin.sass.biz.service.*;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 
 import cn.com.xinxin.sass.repository.model.*;
@@ -42,6 +43,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.annotations.Param;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,24 +94,45 @@ public class SassTenantInitRestController extends AclController {
     private TenantBaseInfoService tenantBaseInfoService;
 
 
-    @RequestMapping(value = "/init",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/init",method = RequestMethod.GET)
     @ResponseBody
-    //@RequiresPermissions(value = {"SASS_TENANT_MNG", "SASS_TENANT_QUERY_LIST"},logical= Logical.OR)
-    public Object tenantDataInit(HttpServletRequest request, @Param("tenantId") String tenantId){
+    @RequiresRoles(value = {"sass_admin","admin","sass_mng"},logical= Logical.OR)
+    public Object tenantDataInit(HttpServletRequest request,
+                                 @Param("tenantId") String tenantId,
+                                 @Param("account") String account){
 
-        loger.info("SassTenantRestController,tenantDataInit,tenantId={}", tenantId);
+        loger.info("SassTenantRestController,tenantDataInit,tenantId={},account={}", tenantId,account);
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
+//
+//        String opsTenantId = this.getOpsTenantId(request);
+//
+//        if(StringUtils.isBlank(opsTenantId)){
+//            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+//        }
+
         if(StringUtils.isEmpty(tenantId)){
-            tenantId = sassUserInfo.getTenantId();
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
         }
+
         // 参数转换设置
-        if(!sassUserInfo.getTenantId().equals(tenantId)){
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"不能初始化非自己租户的数据");
-        }
+//        if(!sassUserInfo.getTenantId().equals(tenantId)){
+//            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"不能初始化非自己租户的数据");
+//        }
         // 初始化之前,务必先添加租户信息。初始化数据只能初始化admin的类型账号
         // 1.初始化权限资源
+
+        TenantIdContext.set(tenantId);
+
+        List<UserDO> userDOS = this.userService.findByUserTenantId(tenantId);
+
+        List<ResourceDO> resourceDOS = this.resourceService.findAllResources();
+
+        if(CollectionUtils.isNotEmpty(userDOS)||CollectionUtils.isNotEmpty(resourceDOS)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户已经初始化，请在用户管理界面进行权限管理");
+        }
+
 
         List<AuthsDO> authsDOList = this.authsService.selectAllAuths();
         // 组装必要的参数, 将权限值组装成一个完整的树结构插入数据
@@ -134,7 +159,7 @@ public class SassTenantInitRestController extends AclController {
 
             ResourceDO resourceDO = new ResourceDO();
             resourceDO.setParentId(Long.valueOf(treeVO.getParentId()));
-            String treesCode = sassUserInfo.getTenantId().toUpperCase() + treeVO.getCode();
+            String treesCode = tenantId.substring(0,4).toUpperCase() + treeVO.getCode();
             rsCodes.add(treesCode);
             resourceDO.setCode(treesCode);
             resourceDO.setTenantId(tenantId);
@@ -159,7 +184,7 @@ public class SassTenantInitRestController extends AclController {
                     ResourceDO childresourceDO = new ResourceDO();
                     childresourceDO.setParentId(Long.valueOf(insertId));
                     childresourceDO.setTenantId(tenantId);
-                    String childrsCode = sassUserInfo.getTenantId().toUpperCase() + childrenVO.getCode();
+                    String childrsCode = tenantId.substring(0,4).toUpperCase() + childrenVO.getCode();
                     rsCodes.add(childrsCode);
                     childresourceDO.setCode(childrsCode);
                     childresourceDO.setResourceType(childrenVO.getType());
@@ -181,7 +206,7 @@ public class SassTenantInitRestController extends AclController {
                             ResourceDO subchildresourceDO = new ResourceDO();
                             subchildresourceDO.setTenantId(tenantId);
                             subchildresourceDO.setParentId(Long.valueOf(childId));
-                            String subrsCode = sassUserInfo.getTenantId().toUpperCase() + subchildrenVO.getCode();
+                            String subrsCode = tenantId.substring(0,4).toUpperCase() + subchildrenVO.getCode();
                             subchildresourceDO.setCode(subrsCode);
                             rsCodes.add(subrsCode);
                             subchildresourceDO.setResourceType(subchildrenVO.getType());
@@ -206,7 +231,7 @@ public class SassTenantInitRestController extends AclController {
         // 2.初始化角色信息
         RoleDO roleDO = new RoleDO();
         roleDO.setTenantId(tenantId);
-        String roleCode = tenantId.toUpperCase()+"RO"+ RandomStringUtils.randomNumeric(6);
+        String roleCode = tenantId.substring(0,4).toUpperCase()+"RO"+ RandomStringUtils.randomNumeric(6);
         roleDO.setCode(roleCode);
         roleDO.setName("租户管理员角色");
         roleDO.setRoleType("admin");
@@ -215,21 +240,23 @@ public class SassTenantInitRestController extends AclController {
         roleDO.setGmtUpdater(sassUserInfo.getAccount());
         this.roleService.createRole(roleDO,rsCodes);
 
-        // 3.初始化用户信息
-        UserRoleDO userRoleDO = new UserRoleDO();
-        userRoleDO.setTenantId(tenantId);
-        userRoleDO.setRoleName(roleDO.getName());
-        userRoleDO.setRoleCode(roleDO.getCode());
-        userRoleDO.setUserName(sassUserInfo.getName());
-        userRoleDO.setUserAccount(sassUserInfo.getAccount());
-        userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
-        userRoleDO.setGmtCreator(sassUserInfo.getAccount());
-        this.userRoleService.createUserRole(userRoleDO);
+        if(StringUtils.isNotBlank(account)){
+            // 3.初始化用户信息
+            UserRoleDO userRoleDO = new UserRoleDO();
+            userRoleDO.setTenantId(tenantId);
+            userRoleDO.setRoleName(roleDO.getName());
+            userRoleDO.setRoleCode(roleDO.getCode());
+            userRoleDO.setUserName(account);
+            userRoleDO.setUserAccount(account);
+            userRoleDO.setGmtUpdater(sassUserInfo.getAccount());
+            userRoleDO.setGmtCreator(sassUserInfo.getAccount());
+            this.userRoleService.createUserRole(userRoleDO);
+        }
 
         // 4.初始化组织机构
         TenantBaseInfoDO tenantBaseInfoDO = this.tenantBaseInfoService.selectByTenantId(tenantId);
         OrganizationDO organizationDO = new OrganizationDO();
-        String orgCode = tenantId.toUpperCase()+"ORG"+ RandomStringUtils.randomNumeric(6);
+        String orgCode = tenantId.substring(0,4).toUpperCase()+"ORG"+ RandomStringUtils.randomNumeric(6);
         organizationDO.setCode(orgCode);
         organizationDO.setTenantId(tenantId);
         organizationDO.setIsLeaf(false);
@@ -241,7 +268,8 @@ public class SassTenantInitRestController extends AclController {
         organizationDO.setState("Y");
         this.organizationService.createOrganization(organizationDO);
 
-        return null;
+        TenantIdContext.remove();
+        return "Success";
     }
 
 }
