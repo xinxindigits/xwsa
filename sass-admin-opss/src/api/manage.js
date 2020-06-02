@@ -23,5 +23,88 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+import axios from "@/libs/http";
+//获取全局权限资源列表树状结构接口
+export const mngGetAuthsTree = () => {
+  return axios.request({
+    url: "/auths/tree",
+    method: "get"
+  });
+};
+export const mngDelAuth = ({ id }) => {
+  return axios.request({
+    url: "/auths/delete",
+    method: "delete",
+    params: { id }
+  });
+};
+export const mngCreateAuth = ({
+  code,
+  parentId,
+  resourceType,
+  name,
+  authority,
+  url,
+  extension
+}) => {
+  let data = {
+    code,
+    parentId,
+    resourceType,
+    name,
+    authority,
+    url,
+    extension,
+    root: false
+  };
+  return axios.request({
+    url: "auths/create",
+    method: "post",
+    data
+  });
+};
+export const mngUpdateAuth = ({
+  id,
+  code,
+  parentId,
+  resourceType,
+  name,
+  authority,
+  url,
+  extension
+}) => {
+  let data = {
+    id,
+    code,
+    parentId,
+    resourceType,
+    name,
+    authority,
+    url,
+    extension,
+    root: false
+  };
+  return axios.request({
+    url: "auths/update",
+    method: "post",
+    data
+  });
+};
+//获取所有租户信息列表，用于选择对应的租户
+export const mngGetTenantRoutes = () => {
+  return axios.request({
+    url: "tenant/routes",
+    method: "get"
+  });
+};
+//租户用户管理员权限初始化
+export const mngResetTenant = ({ tenantId }) => {
+  return axios.request({
+    url: "/tenant/user/init",
+    method: "get",
+    params: {
+      tenantId
+    }
+  });
+};

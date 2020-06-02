@@ -23,5 +23,42 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+import Vue from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import "./plugins/iview.js";
+import config from "@/config";
+import _ from "lodash";
+import { mapDic } from "@/libs/dic";
+import filters from "@/libs/filters";
+import md5 from "md5";
+Object.keys(filters).forEach(k => Vue.filter(k, filters[k]));
+Vue.config.productionTip = false;
+Vue.prototype.$config = config;
+Vue.prototype._ = _;
+Vue.prototype.$mapd = mapDic;
+Vue.prototype.$md5 = md5;
+Vue.prototype.$Message.config({
+  duration: 2.5
+});
+Vue.directive("debounce", {
+  inserted(el, binding) {
+    el.addEventListener(
+      "click",
+      _.debounce(
+        function() {
+          binding.value();
+        },
+        1500,
+        { leading: true, trailing: false }
+      )
+    );
+  }
+});
+new Vue({
+  router,
+  store,
+  render: h => h(App)
+}).$mount("#app");

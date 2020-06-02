@@ -23,5 +23,25 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+export default {
+  props: {
+    parentItem: {
+      type: Object,
+      default: () => {}
+    },
+    theme: String,
+    iconSize: Number
+  },
+  computed: {
+    parentName() {
+      return this.parentItem.name;
+    },
+    children() {
+      return this.parentItem.children;
+    },
+    textColor() {
+      return this.theme === "dark" ? "#fff" : "#495060";
+    }
+  }
+};

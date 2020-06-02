@@ -23,5 +23,7 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+module.exports = {
+  presets: ["@vue/cli-plugin-babel/preset"]
+};

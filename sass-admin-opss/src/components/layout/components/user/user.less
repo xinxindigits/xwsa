@@ -23,5 +23,20 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+.user {
+  &-avatar-dropdown {
+    cursor: pointer;
+    display: inline-block;
+    // height: 64px;
+    vertical-align: middle;
+    // line-height: 64px;
+    .ivu-badge-dot {
+      top: 16px;
+    }
+  }
+  &-name {
+    font-size: 14px;
+    margin-left: 5px;
+  }
+}

@@ -23,5 +23,9 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+import RoleGrant from "./granttree";
+import RoleUpdate from "./modify";
+import RoleQuery from "./query";
+import RoleOperation from "./operate";
+export { RoleGrant, RoleUpdate, RoleQuery, RoleOperation };

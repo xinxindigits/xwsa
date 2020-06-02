@@ -23,5 +23,7 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+import CustomerDetail from "./detail";
+import Query from "./query";
+export { CustomerDetail, Query };

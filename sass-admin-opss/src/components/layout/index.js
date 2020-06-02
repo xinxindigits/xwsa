@@ -23,5 +23,6 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+import Main from "./main.vue";
+export default Main;

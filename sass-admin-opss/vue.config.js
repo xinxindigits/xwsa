@@ -23,5 +23,31 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+const path = require("path");
+
+const resolve = dir => {
+  return path.join(__dirname, dir);
+};
+const BASE_URL = process.env.NODE_ENV === "production" ? "./" : "/";
+module.exports = {
+  publicPath: BASE_URL,
+  css: {
+    loaderOptions: {
+      less: {
+        javascriptEnabled: true
+      }
+    }
+  },
+  chainWebpack: config => {
+    config.plugins.delete("prefetch");
+    config.resolve.alias.set("@", resolve("src"));
+  },
+  devServer: {
+    proxy: "http://172.27.0.16:8080"
+  }
+  // 本地运行代理设置
+  // devServer: {
+  //   proxy: 'localhost:3000'
+  // }
+};

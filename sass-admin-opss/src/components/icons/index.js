@@ -23,5 +23,6 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+
+import Icons from "./icons.vue";
+export default Icons;

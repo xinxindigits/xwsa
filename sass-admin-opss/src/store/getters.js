@@ -23,5 +23,12 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+import { getMenuByRouter } from "@/libs/tools";
+import routers from "@/router/routers";
+export default {
+  token: state => state.user.token,
+  xTenant: state => state.app.xTenant,
+  hasRefreshXTenant: state => state.app.hasRefreshXTenant,
+  breadCrumbList: state => state.app.breadCrumbList,
+  menuList: state => getMenuByRouter(routers.concat(state.app.routers))
+};

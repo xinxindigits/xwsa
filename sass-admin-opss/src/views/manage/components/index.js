@@ -23,5 +23,5 @@
  * endorse or promote products derived from this software without specific prior written permission.
  *
  */
-import tenantModify from "./modify";
-export { tenantModify };
+import Modify from "./modify";
+export { Modify };
