@@ -98,3 +98,13 @@ export const mngGetTenantRoutes = () => {
     method: "get"
   });
 };
+//租户用户管理员权限初始化
+export const mngResetTenant = ({ tenantId }) => {
+  return axios.request({
+    url: "/tenant/user/init",
+    method: "get",
+    params: {
+      tenantId
+    }
+  });
+};

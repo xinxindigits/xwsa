@@ -43,6 +43,20 @@ Vue.prototype.$md5 = md5;
 Vue.prototype.$Message.config({
   duration: 2.5
 });
+Vue.directive("debounce", {
+  inserted(el, binding) {
+    el.addEventListener(
+      "click",
+      _.debounce(
+        function() {
+          binding.value();
+        },
+        1500,
+        { leading: true, trailing: false }
+      )
+    );
+  }
+});
 new Vue({
   router,
   store,

@@ -68,30 +68,29 @@ export const formatMenu = list => {
   return res;
 };
 export const mngRouters = [
-  // {
-  //   path: "/manage",
-  //   redirect: "/manage/tenant",
-  //   name: "_manage-tenant",
-  //   meta: {
-  //     title: "租户选择",
-  //     notCache: true,
-  //     icon: "md-home"
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: "/manage/tenant",
-  //       name: "manage-tenant",
-  //       meta: {
-  //         title: "租户选择",
-  //         notCache: true,
-  //         icon: "md-home"
-  //       },
-  //       component: () => import("@/views/home")
-  //     }
-  //   ]
-  //   // component: () => import("@/views/home")
-  // },
+  {
+    path: "/manage",
+    redirect: "/manage/tenant",
+    name: "_manage-tenant",
+    meta: {
+      title: "租户选择",
+      notCache: true,
+      icon: "md-home"
+    },
+    component: Main,
+    children: [
+      {
+        path: "/manage/tenant",
+        name: "manage-tenant",
+        meta: {
+          title: "租户选择",
+          notCache: true,
+          icon: "md-home"
+        },
+        component: () => import("@/views/home")
+      }
+    ]
+  },
   {
     path: "/auths",
     name: "_auths",

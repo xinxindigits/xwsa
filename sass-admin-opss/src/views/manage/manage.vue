@@ -30,12 +30,20 @@
             管理
           </Button>
           <Button
-            type="warning"
+            type="error"
             size="small"
             style="margin-right: 5px"
             @click="hdlDelete(row)"
           >
             删除
+          </Button>
+          <Button
+            type="warning"
+            size="small"
+            style="margin-right: 5px"
+            @click="hdlReset(row)"
+          >
+            重置
           </Button>
         </template>
       </Table>
@@ -51,7 +59,7 @@
 </template>
 
 <script>
-import { mngGetTenantRoutes } from "@/api";
+import { mngGetTenantRoutes, delTenant, mngResetTenant } from "@/api";
 import { tenantModify } from "@/views/system/tenant/components";
 export default {
   name: "mng-home",
@@ -78,7 +86,7 @@ export default {
           align: "center",
           slot: "create_time"
         },
-        { title: "操作", slot: "action", align: "center", width: 150 }
+        { title: "操作", slot: "action", align: "center", width: 250 }
       ],
       tableData: []
     };
@@ -96,15 +104,43 @@ export default {
       this.$Message.success(`${type == "create" ? "新增" : "修改"}成功！`);
       this.init();
     },
-    hdlDelete() {},
+    hdlDelete(row) {
+      let self = this;
+      this.$Modal.confirm({
+        title: "确认删除？",
+        content: `确定删除选中记录?`,
+        onOk() {
+          delTenant({ codes: [row.tenantId] }).then(() => {
+            this.$Message.success("删除成功！");
+            self.init();
+          });
+        }
+      });
+    },
+    hdlReset(row) {
+      let self = this;
+      this.$Modal.confirm({
+        title: "确认重置？",
+        content: `确定重置管理员权限?`,
+        onOk() {
+          mngResetTenant({ tenantId: row.tenantId }).then(() => {
+            this.$Message.success("重置成功！");
+            self.init();
+          });
+        }
+      });
+    },
     hdlClick(row) {
-      this.$store.commit(
-        "setTagNavList",
-        this.$store.state.app.tagNavList.filter(
-          item => item.name === this.$config.homeName
-        )
-      );
-      this.$store.dispatch("upateXtenant", row.tenantId);
+      this.$router.push("/");
+      setTimeout(() => {
+        this.$store.commit(
+          "setTagNavList",
+          this.$store.state.app.tagNavList.filter(
+            item => item.name === this.$config.homeName
+          )
+        );
+        this.$store.dispatch("upateXtenant", row.tenantId);
+      });
     },
     init() {
       this.isLoading = true;

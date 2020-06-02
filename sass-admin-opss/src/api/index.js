@@ -28,7 +28,8 @@ import {
   mngGetTenantRoutes,
   mngCreateAuth,
   mngUpdateAuth,
-  mngDelAuth
+  mngDelAuth,
+  mngResetTenant
 } from "./manage";
 import { regist, login, getUserInfo, getMenuInfo, logout } from "./user";
 import {
@@ -177,5 +178,6 @@ export {
   mngGetTenantRoutes,
   mngCreateAuth,
   mngUpdateAuth,
-  mngDelAuth
+  mngDelAuth,
+  mngResetTenant
 };

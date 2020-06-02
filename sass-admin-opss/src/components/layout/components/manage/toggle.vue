@@ -9,16 +9,7 @@ export default {
   name: "toggle",
   methods: {
     hdlClick() {
-      this.$store.commit(
-        "setTagNavList",
-        this.$store.state.app.tagNavList.filter(
-          item => item.name === this.$config.homeName
-        )
-      );
-      this.$router.push("/");
-      setTimeout(() => {
-        this.$store.dispatch("upateXtenant", "");
-      });
+      this.$emit("on-toggle-tenant", "");
     }
   }
 };

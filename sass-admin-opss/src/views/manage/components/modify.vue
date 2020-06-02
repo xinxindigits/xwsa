@@ -69,7 +69,11 @@
     </Form>
     <div slot="footer">
       <Button @click="hdlCancel">取消</Button>
-      <Button style="margin-left: 8px" type="primary" @click="hdlSubmit('form')"
+      <Button
+        :loading="loading"
+        style="margin-left: 8px"
+        type="primary"
+        v-debounce="hdlSubmit"
         >确认</Button
       >
     </div>
@@ -106,6 +110,7 @@ export default {
 
   data() {
     return {
+      loading: false,
       code_editable: false,
       curValue: false,
       allGrantsList: [],
@@ -162,13 +167,19 @@ export default {
       this.form.root = false;
       this.form.id = obj.id;
     },
-    hdlSubmit(name) {
-      this.$refs[name].validate(valid => {
+    hdlSubmit() {
+      this.loading = true;
+      this.$refs["form"].validate(valid => {
         if (valid) {
-          _config[this.type].submit(this.form).then(() => {
-            this.curValue = false;
-            this.$emit("auths-modified", this.type);
-          });
+          _config[this.type]
+            .submit(this.form)
+            .then(() => {
+              this.curValue = false;
+              this.$emit("auths-modified", this.type);
+            })
+            .finally(() => (this.loading = false));
+        } else {
+          this.loading = false;
         }
       });
     },

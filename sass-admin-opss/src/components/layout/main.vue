@@ -35,7 +35,7 @@
             :list="breadCrumbList"
             slot="nav"
           />
-          <toggle-manage></toggle-manage>
+          <toggle-manage @on-toggle-tenant="hdlToggleTenant"></toggle-manage>
           <user :user-avatar="userAvatar" :account="account"></user>
         </header-bar>
       </Header>
@@ -163,6 +163,20 @@ export default {
     reload() {
       this.isKeepAlive = false;
       this.$nextTick(() => (this.isKeepAlive = true));
+    },
+    hdlToggleTenant(tenant = "") {
+      this.$store.commit(
+        "setTagNavList",
+        this.$store.state.app.tagNavList.filter(item => {
+          return [this.$config.homeName, "manage-tenant", "auths"].includes(
+            item.name
+          );
+        })
+      );
+      this.$router.push("/");
+      setTimeout(() => {
+        this.$store.dispatch("upateXtenant", tenant);
+      });
     }
   },
   mounted() {
