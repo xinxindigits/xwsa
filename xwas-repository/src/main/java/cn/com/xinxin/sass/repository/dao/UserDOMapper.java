@@ -118,4 +118,11 @@ public interface UserDOMapper {
                                             @Param("startTime") Date startTime,
                                             @Param("endTime") Date endTime,
                                             @Param("tenantId")String tenantId);
+
+    /**
+     *
+     * @param tenantId
+     * @return
+     */
+    List<UserDO> selectByTenantIdLimit5(@Param("tenantId")String tenantId);
 }

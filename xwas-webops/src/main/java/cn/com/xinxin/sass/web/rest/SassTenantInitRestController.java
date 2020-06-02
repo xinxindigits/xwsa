@@ -111,16 +111,22 @@ public class SassTenantInitRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
         }
 
-
         if(StringUtils.isEmpty(tenantId)){
             tenantId = opsTenantId;
         }
+
         // 参数转换设置
 //        if(!sassUserInfo.getTenantId().equals(tenantId)){
 //            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"不能初始化非自己租户的数据");
 //        }
         // 初始化之前,务必先添加租户信息。初始化数据只能初始化admin的类型账号
         // 1.初始化权限资源
+
+        List<UserDO> userDOS = this.userService.findByUserTenantId(tenantId);
+
+        if(CollectionUtils.isNotEmpty(userDOS)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户已经初始化，请在用户管理界面进行权限管理");
+        }
 
         List<AuthsDO> authsDOList = this.authsService.selectAllAuths();
         // 组装必要的参数, 将权限值组装成一个完整的树结构插入数据

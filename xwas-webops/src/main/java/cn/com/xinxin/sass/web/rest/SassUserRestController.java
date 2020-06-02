@@ -352,7 +352,7 @@ public class SassUserRestController extends AclController {
             for(RoleDO roleDO : roleDOList){
 
                 UserRoleDO userRoleDO = new UserRoleDO();
-                userRoleDO.setTenantId(userForm.getTenantId());
+                userRoleDO.setTenantId(opsTenantId);
                 userRoleDO.setUserAccount(userCreateDO.getAccount());
                 userRoleDO.setUserName(userCreateDO.getName());
                 userRoleDO.setRoleCode(roleDO.getCode());
@@ -371,7 +371,7 @@ public class SassUserRestController extends AclController {
             // 如果组织机构编码不为空，则需要创建组装与用户的关系
             OrganizationDO organizationDO = this.organizationService.findByCode(userOrgCode);
             UserOrgDO userOrgDO = new UserOrgDO();
-            userOrgDO.setTenantId(userForm.getTenantId());
+            userOrgDO.setTenantId(opsTenantId);
             userOrgDO.setUserAccount(userCreateDO.getAccount());
             userOrgDO.setUserName(userCreateDO.getName());
             userOrgDO.setOrgCode(organizationDO.getCode());
@@ -395,6 +395,11 @@ public class SassUserRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"用户信息不能为空","用户信息不能为空");
         }
 
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
 
@@ -426,7 +431,7 @@ public class SassUserRestController extends AclController {
             for(RoleDO roleDO : roleDOList){
                 UserRoleDO userRoleDO = new UserRoleDO();
                 userRoleDO.setUserAccount(userDO.getAccount());
-                userRoleDO.setTenantId(userForm.getTenantId());
+                userRoleDO.setTenantId(opsTenantId);
                 userRoleDO.setUserName(userDO.getName());
                 userRoleDO.setRoleCode(roleDO.getCode());
                 userRoleDO.setRoleName(roleDO.getName());
@@ -447,7 +452,7 @@ public class SassUserRestController extends AclController {
             int deleted = this.userService.removeUserOrgRelationByAccount(userDO.getAccount());
             OrganizationDO organizationDO = this.organizationService.findByCode(userOrgCode);
             UserOrgDO userOrgDO = new UserOrgDO();
-            userOrgDO.setTenantId(userForm.getTenantId());
+            userOrgDO.setTenantId(opsTenantId);
             userOrgDO.setUserAccount(userDO.getAccount());
             userOrgDO.setUserName(userDO.getName());
             userOrgDO.setOrgCode(organizationDO.getCode());
@@ -519,6 +524,13 @@ public class SassUserRestController extends AclController {
             throw new BusinessException(SassBizResultCodeEnum.PARAMETER_NULL,"用户信息不能为空","用户信息不能为空");
         }
 
+
+        String opsTenantId = this.getOpsTenantId(request);
+
+        if(StringUtils.isBlank(opsTenantId)){
+            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER, "需要运营的租户不能为空");
+        }
+
         log.info("grantRoleUserInfo, grantForm = {}",grantForm);
 
         SassUserInfo sassUserInfo = this.getSassUser(request);
@@ -537,7 +549,7 @@ public class SassUserRestController extends AclController {
 
         for(UserRoleForm userRoleForm : userRoleForms){
             UserRoleDO userRoleDO = new UserRoleDO();
-            userRoleDO.setTenantId(grantForm.getTenantId());
+            userRoleDO.setTenantId(opsTenantId);
             userRoleDO.setRoleCode(userRoleForm.getRoleCode());
             userRoleDO.setRoleName(userRoleForm.getRoleName());
             userRoleDO.setUserAccount(grantedUserAccount);
