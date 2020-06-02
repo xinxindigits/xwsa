@@ -156,7 +156,7 @@ public class SassTenantInitRestController extends AclController {
 
             ResourceDO resourceDO = new ResourceDO();
             resourceDO.setParentId(Long.valueOf(treeVO.getParentId()));
-            String treesCode = tenantId.substring(4).toUpperCase() + treeVO.getCode();
+            String treesCode = tenantId.substring(0,4).toUpperCase() + treeVO.getCode();
             rsCodes.add(treesCode);
             resourceDO.setCode(treesCode);
             resourceDO.setTenantId(tenantId);
@@ -181,7 +181,7 @@ public class SassTenantInitRestController extends AclController {
                     ResourceDO childresourceDO = new ResourceDO();
                     childresourceDO.setParentId(Long.valueOf(insertId));
                     childresourceDO.setTenantId(tenantId);
-                    String childrsCode = sassUserInfo.getTenantId().toUpperCase() + childrenVO.getCode();
+                    String childrsCode = tenantId.substring(0,4).toUpperCase() + childrenVO.getCode();
                     rsCodes.add(childrsCode);
                     childresourceDO.setCode(childrsCode);
                     childresourceDO.setResourceType(childrenVO.getType());
@@ -203,7 +203,7 @@ public class SassTenantInitRestController extends AclController {
                             ResourceDO subchildresourceDO = new ResourceDO();
                             subchildresourceDO.setTenantId(tenantId);
                             subchildresourceDO.setParentId(Long.valueOf(childId));
-                            String subrsCode = tenantId.substring(4).toUpperCase() + subchildrenVO.getCode();
+                            String subrsCode = tenantId.substring(0,4).toUpperCase() + subchildrenVO.getCode();
                             subchildresourceDO.setCode(subrsCode);
                             rsCodes.add(subrsCode);
                             subchildresourceDO.setResourceType(subchildrenVO.getType());
@@ -228,7 +228,7 @@ public class SassTenantInitRestController extends AclController {
         // 2.初始化角色信息
         RoleDO roleDO = new RoleDO();
         roleDO.setTenantId(tenantId);
-        String roleCode = tenantId.substring(4).toUpperCase()+"RO"+ RandomStringUtils.randomNumeric(6);
+        String roleCode = tenantId.substring(0,4).toUpperCase()+"RO"+ RandomStringUtils.randomNumeric(6);
         roleDO.setCode(roleCode);
         roleDO.setName("租户管理员角色");
         roleDO.setRoleType("admin");
@@ -253,7 +253,7 @@ public class SassTenantInitRestController extends AclController {
         // 4.初始化组织机构
         TenantBaseInfoDO tenantBaseInfoDO = this.tenantBaseInfoService.selectByTenantId(tenantId);
         OrganizationDO organizationDO = new OrganizationDO();
-        String orgCode = tenantId.substring(4).toUpperCase()+"ORG"+ RandomStringUtils.randomNumeric(6);
+        String orgCode = tenantId.substring(0,4).toUpperCase()+"ORG"+ RandomStringUtils.randomNumeric(6);
         organizationDO.setCode(orgCode);
         organizationDO.setTenantId(tenantId);
         organizationDO.setIsLeaf(false);
