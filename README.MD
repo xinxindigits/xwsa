@@ -1,6 +1,6 @@
-# XWSASS(Xinxin And Weixin Enterprise Edition Customer Information SASS)
+# XWSASS(Xinxin And Weixin Enterprise Edition Customer Information SaaS System)
 
-  新心以及企业微信客户关系存留SASS系统。主要设计来保留企业员工与微信企业客户之间的业务交流信息。方便使用企业微信的公司，企业，组织留存企业微信客户，发现必要的业务可能性等。
+  新心以及企业微信客户关系存留SaaS系统。主要设计来保留企业员工与微信企业客户之间的业务交流信息。方便使用企业微信的公司，企业，组织留存企业微信客户，发现必要的业务可能性等。
   主要通过企业维系api，拉取到聊天信息，企业客户信息等。
   主要功能：
   1. 全面的权限管理，基于角色，人，组织关系的权限管理功能。
