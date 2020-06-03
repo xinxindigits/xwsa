@@ -149,6 +149,10 @@
    
       1. Rest接口通常统一返回Object对象。AOP返回结构拦截器自动封装为必要的格式。接收POST请求里面的参数基本都Form表单对象的方式接收。
       2. 基本路径设置等遵循Rest命名规则。
+      
+   4. 前端开发：
+      1. 前端目录包括两部分: sass-admin为使用端前端代码对应的后段接口为xwas-web; sass-admin-opss为运营端代码，后段对应的接口为xwas-webops
+      开发请参考对应的目录:![front-dev](./sass-admin/README.md)
 
 ## 界面展示
 
