@@ -949,8 +949,8 @@ LOCK TABLES `tenant` WRITE;
 
 INSERT INTO `tenant` (`id`, `tenant_id`, `tenant`, `tenant_name`, `corp_id`, `address_list_secret`, `chat_record_secret`, `customer_contact_secret`, `private_key`, `extension`, `gmt_created`, `gmt_creator`, `gmt_updated`, `gmt_updater`, `deleted`, `state`, `remark`)
 VALUES
-    (41,'xinxin','xinxin','新心数科','ww54eb170ef5c64261','xxf62ZimtkWXkFY62Ygyrsrz1nsyTb-XF_AUjCVFfUI','MFUkFrGUytu-Jq-fzp5pdMQ_Op_r843tZOixWe8Kc6A','Y2aAkPpmO2o0sc1MVO85EqiUWXYNaerAL4bjnB96Dxs','MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD2r28z3QLtHgzAW5rTXVRZQQXrh47Ze5QA8APhL6M',NULL,'2020-05-20 18:49:30','admin004','2020-05-22 16:27:35','admin004',0,'Y','。。。'),
-    (43,'alibaba','alibaba','阿里巴巴集团','ww54eb170ef5c64261','xxf62ZimtkWXkFY62Ygyrsrz1nsyTb-XF_AUjCVFfUI','MFUkFrGUytu-Jq-fzp5pdMQ_Op_r843tZOixWe8Kc6A','Y2aAkPpmO2o0sc1MVO85EqiUWXYNaerAL4bjnB96Dxs','MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQD2r28z3QLtHgzAW5rTXVRZQQXrh47Ze5QA8APhL6M',NULL,'2020-05-20 18:49:30','admin004','2020-05-25 16:44:48','admin004',0,'Y','。。。'),
+    (41,'xinxin','xinxin','新心数科','ww54eb11','xxfz1nsyTb-XF_AUI','r843tZOixWe8Kc6A','YNaerAL4bjnB96Dxs','MIIEvQIBADANBgkqh28z3QLtHgzAW5rTXVRZQQXrh47Ze5QA8APhL6M',NULL,'2020-05-20 18:49:30','admin004','2020-05-22 16:27:35','admin004',0,'Y','。。。'),
+    (43,'alibaba','alibaba','阿里巴巴集团','ww54eb170e','rsrz1nsyTb-XF_AUjCVFfUI','MFUkFrGUytu-Jq-fzp5p','Y2aAkPpmO2o0sc1MVO85EqiUWs','MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAA',NULL,'2020-05-20 18:49:30','admin004','2020-05-25 16:44:48','admin004',0,'Y','。。。'),
     (64,'TD1267702986186911744','TD1267702986186911744','测试租户','dadffwerqwe','q3eqsdfasdfasdfas','dfasfadfasa','adfaeqwerqw','qerqerqdasfas',NULL,'2020-06-02 14:18:28','sassadmin','2020-06-02 14:18:28','sassadmin',0,'Y','测试租户');
 
 /*!40000 ALTER TABLE `tenant` ENABLE KEYS */;
