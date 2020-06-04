@@ -159,7 +159,7 @@ public class SassTenantInitRestController extends AclController {
 
             ResourceDO resourceDO = new ResourceDO();
             resourceDO.setParentId(Long.valueOf(treeVO.getParentId()));
-            String treesCode = tenantId.substring(0,4).toUpperCase() + treeVO.getCode();
+            String treesCode = tenantId.substring(0,4).toUpperCase() + treeVO.getCode()+RandomStringUtils.randomNumeric(4);
             rsCodes.add(treesCode);
             resourceDO.setCode(treesCode);
             resourceDO.setTenantId(tenantId);
@@ -184,7 +184,7 @@ public class SassTenantInitRestController extends AclController {
                     ResourceDO childresourceDO = new ResourceDO();
                     childresourceDO.setParentId(Long.valueOf(insertId));
                     childresourceDO.setTenantId(tenantId);
-                    String childrsCode = tenantId.substring(0,4).toUpperCase() + childrenVO.getCode();
+                    String childrsCode = tenantId.substring(0,4).toUpperCase() + childrenVO.getCode()+RandomStringUtils.randomNumeric(4);
                     rsCodes.add(childrsCode);
                     childresourceDO.setCode(childrsCode);
                     childresourceDO.setResourceType(childrenVO.getType());
@@ -206,7 +206,7 @@ public class SassTenantInitRestController extends AclController {
                             ResourceDO subchildresourceDO = new ResourceDO();
                             subchildresourceDO.setTenantId(tenantId);
                             subchildresourceDO.setParentId(Long.valueOf(childId));
-                            String subrsCode = tenantId.substring(0,4).toUpperCase() + subchildrenVO.getCode();
+                            String subrsCode = tenantId.substring(0,4).toUpperCase() + subchildrenVO.getCode()+RandomStringUtils.randomNumeric(4);
                             subchildresourceDO.setCode(subrsCode);
                             rsCodes.add(subrsCode);
                             subchildresourceDO.setResourceType(subchildrenVO.getType());
