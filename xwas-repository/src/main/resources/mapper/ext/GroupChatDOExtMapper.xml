@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xinxin.sass.repository.dao.GroupChatDOMapper">
+  <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.GroupChatDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
+    <result column="chat_name" jdbcType="VARCHAR" property="chatName"/>
+    <result column="chat_id" jdbcType="VARCHAR" property="chatId" />
+    <result column="owner" jdbcType="VARCHAR" property="owner" />
+    <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="extension" jdbcType="VARCHAR" property="extension" />
+    <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+    <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
+    <result column="gmt_updated" jdbcType="TIMESTAMP" property="gmtUpdated" />
+    <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+    <result column="notice" jdbcType="LONGVARCHAR" property="notice" />
+    <result column="member_list" jdbcType="LONGVARCHAR" property="memberList" />
+  </resultMap>
+  <sql id="Base_Column_List_Ext">
+    id, tenant_id, chat_id, owner, create_time, status, task_id, extension, gmt_created, 
+    gmt_creator, gmt_updated, gmt_updater, deleted, notice, member_list, chat_name
+  </sql>
+
+  <select id="selectByChatIdS" parameterType="java.util.List" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from group_chat
+    where deleted = 0 and chat_id in
+    <foreach collection="chatIdS" index="index" item="item" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into group_chat (id, tenant_id, chat_id,
+      owner, create_time, status,
+      task_id, extension, gmt_created,
+      gmt_creator, gmt_updated, gmt_updater, notice, member_list,chat_name
+      )
+    values
+    <foreach collection="groupChatDOS" item="item" index="index" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.tenantId,jdbcType=VARCHAR}, #{item.chatId,jdbcType=VARCHAR},
+      #{item.owner,jdbcType=VARCHAR}, #{item.createTime,jdbcType=VARCHAR}, #{item.status,jdbcType=INTEGER},
+      #{item.taskId,jdbcType=VARCHAR}, #{item.extension,jdbcType=VARCHAR}, #{item.gmtCreated,jdbcType=TIMESTAMP},
+      #{item.gmtCreator,jdbcType=VARCHAR}, #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR},
+      #{item.notice,jdbcType=LONGVARCHAR}, #{item.memberList,jdbcType=LONGVARCHAR},
+      #{item.chatName,jdbcType=VARCHAR})
+    </foreach>
+  </insert>
+
+  <update id="updateBatch" parameterType="java.util.List">
+    <foreach collection="groupChatDOS" item="item" index="index" separator=";">
+      update group_chat
+      <set>
+        <if test="item.tenantId != null">
+          tenant_id = #{item.tenantId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.chatName != null">
+          chat_name = #{item.chatName,jdbcType=VARCHAR},
+        </if>
+        <if test="item.chatId != null">
+          chat_id = #{item.chatId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.owner != null">
+          owner = #{item.owner,jdbcType=VARCHAR},
+        </if>
+        <if test="item.createTime != null">
+          create_time = #{item.createTime,jdbcType=VARCHAR},
+        </if>
+        <if test="item.status != null">
+          status = #{item.status,jdbcType=INTEGER},
+        </if>
+        <if test="item.taskId != null">
+          task_id = #{item.taskId,jdbcType=VARCHAR},
+        </if>
+        <if test="item.extension != null">
+          extension = #{item.extension,jdbcType=VARCHAR},
+        </if>
+        <if test="item.gmtCreated != null">
+          gmt_created = #{item.gmtCreated,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.gmtCreator != null">
+          gmt_creator = #{item.gmtCreator,jdbcType=VARCHAR},
+        </if>
+        <if test="item.gmtUpdated != null">
+          gmt_updated = #{item.gmtUpdated,jdbcType=TIMESTAMP},
+        </if>
+        <if test="item.gmtUpdater != null">
+          gmt_updater = #{item.gmtUpdater,jdbcType=VARCHAR},
+        </if>
+        <if test="item.deleted != null">
+          deleted = #{item.deleted,jdbcType=TINYINT},
+        </if>
+        <if test="item.notice != null">
+          notice = #{item.notice,jdbcType=LONGVARCHAR},
+        </if>
+        <if test="item.memberList != null">
+          member_list = #{item.memberList,jdbcType=LONGVARCHAR},
+        </if>
+      </set>
+      where id = #{item.id,jdbcType=BIGINT}
+    </foreach>
+  </update>
+
+  <select id="selectByChatId" parameterType="java.lang.String" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from group_chat
+    where chat_id = #{chatId} and deleted = 0
+  </select>
+
+</mapper>
