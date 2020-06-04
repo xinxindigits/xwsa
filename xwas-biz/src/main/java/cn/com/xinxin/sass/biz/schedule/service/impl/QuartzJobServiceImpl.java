@@ -29,6 +29,7 @@ package cn.com.xinxin.sass.biz.schedule.service.impl;
 import cn.com.xinxin.sass.biz.SpringContextHolder;
 import cn.com.xinxin.sass.biz.schedule.CommonJob;
 import cn.com.xinxin.sass.biz.schedule.service.QuartzJobService;
+import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.quartz.*;
@@ -54,6 +55,8 @@ public class QuartzJobServiceImpl implements QuartzJobService {
     public void startJob(String tenantId, String taskType, String cronExpression) {
         SchedulerFactoryBean schedulerFactory = (SchedulerFactoryBean) SpringContextHolder.getBean(
                 SchedulerFactoryBean.class);
+
+        TenantIdContext.set(tenantId);
 
         if (null == schedulerFactory) {
             LOGGER.error("无法找到Spring容器中的SchedulerFactoryBean实例");
@@ -100,7 +103,9 @@ public class QuartzJobServiceImpl implements QuartzJobService {
             if(!scheduler.isStarted()){
                 scheduler.start();
             }
+            TenantIdContext.remove();
         } catch (SchedulerException e) {
+            TenantIdContext.remove();
             LOGGER.error("Quartz job initialization -- failed to start scheduler", e);
             throw new BusinessException(SassBizResultCodeEnum.FAIL, "任务[{}]初始化失败", jobName);
         }
