@@ -31,7 +31,6 @@ import cn.com.xinxin.sass.biz.SpringContextHolder;
 import cn.com.xinxin.sass.biz.schedule.service.impl.QuartzJobServiceImpl;
 
 import cn.com.xinxin.sass.biz.service.impl.TenantDataSyncConfigServiceImpl;
-import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.repository.model.TenantDataSyncConfigDO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;

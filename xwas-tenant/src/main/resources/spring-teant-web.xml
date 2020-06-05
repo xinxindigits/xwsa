@@ -42,8 +42,6 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
-    <context:component-scan base-package="cn.com.xinxin.sass.web"/>
-    <context:component-scan base-package="cn.com.xinxin.sass.**.web.*"/>
     <mvc:annotation-driven/>
     <mvc:interceptors>
         <!-- taceid 拦截器 -->
@@ -60,50 +58,8 @@
             <mvc:exclude-mapping path="/static/**"/>
             <mvc:exclude-mapping path="/check-service.html"/>
             <mvc:exclude-mapping path="/"/>
-            <bean class="cn.com.xinxin.sass.biz.tenant.TenantIdHandlerInterceptor"/>
+            <bean class="cn.com.xinxin.sass.tenant.TenantIdHandlerInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
-
-    <!-- 支持静态资源文件 -->
-    <mvc:default-servlet-handler/>
-
-    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
-    <bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
-    <bean id="validationInterceptor" class="cn.com.xinxin.sass.web.interceptor.ValidationInterceptor"/>
-
-    <bean id="restResultInterceptor" class="com.xinxinfinance.commons.interceptor.CommonResultInterceptor" c:wrapReturnValue="true"/>
-
-    <aop:config>
-        <aop:pointcut id="restPointcut" expression="@within(org.springframework.web.bind.annotation.RestController)
-         and @annotation(org.springframework.web.bind.annotation.RequestMapping)"/>
-        <aop:pointcut id="controllerPointcut" expression="@within(org.springframework.web.bind.annotation.RestController)
-        and @annotation(org.springframework.web.bind.annotation.RequestMapping)"/>
-        <aop:advisor pointcut-ref="restPointcut" advice-ref="restResultInterceptor" order="0"/>
-        <aop:advisor pointcut-ref="restPointcut" advice-ref="validationInterceptor" order="1"/>
-    </aop:config>
-
-    <mvc:resources mapping="/check-service.html" location="/check-service.html"/>
-    <mvc:resources mapping="/static/**" location="/WEB-INF/static/"/>
-
-    <!-- 定义无需Controller的url<->view直接映射 -->
-    <!--<mvc:vwebller path="/" view-name="redirect:/unauthorized"/>-->
-
-    <bean id="defaultViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/views/"/>
-        <property name="suffix" value=".jsp"/>
-    </bean>
-
-    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
-        <!--&lt;!&ndash; 设定默认编码 &ndash;&gt;-->
-        <!--<property name="defaultEncoding" value="UTF-8"></property>-->
-        <!--&lt;!&ndash; 设定文件上传的最大值为50MB&ndash;&gt;-->
-        <!--<property name="maxUploadSize" value="52428800"></property>-->
-        <!--&lt;!&ndash; 设定文件上传时写入内存的最大值，如果小于这个参数不会生成临时文件，默认为10240 &ndash;&gt;-->
-        <!--<property name="maxInMemorySize" value="90960"></property>-->
-        <!--&lt;!&ndash; 延迟文件解析 &ndash;&gt;-->
-        <!--<property name="resolveLazily" value="true"/>-->
-    <!--</bean>-->
-
-    <bean id="exceptionHandlerExceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
 </beans>

@@ -31,13 +31,13 @@ import cn.com.xinxin.sass.auth.model.SassUserInfo;
 import cn.com.xinxin.sass.auth.repository.UserAclTokenRepository;
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
 import cn.com.xinxin.sass.biz.service.OplogService;
-import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import cn.com.xinxin.sass.auth.utils.CommonHttpRequestUtil;
 import cn.com.xinxin.sass.repository.model.OplogDOWithBLOBs;
 import cn.com.xinxin.sass.repository.model.ResourceDO;
 import cn.com.xinxin.sass.repository.model.RoleDO;
+import cn.com.xinxin.sass.tenant.TenantIdContext;
 import cn.com.xinxin.sass.web.convert.SassFormConvert;
 import cn.com.xinxin.sass.web.form.UserForm;
 import cn.com.xinxin.sass.web.form.UserLoginForm;
@@ -107,9 +107,9 @@ public class SassAuthRestController {
                         @RequestBody UserLoginForm userLoginForm){
 
 
-        if (!KaptchaUtils.checkVerifyCode(request)) {
-            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
-        }
+//        if (!KaptchaUtils.checkVerifyCode(request)) {
+//            throw new BusinessException(SassBizResultCodeEnum.ILLEGAL_PARAMETER,"验证码有误");
+//        }
 
         String userAccount = userLoginForm.getAccount();
 

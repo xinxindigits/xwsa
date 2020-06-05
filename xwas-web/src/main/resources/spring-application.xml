@@ -50,6 +50,7 @@
     <import resource="classpath:spring-portal-session-aop.xml"/>
     <import resource="classpath:spring-quartz.xml"/>
     <import resource="kaptcha.xml"/>
+    <import resource="classpath:spring-tenant.xml"/>
 
     <context:component-scan base-package="cn.com.xinxin">
         <context:exclude-filter type="aspectj" expression="cn.com.xinxin.sass.*.web.*"/>
