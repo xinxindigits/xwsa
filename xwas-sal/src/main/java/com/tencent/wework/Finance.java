@@ -44,33 +44,23 @@ public class Finance {
 	
     public native static void DestroySdk(long sdk);
     public native static long NewSlice();
-    /**
-     * @brief �ͷ�slice����NewSlice�ɶ�ʹ��
-     * @return 
-     */
+
     public native static void FreeSlice(long slice);
 
-    /**
-     * @brief ��ȡslice����
-     * @return ����
-     */
     public native static String GetContentFromSlice(long slice);
 
-    /**
-     * @brief ��ȡslice���ݳ���
-     * @return ����
-     */
+
     public native static int GetSliceLen(long slice);
     public native static long NewMediaData();
     public native static void FreeMediaData(long mediaData);
 
     /**
-     * @brief ��ȡmediadata outindex
+     * @brief ???mediadata outindex
      * @return outindex
      */
     public native static String GetOutIndexBuf(long mediaData);
     /**
-     * @brief ��ȡmediadata data����
+     * @brief ???mediadata data????
      * @return data
      */
     public native static byte[] GetData(long mediaData);
@@ -78,8 +68,8 @@ public class Finance {
     public native static int GetDataLen(long mediaData);
 
     /**
-     * @brief �ж�mediadata�Ƿ����
-     * @return 1��ɡ�0δ���
+     * @brief ?ж?mediadata??????
+     * @return 1??ɡ?0δ???
      */
     public native static int IsMediaDataFinish(long mediaData);
 

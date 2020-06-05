@@ -48,6 +48,10 @@
         </dependency>
         <dependency>
             <groupId>com.xinxinfinance.xwas</groupId>
+            <artifactId>xwas-tenant</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinxinfinance.xwas</groupId>
             <artifactId>xwas-common</artifactId>
         </dependency>
         <dependency>

@@ -35,7 +35,6 @@ import cn.com.xinxin.sass.biz.service.TenantDataSyncConfigService;
 import cn.com.xinxin.sass.biz.service.TenantDataSyncLogService;
 import cn.com.xinxin.sass.biz.service.UserService;
 import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
-import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import cn.com.xinxin.sass.common.enums.TaskTypeEnum;
 import cn.com.xinxin.sass.common.model.PageResultVO;

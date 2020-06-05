@@ -31,6 +31,7 @@ import cn.com.xinxin.sass.biz.service.wechatwork.WeChatWorkSyncService;
 import cn.com.xinxin.sass.biz.service.wechatwork.impl.WeChatWorkAddressListSyncServiceImpl;
 import cn.com.xinxin.sass.biz.service.wechatwork.impl.WeChatWorkChatRecordSyncServiceImpl;
 import cn.com.xinxin.sass.common.enums.TaskTypeEnum;
+import cn.com.xinxin.sass.tenant.TenantIdContext;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -52,6 +53,10 @@ public class CommonJob implements Job {
         LOGGER.info("Project被触发");
         String jobName = context.getJobDetail().getKey().getName();
 
+        String tenantId = jobName.split("_")[0];
+
+        TenantIdContext.set(tenantId);
+
         LOGGER.info("Project {} 被触发", jobName);
 
         try {
@@ -64,7 +69,9 @@ public class CommonJob implements Job {
                         WeChatWorkChatRecordSyncServiceImpl.class);
                 weChatWorkSyncService.sync(jobName.replace("_" + TaskTypeEnum.MESSAGE_SYNC.getType(), ""));
             }
+            TenantIdContext.remove();
         } catch (Exception e) {
+            TenantIdContext.remove();
             LOGGER.error("任务执行失败", e);
         }
     }

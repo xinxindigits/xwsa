@@ -55,6 +55,8 @@ public class QuartzJobServiceImpl implements QuartzJobService {
         SchedulerFactoryBean schedulerFactory = (SchedulerFactoryBean) SpringContextHolder.getBean(
                 SchedulerFactoryBean.class);
 
+        //TenantIdContext.set(tenantId);
+
         if (null == schedulerFactory) {
             LOGGER.error("无法找到Spring容器中的SchedulerFactoryBean实例");
             return;
@@ -100,7 +102,9 @@ public class QuartzJobServiceImpl implements QuartzJobService {
             if(!scheduler.isStarted()){
                 scheduler.start();
             }
+            //TenantIdContext.remove();
         } catch (SchedulerException e) {
+            //TenantIdContext.remove();
             LOGGER.error("Quartz job initialization -- failed to start scheduler", e);
             throw new BusinessException(SassBizResultCodeEnum.FAIL, "任务[{}]初始化失败", jobName);
         }

@@ -61,12 +61,6 @@
     </bean>
 
 
-    <bean id="sassTenantHandler" class="cn.com.xinxin.sass.biz.tenant.ops.SassOpsTenantHandler"/>
-
-    <bean id="tenantSqlParser" class="cn.com.xinxin.sass.biz.tenant.ops.SassOpsTenantSqlParser">
-        <property name="tenantHandler" ref="sassTenantHandler"/>
-    </bean>
-
     <bean id="tenantPlugin" class="com.baomidou.mybatisplus.extension.plugins.PaginationInterceptor">
         <property name="sqlParserList">
             <util:list>
@@ -74,7 +68,6 @@
             </util:list>
         </property>
     </bean>
-
 
 
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
