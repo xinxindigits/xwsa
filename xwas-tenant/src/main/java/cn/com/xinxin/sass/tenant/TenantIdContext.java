@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.biz.tenant;
+package cn.com.xinxin.sass.tenant;
 
 
 

@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.biz.tenant;
+package cn.com.xinxin.sass.tenant.ops;
 
 
 
@@ -29,7 +29,7 @@ package cn.com.xinxin.sass.biz.tenant;
  */
 
 import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
-import cn.com.xinxin.sass.auth.utils.JWTUtil;
+import cn.com.xinxin.sass.tenant.TenantIdContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,29 +44,29 @@ import javax.servlet.http.HttpServletResponse;
  * @updater:
  * @description:
  */
-public class TenantIdHandlerInterceptor extends HandlerInterceptorAdapter {
+public class OpsTenantIdHandlerInterceptor extends HandlerInterceptorAdapter {
 
     private final static String DEFAULT_TEANT_ID = "xinxin";
 
-    private static final Logger log = LoggerFactory.getLogger(TenantIdHandlerInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(OpsTenantIdHandlerInterceptor.class);
 
+    // 获取需要操作的运营租户ID
     @Override
     public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler)
     {
         // 从请求中获取token，读取租户ID
         // 登陆请求除外
-        String token = HttpRequestUtil.getLoginToken(request);
-        if (StringUtils.isEmpty(token))
+        String opsTenantId = HttpRequestUtil.getOpsTenantId(request);
+        if (StringUtils.isEmpty(opsTenantId))
         {
-            log.error("token无效");
+            log.error("opsTenantId无效");
         }
-        String tenantId = JWTUtil.getUserTeantId(token);
         // Generate a new one
-        if (StringUtils.isEmpty(tenantId))
+        if (StringUtils.isEmpty(opsTenantId))
         {
-            tenantId = DEFAULT_TEANT_ID;
+            opsTenantId = DEFAULT_TEANT_ID;
         }
-        TenantIdContext.set(tenantId);
+        TenantIdContext.set(opsTenantId);
         return true;
     }
 
