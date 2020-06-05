@@ -34,9 +34,31 @@ public class Finance {
     public native static int Init(long sdk, String corpid, String secret);
 
 
+    /**
+     * 获取聊天数据
+     * @param sdk
+     * @param seq
+     * @param limit
+     * @param proxy
+     * @param passwd
+     * @param timeout
+     * @param chatData
+     * @return
+     */
     public native static int GetChatData(long sdk, long seq, long limit, String proxy, String passwd, long timeout, long chatData);
 
 
+    /**
+     * 获取图片视频等内容
+     * @param sdk
+     * @param indexbuf
+     * @param sdkField
+     * @param proxy
+     * @param passwd
+     * @param timeout
+     * @param mediaData
+     * @return
+     */
     public native static int GetMediaData(long sdk, String indexbuf, String sdkField, String proxy, String passwd, long timeout, long mediaData);
 
 
@@ -55,21 +77,25 @@ public class Finance {
     public native static void FreeMediaData(long mediaData);
 
     /**
-     * @brief ???mediadata outindex
-     * @return outindex
+     * 多媒体内容读取
+     * @param mediaData
+     * @return
      */
     public native static String GetOutIndexBuf(long mediaData);
+
     /**
-     * @brief ???mediadata data????
-     * @return data
+     *
+     * @param mediaData
+     * @return
      */
     public native static byte[] GetData(long mediaData);
     public native static int GetIndexLen(long mediaData);
     public native static int GetDataLen(long mediaData);
 
     /**
-     * @brief ?ж?mediadata??????
-     * @return 1??ɡ?0δ???
+     *
+     * @param mediaData
+     * @return
      */
     public native static int IsMediaDataFinish(long mediaData);
 
