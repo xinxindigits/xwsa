@@ -115,7 +115,7 @@ public class SassFormConvert {
 
         return userRoleDO;
     }
-
+    
 
     public static List<ResourceVO> convertResourceDO2VO(List<ResourceDO> resourceDOS){
         List<ResourceVO> resourceVOList = BaseConvert.convertList(resourceDOS,ResourceVO.class);

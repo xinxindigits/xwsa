@@ -47,7 +47,6 @@ public class Finance {
 
     public native static void FreeSlice(long slice);
 
-
     public native static String GetContentFromSlice(long slice);
 
 
@@ -55,14 +54,23 @@ public class Finance {
     public native static long NewMediaData();
     public native static void FreeMediaData(long mediaData);
 
-
+    /**
+     * @brief ???mediadata outindex
+     * @return outindex
+     */
     public native static String GetOutIndexBuf(long mediaData);
-
+    /**
+     * @brief ???mediadata data????
+     * @return data
+     */
     public native static byte[] GetData(long mediaData);
     public native static int GetIndexLen(long mediaData);
     public native static int GetDataLen(long mediaData);
 
-  
+    /**
+     * @brief ?ж?mediadata??????
+     * @return 1??ɡ?0δ???
+     */
     public native static int IsMediaDataFinish(long mediaData);
 
     static {

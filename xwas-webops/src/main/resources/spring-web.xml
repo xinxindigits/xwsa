@@ -42,27 +42,14 @@
 
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
+    <import resource="classpath:spring-teant-web.xml"/>
+
     <context:component-scan base-package="cn.com.xinxin.sass.web"/>
     <context:component-scan base-package="cn.com.xinxin.sass.**.web.*"/>
     <mvc:annotation-driven/>
     <mvc:interceptors>
         <!-- taceid 拦截器 -->
         <bean class="com.xinxinfinance.commons.trace.TraceIdHandlerInterceptor"/>
-        <!-- 租户ID拦截器 如果不需要验证的地方请加入排除项-->
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/auth"/>
-            <mvc:exclude-mapping path="/rememberMe"/>
-            <mvc:exclude-mapping path="/kaptcha"/>
-            <mvc:exclude-mapping path="/hello"/>
-            <mvc:exclude-mapping path="/register"/>
-            <mvc:exclude-mapping path="/unauthorized"/>
-            <!--<mvc:exclude-mapping path="/tenant/create"/>-->
-            <mvc:exclude-mapping path="/static/**"/>
-            <mvc:exclude-mapping path="/check-service.html"/>
-            <mvc:exclude-mapping path="/"/>
-            <bean class="cn.com.xinxin.sass.biz.tenant.ops.OpsTenantIdHandlerInterceptor"/>
-        </mvc:interceptor>
     </mvc:interceptors>
 
     <!-- 支持静态资源文件 -->

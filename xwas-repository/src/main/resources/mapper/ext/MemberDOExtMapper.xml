@@ -63,7 +63,7 @@
     <result column="deleted" jdbcType="TINYINT" property="deleted" />
   </resultMap>
   <sql id="Base_Column_List_Ext">
-    id, tenant_id, user_id, member_name, mobile, department_id_list, order_list, member_position,
+    id, tenant_id, user_id, member_name, mobile, department_id_list, order_list, member_position, 
     gender, mail, is_leader_in_dept, avatar, thumb_avatar, telephone, alias, status, 
     ext_attr, qr_code, external_profile, external_position, address, hide_mobile, english_name, 
     open_userid, main_department, member_status, task_id, extension, gmt_created, gmt_creator, 
