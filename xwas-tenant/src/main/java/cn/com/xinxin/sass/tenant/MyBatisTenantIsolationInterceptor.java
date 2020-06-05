@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.biz.tenant;
+package cn.com.xinxin.sass.tenant;
 
 
 
@@ -31,17 +31,15 @@ package cn.com.xinxin.sass.biz.tenant;
 
 import com.baomidou.mybatisplus.extension.handlers.AbstractSqlParserHandler;
 import org.apache.ibatis.executor.statement.StatementHandler;
+import org.apache.ibatis.mapping.BoundSql;
+import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.*;
+import org.apache.ibatis.reflection.DefaultReflectorFactory;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 
-
-import java.sql.Connection;
-import org.apache.ibatis.mapping.BoundSql;
-import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.reflection.DefaultReflectorFactory;
-
 import java.lang.reflect.Field;
+import java.sql.Connection;
 import java.util.Properties;
 
 /**

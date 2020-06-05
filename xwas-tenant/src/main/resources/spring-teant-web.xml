@@ -28,41 +28,38 @@
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:c="http://www.springframework.org/schema/c"
        xsi:schemaLocation="
            http://www.springframework.org/schema/aop     http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
            http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/mvc     http://www.springframework.org/schema/mvc/spring-mvc.xsd
        ">
-
-    <!-- - The configuration file of ROOT's ApplicationContext. -->
-    <bean id="springContextHolder" class="cn.com.xinxin.sass.biz.SpringContextHolder" />
-    <bean id="quartzJobInitialization" class="cn.com.xinxin.sass.biz.schedule.QuartzJobInitialization"/>
+    <!-- - The configuration file of web-servlet's WebApplicationContext which
+        is child of the ROOT context. -->
 
     <aop:aspectj-autoproxy proxy-target-class="true" />
 
-    <import resource="classpath:spring-datasource.xml"/>
-    <import resource="classpath:spring-dubbo.xml"/>
-    <!--<import resource="classpath:spring-redis.xml"/>-->
-    <import resource="classpath:spring-aop.xml"/>
-    <import resource="classpath:spring-portal-session.xml"/>
-    <import resource="classpath:spring-session-redis.xml"/>
-    <import resource="classpath:spring-portal-session-aop.xml"/>
-    <import resource="classpath:spring-quartz.xml"/>
-    <import resource="kaptcha.xml"/>
-    <import resource="classpath:spring-tenant.xml"/>
-
-    <context:component-scan base-package="cn.com.xinxin">
-        <context:exclude-filter type="aspectj" expression="cn.com.xinxin.sass.*.web.*"/>
-    </context:component-scan>
-    <context:component-scan base-package="com.xinxinfinance.commons"/>
-
-    <context:annotation-config/>
-
-    <!-- Properties will be merged, properties will be override by the last
-        position file -->
-    <context:property-placeholder
-            location="classpath:properties/${properties.name}.properties, classpath:properties/*-${properties.name}.properties"
-            ignore-unresolvable="true"/>
+    <mvc:annotation-driven/>
+    <mvc:interceptors>
+        <!-- taceid 拦截器 -->
+        <bean class="com.xinxinfinance.commons.trace.TraceIdHandlerInterceptor"/>
+        <!-- 租户ID拦截器 如果不需要验证的地方请加入排除项-->
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <mvc:exclude-mapping path="/auth"/>
+            <mvc:exclude-mapping path="/rememberMe"/>
+            <mvc:exclude-mapping path="/kaptcha"/>
+            <mvc:exclude-mapping path="/hello"/>
+            <mvc:exclude-mapping path="/register"/>
+            <mvc:exclude-mapping path="/unauthorized"/>
+            <mvc:exclude-mapping path="/static/**"/>
+            <mvc:exclude-mapping path="/check-service.html"/>
+            <mvc:exclude-mapping path="/"/>
+            <bean class="cn.com.xinxin.sass.tenant.TenantIdHandlerInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 </beans>

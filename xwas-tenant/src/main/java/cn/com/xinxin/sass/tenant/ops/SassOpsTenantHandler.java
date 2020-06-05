@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.biz.tenant.ops;
+package cn.com.xinxin.sass.tenant.ops;
 
 
 
@@ -29,7 +29,7 @@ package cn.com.xinxin.sass.biz.tenant.ops;
  *
  */
 
-import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
+import cn.com.xinxin.sass.tenant.TenantIdContext;
 import com.baomidou.mybatisplus.extension.plugins.tenant.TenantHandler;
 import com.google.common.collect.Lists;
 import net.sf.jsqlparser.expression.Expression;

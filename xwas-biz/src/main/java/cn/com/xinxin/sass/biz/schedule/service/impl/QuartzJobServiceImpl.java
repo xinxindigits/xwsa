@@ -29,7 +29,6 @@ package cn.com.xinxin.sass.biz.schedule.service.impl;
 import cn.com.xinxin.sass.biz.SpringContextHolder;
 import cn.com.xinxin.sass.biz.schedule.CommonJob;
 import cn.com.xinxin.sass.biz.schedule.service.QuartzJobService;
-import cn.com.xinxin.sass.biz.tenant.TenantIdContext;
 import cn.com.xinxin.sass.common.enums.SassBizResultCodeEnum;
 import com.xinxinfinance.commons.exception.BusinessException;
 import org.quartz.*;
@@ -105,7 +104,7 @@ public class QuartzJobServiceImpl implements QuartzJobService {
             }
             //TenantIdContext.remove();
         } catch (SchedulerException e) {
-            TenantIdContext.remove();
+            //TenantIdContext.remove();
             LOGGER.error("Quartz job initialization -- failed to start scheduler", e);
             throw new BusinessException(SassBizResultCodeEnum.FAIL, "任务[{}]初始化失败", jobName);
         }
