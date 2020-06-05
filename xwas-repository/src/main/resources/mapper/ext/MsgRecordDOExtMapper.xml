@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xinxin.sass.repository.dao.MsgRecordDOMapper">
+  <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.MsgRecordDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
+    <result column="seq_id" jdbcType="BIGINT" property="seqId" />
+    <result column="msg_id" jdbcType="VARCHAR" property="msgId" />
+    <result column="action" jdbcType="VARCHAR" property="action" />
+    <result column="from_user_id" jdbcType="VARCHAR" property="fromUserId" />
+    <result column="room_id" jdbcType="VARCHAR" property="roomId" />
+    <result column="msg_time" jdbcType="VARCHAR" property="msgTime" />
+    <result column="msg_type" jdbcType="VARCHAR" property="msgType" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="to_user_id" jdbcType="LONGVARCHAR" property="toUserId" />
+    <result column="content" jdbcType="LONGVARCHAR" property="content" />
+    <result column="extension" jdbcType="VARCHAR" property="extension" />
+    <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+    <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
+    <result column="gmt_updated" jdbcType="TIMESTAMP" property="gmtUpdated" />
+    <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List_Ext">
+    id, tenant_id, seq_id, msg_id, action, from_user_id, room_id, msg_time, msg_type, task_id, 
+    extension, gmt_created, gmt_creator, gmt_updated, gmt_updater, deleted,to_user_id, content
+  </sql>
+  <insert id="insertBatch" parameterType="java.util.List">
+    insert into msg_record (id, tenant_id, seq_id,
+      msg_id, action, from_user_id,
+      room_id, msg_time, msg_type,
+      task_id, extension, gmt_created,
+      gmt_creator, gmt_updated, gmt_updater, to_user_id, content
+      )
+    values
+    <foreach collection="msgRecordDOS" item="item" index="index" separator=",">
+      (#{item.id,jdbcType=BIGINT}, #{item.tenantId,jdbcType=VARCHAR}, #{item.seqId,jdbcType=BIGINT},
+      #{item.msgId,jdbcType=VARCHAR}, #{item.action,jdbcType=VARCHAR}, #{item.fromUserId,jdbcType=VARCHAR},
+      #{item.roomId,jdbcType=VARCHAR}, #{item.msgTime,jdbcType=VARCHAR}, #{item.msgType,jdbcType=VARCHAR},
+      #{item.taskId,jdbcType=VARCHAR}, #{item.extension,jdbcType=VARCHAR}, #{item.gmtCreated,jdbcType=TIMESTAMP},
+      #{item.gmtCreator,jdbcType=VARCHAR}, #{item.gmtUpdated,jdbcType=TIMESTAMP}, #{item.gmtUpdater,jdbcType=VARCHAR},
+      #{item.toUserId,jdbcType=LONGVARCHAR}, #{item.content,jdbcType=LONGVARCHAR}
+      )
+    </foreach>
+  </insert>
+
+  <select id="selectPageByOrgIdAndUserIdAndTime" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from msg_record
+    <where>
+      tenant_id = #{tenantId} and deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userId)">
+        and (from_user_id = #{userId} or to_user_id like concat('%', #{userId}, '%'))
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and msg_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and msg_time <= #{endTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
+        and content like concat('%', #{keyWord}, '%')
+      </if>
+      order by id limit #{index}, #{pageSize}
+    </where>
+  </select>
+
+  <select id="selectCountByOrgIdAndUserIdAndTime" resultType="java.lang.Long">
+    select count(id)
+    from msg_record
+    <where>
+      tenant_id = #{tenantId} and deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userId)">
+        and (from_user_id = #{userId} or to_user_id like concat('%', #{userId}, '%'))
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and msg_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and msg_time <= #{endTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
+        and content like concat('%', #{keyWord}, '%')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectMsgRecordBetweenPersons" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from msg_record where tenant_id = #{tenantId} and ((from_user_id = #{userIdOne} and to_user_id = concat('[',#{userIdTwo},']'))  or (from_user_id = #{userIdTwo} and to_user_id = concat('[',#{userIdOne},']') ))
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
+      and content like concat('%',#{keyWord,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime) and @org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+      and <![CDATA[msg_time >= #{startTime} and msg_time < #{endTime}]]>
+    </if>
+    order by seq_id
+  </select>
+
+  <select id="selectRowNumberById" resultType="java.lang.Integer">
+    select count(id)
+    from msg_record where tenant_id = #{tenantId}
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userIdOne) and @org.apache.commons.lang3.StringUtils@isNotBlank(userIdTwo)">
+      and ((from_user_id = #{userIdOne} and to_user_id = concat('[',#{userIdTwo},']'))  or (from_user_id = #{userIdTwo} and to_user_id = concat('[',#{userIdOne},']') ))
+    </if>
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(roomId)">
+      and room_id = #{roomId}
+    </if>
+    and id <![CDATA[ <= ]]> #{id}
+  </select>
+
+  <select id="selectRoomMsgRecord" resultMap="BaseResultMapExt">
+    select <include refid="Base_Column_List_Ext"/>
+    from msg_record where tenant_id = #{tenantId} and room_id = #{roomId}
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
+      and content like concat('%',#{keyWord,jdbcType=VARCHAR},'%')
+    </if>
+    <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime) and @org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+      and <![CDATA[msg_time >= #{startTime} and msg_time < #{endTime}]]>
+    </if>
+    order by seq_id
+  </select>
+
+  <select id="selectByMemberUserIdAndKeyWordAndTime" resultMap="BaseResultMapExt">
+    select from_user_id,to_user_id,room_id
+    from msg_record
+    <where>
+      deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(userId)">
+        and (from_user_id = #{userId} or to_user_id like concat('%', #{userId}, '%'))
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(keyWord)">
+        and content like concat('%', #{keyWord}, '%')
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and msg_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and msg_time <= #{endTime}]]>
+      </if>
+    </where>
+  </select>
+
+</mapper>

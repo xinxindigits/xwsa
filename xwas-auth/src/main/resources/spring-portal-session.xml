@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <import resource="spring-session-redis.xml"/>
+    <import resource="spring-portal-session-aop.xml"/>
+
+    <bean id="userAclTokenRepository" class="cn.com.xinxin.sass.auth.repository.UserAclTokenRepository">
+        <property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>
+    </bean>
+
+    <bean id="jwtTokenAuthorizingRealmRealm" class="cn.com.xinxin.sass.auth.shiro.realm.JwtTokenAuthorizingRealm">
+        <!--<property name="userService" ref="userServiceImpl"/>-->
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
+    </bean>
+
+    <bean id="defaultSessionStorageEvaluator" class="org.apache.shiro.mgt.DefaultSessionStorageEvaluator">
+        <property name="sessionStorageEnabled" value="false"/>
+    </bean>
+
+    <bean id="subjectDAO" class="org.apache.shiro.mgt.DefaultSubjectDAO">
+        <property name="sessionStorageEvaluator" ref="defaultSessionStorageEvaluator"/>
+    </bean>
+
+    <!--手动指定cookie-->
+    <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <constructor-arg value="rememberMe"/>
+        <property name="httpOnly" value="true"/>
+        <property name="maxAge" value="1000"/><!-- 7天 -->
+    </bean>
+
+    <!-- rememberMe管理器 -->
+    <bean id="rememberMeManager" class="org.apache.shiro.web.mgt.CookieRememberMeManager">
+        <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
+    <!-- 权限管理器 -->
+    <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+        <property name="realms">
+            <list>
+                <ref bean="jwtTokenAuthorizingRealmRealm"/>
+            </list>
+        </property>
+        <property name="subjectDAO" ref="subjectDAO"/>
+        <property name="rememberMeManager" ref="rememberMeManager"/>
+    </bean>
+
+    <bean id="jwtTokenFilter" class="cn.com.xinxin.sass.auth.shiro.filter.JWTTokenFilter">
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
+    </bean>
+
+    <bean id="logoutFilter" class="cn.com.xinxin.sass.auth.shiro.filter.JwtLogoutFilter">
+        <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
+    </bean>
+
+    <!--<bean id="filterRegistration" >-->
+
+    <!--</bean>-->
+
+    <bean id="firstSuccessfulStrategy" class="org.apache.shiro.authc.pam.FirstSuccessfulStrategy"/>
+
+    <bean id="authenticator" class="org.apache.shiro.authc.pam.ModularRealmAuthenticator">
+
+        <property name="authenticationStrategy" ref="firstSuccessfulStrategy"/>
+        <property name="realms">
+            <util:list>
+                <ref bean="jwtTokenAuthorizingRealmRealm"/>
+            </util:list>
+        </property>
+    </bean>
+
+    <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+        <property name="securityManager" ref="securityManager"/>
+        <property name="loginUrl" value="/auth"/>
+        <property name="successUrl" value="/authorized"/>
+        <property name="unauthorizedUrl" value="/unauthorized"/>
+        <property name="filters">
+            <util:map>
+                <entry key="jwtFilter" value-ref="jwtTokenFilter"/>
+                <entry key="logoutFilter" value-ref="logoutFilter"/>
+            </util:map>
+        </property>
+
+        <!-- 访问地址的过滤规则，从上到下的优先级，如果有匹配的规则，就会返回，不会再进行匹配 -->
+        <!--
+         anno 任何人都可以访问
+         authc 必须登录才可以访问，不包含rememberme
+         user 登录用户才可以访问，包含rememberme
+         perms 指定过滤规则
+         -->
+        <property name="filterChainDefinitions">
+            <value>
+                /auth = anon
+                /rememberMe = anon
+                /= anon
+                /kaptcha = anon
+                /hello = anon
+                /register = anon
+                /unauthorized = anon
+                /static/** = anon
+                /logout = logoutFilter
+                /** = jwtFilter
+            </value>
+        </property>
+    </bean>
+
+    <!-- shiro 生命周期处理器 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <!--<aop:config proxy-target-class="true"/>-->
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
+    </bean>
+
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true"/>
+    </bean>
+
+
+</beans>

@@ -1,0 +1,286 @@
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<configuration>-->
+
+    <!--&lt;!&ndash; 全局流水号tracId &ndash;&gt;-->
+    <!--<conversionRule conversionWord="traceId" converterClass="cn.com.ykse.commons.context.trace.TraceIdAccessConverter"/>-->
+    <!--&lt;!&ndash; 压测标 &ndash;&gt;-->
+    <!--<conversionRule conversionWord="godEye" converterClass="cn.com.ykse.commons.context.godeye.GodEyeAccessConverter"/>-->
+
+    <!--<appender name="ROOT"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/root.log</file>-->
+        <!--<filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+            <!--<level>TRACE</level>-->
+        <!--</filter>-->
+        <!--&lt;!&ndash; 可让每天产生一个日志文件，最多 10 个，自动回滚 &ndash;&gt;-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/root.log.%d{yyyy-MM-dd}-->
+            <!--</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%traceId] [%godEye] %logger - %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--<appender name="default-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/default.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/default.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%traceId] [%godEye] %logger - %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--<appender name="error-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/error.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/error.log.%d{yyyy-MM-dd}-->
+            <!--</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%traceId] [%godEye] %logger - %msg%n</pattern>-->
+        <!--</encoder>-->
+        <!--<filter class="ch.qos.logback.classic.filter.LevelFilter">-->
+            <!--<level>ERROR</level>-->
+            <!--<onMatch>ACCEPT</onMatch>-->
+            <!--<onMismatch>DENY</onMismatch>-->
+        <!--</filter>-->
+    <!--</appender>-->
+
+    <!--<appender name="sql-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/sql.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/sql.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%traceId] [%godEye] %logger - %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--<appender name="biz-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/biz.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/biz.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%traceId] [%godEye] %logger - %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--<appender name="sal-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/sal.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/sal.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%traceId] [%godEye] %logger - %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--<appender name="web-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/web.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/web.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%traceId] [%godEye] %logger - %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--<appender name="dal-digest-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/dal-digest.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/dal-digest.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] [%godEye] %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+    <!--<appender name="sal-digest-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/sal-digest.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/sal-digest.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] [%godEye] %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+    <!--<appender name="api-digest-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/api-digest.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/api-digest.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] [%godEye] %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+    <!--<appender name="druid-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/druid.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/druid.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>3</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] [%godEye] %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--<appender name="cloudbridge-digest-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/cloudbridge-digest.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/cloudbridge-digest.log.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] [%godEye] %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+    <!--<appender name="cloudbridge-timeout-appender"-->
+              <!--class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+        <!--<file>${log.home}/cloudbridge-timeout.log</file>-->
+        <!--<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+            <!--<fileNamePattern>${log.home}/cloudbridge-timeout.%d{yyyy-MM-dd}</fileNamePattern>-->
+            <!--<maxHistory>10</maxHistory>-->
+        <!--</rollingPolicy>-->
+        <!--<encoder>-->
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%traceId] [%godEye] %msg%n</pattern>-->
+        <!--</encoder>-->
+    <!--</appender>-->
+
+    <!--<root>-->
+        <!--<level value="${log.level}"/>-->
+        <!--<appender-ref ref="ROOT"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</root>-->
+
+    <!--&lt;!&ndash; default &ndash;&gt;-->
+    <!--<logger name="com.xinxinfinance.exmple" additivity="false">-->
+        <!--<level value="${log.level}"/>-->
+        <!--<appender-ref ref="default-appender"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</logger>-->
+
+
+    <!--&lt;!&ndash; biz &ndash;&gt;-->
+    <!--<logger name="com.xinxinfinance.exmple.biz" additivity="false">-->
+        <!--<level value="info"/>-->
+        <!--<appender-ref ref="biz-appender"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="com.xinxinfinance.exmple.web" additivity="false">-->
+        <!--<level value="INFO"/>-->
+        <!--<appender-ref ref="web-appender"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</logger>-->
+
+    <!--&lt;!&ndash; sal &ndash;&gt;-->
+    <!--<logger name="com.xinxinfinance.exmple.sal" additivity="false">-->
+        <!--<level value="${log.level}"/>-->
+        <!--<appender-ref ref="sal-appender"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</logger>-->
+
+    <!--&lt;!&ndash; sql &ndash;&gt;-->
+    <!--<logger name="java.sql" additivity="false">-->
+        <!--<level value="${log.level}"/>-->
+        <!--<appender-ref ref="sql-appender"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</logger>-->
+    <!--<logger name="org.mybatis" additivity="false">-->
+        <!--<level value="${log.level}"/>-->
+        <!--<appender-ref ref="sql-appender"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</logger>-->
+
+    <!--&lt;!&ndash; third &ndash;&gt;-->
+    <!--<logger name="org.springframework" additivity="false">-->
+        <!--<level value="WARN"/>-->
+        <!--<appender-ref ref="ROOT"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</logger>-->
+    <!--<logger name="org.apache" additivity="false">-->
+        <!--<level value="WARN"/>-->
+        <!--<appender-ref ref="ROOT"/>-->
+        <!--<appender-ref ref="error-appender"/>-->
+    <!--</logger>-->
+
+
+    <!--&lt;!&ndash; digest logger &ndash;&gt;-->
+    <!--<logger name="dal-digest-log" additivity="false">-->
+        <!--<level value="info"/>-->
+        <!--<appender-ref ref="dal-digest-appender"/>-->
+    <!--</logger>-->
+    <!--<logger name="api-digest-log" additivity="false">-->
+        <!--<level value="info"/>-->
+        <!--<appender-ref ref="api-digest-appender"/>-->
+    <!--</logger>-->
+    <!--<logger name="sal-digest-log" additivity="false">-->
+        <!--<level value="info"/>-->
+        <!--<appender-ref ref="sal-digest-appender"/>-->
+    <!--</logger>-->
+    <!--<logger name="com.alibaba.druid" additivity="false">-->
+        <!--<level value="INFO"/>-->
+        <!--<appender-ref ref="druid-appender"/>-->
+    <!--</logger>-->
+
+    <!--<logger name="cn.com.ykse.cloudbridge" additivity="false">-->
+        <!--<level value="${log.level}"/>-->
+        <!--<appender-ref ref="cloudbridge-digest-appender"/>-->
+    <!--</logger>-->
+    <!--<logger name="cloudbridge-timeout-log" additivity="false">-->
+        <!--<level value="${log.level}"/>-->
+        <!--<appender-ref ref="cloudbridge-timeout-appender"/>-->
+    <!--</logger>-->
+    <!--<logger name="biz-log" additivity="false">-->
+        <!--<level value="info"/>-->
+        <!--<appender-ref ref="biz-appender"/>-->
+    <!--</logger>-->
+<!--</configuration>-->

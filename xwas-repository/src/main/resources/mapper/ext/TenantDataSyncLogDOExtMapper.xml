@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.xinxin.sass.repository.dao.TenantDataSyncLogDOMapper">
+  <resultMap id="BaseResultMapExt" type="cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="tenant_id" jdbcType="VARCHAR" property="tenantId" />
+    <result column="task_type" jdbcType="VARCHAR" property="taskType" />
+    <result column="task_date" jdbcType="VARCHAR" property="taskDate" />
+    <result column="task_time" jdbcType="VARCHAR" property="taskTime" />
+    <result column="message_count" jdbcType="INTEGER" property="messageCount" />
+    <result column="department_count" jdbcType="INTEGER" property="departmentCount" />
+    <result column="member_count" jdbcType="INTEGER" property="memberCount" />
+    <result column="customer_count" jdbcType="INTEGER" property="customerCount" />
+    <result column="task_status" jdbcType="VARCHAR" property="taskStatus" />
+    <result column="error_code" jdbcType="VARCHAR" property="errorCode" />
+    <result column="error_desc" jdbcType="VARCHAR" property="errorDesc" />
+    <result column="extension" jdbcType="VARCHAR" property="extension" />
+    <result column="gmt_created" jdbcType="TIMESTAMP" property="gmtCreated" />
+    <result column="gmt_creator" jdbcType="VARCHAR" property="gmtCreator" />
+    <result column="gmt_updated" jdbcType="TIMESTAMP" property="gmtUpdated" />
+    <result column="gmt_updater" jdbcType="VARCHAR" property="gmtUpdater" />
+    <result column="deleted" jdbcType="TINYINT" property="deleted" />
+  </resultMap>
+  <sql id="Base_Column_List_Ext">
+    id, task_id, tenant_id, task_type, task_date, task_time, message_count, department_count, 
+    member_count, customer_count, task_status, error_code, error_desc, extension, gmt_created, 
+    gmt_creator, gmt_updated, gmt_updater, deleted
+  </sql>
+
+  <insert id="insertReturnId" parameterType="cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO"
+          useGeneratedKeys="true" keyProperty="id">
+    <selectKey resultType="long" order="AFTER" keyProperty="id">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into tenant_sync_log (id, task_id, tenant_id,
+    task_type, task_date, task_time,
+    message_count, department_count, member_count,
+    customer_count, task_status, error_code,
+    error_desc, extension, gmt_created,
+    gmt_creator, gmt_updated, gmt_updater)
+    values (#{id,jdbcType=BIGINT}, #{taskId,jdbcType=VARCHAR}, #{tenantId,jdbcType=VARCHAR},
+    #{taskType,jdbcType=VARCHAR}, #{taskDate,jdbcType=VARCHAR}, #{taskTime,jdbcType=VARCHAR},
+    #{messageCount,jdbcType=INTEGER}, #{departmentCount,jdbcType=INTEGER}, #{memberCount,jdbcType=INTEGER},
+    #{customerCount,jdbcType=INTEGER}, #{taskStatus,jdbcType=VARCHAR}, #{errorCode,jdbcType=VARCHAR},
+    #{errorDesc,jdbcType=VARCHAR}, #{extension,jdbcType=VARCHAR}, #{gmtCreated,jdbcType=TIMESTAMP},
+    #{gmtCreator,jdbcType=VARCHAR}, #{gmtUpdated,jdbcType=TIMESTAMP}, #{gmtUpdater,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="selectRecordSPage" resultMap="BaseResultMapExt"
+          parameterType="cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO">
+    select <include refid="Base_Column_List_Ext"/>
+    from tenant_sync_log
+    <where>
+      tenant_id = #{tenantId} and deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskType)">
+        and task_type = #{taskType}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskDate)">
+        and task_date = #{taskDate}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskStatus)">
+        and task_status = #{taskStatus}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and task_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and task_time <= #{endTime}]]>
+      </if>
+      order by id desc limit #{index}, #{pageSize}
+    </where>
+  </select>
+
+  <select id="selectRecordSCount" parameterType="cn.com.xinxin.sass.repository.model.TenantDataSyncLogDO" resultType="java.lang.Long">
+    select count(id)
+    from tenant_sync_log
+    <where>
+      tenant_id = #{tenantId} and deleted = 0
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskType)">
+        and task_type = #{taskType}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskDate)">
+        and task_date = #{taskDate}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(taskStatus)">
+        and task_status = #{taskStatus}
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(startTime)">
+        <![CDATA[and task_time >= #{startTime}]]>
+      </if>
+      <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(endTime)">
+        <![CDATA[and task_time <= #{endTime}]]>
+      </if>
+    </where>
+  </select>
+
+</mapper>

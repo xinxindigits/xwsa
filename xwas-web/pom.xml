@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~
+  ~ Copyright 2020 www.xinxindigits.com
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of this software
+  ~ and associated documentation files (the "Software"),to deal in the Software without restriction,
+  ~ including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  ~ and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice
+  ~ shall be included in all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  ~ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+  ~ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+  ~ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+  ~ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  ~
+  ~ Redistribution and selling copies of the software are prohibited, only if the authorization from xinxin digits
+  ~ was obtained.Neither the name of the xinxin digits; nor the names of its contributors may be used to
+  ~ endorse or promote products derived from this software without specific prior written permission.
+  ~
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>xwas-parent</artifactId>
+        <groupId>com.xinxinfinance.xwas</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>xwas-web</artifactId>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.xinxinfinance.xwas</groupId>
+            <artifactId>xwas-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinxinfinance.xwas</groupId>
+            <artifactId>xwas-biz</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinxinfinance.xwas</groupId>
+            <artifactId>xwas-repository</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinxinfinance.xwas</groupId>
+            <artifactId>xwas-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinxinfinance.xwas</groupId>
+            <artifactId>xwas-auth</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.xinxinfinance.xwas</groupId>
+            <artifactId>xwas-tenant</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>${servlet.jstl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.freemarker</groupId>
+            <artifactId>freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xinxinfinance.commons</groupId>
+            <artifactId>commons-dependency-dubbo-all</artifactId>
+            <type>pom</type>
+        </dependency>
+
+        <!-- shiro begin -->
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-spring</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.shiro</groupId>
+            <artifactId>shiro-ehcache</artifactId>
+        </dependency>
+        <!-- shiro end -->
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+        </dependency>
+
+
+    </dependencies>
+
+    <build>
+        <finalName>sass</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>profiles/**</exclude>
+                    <exclude>properties/**</exclude>
+                    <exclude>logback-test.xml</exclude>
+                </excludes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>profiles/${properties.name}/**</include>
+                    <include>properties/${properties.name}.properties</include>
+                    <include>properties/*-${properties.name}.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>local-debug</id>
+            <properties>
+                <properties.name>cloud-dev</properties.name>
+                <log.level>debug</log.level>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <finalName>sass</finalName>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <includes>
+                            <include>logback-test.xml</include>
+                        </includes>
+                    </resource>
+                </resources>
+            </build>
+        </profile>
+        <profile>
+            <id>local</id>
+            <properties>
+                <properties.name>cloud-dev</properties.name>
+                <log.home>/home/appuser/logs/app</log.home>
+                <log.level>debug</log.level>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <properties.name>dev</properties.name>
+                <log.home>/home/appuser/logs/app</log.home>
+                <log.level>debug</log.level>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <properties.name>test</properties.name>
+                <log.home>/home/appuser/logs/app</log.home>
+                <log.level>info</log.level>
+            </properties>
+        </profile>
+        <profile>
+            <id>cloud-dev</id>
+            <properties>
+                <properties.name>cloud-dev</properties.name>
+                <log.home>/home/appuser/logs/app</log.home>
+                <log.level>info</log.level>
+            </properties>
+        </profile>
+        <profile>
+            <id>sit</id>
+            <properties>
+                <properties.name>sit</properties.name>
+                <log.home>/home/appuser/logs/app</log.home>
+                <log.level>info</log.level>
+            </properties>
+        </profile>
+        <profile>
+            <id>sitp</id>
+            <properties>
+                <properties.name>sitp</properties.name>
+                <log.home>/home/appuser/logs/app</log.home>
+                <log.level>info</log.level>
+            </properties>
+        </profile>
+        <profile>
+            <id>sitw</id>
+            <properties>
+                <properties.name>sitw</properties.name>
+                <log.home>/home/appuser/logs/app</log.home>
+                <log.level>info</log.level>
+            </properties>
+        </profile>
+        <profile>
+            <id>pre</id>
+            <properties>
+                <properties.name>pre</properties.name>
+                <log.home>/home/weblogic/logs/app</log.home>
+                <log.level>info</log.level>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <properties.name>prod</properties.name>
+                <log.home>/logs/app</log.home>
+                <!--<log.home>/home/tomcat/logs/app</log.home>-->
+                <log.level>info</log.level>
+            </properties>
+        </profile>
+    </profiles>
+</project>
