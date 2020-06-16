@@ -44,6 +44,35 @@
         <property name="userAclTokenRepository" ref="userAclTokenRepository"/>
     </bean>
 
+    <!--&lt;!&ndash; 现在缓存中最大登陆人数1&ndash;&gt;-->
+    <!--<bean id="kickoutSessionControlFilter" class="cn.com.xinxin.sass.auth.interceptor.KickoutSessionControlFilter">-->
+        <!--<property name="cacheManager" ref="sassSessionRedisCacheManager"/>-->
+        <!--<property name="sessionManager" ref="sessionManager"/>-->
+        <!--&lt;!&ndash; 是否踢出后来登录的，默认是false；即后者登录的用户踢出前者登录的用户 &ndash;&gt;-->
+        <!--<property name="kickoutAfter" value="false"/>-->
+        <!--&lt;!&ndash; 同一个用户最大的会话数，默认1；比如2的意思是同一个用户允许最多同时两个人登录 &ndash;&gt;-->
+        <!--<property name="maxSession" value="1"/>-->
+        <!--<property name="kickoutUrl" value="/unauthorized"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">-->
+        <!--<property name="sessionValidationSchedulerEnabled" value="true"/>-->
+        <!--<property name="sessionValidationInterval" value="1800000"/>-->
+        <!--<property name="globalSessionTimeout" value="129600000"/>-->
+        <!--<property name="deleteInvalidSessions" value="true"/>-->
+        <!--<property name="sessionDAO" ref="sassSessionRedisDao"/>-->
+        <!--<property name="cacheManager" ref="sassSessionRedisCacheManager"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="sassSessionRedisCacheManager" class="cn.com.xinxin.sass.auth.repository.SessionRedisCacheManager">-->
+        <!--<property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>-->
+    <!--</bean>-->
+
+    <!--<bean id="sassSessionRedisDao" class="cn.com.xinxin.sass.auth.repository.SassSessionRedisDao">-->
+        <!--<property name="sessionRedisTemplate" ref="sessionRedisTemplate"/>-->
+    <!--</bean>-->
+
+
     <bean id="defaultSessionStorageEvaluator" class="org.apache.shiro.mgt.DefaultSessionStorageEvaluator">
         <property name="sessionStorageEnabled" value="false"/>
     </bean>
@@ -108,6 +137,7 @@
             <util:map>
                 <entry key="jwtFilter" value-ref="jwtTokenFilter"/>
                 <entry key="logoutFilter" value-ref="logoutFilter"/>
+                <!--<entry key="kickout" value-ref="kickoutSessionControlFilter"/>-->
             </util:map>
         </property>
 
@@ -129,6 +159,7 @@
                 /unauthorized = anon
                 /static/** = anon
                 /logout = logoutFilter
+                <!--/** = kickout,jwtFilter-->
                 /** = jwtFilter
             </value>
         </property>

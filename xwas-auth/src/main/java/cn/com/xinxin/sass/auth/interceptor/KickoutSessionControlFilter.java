@@ -26,7 +26,10 @@ package cn.com.xinxin.sass.auth.interceptor;
  *
  */
 
+import cn.com.xinxin.sass.auth.utils.HttpRequestUtil;
+import cn.com.xinxin.sass.auth.utils.JWTUtil;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.cache.CacheManager;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.session.Session;
@@ -40,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -99,34 +103,35 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
 
 
         logger.info("KickoutSessionControlFilter==== onAccessDenied === {}", kickoutUrl);
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        // 获取用户token并且拿到用户信息
+        String token = HttpRequestUtil.getLoginToken(httpServletRequest);
+        String account = JWTUtil.getUserAccount(token);
 
-        Subject subject = getSubject(request, response);
-        if(!subject.isAuthenticated() && !subject.isRemembered()) {
+        if(StringUtils.isEmpty(account)) {
             //如果没有登录，直接进行之后的流程
             return true;
         }
 
+        Subject subject = getSubject(request, response);
+
         Session session = subject.getSession();
-        //SassUserInfo user = (SassUserInfo)subject.getPrincipal();
-        //String username = user.getAccount();
-        String username = (String) subject.getPrincipal();
 
-
-        logger.info("KickoutSessionControlFilter==== onAccessDenied ===username ==== {}", username);
+        logger.info("KickoutSessionControlFilter==== onAccessDenied ===account ==== {}", account);
         Serializable sessionId = session.getId();
 
         // 同步控制
-        Deque<Serializable> deque = cache.get(username);
+        Deque<Serializable> deque = cache.get(account);
         if(deque == null || CollectionUtils.isEmpty(deque)) {
             // 如果队列为空，则放入队列
             deque = new LinkedList<Serializable>();
-            cache.put(username, deque);
+            cache.put(account, deque);
         }
 
         //如果队列里没有此sessionId，且用户没有被踢出；放入队列
         if(!deque.contains(sessionId) && session.getAttribute("kickout") == null) {
             deque.push(sessionId);
-            cache.put(username, deque);
+            cache.put(account, deque);
         }
 
         //如果队列里的sessionId数超出最大会话数，开始踢人
@@ -145,7 +150,7 @@ public class KickoutSessionControlFilter extends AccessControlFilter {
                 }
             } catch (Exception e) {//ignore exception
             }
-            cache.put(username, deque);
+            cache.put(account, deque);
         }
 
         //如果被踢出了，直接退出，重定向到踢出后的地址

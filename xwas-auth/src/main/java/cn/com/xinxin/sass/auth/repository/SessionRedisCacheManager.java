@@ -1,4 +1,4 @@
-package cn.com.xinxin.sass.auth.constant;
+package cn.com.xinxin.sass.auth.repository;
 
 /*
  *
@@ -26,51 +26,42 @@ package cn.com.xinxin.sass.auth.constant;
  *
  */
 
+import org.apache.shiro.cache.Cache;
+import org.apache.shiro.cache.CacheException;
+import org.apache.shiro.cache.CacheManager;
+import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author: zhouyang
- * @created: 16/07/2018.
+ * @created: 16/06/2020.
  * @updater:
  * @description:
  */
-public class SessionCacheConstants {
+public class SessionRedisCacheManager implements CacheManager {
 
-    /**
-     * auth cache key
-     */
-    public static final String SASS_SESSION_MANAGER_CACHE_KEY = "shiro_redis_session_manager:";
+    private final ConcurrentHashMap<String,Cache> caches = new ConcurrentHashMap<>();
 
-    /**
-     * CHIRO_USER_CACHE_KEY
-     */
-    public static final String SASS_USER_SESSION_CACHE_KEY = "shiro_session_cache:";
+    private RedisTemplate sessionRedisTemplate;
 
+    @Override
+    public <K, V> Cache<K, V> getCache(String s) throws CacheException {
+        Cache cache = caches.get(s);
+        if (cache == null){
+            cache = new ShiroSessionRedisCacheManager(sessionRedisTemplate,s);
+            caches.put(s,cache);
+        }
 
-    /**
-     * session默认超时时间, 分钟为单位
-     */
-    public static final Integer DEFAULT_SESSION_TIME_OUT = 480;
-
-    /**
-     * 用户信息缓存
-     */
-    public static final String SASS_USER_INFO_CACHE_KEY = "SASS_USER_INFO:";
-
-    /**
-     * token cache key
-     */
-    public static final String SASS_USER_TOKEN_CACHE_KEY = "sass_user_token:";
-
-    /**
-     * JWT刷新新token响应状态码
-     */
-    public static final int JWT_REFRESH_TOKEN_CODE = 460;
-
-    /**
-     * JWT刷新新token响应状态码，
-     * Redis中不存在，但jwt未过期，不生成新的token，返回361状态码
-     */
-    public static final int JWT_INVALID_TOKEN_CODE = 361;
+        return cache;
+    }
 
 
+    public RedisTemplate getSessionRedisTemplate() {
+        return sessionRedisTemplate;
+    }
 
+    public void setSessionRedisTemplate(RedisTemplate sessionRedisTemplate) {
+        this.sessionRedisTemplate = sessionRedisTemplate;
+    }
 }
