@@ -63,7 +63,7 @@
         <xwas.auth.version>1.6-SNAPSHOT</xwas.auth.version>
         <commons-util.version>1.0.6-SNAPSHOT</commons-util.version>
         <commons-api-support.version>1.2.0-SNAPSHOT</commons-api-support.version>
-        <protobuf.version>2.5.0</protobuf.version>
+        <protobuf.version>3.16.1</protobuf.version>
         <freemarker.version>2.3.20</freemarker.version>
         <fastjson.version>1.2.29.sec06</fastjson.version>
         <hvalidator.version>6.0.7.Final</hvalidator.version>
