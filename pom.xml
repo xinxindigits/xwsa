@@ -65,7 +65,7 @@
         <commons-api-support.version>1.2.0-SNAPSHOT</commons-api-support.version>
         <protobuf.version>2.5.0</protobuf.version>
         <freemarker.version>2.3.20</freemarker.version>
-        <fastjson.version>1.2.29.sec06</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <hvalidator.version>6.0.7.Final</hvalidator.version>
         <ojdbc.version>5</ojdbc.version>
         <servlet.jstl.version>1.2</servlet.jstl.version>
